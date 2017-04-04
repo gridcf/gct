@@ -2062,7 +2062,7 @@ globus_l_gsc_cmd_pasv_cb(
                 goto err;
             }
             
-            if(0)
+            if(op->server_handle->epsv_ip)
             {
                 msg = globus_common_create_string(
                     "%d Entering Passive Mode (|%d|%s|%d|)\r\n",

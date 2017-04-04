@@ -554,6 +554,11 @@ globus_gridftp_server_control_attr_set_idle_time(
     int                                     idle_timeout,
     int                                     preauth_timeout);
 
+globus_result_t
+globus_gridftp_server_control_attr_set_epsv_ip(
+    globus_gridftp_server_control_attr_t    in_attr,
+    globus_bool_t                           epsv_ip);
+
 /*
  *  if module name is NULL then it is the default handler
  */

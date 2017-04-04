@@ -3748,6 +3748,13 @@ globus_i_gfs_control_start(
         goto error_attr_setup;
     }
 
+    result = globus_gridftp_server_control_attr_set_epsv_ip(
+        attr, globus_i_gfs_config_bool("epsv_ip"));
+    if(result != GLOBUS_SUCCESS)
+    {
+        goto error_attr_setup;
+    }
+
     idle_timeout = globus_i_gfs_config_int("control_idle_timeout");
     preauth_timeout = globus_i_gfs_config_int("control_preauth_timeout");
     
