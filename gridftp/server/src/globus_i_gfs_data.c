@@ -6841,6 +6841,16 @@ globus_gfs_data_get_file_stack_list(
     }
 }
 
+char *
+globus_gfs_data_get_cmd_string(
+    globus_gfs_operation_t              op)
+{
+    char *                              cmd = NULL;
+
+    cmd = globus_i_gsc_get_cmd_string(op->user_arg);
+
+    return cmd;
+}
 
 static
 globus_result_t

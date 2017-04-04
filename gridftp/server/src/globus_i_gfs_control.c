@@ -953,6 +953,20 @@ error_init:
     GlobusGFSDebugExitWithError();
 }
 
+char *
+globus_i_gsc_get_cmd_string(
+    void *                              user_arg)
+{
+    globus_l_gfs_request_info_t *       request;
+    char *                              cmd = NULL;
+    GlobusGFSName(globus_i_gsc_get_cmd_string);
+
+    request = (globus_l_gfs_request_info_t *) user_arg;
+    cmd = globus_gridftp_server_control_get_cmd_string(request->control_op);
+
+    return cmd;
+}
+
 globus_result_t
 globus_i_gsc_cmd_intermediate_reply(
     globus_gridftp_server_control_op_t  op,

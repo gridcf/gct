@@ -28,4 +28,8 @@ globus_i_gfs_control_start(
     globus_i_gfs_server_close_cb_t      close_func,
     void *                              user_arg);
 
+char *
+globus_i_gsc_get_cmd_string(
+    void *                              user_arg);
+
 #endif
