@@ -2042,10 +2042,15 @@ globus_l_gsc_cmd_pasv_cb(
             }
             
             h = host;
-            if(*cs[0] == '[')
+            if(*host == '[')
             {
                 h++;
                 *(p - 1) = 0;
+                if (strncmp(h, "::ffff:", 7) == 0) /* IPv4 mapped address */
+                {
+                    h += 7;
+                    *host = ' ';
+                }
             }
             else
             {
@@ -2067,7 +2072,7 @@ globus_l_gsc_cmd_pasv_cb(
                 msg = globus_common_create_string(
                     "%d Entering Passive Mode (|%d|%s|%d|)\r\n",
                         wrapper->reply_code,
-                        *cs[0] == '[' ? 2 : 1,
+                        *host == '[' ? 2 : 1,
                         h,
                         (int) port);
             }
