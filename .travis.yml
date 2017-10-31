@@ -1,0 +1,17 @@
+sudo: required
+env:
+    matrix:
+    - OS_VERSION=6
+    - OS_VERSION=7
+
+services:
+    - docker
+
+before_install:
+    - sudo apt-get update
+    - sleep 5
+    - sudo docker pull centos:centos${OS_VERSION}
+
+script:
+- travis-ci/setup_tests.sh
+
