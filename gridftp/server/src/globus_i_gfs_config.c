@@ -493,8 +493,8 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"config_dir", "config_dir", NULL, "C", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
      "Path to directory holding configuration files that should be loaded. Files "
      "will be loaded in alphabetical order, and in the event of duplicate parameters "
-     "the last loaded file will take precedence.  Files with a '.' in the name "
-     "(file.bak, file.rpmsave, etc.) will be ignored.  Note that the main "
+     "the last loaded file will take precedence.  Backup files and files created by "
+     "package updates (e.g. file.rpmsave) will be ignored.  Note that the main "
      "configuration file, if one exists, will always be loaded last.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"config_base_path", "config_base_path", NULL, "config-base-path", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
      "Base path to use when config and log path options are not full paths. "
@@ -1160,9 +1160,10 @@ globus_l_gfs_config_load_config_dir(
         {
             char *                      full_path;
             
-            /* skip any file with a '.': hidden, . or ..
-             and files like .rpm*, .deb*, .bak*, etc */
-            if(strchr(entries[i]->d_name, '.') != NULL)
+            /* skip hidden and . or ..
+             and files possibly created by updates .rpmsave or .rpmnew */
+            if(*entries[i]->d_name == '.' ||
+                strstr(entries[i]->d_name, '.rpm') != NULL)
             {
                 free(entries[i]);
                 continue;
