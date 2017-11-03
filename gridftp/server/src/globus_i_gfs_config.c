@@ -1159,19 +1159,47 @@ globus_l_gfs_config_load_config_dir(
         for(i = 0; i < count && result == GLOBUS_SUCCESS; i++)
         {
             char *                      full_path;
-            
-            /* skip hidden and . or ..
-             and files possibly created by updates .rpmsave or .rpmnew */
-            if(*entries[i]->d_name == '.' ||
-                strstr(entries[i]->d_name, '.rpm') != NULL)
+            char *                      filename;
+            char *                      fileext;
+            char *                      backupsuffix;
+
+            filename = entries[i]->d_name;
+
+
+            /* skip windows backup files (.bak) and backups created
+               by package managers (.rpmsave, .rpmnew, etc.) */
+            fileext = strrchr(filename, '.');
+            if(fileext &&
+                (! strcmp(fileext, ".bak")       ||
+                 ! strcmp(fileext, ".dpkg-dist") ||
+                 ! strcmp(fileext, ".dpkg-new")  ||
+                 ! strcmp(fileext, ".dpkg-old")  ||
+                 ! strcmp(fileext, ".rpmnew")    ||
+                 ! strcmp(fileext, ".rpmsave")))
             {
                 free(entries[i]);
                 continue;
             }
-            
+
+            /* skip unix backup files */
+            backupsuffix = strrchr(filename, '~');
+            if(backupsuffix && ! strcmp(backupsuffix, "~"))
+            {
+                free(entries[i]);
+                continue;
+            }
+
+            /* skip unix hidden files */
+            if(*filename == '.')
+            {
+                free(entries[i]);
+                continue;
+            }
+
+
             full_path = malloc(PATH_MAX);
             rc = snprintf(
-                full_path, PATH_MAX, "%s/%s", conf_dir, entries[i]->d_name);
+                full_path, PATH_MAX, "%s/%s", conf_dir, filename);
 
             if(!envs_only)
             {
