@@ -17,7 +17,7 @@ echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.c
 yum -y install gcc gcc-c++ curl make autoconf automake libtool \
                libtool-ltdl-devel openssl-devel git patch \
                'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)' \
-               openssl
+               openssl which
 # ^ openssl-devel doesn't bring in openssl on el7
 
 getent passwd builduser > /dev/null || useradd builduser
