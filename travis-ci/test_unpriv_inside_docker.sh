@@ -5,7 +5,7 @@ env | sort
 
 cd /gct
 autoreconf -if
-./configure --prefix=/gct --enable-myproxy
+./configure --prefix=/gct --enable-myproxy --enable-udt
 make
 make install
 
