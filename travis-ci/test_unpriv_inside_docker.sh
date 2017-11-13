@@ -7,7 +7,7 @@ env | sort
 
 cd /gct
 autoreconf -if
-args=(--prefix=/gct)
+args=(--prefix=/gct --enable-silent-rules)
 if [[ $COMPONENTS == *myproxy* ]]; then
     args+=(--enable-myproxy)
 fi
