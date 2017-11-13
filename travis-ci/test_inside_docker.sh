@@ -15,10 +15,12 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}
 # Broken mirror?
 echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
 
-# TODO: don't download openssh and we can get rid of curl
-packages=(gcc gcc-c++ curl make autoconf automake libtool \
-          libtool-ltdl-devel openssl openssl-devel git patch \
+packages=(gcc gcc-c++ make autoconf automake libtool \
+          libtool-ltdl-devel openssl openssl-devel git \
           'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)')
+if [[ $COMPONENTS == *ssh* ]]; then
+    packages+=(curl patch)
+fi
 if [[ $COMPONENTS == *udt* ]]; then
     packages+=(glib2 xz)
 fi

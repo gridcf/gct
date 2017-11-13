@@ -1,8 +1,8 @@
 sudo: required
 env:
     matrix:
-    - OS_VERSION=6 COMPONENTS=udt,myproxy
-    - OS_VERSION=7 COMPONENTS=udt,myproxy
+    - OS_VERSION=6 COMPONENTS=udt,myproxy,ssh
+    - OS_VERSION=7 COMPONENTS=udt,myproxy,ssh
     - OS_VERSION=6 COMPONENTS=gram5
     - OS_VERSION=7 COMPONENTS=gram5
 

@@ -6,8 +6,12 @@ id
 env | sort
 
 cd /gct
-autoreconf -if
 args=(--prefix=/gct --enable-silent-rules)
+if [[ $COMPONENTS != *ssh* ]]; then
+    rm -f prep-gsissh gsi_openssh.gt6.diff
+    args+=(--disable-gsi-openssh)
+fi
+autoreconf -if
 if [[ $COMPONENTS == *myproxy* ]]; then
     args+=(--enable-myproxy)
 fi
