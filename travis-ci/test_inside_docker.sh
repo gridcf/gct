@@ -1,6 +1,8 @@
 #!/bin/bash
 
 OS_VERSION=$1
+COMPONENTS=$2
+
 
 set -xe
 
@@ -14,15 +16,21 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}
 echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
 
 # TODO: don't download openssh and we can get rid of curl
-yum -y install gcc gcc-c++ curl make autoconf automake libtool \
-               libtool-ltdl-devel openssl-devel git patch \
-               'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)' \
-               openssl which glib2 xz
-# ^ openssl-devel doesn't bring in openssl on el7
+packages=(gcc gcc-c++ curl make autoconf automake libtool \
+          libtool-ltdl-devel openssl openssl-devel git patch \
+          'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)')
+if [[ $COMPONENTS == *udt* ]]; then
+    packages+=(glib2 xz)
+fi
+if [[ $COMPONENTS == *myproxy* ]]; then
+    packages+=(which)
+fi
+
+yum -y -d1 install "${packages[@]}"
 
 getent passwd builduser > /dev/null || useradd builduser
 chown -R builduser: /gct
-su builduser -c '/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh'
+su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $COMPONENTS"
 
 set +x
 echo "**** TESTS COMPLETED *****"

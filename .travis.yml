@@ -1,8 +1,10 @@
 sudo: required
 env:
     matrix:
-    - OS_VERSION=6
-    - OS_VERSION=7
+    - OS_VERSION=6 COMPONENTS=udt,myproxy
+    - OS_VERSION=7 COMPONENTS=udt,myproxy
+    - OS_VERSION=6 COMPONENTS=gram5
+    - OS_VERSION=7 COMPONENTS=gram5
 
 services:
     - docker
@@ -13,5 +15,5 @@ before_install:
     - sudo docker pull centos:centos${OS_VERSION}
 
 script:
-- travis-ci/setup_tests.sh
+- travis-ci/setup_tests.sh ${COMPONENTS}
 
