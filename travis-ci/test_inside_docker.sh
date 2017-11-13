@@ -15,18 +15,15 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}
 # Broken mirror?
 echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
 
-packages=(gcc gcc-c++ make autoconf automake libtool \
+packages=(gcc gcc-c++ make autoconf automake libtool patch \
           libtool-ltdl-devel openssl openssl-devel git \
           'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)')
-if [[ $COMPONENTS == *ssh* ]]; then
-    packages+=(curl patch)
-fi
-if [[ $COMPONENTS == *udt* ]]; then
-    packages+=(glib2 xz)
-fi
-if [[ $COMPONENTS == *myproxy* ]]; then
-    packages+=(which)
-fi
+
+set +e
+[[ $COMPONENTS == *ssh* ]]     && packages+=(curl)
+[[ $COMPONENTS == *udt* ]]     && packages+=(glib2 xz)
+[[ $COMPONENTS == *myproxy* ]] && packages+=(which)
+set -e
 
 yum -y -d1 install "${packages[@]}"
 

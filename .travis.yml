@@ -15,5 +15,5 @@ before_install:
     - sudo docker pull centos:centos${OS_VERSION}
 
 script:
-- travis-ci/setup_tests.sh ${COMPONENTS}
+- travis-ci/setup_tests.sh
 
