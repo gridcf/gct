@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OS_VERSION=$1
+IMAGE=$1
 COMPONENTS=$2
 
 
@@ -10,10 +10,14 @@ set -xe
 yum clean all
 
 # First, install all the needed packages.
-rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
+if [[ $IMAGE == centos* ]]; then
+    # "centos:centos7" -> "7"
+    OS_VERSION=${IMAGE#centos:centos}
+    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
 
-# Broken mirror?
-echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
+    # Broken mirror?
+    echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
+fi
 
 packages=(gcc gcc-c++ make autoconf automake libtool patch \
           libtool-ltdl-devel openssl openssl-devel git \
@@ -23,13 +27,14 @@ set +e
 [[ $COMPONENTS == *ssh* ]]     && packages+=(curl)
 [[ $COMPONENTS == *udt* ]]     && packages+=(glib2 xz)
 [[ $COMPONENTS == *myproxy* ]] && packages+=(which)
+[[ $COMPONENTS == *gram* ]]    && packages+=('perl(Pod::Html)')
 set -e
 
 yum -y -d1 install "${packages[@]}"
 
 getent passwd builduser > /dev/null || useradd builduser
 chown -R builduser: /gct
-su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $COMPONENTS"
+su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $IMAGE $COMPONENTS"
 
 set +x
 echo "**** TESTS COMPLETED *****"

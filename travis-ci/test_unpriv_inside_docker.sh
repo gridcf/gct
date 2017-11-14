@@ -1,6 +1,7 @@
 #!/bin/bash
 
-COMPONENTS=$1
+IMAGE=$1
+COMPONENTS=$2
 
 id
 env | sort
@@ -20,6 +21,7 @@ else
 fi
 [[ $COMPONENTS == *myproxy* ]] && args+=(--enable-myproxy)
 [[ $COMPONENTS == *udt* ]]     && args+=(--enable-udt)
+[[ $IMAGE      == *fedora* ]]  && args+=(LIBS='-ldl')
 set -e
 
 autoreconf -if
