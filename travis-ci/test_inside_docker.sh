@@ -9,16 +9,6 @@ set -xe
 # Clean the yum cache
 yum clean all
 
-# First, install all the needed packages.
-if [[ $IMAGE == centos* ]]; then
-    # "centos:centos7" -> "7"
-    OS_VERSION=${IMAGE#centos:centos}
-    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
-
-    # Broken mirror?
-    echo "exclude=mirror.beyondhosting.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
-fi
-
 packages=(gcc gcc-c++ make autoconf automake libtool patch \
           libtool-ltdl-devel openssl openssl-devel git \
           'perl(Test::More)' 'perl(File::Spec)' 'perl(URI)' \
