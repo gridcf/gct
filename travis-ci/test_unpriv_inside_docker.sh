@@ -25,15 +25,33 @@ fi
 set -e
 
 echo '================================================================================'
-time autoreconf -if
+time autoreconf -i
 echo '================================================================================'
 time ./configure "${args[@]}"
 echo '================================================================================'
 time make -j
 echo '================================================================================'
 time make -j install
-
 export PATH=/gct/bin:$PATH LD_LIBRARY_PATH=/gct/lib:$LD_LIBRARY_PATH
-
 echo '================================================================================'
 time make -j check | tee check.out
+echo '================================================================================'
+
+set +x
+echo '===== TESTS COMPLETED =========================================================='
+grep '^FAIL:\|^PASS:\|^SKIP:\|^XFAIL:\|^XPASS:\|^ERROR:' check.out  ||  \
+    {
+        echo "Failure: no apparent test output.  Full log:"
+        cat check.out
+        exit 1
+    }
+count=`grep -c '^FAIL:\|^ERROR:' check.out` || :
+if [[ $count -ge 1 ]]; then
+    echo "**** $count TESTS FAILED ****"
+    find . -wholename \*/test/test-suite.log | while read logfile; do
+        echo "=== $logfile ==="
+        cat "$logfile"
+        echo
+    done
+    exit 1
+fi
