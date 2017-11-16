@@ -2,7 +2,11 @@
 
 DIRT_BRANCH_DEF="$(git rev-parse --show-toplevel)/branch.def"
 current_branch="$(git branch | awk "/\*/ {print \$2}")"
-current_branch_id="$(awk "/$current_branch/ {print \$2}" < "$DIRT_BRANCH_DEF")"
+if expr + "$current_branch" : ".*[^a-zA-Z0-9_-]" >/dev/null; then
+    current_branch_id=0
+else
+    current_branch_id="$(awk "/$current_branch/ {print \$2}" < "$DIRT_BRANCH_DEF")"
+fi
 current_timestamp="$(git log -n 1 --pretty=format:%ct%n .)"
 
 dirtfile="$(dirname "$2")/$(basename "$2" .in)"
