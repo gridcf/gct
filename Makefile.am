@@ -99,6 +99,7 @@ osx/$(PACKAGE)-$(VERSION).pkg: $(GT_TARGETS_OSX_PKG) osx/distribution.xml
 		$@
 osx-pkgs: osx/$(PACKAGE)-$(VERSION).pkg
 rpm-pkgs: $(GT_TARGETS_RPM)
+tarballs: $(GT_ALL_TARGETS_DIST)
 
 DOC_STAMPS =
 DOC_PHONY = 
