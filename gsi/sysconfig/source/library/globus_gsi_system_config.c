@@ -892,8 +892,34 @@ globus_gsi_sysconfig_dir_exists_win32(
  *
  */
 globus_result_t
-globus_gsi_sysconfig_check_keyfile_win32(
+globus_gsi_sysconfig_check_keyfile_uid_win32(
     const char *                        filename)
+{
+    return globus_gsi_sysconfig_check_keyfile_uid_win32(filename, -1);
+}
+
+/**
+ * @brief Win32 - Check File Status for Key
+ * @ingroup globus_i_gsi_sysconfig_win32
+ * @details
+ * This is a convenience function used to check the status of a 
+ * private key file.  The desired status is only the current user has
+ * ownership and read permissions, everyone else should not be able
+ * to access it.
+ * 
+ * @param filename
+ *        The name of the file to check the status of
+ *
+ * @return 
+ *        GLOBUS_SUCCESS if the status of the file was able
+ *        to be determined.  Otherwise, an error object
+ *        identifier
+ *
+ */
+globus_result_t
+globus_gsi_sysconfig_check_keyfile_win32(
+    const char *                        filename,
+    uid_t                               uid)
 {
     struct stat                         stx;
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -1007,6 +1033,32 @@ globus_gsi_sysconfig_check_keyfile_win32(
 globus_result_t
 globus_gsi_sysconfig_check_certfile_win32(
     const char *                        filename)
+{
+    return globus_gsi_sysconfig_check_certfile_uid_win32(filename, -1);
+}
+
+/**
+ * @brief Win32 - Check File Status for Cert
+ * @ingroup globus_i_gsi_sysconfig_win32
+ * @details
+ * This is a convenience function used to check the status of a 
+ * certificate file.  The desired status is the current user has
+ * ownership and read/write permissions, while group and others only
+ * have read permissions.
+ * 
+ * @param filename
+ *        The name of the file to check the status of
+ *
+ * @return 
+ *        GLOBUS_SUCCESS if the status of the file was able
+ *        to be determined.  Otherwise, an error object
+ *        identifier
+ *
+ */
+globus_result_t
+globus_gsi_sysconfig_check_certfile_uid_win32(
+    const char *                        filename,
+    uid_t                               uid)
 {
     struct stat                         stx;
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -4503,6 +4555,34 @@ globus_result_t
 globus_gsi_sysconfig_check_keyfile_unix(
     const char *                        filename)
 {
+    return globus_gsi_sysconfig_check_keyfile_uid_unix(filename, geteuid());
+}
+
+/**
+ * @brief UNIX - Check File Status for Key
+ * @ingroup globus_gsi_sysconfig_unix
+ * @details
+ * This is a convenience function used to check the status of a 
+ * private key file.  The desired status is only the specified user has
+ * ownership and read permissions, everyone else should not be able
+ * to access it.
+ * 
+ * @param filename
+ *        The name of the file to check the status of
+ * @param uid
+ *        The owner of the file to check the status of
+ *
+ * @return 
+ *        GLOBUS_SUCCESS if the status of the file was able
+ *        to be determined.  Otherwise, an error object
+ *        identifier
+ *
+ */
+globus_result_t
+globus_gsi_sysconfig_check_keyfile_uid_unix(
+    const char *                        filename,
+    uid_t                               uid)
+{
     struct stat                         stx;
     globus_result_t                     result = GLOBUS_SUCCESS;
 
@@ -4557,7 +4637,7 @@ globus_gsi_sysconfig_check_keyfile_unix(
      */
     RAND_add((void*)&stx,sizeof(stx),2);
 
-    if (stx.st_uid != geteuid())
+    if (stx.st_uid != uid)
     {
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
@@ -4613,6 +4693,7 @@ globus_gsi_sysconfig_check_keyfile_unix(
     return result;
 }
 
+
 /**
  * @brief UNIX - Check File Status for Cert
  * @ingroup globus_gsi_sysconfig_unix
@@ -4634,6 +4715,35 @@ globus_gsi_sysconfig_check_keyfile_unix(
 globus_result_t
 globus_gsi_sysconfig_check_certfile_unix(
     const char *                        filename)
+{
+    return globus_gsi_sysconfig_check_certfile_uid_unix(filename, geteuid());
+}
+
+
+/**
+ * @brief UNIX - Check File Status for Cert
+ * @ingroup globus_gsi_sysconfig_unix
+ * @details
+ * This is a convenience function used to check the status of a 
+ * certificate file.  The desired status is the current user has
+ * ownership and read/write permissions, while group and others only
+ * have read permissions.
+ * 
+ * @param filename
+ *        The name of the file to check the status of
+ * @param uid
+ *        The user id that may be the owner of the file
+ *
+ * @return 
+ *        GLOBUS_SUCCESS if the status of the file was able
+ *        to be determined.  Otherwise, an error object
+ *        identifier
+ *
+ */
+globus_result_t
+globus_gsi_sysconfig_check_certfile_uid_unix(
+    const char *                        filename,
+    uid_t                               uid)
 {
     struct stat                         stx;
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -4688,7 +4798,7 @@ globus_gsi_sysconfig_check_certfile_unix(
      */
     RAND_add((void*)&stx,sizeof(stx),2);
 
-    if (stx.st_uid != geteuid())
+    if (stx.st_uid != uid)
     {
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,

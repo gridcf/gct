@@ -1,3 +1,9 @@
+globus-gridftp-server-control (6.1-1+gt6.@distro@) @distro@; urgency=low
+
+  * Don't error if acquire_cred fails when vhost env is set
+
+ -- Globus Toolkit <support@globus.org>  Wed, 01 Nov 2017 20:29:37 +0000
+
 globus-gridftp-server-control (6.0-1+gt6.@distro@) @distro@; urgency=low
 
   * Add support for control channel over TLS

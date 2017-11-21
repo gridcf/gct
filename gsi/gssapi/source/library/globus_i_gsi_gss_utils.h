@@ -189,10 +189,11 @@ extern globus_bool_t                    globus_i_gssapi_active;
                     "%s exiting\n", \
                     __func__))
 
-extern int                        globus_i_gsi_gssapi_min_tls_protocol;
-extern int                        globus_i_gsi_gssapi_max_tls_protocol;
+extern int                              globus_i_gsi_gssapi_min_tls_protocol;
+extern int                              globus_i_gsi_gssapi_max_tls_protocol;
 extern const char *                     globus_i_gsi_gssapi_cipher_list;
 extern globus_bool_t                    globus_i_gsi_gssapi_server_cipher_order;
+extern uid_t                            globus_i_gsi_gssapi_vhost_cred_owner;
 
 typedef enum
 {
@@ -241,7 +242,8 @@ globus_i_gsi_gss_create_cred(
     OM_uint32 *                         minor_status,
     const gss_cred_usage_t              cred_usage,
     gss_cred_id_t *                     output_cred_handle_P,
-    globus_gsi_cred_handle_t *          cred_handle);
+    globus_gsi_cred_handle_t *          cred_handle,
+    globus_bool_t                       sni_context);
 
 int globus_i_gsi_gss_verify_extensions_callback(
     globus_gsi_callback_data_t          callback_data,
@@ -296,7 +298,8 @@ OM_uint32
 globus_i_gsi_gssapi_init_ssl_context(
     OM_uint32 *                         minor_status,
     gss_cred_id_t                       credential,
-    globus_i_gsi_gss_context_type_t     anon_ctx);
+    globus_i_gsi_gss_context_type_t     anon_ctx,
+    globus_bool_t                       sni_context);
 
 globus_result_t
 globus_i_gsi_gssapi_openssl_error_result(

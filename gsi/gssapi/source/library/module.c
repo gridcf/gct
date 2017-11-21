@@ -33,6 +33,7 @@
 #define strncasecmp strnicmp
 #else
 #include <strings.h>
+#include <pwd.h>
 #endif
 
 static int globus_l_gsi_gssapi_activate(void);
@@ -76,6 +77,10 @@ int                               globus_i_gsi_gssapi_max_tls_protocol;
  * Choose the default set of ciphers to support
  */
 const char *                            globus_i_gsi_gssapi_cipher_list;
+/**
+ * @brief VHost cert owner
+ */
+uid_t                                   globus_i_gsi_gssapi_vhost_cred_owner;
 
 /**
  * @brief Honor Server SSL Cipher List Order
@@ -252,6 +257,7 @@ globus_l_gsi_gssapi_parse_config(
         "GLOBUS_GSSAPI_CIPHERS",
         "GLOBUS_GSSAPI_SERVER_CIPHER_ORDER",
         "GLOBUS_GSSAPI_BACKWARD_COMPATIBLE_MIC",
+        "GLOBUS_GSSAPI_VHOST_CRED_OWNER",
         NULL
     };
 
@@ -348,6 +354,8 @@ globus_l_gsi_gssapi_activate(void)
             goto strdup_default_data_fail;
         }
     }
+    /* Don't allow an environment override */
+    globus_libc_unsetenv("GLOBUS_GSSAPI_VHOST_CRED_OWNER");
     rc = globus_l_gsi_gssapi_parse_config(gsi_conf_data);
     if (rc != GLOBUS_SUCCESS)
     {
@@ -498,6 +506,30 @@ globus_l_gsi_gssapi_activate(void)
             globus_i_gsi_gssapi_server_cipher_order = GLOBUS_TRUE;
         }
     }
+#ifndef WIN32
+    tmp_string = globus_module_getenv("GLOBUS_GSSAPI_VHOST_CRED_OWNER");
+    if(tmp_string != GLOBUS_NULL)
+    {
+        long                            buflen = -1;
+        buflen = sysconf(_SC_GETPW_R_SIZE_MAX);
+
+        assert(buflen > 0);
+        char buffer[buflen];
+        struct passwd pwd = {0};
+        struct passwd *res = NULL;
+        
+        rc = getpwnam_r(tmp_string, &pwd, buffer, (size_t) buflen, &res);
+
+        if (rc == 0)
+        {
+            globus_i_gsi_gssapi_vhost_cred_owner = pwd.pw_uid;
+        }
+        else
+        {
+            globus_i_gsi_gssapi_vhost_cred_owner = 0;
+        }
+    }
+#endif
 
     if (OPENSSL_VERSION_NUMBER < 0x10100000L)
     {

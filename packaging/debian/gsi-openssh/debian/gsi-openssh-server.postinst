@@ -4,7 +4,7 @@ setup_sshd_user() {
         fi
 }
 
-if [ "$action" = configure ]; then
+if [ "$1" = configure ]; then
         setup_sshd_user
 fi
 

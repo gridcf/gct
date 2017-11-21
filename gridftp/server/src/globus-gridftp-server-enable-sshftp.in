@@ -70,6 +70,10 @@ fi
 
 if [ -f \$GLOBUS_LOCATION/etc/globus-user-env.sh ]; then
     . \$GLOBUS_LOCATION/etc/globus-user-env.sh
+elif [ -f \$GLOBUS_LOCATION/share/globus-user-env.sh ]; then
+    . \$GLOBUS_LOCATION/share/globus-user-env.sh
+elif [ -f \$GLOBUS_LOCATION/share/globus/globus-user-env.sh ]; then
+    . \$GLOBUS_LOCATION/share/globus/globus-user-env.sh
 fi
 
 #export GLOBUS_TCP_PORT_RANGE=50000,50100

@@ -6,7 +6,7 @@ Name:		globus-gridftp-server
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	12.3
+Version:	12.4
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GridFTP Server
@@ -230,6 +230,9 @@ fi
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Nov 08 2017 Globus Toolkit <support@globus.org> - 12.4-1
+- Improve search for user env in enable-sshftp script
+
 * Mon Sep 25 2017 Globus Toolkit <support@globus.org> - 12.3-1
 - preloaded module typo fix
 

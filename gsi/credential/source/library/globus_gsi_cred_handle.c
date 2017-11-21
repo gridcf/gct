@@ -24,13 +24,6 @@
 #include "openssl/err.h"
 #include <math.h>
 
-
-#if OPENSSL_VERSION_NUMBER < 0x0090801fL
-#define GT_SK_UNSHIFT_CAST (char *)
-#else
-#define GT_SK_UNSHIFT_CAST
-#endif
-
 #define GLOBUS_GSI_CRED_HANDLE_MALLOC_ERROR(_LENGTH_) \
     globus_error_put(globus_error_wrap_errno_error( \
         GLOBUS_GSI_CREDENTIAL_MODULE, \
@@ -634,6 +627,15 @@ globus_gsi_cred_get_cert(
         goto error_exit;
     }
 
+    if (handle->cert == NULL)
+    {
+        GLOBUS_GSI_CRED_ERROR_RESULT(
+            result,
+            GLOBUS_GSI_CRED_ERROR_WITH_CRED_PRIVATE_KEY,
+            (_GCRSL("The handle's cert is NULL")));
+
+        goto error_exit;
+    }
     *cert = X509_dup(handle->cert);
 
     result = GLOBUS_SUCCESS;
@@ -1099,7 +1101,7 @@ globus_gsi_cred_get_X509_identity_name(
         cert_chain = sk_X509_dup(handle->cert_chain);
     }
 
-    sk_X509_unshift(cert_chain, GT_SK_UNSHIFT_CAST handle->cert);
+    sk_X509_unshift(cert_chain, handle->cert);
 
     result = globus_gsi_cert_utils_get_base_name(identity, cert_chain);
 
@@ -1211,7 +1213,7 @@ globus_gsi_cred_get_subject_name(
 globus_result_t
 globus_gsi_cred_get_policies(
     globus_gsi_cred_handle_t            handle,
-    STACK **                            policies)
+    STACK_OF(OPENSSL_STRING) **         policies)
 {
     int                                 index;
     unsigned char *                     policy_string = NULL;
@@ -1232,11 +1234,7 @@ globus_gsi_cred_get_policies(
         goto exit;
     }
 
-#if OPENSSL_VERSION_NUMBER < 0x10000000L 
-    if((*policies = sk_new_null()) == NULL)
-#else
     if((*policies = sk_OPENSSL_STRING_new_null()) == NULL)
-#endif
     {
         GLOBUS_GSI_CRED_OPENSSL_ERROR_RESULT(
             result,
@@ -1310,11 +1308,7 @@ globus_gsi_cred_get_policies(
         memcpy(final_policy_string, policy_string, policy_string_length);
         final_policy_string[policy_string_length] = 0;
 
-#if OPENSSL_VERSION_NUMBER < 0x10000000L 
-        if(sk_push(*policies, final_policy_string) == 0)
-#else
         if(sk_OPENSSL_STRING_push(*policies, (OPENSSL_STRING)final_policy_string) == 0)
-#endif
         {
             GLOBUS_GSI_CRED_OPENSSL_ERROR_RESULT(
                 result,
@@ -1346,11 +1340,7 @@ globus_gsi_cred_get_policies(
 
     if(*policies != NULL)
     {
-#if OPENSSL_VERSION_NUMBER < 0x10000000L 
-        sk_pop_free(*policies, free);
-#else
         sk_OPENSSL_STRING_pop_free(*policies, (void (*) (char *)) free);
-#endif
     }
     *policies = NULL;
     
@@ -1745,18 +1735,18 @@ globus_gsi_cred_verify_cert_chain(
     
     if (X509_STORE_load_locations(cert_store, NULL, cert_dir))
     {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+        /* override the check_issued with our version */
+        cert_store->check_issued = globus_gsi_callback_check_issued;
+#else
+        X509_STORE_set_check_issued(cert_store, globus_gsi_callback_check_issued);
+#endif
+
         store_context = X509_STORE_CTX_new();
         X509_STORE_CTX_init(store_context, cert_store, cert,
                             cred_handle->cert_chain);
         X509_STORE_CTX_set_depth(store_context,
                                  GLOBUS_GSI_CALLBACK_VERIFY_DEPTH);
-
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
-        /* override the check_issued with our version */
-        store_context->check_issued = globus_gsi_callback_check_issued;
-#else
-        X509_STORE_set_check_issued(X509_STORE_CTX_get0_store(store_context), globus_gsi_callback_check_issued);
-#endif
 
         globus_gsi_callback_get_X509_STORE_callback_data_index(
             &callback_data_index);
@@ -1937,18 +1927,18 @@ globus_gsi_cred_verify_cert_chain_when(
     
     if (X509_STORE_load_locations(cert_store, NULL, cert_dir))
     {
+        /* override the check_issued with our version */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+        cert_store->check_issued = globus_gsi_callback_check_issued;
+#else
+        X509_STORE_set_check_issued(cert_store, globus_gsi_callback_check_issued);
+#endif
+
         store_context = X509_STORE_CTX_new();
         X509_STORE_CTX_init(store_context, cert_store, cert,
                             cred_handle->cert_chain);
         X509_STORE_CTX_set_depth(store_context,
                                  GLOBUS_GSI_CALLBACK_VERIFY_DEPTH);
-
-        /* override the check_issued with our version */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
-        store_context->check_issued = globus_gsi_callback_check_issued;
-#else
-        X509_STORE_set_check_issued(X509_STORE_CTX_get0_store(store_context), globus_gsi_callback_check_issued);
-#endif
 
         globus_gsi_callback_get_X509_STORE_callback_data_index(
             &callback_data_index);

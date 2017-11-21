@@ -256,6 +256,7 @@ globus_i_gsi_gss_create_and_fill_context(
     int                                 cb_index = -1;
     OM_uint32                           local_minor_status;
     char *                              certdir = NULL;
+    globus_bool_t                       allocated_context = GLOBUS_FALSE;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
@@ -276,6 +277,7 @@ globus_i_gsi_gss_create_and_fill_context(
         memset(context, 0, sizeof(gss_ctx_id_desc));
         *context_handle_P = context;
         context->ctx_flags = 0;
+        allocated_context = GLOBUS_TRUE;
     }
     else
     {
@@ -379,6 +381,35 @@ globus_i_gsi_gss_create_and_fill_context(
                 (gss_cred_id_t *) &context->cred_handle, 
                 NULL, 
                 NULL);
+
+            /* OK if that failed, if we are using SNI */
+            if (major_status != GSS_S_COMPLETE
+                && cred_usage != GSS_C_INITIATE
+                && context->sni_credentials == NULL
+                && getenv("X509_VHOST_CRED_DIR") != NULL)
+            {
+                globus_gsi_cred_handle_t    cred_handle = NULL;
+
+                local_result = globus_gsi_cred_handle_init(&cred_handle, NULL);
+                if (local_result != GLOBUS_SUCCESS)
+                {
+                    local_minor_status = local_result;
+                    major_status = GSS_S_FAILURE;
+                }
+                else
+                {
+                    major_status = globus_i_gsi_gss_create_cred(
+                        &local_minor_status,
+                        cred_usage,
+                        &context->cred_handle,
+                        &cred_handle,
+                        GLOBUS_TRUE);
+                    if (major_status != GSS_S_COMPLETE && cred_handle != NULL)
+                    {
+                        globus_gsi_cred_handle_destroy(cred_handle);
+                    }
+                }
+            }
         }
         
         if (GSS_ERROR(major_status))
@@ -406,11 +437,15 @@ globus_i_gsi_gss_create_and_fill_context(
         {
             size_t                      sni_creds_len = 0;
 
-            globus_i_gss_read_vhost_cred_dir(
-                &local_minor_status,
+            major_status = globus_i_gss_read_vhost_cred_dir(
+                minor_status,
                 NULL,
                 &context->sni_credentials,
                 &context->sni_credentials_count);
+            if(major_status != GLOBUS_SUCCESS)
+            {
+                goto free_callback_data;
+            }
         }
         if (context->sni_credentials_count > 0)
         {
@@ -471,11 +506,8 @@ globus_i_gsi_gss_create_and_fill_context(
         goto free_cert_dir;
     }
 
-    if(certdir)
-    {
-        free(certdir);
-        certdir = NULL;
-    }
+    free(certdir);
+    certdir = NULL;
     
     if(req_flags & GSS_C_GLOBUS_ALLOW_MISSING_SIGNING_POLICY)
     {
@@ -700,6 +732,7 @@ globus_i_gsi_gss_create_and_fill_context(
     if(context->gss_wbio)
     {
         BIO_free(context->gss_wbio);
+        context->gss_wbio = NULL;
     }
 
  free_rbio:
@@ -707,33 +740,34 @@ globus_i_gsi_gss_create_and_fill_context(
     if(context->gss_rbio)
     {
         BIO_free(context->gss_rbio);
+        context->gss_rbio = NULL;
     }
 
  free_cert_dir:
     
-    if(certdir)
-    {
-        globus_libc_free(certdir);
-    }
+    free(certdir);
+    certdir = NULL;
 
     if(context->cred_handle && context->cred_obtained)
     {
         gss_release_cred(&local_minor_status, 
                          (gss_cred_id_t *) &context->cred_handle);
+        context->cred_handle = NULL;
     }
 
  free_callback_data:
-
     if(context->callback_data)
     {
         globus_gsi_callback_data_destroy(context->callback_data);
+        context->callback_data = NULL;
     }
 
  free_proxy_handle:
     
-    if(context->proxy_handle)
+    if(context->proxy_handle != NULL)
     {
         globus_gsi_proxy_handle_destroy(context->proxy_handle);
+        context->proxy_handle = NULL;
     }
 
  free_peer_cred_handle:
@@ -741,20 +775,19 @@ globus_i_gsi_gss_create_and_fill_context(
     if(context->peer_cred_handle->cred_handle)
     {
         globus_gsi_cred_handle_destroy(context->peer_cred_handle->cred_handle);
+        context->peer_cred_handle->cred_handle = NULL;
     }
 
  free_peer_cred:
 
-    if(context->peer_cred_handle)
-    {
-        globus_libc_free(context->peer_cred_handle);
-    }
+    free(context->peer_cred_handle);
+    context->peer_cred_handle = NULL;
 
  free_context:
 
-    if(context)
+    if(allocated_context)
     {
-        globus_libc_free(context);
+        free(context);
         *context_handle_P = NULL;
     }
 
@@ -1435,7 +1468,8 @@ globus_i_gsi_gss_create_anonymous_cred(
     major_status = globus_i_gsi_gssapi_init_ssl_context(
         &local_minor_status,
         (gss_cred_id_t) newcred,
-        GLOBUS_I_GSI_GSS_ANON_CONTEXT);
+        GLOBUS_I_GSI_GSS_ANON_CONTEXT,
+        GLOBUS_FALSE);
     if(GSS_ERROR(major_status))
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1509,7 +1543,8 @@ globus_i_gsi_gss_cred_read_bio(
     major_status = globus_i_gsi_gss_create_cred(&local_minor_status,
                                                 cred_usage,
                                                 cred_id_handle, 
-                                                &local_cred_handle);
+                                                &local_cred_handle,
+                                                GLOBUS_FALSE);
     
     if(GSS_ERROR(major_status))
     {
@@ -1542,6 +1577,7 @@ globus_i_gsi_gss_cred_read(
     globus_gsi_cred_handle_t            local_cred_handle;
     OM_uint32                           local_minor_status;
     OM_uint32                           major_status = GSS_S_COMPLETE;
+    int                                 rc = 0;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
@@ -1555,6 +1591,7 @@ globus_i_gsi_gss_cred_read(
         major_status = GSS_S_FAILURE;
         goto exit;
     }
+
 
     local_result = globus_gsi_cred_read(local_cred_handle, 
                                         (X509_NAME *) desired_subject);
@@ -1570,7 +1607,8 @@ globus_i_gsi_gss_cred_read(
     major_status = globus_i_gsi_gss_create_cred(&local_minor_status,
                                                 cred_usage,
                                                 cred_handle, 
-                                                &local_cred_handle);
+                                                &local_cred_handle,
+                                                GLOBUS_FALSE);
     if(GSS_ERROR(major_status))
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1610,7 +1648,8 @@ globus_i_gsi_gss_create_cred(
     OM_uint32 *                         minor_status,
     const gss_cred_usage_t              cred_usage,
     gss_cred_id_t *                     output_cred_handle_P,
-    globus_gsi_cred_handle_t *          cred_handle)
+    globus_gsi_cred_handle_t *          cred_handle,
+    globus_bool_t                       sni_context)
 {
     gss_cred_id_desc **                 output_cred_handle = 
         (gss_cred_id_desc **) output_cred_handle_P;
@@ -1656,7 +1695,8 @@ globus_i_gsi_gss_create_cred(
     major_status = globus_i_gsi_gssapi_init_ssl_context(
         &local_minor_status,
         (gss_cred_id_t) newcred,
-        GLOBUS_I_GSI_GSS_DEFAULT_CONTEXT);
+        GLOBUS_I_GSI_GSS_DEFAULT_CONTEXT,
+        sni_context);
     if(GSS_ERROR(major_status))
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1666,6 +1706,10 @@ globus_i_gsi_gss_create_cred(
         goto error_exit;
     }
 
+    if (sni_context)
+    {
+        goto skip_for_sni;
+    }
     local_result = globus_gsi_cred_get_cert_type(
         newcred->cred_handle, 
         &cert_type);
@@ -1740,6 +1784,7 @@ globus_i_gsi_gss_create_cred(
     }
             
     
+skip_for_sni:
     *output_cred_handle = newcred;
 
  error_exit:
@@ -2191,7 +2236,8 @@ OM_uint32
 globus_i_gsi_gssapi_init_ssl_context(
     OM_uint32 *                         minor_status,
     gss_cred_id_t                       credential,
-    globus_i_gsi_gss_context_type_t     anon_ctx)
+    globus_i_gsi_gss_context_type_t     anon_ctx,
+    globus_bool_t                       sni_context)
 {
     X509 *                              client_cert = NULL;
     EVP_PKEY *                          client_key = NULL;
@@ -2351,114 +2397,117 @@ globus_i_gsi_gssapi_init_ssl_context(
     
     if(anon_ctx != GLOBUS_I_GSI_GSS_ANON_CONTEXT)
     {
-        local_result = globus_gsi_cred_get_cert(cred_handle->cred_handle,
-                                                &client_cert);
-        if(local_result != GLOBUS_SUCCESS)
+        if (!sni_context)
         {
-            GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
-                minor_status, local_result,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        if(!client_cert)
-        {
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
-                (_GGSL("The GSI credential's certificate has not been set.")));
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        if(!SSL_CTX_use_certificate(cred_handle->ssl_context, 
-                                    client_cert))
-        {
-            GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
-                (_GGSL("Couldn't set the certificate to "
-                 "be used for the SSL context")));
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        local_result = globus_gsi_cred_get_key(cred_handle->cred_handle,
-                                               &client_key);
-        if(local_result != GLOBUS_SUCCESS)
-        {
-            GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
-                minor_status, local_result,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        if(!client_key)
-        {
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
-                (_GGSL("The GSI credential's private key has not been set.")));
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        if(!SSL_CTX_use_PrivateKey(cred_handle->ssl_context, client_key))
-        {
-            GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
-                (_GGSL("Couldn't set the private key to "
-                 "be used for the SSL context")));
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-            
-        local_result = globus_gsi_cred_get_cert_chain(cred_handle->cred_handle,
-                                                      &client_cert_chain);
-        if(local_result != GLOBUS_SUCCESS)
-        {
-            GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
-                minor_status, local_result,
-                GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
-            major_status = GSS_S_FAILURE;
-            goto exit;
-        }
-
-        if(client_cert_chain)
-        {
-            int                         index;
-            X509 *                      tmp_cert = NULL;
-            for(index = 0; index < sk_X509_num(client_cert_chain); ++index)
+            local_result = globus_gsi_cred_get_cert(cred_handle->cred_handle,
+                                                    &client_cert);
+            if(local_result != GLOBUS_SUCCESS)
             {
-                tmp_cert = X509_dup(sk_X509_value(client_cert_chain, index));
-                if(!X509_STORE_add_cert(
-                       SSL_CTX_get_cert_store(cred_handle->ssl_context),
-                       tmp_cert))
+                GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                    minor_status, local_result,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            if(!client_cert)
+            {
+                GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
+                    (_GGSL("The GSI credential's certificate has not been set.")));
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            if(!SSL_CTX_use_certificate(cred_handle->ssl_context, 
+                                        client_cert))
+            {
+                GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
+                    (_GGSL("Couldn't set the certificate to "
+                     "be used for the SSL context")));
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            local_result = globus_gsi_cred_get_key(cred_handle->cred_handle,
+                                                   &client_key);
+            if(local_result != GLOBUS_SUCCESS)
+            {
+                GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                    minor_status, local_result,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            if(!client_key)
+            {
+                GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
+                    (_GGSL("The GSI credential's private key has not been set.")));
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            if(!SSL_CTX_use_PrivateKey(cred_handle->ssl_context, client_key))
+            {
+                GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
+                    (_GGSL("Couldn't set the private key to "
+                     "be used for the SSL context")));
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+                
+            local_result = globus_gsi_cred_get_cert_chain(cred_handle->cred_handle,
+                                                          &client_cert_chain);
+            if(local_result != GLOBUS_SUCCESS)
+            {
+                GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                    minor_status, local_result,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+
+            if(client_cert_chain)
+            {
+                int                         index;
+                X509 *                      tmp_cert = NULL;
+                for(index = 0; index < sk_X509_num(client_cert_chain); ++index)
                 {
+                    tmp_cert = X509_dup(sk_X509_value(client_cert_chain, index));
+                    if(!X509_STORE_add_cert(
+                           SSL_CTX_get_cert_store(cred_handle->ssl_context),
+                           tmp_cert))
+                    {
+                        /* need to free to reduce ref count */
+                        X509_free(tmp_cert);
+                        if ((ERR_GET_REASON(ERR_peek_error()) ==
+                             X509_R_CERT_ALREADY_IN_HASH_TABLE))
+                        {
+                            ERR_clear_error();
+                            break;
+                        }
+                        else
+                        {
+                            GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
+                                minor_status,
+                                GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
+                                (_GGSL("Couldn't add certificate to the SSL context's "
+                                 "certificate store.")));
+                            major_status = GSS_S_FAILURE;
+                            goto exit;
+                        }
+                    }
                     /* need to free to reduce ref count */
                     X509_free(tmp_cert);
-                    if ((ERR_GET_REASON(ERR_peek_error()) ==
-                         X509_R_CERT_ALREADY_IN_HASH_TABLE))
-                    {
-                        ERR_clear_error();
-                        break;
-                    }
-                    else
-                    {
-                        GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
-                            minor_status,
-                            GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
-                            (_GGSL("Couldn't add certificate to the SSL context's "
-                             "certificate store.")));
-                        major_status = GSS_S_FAILURE;
-                        goto exit;
-                    }
                 }
-                /* need to free to reduce ref count */
-                X509_free(tmp_cert);
             }
         }
     }
@@ -2773,6 +2822,7 @@ globus_l_gsi_gss_servername_callback(
     X509                               *client_cert = NULL;
     EVP_PKEY                           *client_key = NULL;
     STACK_OF(X509)                     *client_cert_chain = NULL;
+    globus_gsi_cert_utils_cert_type_t   cert_type;
     
     servername = SSL_get_servername(s, TLSEXT_NAMETYPE_host_name);
     if(GLOBUS_I_GSI_GSSAPI_DEBUG(3))
@@ -2785,8 +2835,22 @@ globus_l_gsi_gss_servername_callback(
 
     if (servername == NULL)
     {
-        /* No SNI, use default credential */
-        return SSL_TLSEXT_ERR_OK;
+        X509 *                          default_cert = NULL;
+
+        if (globus_gsi_cred_get_cert(
+                context->cred_handle->cred_handle,
+                &default_cert) == GLOBUS_SUCCESS)
+        {
+            /* No SNI, but we have a default credential */
+            X509_free(default_cert);
+            return SSL_TLSEXT_ERR_OK;
+        }
+        else
+        {
+            /* No SNI, pick the first one we loaded */
+            credential = context->sni_credentials[0];
+            goto use_any;
+        }
     }
     context->sni_servername = strdup(servername);
 
@@ -2836,6 +2900,7 @@ globus_l_gsi_gss_servername_callback(
         return SSL_TLSEXT_ERR_NOACK;
     }
 
+use_any:
     /* Replace the credential used by the context with the newly acquired
      * one
      */

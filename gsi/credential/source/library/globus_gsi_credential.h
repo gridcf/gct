@@ -165,9 +165,6 @@ typedef struct globus_l_gsi_cred_handle_s *
  *
  * @see globus_gsi_cred_handle_init
  */
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
-#define STACK STACK_OF(OPENSSL_STRING)
-#endif
 
 typedef struct globus_l_gsi_cred_handle_attrs_s *
                                         globus_gsi_cred_handle_attrs_t;
@@ -193,10 +190,6 @@ globus_result_t globus_gsi_cred_handle_attrs_destroy(
 globus_result_t globus_gsi_cred_handle_attrs_copy(
     globus_gsi_cred_handle_attrs_t      source,
     globus_gsi_cred_handle_attrs_t *    dest);
-
-globus_result_t
-globus_gsi_cred_handle_init_ssl_context(
-    globus_gsi_cred_handle_t            cred_handle);
 
 globus_result_t globus_gsi_cred_read(
     globus_gsi_cred_handle_t            handle,
@@ -266,7 +259,7 @@ globus_result_t globus_gsi_cred_get_subject_name(
 
 globus_result_t globus_gsi_cred_get_policies(
     globus_gsi_cred_handle_t            handle,
-    STACK **                            policies);
+    STACK_OF(OPENSSL_STRING) **         policies);
 
 globus_result_t globus_gsi_cred_get_policy_languages(
     globus_gsi_cred_handle_t            handle,

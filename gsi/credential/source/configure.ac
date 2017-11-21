@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gsi_credential],[7.11],[https://github.com/globus/globus-toolkit/issues])
+AC_INIT([globus_gsi_credential],[7.14],[https://github.com/globus/globus-toolkit/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -15,12 +15,9 @@ m4_include([dirt.sh])
 AC_SUBST(DIRT_TIMESTAMP)
 AC_SUBST(DIRT_BRANCH_ID)
 
-PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"],
-    [
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e])
-        OPENSSL_PKGCONFIG="openssl101e"
-    ])
+PKG_CHECK_MODULES(
+    [OPENSSL], [openssl >= 1.0],
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 
 AC_SUBST([OPENSSL_PKGCONFIG])
 PKG_CHECK_MODULES([PACKAGE_DEP], $PACKAGE_DEPS)

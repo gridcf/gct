@@ -1378,11 +1378,12 @@ globus_l_xio_gssapi_ftp_server_read_cb(
                 else
                 {
                     /* get the credential now.  if we can't get it fail */
-                    maj_stat = globus_gss_assist_acquire_cred(
-                                    &min_stat,
-                                    GSS_C_ACCEPT,
-                                    &handle->cred_handle);
-                    if(maj_stat != GSS_S_COMPLETE)
+                        maj_stat = globus_gss_assist_acquire_cred(
+                                        &min_stat,
+                                        GSS_C_ACCEPT,
+                                        &handle->cred_handle);
+                    if (maj_stat != GSS_S_COMPLETE
+                        && getenv("X509_VHOST_CRED_DIR") == NULL)
                     {
                         char *          tmp_msg;
                         /* XXX need to propagate this error to server */
