@@ -3,6 +3,8 @@
 # Create source tarballs for all components except gridftp-hdfs in a
 # "package-output/" directory in the repo
 
+# This can be run manually as well as part of a Travis-CI build
+
 # rpm requirements:
 #   make autoconf automake libtool libtool-ltdl-devel patch curl git bison openssl openssl-devel
 

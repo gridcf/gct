@@ -1,7 +1,8 @@
 #!/bin/bash
 
 IMAGE=$1
-COMPONENTS=$2
+TASK=$2
+COMPONENTS=$3
 
 
 set -xe
@@ -25,4 +26,18 @@ yum -y -d1 install "${packages[@]}"
 
 getent passwd builduser > /dev/null || useradd builduser
 chown -R builduser: /gct
-su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $IMAGE $COMPONENTS"
+case $TASK in
+    (tests)
+        su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $IMAGE $COMPONENTS"
+        exit $?
+        ;;
+    (tarballs)
+        cd /gct
+        su builduser -c "/bin/bash -xe /gct/travis-ci/make_source_tarballs.sh"
+        exit $?
+        ;;
+    (*)
+        echo "*** INVALID TASK '$TASK' ***"
+        exit 2
+        ;;
+esac
