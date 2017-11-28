@@ -17,6 +17,7 @@ env:
 #    - IMAGE=fedora:26      TASK=tests COMPONENTS=gram5
 #    - IMAGE=fedora:27      TASK=tests COMPONENTS=gram5
     - IMAGE=centos:centos7 TASK=tarballs COMPONENTS=ssh,gram5
+    - IMAGE=centos:centos7 TASK=rpms COMPONENTS=
 
 
 services:
