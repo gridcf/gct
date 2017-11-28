@@ -1,3 +1,9 @@
+globus-gridftp-server (12.4-1+gt6.@distro@) @distro@; urgency=low
+
+  * Improve search for user env in enable-sshftp script
+
+ -- Globus Toolkit <support@globus.org>  Wed, 08 Nov 2017 09:55:26 -0500
+
 globus-gridftp-server (12.3-1+gt6.@distro@) @distro@; urgency=low
 
   * preloaded module typo fix

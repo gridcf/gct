@@ -24,12 +24,12 @@ gss_name_t                              names[NUM_TEST_CREDS];
 
 static gss_OID_desc GSS_SNI_CREDENTIALS_OID =
    {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x03\x04"};
-gss_OID_desc * GSS_SNI_CREDENTIALS =
+static gss_OID_desc * GSS_SNI_CREDENTIALS =
    &GSS_SNI_CREDENTIALS_OID;
 
 static gss_OID_desc gss_ext_server_name_oid_desc =
      {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x09"}; 
-gss_OID_desc * gss_ext_server_name_oid =
+static gss_OID_desc * gss_ext_server_name_oid =
                 &gss_ext_server_name_oid_desc;
 struct test_case
 {

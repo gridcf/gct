@@ -6,7 +6,7 @@ Name:		globus-gssapi-gsi
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	13.2
+Version:	13.4
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - GSSAPI library
@@ -25,7 +25,7 @@ BuildRequires:	globus-gsi-openssl-error-devel >= 2
 BuildRequires:	globus-gsi-proxy-core-devel >= 6
 BuildRequires:	globus-gsi-cert-utils-devel >= 8
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-gsi-sysconfig-devel >= 8
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
@@ -179,6 +179,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Wed Nov 01 2017 Globus Toolkit <support@globus.org> - 13.4-1
+- Improve vhost support
+
+* Mon Oct 30 2017 Globus Toolkit <support@globus.org> - 13.3-1
+- Allow configuration of non-root user to own credentials for root services
+
 * Thu Sep 28 2017 Globus Toolkit <support@globus.org> - 13.2-1
 - Fix make clean rule (pull #114)
 - Fix alpn mismatch test

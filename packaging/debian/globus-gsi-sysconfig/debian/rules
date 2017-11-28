@@ -13,7 +13,7 @@ include /usr/share/quilt/quilt.make
 
 name = globus-gsi-sysconfig
 _name = globus_gsi_sysconfig
-version = 7.1
+version = 8.0
 soname = 1
 
 INSTALLDIR = $(CURDIR)/debian/tmp

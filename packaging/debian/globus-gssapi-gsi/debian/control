@@ -1,7 +1,7 @@
 Source: globus-gssapi-gsi
 Priority: optional
 Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 9), autotools-dev, quilt, libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-cert-utils-dev (>= 8), libglobus-common-dev (>= 14), libglobus-gsi-sysconfig-dev (>= 5), doxygen (>> 1.6.2-1), graphviz, pkg-config, openssl, libssl-dev, libltdl3-dev, dh-exec
+Build-Depends: debhelper (>= 9), autotools-dev, quilt, libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-cert-utils-dev (>= 8), libglobus-common-dev (>= 14), libglobus-gsi-sysconfig-dev (>= 8), doxygen (>> 1.6.2-1), graphviz, pkg-config, openssl, libssl-dev, libltdl3-dev, dh-exec
 Standards-Version: 3.9.2
 Section: net
 Homepage: http://toolkit.globus.org/

@@ -155,8 +155,12 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
             globus_gsi_sysconfig_get_home_dir_win32
 #    define GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE \
             globus_gsi_sysconfig_check_keyfile_win32
+#    define GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE_UID \
+            globus_gsi_sysconfig_check_keyfile_uid_win32
 #    define GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE \
             globus_gsi_sysconfig_check_certfile_win32
+#    define GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE_UID \
+            globus_gsi_sysconfig_check_certfile_uid_win32
 #    define GLOBUS_GSI_SYSCONFIG_FILE_EXISTS \
             globus_gsi_sysconfig_file_exists_win32
 #    define GLOBUS_GSI_SYSCONFIG_DIR_EXISTS \
@@ -226,6 +230,16 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 #    define GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE \
             globus_gsi_sysconfig_check_keyfile_unix
 /**
+ * Check for the correct file permissions on a private key owned by a
+ * particular user id.
+ * @ingroup globus_gsi_system_config_defines
+ * @hideinitializer
+ * See globus_gsi_sysconfig_check_keyfile_unix() and
+ * globus_gsi_sysconfig_check_keyfile_win32()
+ */
+#    define GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE_UID \
+            globus_gsi_sysconfig_check_keyfile_uid_unix
+/**
  * Check for the correct file permissions on a certificate.
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
@@ -234,6 +248,16 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
  */
 #    define GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE \
             globus_gsi_sysconfig_check_certfile_unix
+/**
+ * Check for the correct file permissions on a certificate owned by a
+ * particular user id.
+ * @ingroup globus_gsi_system_config_defines
+ * @hideinitializer
+ * See globus_gsi_sysconfig_check_certfile_uid_junix() and
+ * globus_gsi_sysconfig_check_certfile_uid_jwin32()
+ */
+#    define GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE_UID \
+            globus_gsi_sysconfig_check_certfile_uid_unix
 /**
  * Check whether a given file exists
  * @ingroup globus_gsi_system_config_defines
@@ -455,8 +479,18 @@ GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE(
     const char *                        filename);
 
 globus_result_t
+GLOBUS_GSI_SYSCONFIG_CHECK_KEYFILE_UID(
+    const char *                        filename,
+    uid_t                               uid);
+
+globus_result_t
 GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE(
     const char *                        filename);
+
+globus_result_t
+GLOBUS_GSI_SYSCONFIG_CHECK_CERTFILE_UID(
+    const char *                        filename,
+    uid_t                               uid);
 
 globus_result_t
 GLOBUS_GSI_SYSCONFIG_GET_CERT_DIR(
