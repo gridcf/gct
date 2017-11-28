@@ -1,4 +1,11 @@
 #!/bin/bash
+
+# Create source tarballs for all components except gridftp-hdfs in a
+# "package-output/" directory in the repo
+
+# rpm requirements:
+#   make autoconf automake libtool libtool-ltdl-devel patch curl git bison openssl openssl-devel
+
 set -eu
 
 root=$(git rev-parse --show-toplevel)
