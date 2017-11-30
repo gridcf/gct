@@ -56,7 +56,7 @@ targets=(x86_64-linux)
 
 remove_installed_gct_rpms()
 {
-    rpm -qa | egrep '^globus-|^myproxy|^gsi_openssh' \
+    rpm -qa | egrep '^globus-|^myproxy' \
         | xargs --no-run-if-empty \
             sudo rpm -e $pkgs_to_rm
 }
@@ -78,16 +78,6 @@ for rpmname in ${packages[*]}; do
     if [[ ! -f $fedoradir/$rpmname.spec ]]; then
         echo >&2 "Spec file not found for $rpmname"
         exit 1
-    elif [ "$i" = gsi_openssh ]; then
-        #pkgversion="$(awk '/%global[ \t]*gsi_openssh_ver[ \t]*/ {print $3}' <  $fedoradir/gsi-openssh.spec)"
-        pkgversion=$(rpm -q --specfile $fedoradir/gsi-openssh.spec --qf '%{VERSION}\n' | head -n 1)
-	tarball="$topdir/SOURCES/gsi-openssh-$pkgversion.tar.gz"
-        if [ ! -f "$tarball" ]; then
-            bundle_tarball="gsi_openssh_bundle-${pkgversion}-src.tar.gz"
-            bundle_url="https://sourceforge.net/projects/cilogon/files/gsissh/$bundle_tarball/download"
-            curl -Ls "$bundle_url" | tar -C $topdir/SOURCES \
-                -zxf - "$(basename "$tarball")"
-        fi
     fi
 
     rpmbuild -bs --nodeps "$fedoradir/$rpmname.spec";
