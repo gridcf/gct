@@ -615,7 +615,7 @@ globus_l_gsc_cmd_cwd_cb(
                     _FSMSL("%s: No such file or directory."), path);
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(_FSMSL("Permission denied."));
                 break;
@@ -769,7 +769,7 @@ globus_l_gsc_cmd_stat_cb(
                     _FSMSL("No such file or directory."));
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(
                     _FSMSL("Permission denied."));
@@ -977,7 +977,7 @@ globus_l_gsc_cmd_size_cb(
                     _FSMSL("No such file."));
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(
                     _FSMSL("Permission denied."));
