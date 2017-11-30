@@ -1,6 +1,5 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * Copyright 2017 Grid Community Forum
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
