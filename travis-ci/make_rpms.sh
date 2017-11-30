@@ -88,12 +88,8 @@ for rpmname in ${packages[*]}; do
             curl -Ls "$bundle_url" | tar -C $topdir/SOURCES \
                 -zxf - "$(basename "$tarball")"
         fi
-    elif [ "$i" = "udt" ]; then
-        pkgversion="$(awk '/Version:[ \t]*/ {print $2}' <  $fedoradir/udt.spec)"
-        pkgurl="http://sourceforge.net/projects/udt/files/udt/${pkgversion}/udt.sdk.${pkgversion}.tar.gz"
-        curl -Lso $topdir/SOURCES/udt.sdk.${pkgversion}.tar.gz "${pkgurl}"
     fi
-    
+
     rpmbuild -bs --nodeps "$fedoradir/$rpmname.spec";
 done
 
