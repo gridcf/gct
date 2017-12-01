@@ -11,7 +11,7 @@ cd /gct
 set +e
 args=(--prefix=/gct --enable-silent-rules)
 if [[ $COMPONENTS != *ssh* ]]; then
-    rm -f prep-gsissh gsi_openssh.gt6.diff
+    rm -f prep-gsissh
     args+=(--disable-gsi-openssh)
 fi
 if [[ $COMPONENTS == *gram5* ]]; then
