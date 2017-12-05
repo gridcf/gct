@@ -35,5 +35,5 @@ before_install:
     - sudo docker pull ${IMAGE}
 
 script:
-- travis-ci/setup_tests.sh
+- travis-ci/setup_tasks.sh
 

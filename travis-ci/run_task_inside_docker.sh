@@ -78,7 +78,7 @@ print_file_size_table () {
     
 case $TASK in
     (tests)
-        su builduser -c "/bin/bash -xe /gct/travis-ci/test_unpriv_inside_docker.sh $IMAGE $COMPONENTS"
+        su builduser -c "/bin/bash -xe /gct/travis-ci/build_and_test.sh $IMAGE $COMPONENTS"
         ;;
     (tarballs)
         cd /gct
