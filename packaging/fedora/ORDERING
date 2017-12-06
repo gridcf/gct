@@ -47,6 +47,7 @@ globus-xio-gridftp-driver
 globus-gridmap-verify-myproxy-callout
 globus-proxy-utils
 myproxy
+myproxy-oauth
 globus-xioperf
 globus-gatekeeper
 globus-gram-client-tools
