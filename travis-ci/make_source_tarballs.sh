@@ -38,3 +38,10 @@ mkdir package-output
 echo '================================================================================'
 sed -i 's/gridftp_hdfs-dist//' Makefile
 time make tarballs
+
+echo '================================================================================'
+pushd "$root/myproxy/oauth/source"
+time python setup.py sdist
+mv dist/*.tar.gz $root/package-output/
+popd
+

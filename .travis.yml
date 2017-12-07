@@ -6,17 +6,24 @@ env:
 #   Fedora builds are implemented but are disabled until we decide we
 #   need them; Travis limits our number of concurrent jobs so we don't
 #   want more than are necessary.
-#    - IMAGE=fedora:25     TASK=tests COMPONENTS=udt,myproxy,ssh
 #    - IMAGE=fedora:26     TASK=tests COMPONENTS=udt,myproxy,ssh
 #    - IMAGE=fedora:27     TASK=tests COMPONENTS=udt,myproxy,ssh
     - IMAGE=centos:centos6 TASK=tests COMPONENTS=gram5
     - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
 #   The following gram tests failed for all fedora versions:
 #       nonblocking-register-test.pl, register-callback-test.pl, register-test.pl
-#    - IMAGE=fedora:25      TASK=tests COMPONENTS=gram5
 #    - IMAGE=fedora:26      TASK=tests COMPONENTS=gram5
 #    - IMAGE=fedora:27      TASK=tests COMPONENTS=gram5
-    - IMAGE=centos:centos7 TASK=tarballs COMPONENTS=ssh,gram5
+#   The 'rpms' task does not run the unit tests (%check sections in RPMs)
+#   (except on centos 6, where disabling them is not possible),
+#   because they are already covered in the 'tests' task
+    - IMAGE=centos:centos6 TASK=rpms COMPONENTS=udt,myproxy,gram
+    - IMAGE=centos:centos7 TASK=rpms COMPONENTS=udt,myproxy,gram
+#   Fedora builds are implemented but are disabled until we decide we
+#   need them; Travis limits our number of concurrent jobs so we don't
+#   want more than are necessary.
+#    - IMAGE=fedora:26 TASK=rpms COMPONENTS=udt,myproxy,gram
+#    - IMAGE=fedora:27 TASK=rpms COMPONENTS=udt,myproxy,gram
 
 
 services:
@@ -28,5 +35,5 @@ before_install:
     - sudo docker pull ${IMAGE}
 
 script:
-- travis-ci/setup_tests.sh
+- travis-ci/setup_tasks.sh
 
