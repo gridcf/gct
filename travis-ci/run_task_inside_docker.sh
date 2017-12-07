@@ -90,6 +90,7 @@ case $TASK in
     (rpms)
         cd /gct
         su builduser -c "/bin/bash -xe /gct/travis-ci/make_source_tarballs.sh"
+        print_file_size_table Tarballs /gct/package-output
         echo '==========================================================================================='
         # -C = skip unit tests
         su builduser -c "/bin/bash -xe /gct/travis-ci/make_rpms.sh $nocheck"
