@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+
 usage()
 {
     echo "Usage: $0 [<options>]"
@@ -14,13 +15,13 @@ usage()
 umask 022
 
 
-rootdir=$(git rev-parse --show-toplevel)
-packagingdir=$rootdir/packaging
+root=$(git rev-parse --show-toplevel)
+packagingdir=$root/packaging
 
 cd "$packagingdir"
 
 fedoradir=$packagingdir/fedora
-tarballdir=$rootdir/package-output
+tarballdir=$root/package-output
 topdir=$packagingdir/rpmbuild
 globusversion=
 nocheck=
