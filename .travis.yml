@@ -35,11 +35,9 @@ jobs:
       env:
         - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
 
-    - &deploy_rpm
-      # Template; subsequent uses modify 'env'
+    - stage: deploy
       env:
-        - IMAGE=centos:centos6 TASK=rpms
-      stage: deploy
+        - IMAGE=centos:centos7 TASK=srpms
       sudo: required
       services:
         - docker
@@ -64,8 +62,5 @@ jobs:
         api_key:
           secure: ndqiULdDgGzxuFQmqDmgC6OmtXKLIowqOTJRPSoLCMBIPPbZf68bTcEjbWdwqnTKz9V/YyigWkQO55M/FH5ZzG8Y/olK3NObr/GebGkyCOEDdM4LHL1rt/1kmxENpFZidVO9bxMbkj+cgaJKU9pJ6VJ7jbXYpP6hj2imVm2KQZIAOvynGYFiSleZmgnmqMJw7yRXxaGOtXyHwV8mc17MPVM2dnMUXPEta7RIRJzLy/gInxHnZzQwZ4EDIDhUTxgeeqMVV6AInQJzsg7xUJsgv7IEvYm3bfqZJz5NkYh1izABDJBNDwJac8osaicllhVmLjwr9k2QSLCchyIiR/BzB0ciKqsxBzo6fpF03e1kkiqIxMdLWHLOiWV092OJLjqdrUZReLlnpYf45Uvwv0gQuX9sYAgR9xLunxmyTjXr5WUkqtIPSA8OchSuvbNOIHB9BqJ+rt4Ejt54ZYNtUUdHhqaB3q7PJSdUnbOesoaVqQYgPo6rDuh3wR16kahkhPAslkuTTbYw2b5ZUapaN1fiZpMQfqGdWvaNiIU6Esata05ANoKnu/QORSfZkTydIYEPtROGpDNkC94nTRcfWcxTOySft6cXjB5OyAelnaV6mq6h+lgz4NBNnIOh1yIMenjpgu118p2NmYgZejpf+DtmKpm6RpmJFkcW0AKwe9qcjDk=
         file: travis_deploy/*
-    - <<: *deploy_rpm
-      env:
-        - IMAGE=centos:centos7 TASK=rpms
 
 # vim:ft=yaml:sw=2:sts=2:et

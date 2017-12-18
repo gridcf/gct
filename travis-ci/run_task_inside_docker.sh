@@ -30,7 +30,7 @@ if [[ $TASK == tests ]]; then
     [[ $COMPONENTS == *myproxy* ]] && packages+=(which)
     [[ $COMPONENTS == *gram* ]]    && packages+=('perl(Pod::Html)')
     set -e
-elif [[ $TASK == rpms ]]; then
+elif [[ $TASK == *rpms ]]; then
     case $OS in
         centos6)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
                   ;;
@@ -88,9 +88,16 @@ make_tarballs() {
     print_file_size_table Tarballs /gct/package-output
 }
 
+make_srpms() {
+    dist=$1
+    su travis -c "/bin/bash -x /gct/travis-ci/make_rpms.sh -s -d $dist"
+    print_file_size_table SRPMS /gct/packaging/rpmbuild/SRPMS
+}
+
 make_rpms() {
     nocheck=$1
-    su travis -c "/bin/bash -x /gct/travis-ci/make_rpms.sh $nocheck"
+    dist=$2
+    su travis -c "/bin/bash -x /gct/travis-ci/make_rpms.sh $nocheck -d $dist"
     print_file_size_table SRPMS /gct/packaging/rpmbuild/SRPMS
     print_file_size_table RPMS /gct/packaging/rpmbuild/RPMS
 }
@@ -103,6 +110,18 @@ case $TASK in
     tarballs)
         make_tarballs
         ;;
+    srpms)
+        make_tarballs
+        echo '==========================================================================================='
+        make_srpms .gct
+
+        # copy all the files we want to deploy into one directory b/c
+        # can't specify multiple directories in travis
+        mkdir -p travis_deploy
+
+        cp -f packaging/rpmbuild/SRPMS/*.rpm package-output/*.tar.gz  \
+              travis_deploy/
+        ;;
     rpms)
         make_tarballs
         echo '==========================================================================================='
@@ -114,7 +133,7 @@ case $TASK in
             # -C = skip unit tests
             nocheck=-C
         fi
-        make_rpms $nocheck
+        make_rpms $nocheck .gct.$OS
 
         # copy all the files we want to deploy into one directory b/c
         # can't specify multiple directories in travis
