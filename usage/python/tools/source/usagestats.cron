@@ -1,7 +1,0 @@
-# Every hour, upload packets to database
-1 * * * * /usr/sbin/globus-usage-uploader
-# Daily, remove empty usage directories
-59 0 * * * rmdir /var/lib/globus/usage/*
-# Daily aggregate gridftp and gram packets
-30 0 * * * /usr/sbin/globus-usage-aggregator -t gram
-45 0 * * * /usr/sbin/globus-usage-aggregator -t gridftp

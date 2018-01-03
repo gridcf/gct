@@ -1,8 +1,0 @@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@libdir@
-includedir=@includedir@
-
-Name: globus-usage-tools
-Description: Globus Toolkit - Usage Packet Processing Tools
-Version: @VERSION@
