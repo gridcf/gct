@@ -1,15 +1,14 @@
 #!/bin/bash
 
-IMAGE=$1
+set -e
+
+OS=$1
 COMPONENTS=$2
 
-id
-env | sort
+root=$(git rev-parse --show-toplevel)
+cd "$root"
 
-cd /gct
-
-set +e
-args=(--prefix=/gct --enable-silent-rules)
+args=(--prefix="$root" --enable-silent-rules)
 if [[ $COMPONENTS != *ssh* ]]; then
     rm -f prep-gsissh
     args+=(--disable-gsi-openssh)
@@ -19,9 +18,10 @@ if [[ $COMPONENTS == *gram5* ]]; then
 else
     args+=(--disable-gram5)
 fi
+set +e
 [[ $COMPONENTS == *myproxy* ]] && args+=(--enable-myproxy)
 [[ $COMPONENTS == *udt* ]]     && args+=(--enable-udt)
-[[ $IMAGE      == *fedora* ]]  && args+=(LIBS='-ldl')
+[[ $OS         == fedora* ]]   && args+=(LIBS='-ldl')
 set -e
 
 echo '================================================================================'
@@ -32,7 +32,7 @@ echo '==========================================================================
 time make -j
 echo '================================================================================'
 time make -j install
-export PATH=/gct/bin:$PATH LD_LIBRARY_PATH=/gct/lib:$LD_LIBRARY_PATH
+export PATH="$root"/bin:$PATH LD_LIBRARY_PATH="$root"/lib:$LD_LIBRARY_PATH
 echo '================================================================================'
 time make -j check | tee check.out
 echo '================================================================================'

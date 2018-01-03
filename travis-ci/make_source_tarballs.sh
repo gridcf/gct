@@ -22,7 +22,6 @@ tmpfile=$(mktemp)
 trap "rm -f $tmpfile" EXIT
 
 
-set -x
 if [[ ! -f Makefile ]]; then
     if [[ ! -f configure ]]; then
         echo '================================================================================'
@@ -37,11 +36,11 @@ rm -rf package-output
 mkdir package-output
 echo '================================================================================'
 sed -i 's/gridftp_hdfs-dist//' Makefile
-time make tarballs
+time make -j1 tarballs
 
 echo '================================================================================'
 pushd "$root/myproxy/oauth/source"
 time python setup.py sdist
-mv dist/*.tar.gz $root/package-output/
+mv dist/*.tar.gz "$root/package-output/"
 popd
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+
 usage()
 {
     echo "Usage: $0 [<options>]"
@@ -8,22 +9,26 @@ usage()
     echo "Options:"
     echo "  -h                              This message"
     echo "  -C                              Skip %check when building RPMs"
+    echo "  -s                              Build SRPMs only"
+    echo "  -d [dist]                       %dist tag"
 }
 
 
 umask 022
 
 
-rootdir=$(git rev-parse --show-toplevel)
-packagingdir=$rootdir/packaging
+root=$(git rev-parse --show-toplevel)
+packagingdir=$root/packaging
 
 cd "$packagingdir"
 
 fedoradir=$packagingdir/fedora
-tarballdir=$rootdir/package-output
+tarballdir=$root/package-output
 topdir=$packagingdir/rpmbuild
 globusversion=
 nocheck=
+srpmsonly=false
+dist=.gct
 
 if ! ls "$tarballdir"/*.tar.gz >/dev/null; then
     echo >&2 "No tarballs found in package-output directory"
@@ -32,7 +37,7 @@ if ! ls "$tarballdir"/*.tar.gz >/dev/null; then
 fi
 
 
-while getopts hC i; do
+while getopts hCsd: i; do
     case "$i" in
         h)
             usage
@@ -40,6 +45,12 @@ while getopts hC i; do
             ;;
         C)
             nocheck=1
+            ;;
+        s)
+            srpmsonly=true
+            ;;
+        d)
+            dist=$OPTARG
             ;;
     esac
 done
@@ -65,6 +76,7 @@ remove_installed_gct_rpms()
 cat <<EOF >> "$topdir/.rpmmacros"
 %_topdir               $topdir
 %_tmppath              $topdir/tmp
+%dist                  $dist
 # Override this, as it breaks documentation dependencies in some of the builds
 %_excludedocs 0
 EOF
@@ -83,6 +95,9 @@ for rpmname in ${packages[*]}; do
     rpmbuild -bs --nodeps "$fedoradir/$rpmname.spec";
 done
 
+if $srpmsonly; then
+    exit 0
+fi
 
 build_all_for_target()
 {
