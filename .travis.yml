@@ -53,6 +53,7 @@ jobs:
         on:
           tags: true
           all_branches: false
+          repo: gridcf/gct
         skip_cleanup: true
         file_glob: true
         provider: releases
@@ -60,7 +61,7 @@ jobs:
         # ^ this doesn't actually work but I'm leaving it in there in
         #   case it gets fixed later
         api_key:
-          secure: ndqiULdDgGzxuFQmqDmgC6OmtXKLIowqOTJRPSoLCMBIPPbZf68bTcEjbWdwqnTKz9V/YyigWkQO55M/FH5ZzG8Y/olK3NObr/GebGkyCOEDdM4LHL1rt/1kmxENpFZidVO9bxMbkj+cgaJKU9pJ6VJ7jbXYpP6hj2imVm2KQZIAOvynGYFiSleZmgnmqMJw7yRXxaGOtXyHwV8mc17MPVM2dnMUXPEta7RIRJzLy/gInxHnZzQwZ4EDIDhUTxgeeqMVV6AInQJzsg7xUJsgv7IEvYm3bfqZJz5NkYh1izABDJBNDwJac8osaicllhVmLjwr9k2QSLCchyIiR/BzB0ciKqsxBzo6fpF03e1kkiqIxMdLWHLOiWV092OJLjqdrUZReLlnpYf45Uvwv0gQuX9sYAgR9xLunxmyTjXr5WUkqtIPSA8OchSuvbNOIHB9BqJ+rt4Ejt54ZYNtUUdHhqaB3q7PJSdUnbOesoaVqQYgPo6rDuh3wR16kahkhPAslkuTTbYw2b5ZUapaN1fiZpMQfqGdWvaNiIU6Esata05ANoKnu/QORSfZkTydIYEPtROGpDNkC94nTRcfWcxTOySft6cXjB5OyAelnaV6mq6h+lgz4NBNnIOh1yIMenjpgu118p2NmYgZejpf+DtmKpm6RpmJFkcW0AKwe9qcjDk=
+          secure: gNgkiuvPm/7eEKa203yXe1jPwBmALWLXPpXhfNZO7wBISPgB1XZHgRNMr6DKlE5gucElKSjWWhQbn5VCfJm3OB+KCb1Tx1Xsw6xmsLrEL0d+YF/cqQl98a4ZRQjrRW4CBHz6V/FGWYiI53YDvwb/wfSC3uhIXlBjN+CeLv2aJQuOYZ9ZJHVDZYKWp2yrL5qvCvwXVZfNZNCf1jNztKFyDyQ5xCT7ePjQAbASkkvO1ZMRVgwloiKqZVWINhjcYlKaTI5ov0U0yPLneE2ybZz5mxFCNSa4okQf3gb36eMge7i7yulk8R7uVxsFte0bhLEslGnYn+dtLT+4RmYflt5OqFs3z0fVAG+q9kwsLii50iE1pmY9QHt+P+8vkajX7T+QiK+qers41kmDvArFZboIDMkvHWaNceAtDZ9e/Pd54hL8ztJUjSa3FPqz6mwa6og3RNd4GFiER4aO6ISfdshCxTRkUnYMetzI+p77cP4HI2I87grJGOJUIGpp9qzukvPAGVS79kmBgV7Ykd7GQccKiiNx25hbACV81pZ9WZ9MhYVoc/SkzrST7b9Tba8QHCrtdZWafpN1awTkbjOxw4vN8XIaexE7WS6d7TduhTORb6awcABFzL9TNtQKQJWjlLsRv4VKVNz59mKrux/VnfF8vkMEqdn/P8d6UCn7oVe6i+g=
         file: travis_deploy/*
 
 # vim:ft=yaml:sw=2:sts=2:et
