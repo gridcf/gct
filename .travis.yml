@@ -52,7 +52,7 @@ jobs:
       deploy:
         on:
           tags: true
-          all_branches: true
+          all_branches: false
         skip_cleanup: true
         file_glob: true
         provider: releases

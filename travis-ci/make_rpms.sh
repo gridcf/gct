@@ -9,7 +9,7 @@ usage()
     echo "Options:"
     echo "  -h                              This message"
     echo "  -C                              Skip %check when building RPMs"
-    echo "  -s                              Stop after building SRPMs"
+    echo "  -s                              Build SRPMs only"
     echo "  -d [dist]                       %dist tag"
 }
 
