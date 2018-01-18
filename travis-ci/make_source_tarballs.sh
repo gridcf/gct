@@ -10,7 +10,6 @@
 
 set -eu
 
-source_installer_tarball="gct-source.tar.gz"
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 
@@ -27,14 +26,6 @@ if [[ ! -f Makefile ]]; then
     if [[ ! -f configure ]]; then
         echo '================================================================================'
         time autoreconf -i
-        if [[ $? -eq 0 ]]; then
-            cd "$root/.."
-            tar -czf $source_installer_tarball --exclude='.git/' "$root"
-            cd "$root"
-        else
-            echo "autoreconf failed. Cannot continue. Exiting" 1>&2
-            exit 1
-        fi
     fi
     echo '================================================================================'
     time ./configure --enable-udt --enable-myproxy --enable-gram5-{server,lsf,sge,slurm,condor,pbs,auditing}
@@ -43,9 +34,9 @@ if [[ ! -f Makefile ]]; then
 fi
 rm -rf package-output
 mkdir package-output
-mv "$root/../$source_installer_tarball" "$root/package-output/"
 echo '================================================================================'
 sed -i 's/gridftp_hdfs-dist//' Makefile
+make dist
 time make -j1 tarballs
 
 echo '================================================================================'
