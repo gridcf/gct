@@ -21,6 +21,27 @@
  *                      get functions
  *                      -------------
  ************************************************************************/
+char *
+globus_gridftp_server_control_get_cmd_string(
+    globus_gridftp_server_control_op_t      op)
+{
+    char *                                  cmd = NULL;
+    GlobusGridFTPServerName(globus_gridftp_server_control_get_cmd_string);
+
+    if(op == NULL)
+    {
+        return NULL;
+    }
+
+    globus_mutex_lock(&op->server_handle->mutex);
+    {
+        cmd = globus_libc_strdup(op->command);
+    }
+    globus_mutex_unlock(&op->server_handle->mutex);
+
+    return cmd;
+}
+
 globus_bool_t
 globus_gridftp_server_control_authenticated(
     globus_gridftp_server_control_t         server)
