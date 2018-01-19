@@ -495,8 +495,8 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"config_dir", "config_dir", NULL, "C", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
      "Path to directory holding configuration files that should be loaded. Files "
      "will be loaded in alphabetical order, and in the event of duplicate parameters "
-     "the last loaded file will take precedence.  Files with a '.' in the name "
-     "(file.bak, file.rpmsave, etc.) will be ignored.  Note that the main "
+     "the last loaded file will take precedence.  Backup files and files created by "
+     "package updates (e.g. file.rpmsave) will be ignored.  Note that the main "
      "configuration file, if one exists, will always be loaded last.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"config_base_path", "config_base_path", NULL, "config-base-path", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
      "Base path to use when config and log path options are not full paths. "
@@ -1161,18 +1161,47 @@ globus_l_gfs_config_load_config_dir(
         for(i = 0; i < count && result == GLOBUS_SUCCESS; i++)
         {
             char *                      full_path;
-            
-            /* skip any file with a '.': hidden, . or ..
-             and files like .rpm*, .deb*, .bak*, etc */
-            if(strchr(entries[i]->d_name, '.') != NULL)
+            char *                      filename;
+            char *                      fileext;
+            char *                      backupsuffix;
+
+            filename = entries[i]->d_name;
+
+
+            /* skip windows backup files (.bak) and backups created
+               by package managers (.rpmsave, .rpmnew, etc.) */
+            fileext = strrchr(filename, '.');
+            if(fileext &&
+                (! strcmp(fileext, ".bak")       ||
+                 ! strcmp(fileext, ".dpkg-dist") ||
+                 ! strcmp(fileext, ".dpkg-new")  ||
+                 ! strcmp(fileext, ".dpkg-old")  ||
+                 ! strcmp(fileext, ".rpmnew")    ||
+                 ! strcmp(fileext, ".rpmsave")))
             {
                 free(entries[i]);
                 continue;
             }
-            
+
+            /* skip unix backup files */
+            backupsuffix = strrchr(filename, '~');
+            if(backupsuffix && ! strcmp(backupsuffix, "~"))
+            {
+                free(entries[i]);
+                continue;
+            }
+
+            /* skip unix hidden files */
+            if(*filename == '.')
+            {
+                free(entries[i]);
+                continue;
+            }
+
+
             full_path = malloc(PATH_MAX);
             rc = snprintf(
-                full_path, PATH_MAX, "%s/%s", conf_dir, entries[i]->d_name);
+                full_path, PATH_MAX, "%s/%s", conf_dir, filename);
 
             if(!envs_only)
             {
