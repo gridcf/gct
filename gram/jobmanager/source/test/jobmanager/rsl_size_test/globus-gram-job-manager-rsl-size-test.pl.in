@@ -22,12 +22,20 @@ my $verbose = 0;
 
 die if $contact eq '';
 
-my @test_cases=qw(
-    tiny small medium large huge
-);
-
-my @todo_cases=qw(
-);
+my @test_cases;
+my @todo_cases;
+if ($^O eq 'gnu')
+{
+    # SO_RCVBUF/SO_SNDBUF not implemented on GNU/Hurd
+    # http://savannah.gnu.org/task/?12729
+    @test_cases=qw(tiny small medium);
+    @todo_cases=qw(large huge);
+}
+else
+{
+    @test_cases=qw(tiny small medium large huge);
+    @todo_cases=qw();
+}
 
 sub test_rsl
 {
