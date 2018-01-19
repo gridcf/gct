@@ -435,6 +435,8 @@ static const globus_l_gfs_config_option_t option_list[] =
     "This, along with -data-interface, can be used to enable operation behind "
     "a firewall and/or when NAT is involved. "
     "This is the same as setting the environment variable GLOBUS_TCP_PORT_RANGE.", NULL, NULL, GLOBUS_FALSE, NULL},
+ {"epsv_ip", "epsv_ip", NULL, "epsv-ip", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
+    "Adds an IPv6 address to EPSV response. Breaks RFC 2428, but allows redirection to work with IPv6.", NULL, NULL, GLOBUS_FALSE, NULL},
 {NULL, "User Messages", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL},
  {"banner", "banner", NULL, "banner", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Message to display to the client before authentication.", NULL, NULL,GLOBUS_TRUE, NULL},
