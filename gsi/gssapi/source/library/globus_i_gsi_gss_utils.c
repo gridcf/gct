@@ -575,8 +575,8 @@ globus_i_gsi_gss_create_and_fill_context(
     }
 #endif
 
-    /* No longer setting SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS since it seemed
-     * like a stop-gap measure to interoperate with broken SSL */
+    /* This is needed for compatibility with Bestman */
+    SSL_set_options(context->gss_ssl, SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
 
     local_result = globus_gsi_callback_get_SSL_callback_data_index(&cb_index);
     if(local_result != GLOBUS_SUCCESS)
