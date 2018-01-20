@@ -13,7 +13,7 @@ include /usr/share/quilt/quilt.make
 
 name = globus-gram-job-manager
 _name = globus_gram_job_manager
-version = 14.36
+version = 14.37
 
 INSTALLDIR = $(CURDIR)/debian/tmp
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
@@ -44,7 +44,7 @@ configure-stamp:
 	  fi ; \
 	done
 	./configure \
- 	   --host=$(DEB_HOST_GNU_TYPE) \
+	   --host=$(DEB_HOST_GNU_TYPE) \
 	   --build=$(DEB_BUILD_GNU_TYPE) \
 	   --prefix=$(_prefix) \
 	   --sysconfdir='$(_sysconfdir)' \

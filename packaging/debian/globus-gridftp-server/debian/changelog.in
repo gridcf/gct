@@ -1,3 +1,12 @@
+globus-gridftp-server (13.0-1+gt6.@distro@) @distro@; urgency=low
+
+  * Add option to send IPv6 address in EPSV response
+  * Add function to get the command string
+  * Be more selective in what config files we skip
+  * Add unames for GNU/Hurd and kfreebsd to chroot setup script
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 20 Jan 2018 08:14:01 +0100
+
 globus-gridftp-server (12.4-1+gt6.@distro@) @distro@; urgency=low
 
   * Improve search for user env in enable-sshftp script

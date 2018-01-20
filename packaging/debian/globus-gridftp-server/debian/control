@@ -1,7 +1,7 @@
 Source: globus-gridftp-server
 Priority: optional
 Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-gridftp-server-control-dev (>= 5), libglobus-usage-dev (>= 3), libglobus-xio-gsi-driver-dev (>= 2), libglobus-xio-dev (>= 5), libglobus-authz-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-ftp-control-dev (>= 7), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-common-dev (>= 17), globus-common-progs (>= 17), libglobus-gsi-credential-dev (>= 6), openssl, pkg-config, libltdl-dev, zlib1g-dev
+Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-gridftp-server-control-dev (>= 7), libglobus-usage-dev (>= 3), libglobus-xio-gsi-driver-dev (>= 2), libglobus-xio-dev (>= 5), libglobus-authz-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-ftp-control-dev (>= 7), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-common-dev (>= 17), globus-common-progs (>= 17), libglobus-gsi-credential-dev (>= 6), openssl, pkg-config, libltdl-dev, zlib1g-dev
 Standards-Version: 3.9.0
 Section: net
 DM-Upload-Allowed: yes
