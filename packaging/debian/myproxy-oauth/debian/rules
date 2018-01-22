@@ -14,6 +14,29 @@ libdir = /usr/share
 sbindir = /usr/sbin
 name = myproxy-oauth
 
+os_vendor:=$(shell lsb_release -is)
+os_version:=$(shell lsb_release -rs)
+
+ifeq (Ubuntu,$(os_vendor))
+    ifeq (0, $(shell [ `echo $(os_version) | tr -d .` -lt  1404 ] && echo 0))
+        apacheconfdir=/etc/apache2/conf.d
+    else
+        apacheconfdir=/etc/apache2/conf-available
+        apacheconf_suffix=-2.4-deb
+    endif
+else
+    ifeq (Debian,$(os_vendor))
+        ifeq (0, $(shell [ `echo $(os_version) | cut -d . -f1` -lt  8 ] && echo 0))
+            apacheconfdir=/etc/apache2/conf.d
+        else
+            apacheconfdir=/etc/apache2/conf-available
+            apacheconf_suffix=-2.4-deb
+        endif
+    else
+        apacheconfdir=/etc/apache2/conf.d
+    endif
+endif
+
 %:
 	dh $@
 
@@ -37,11 +60,14 @@ install-stamp: build-stamp
             --install-lib /usr/share/$(name) \
             --install-scripts /usr/share/$(name) \
             --install-data /usr/share/doc/$(name)
+	mkdir -p $(INSTALLDIR)$(apacheconfdir)
 	mkdir -p $(INSTALLDIR)$(sbindir)
 	sed -e s'!@PYTHONPATH@!/usr/share/$(name)!' \
             < $(CURDIR)/debian/myproxy-oauth-setup.in \
             > $(INSTALLDIR)/$(sbindir)/myproxy-oauth-setup
 	chmod 0755 $(INSTALLDIR)/$(sbindir)/myproxy-oauth-setup
+	cp $(INSTALLDIR)/usr/share/doc/$(name)/apache/$(name)$(apacheconf_suffix) \
+	   $(INSTALLDIR)$(apacheconfdir)/$(name).conf
 	find debian/tmp -type f | while read filename; do \
 		echo "$$filename" |sed -e s"|debian/tmp/||"; \
 	done > debian/myproxy-oauth.install

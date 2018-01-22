@@ -22,8 +22,6 @@ import httplib
 import json
 import os
 import random
-import platform
-import shutil
 import socket
 import urllib
 from subprocess import Popen, PIPE
@@ -56,9 +54,7 @@ service. The registration consists of two steps:
 1. Get an access token from Globus.
 2. Trigger Globus client registration with this service.
 """
-def configure(username=None, pwstdin=False, oauth_server=None, myproxy_server=None, nexus_server=None, five=False):
-    if not five:
-        install_config()
+def configure(username=None, pwstdin=False, oauth_server=None, myproxy_server=None, nexus_server=None):
 
     # Delay this until after seteuid() so that the database file is owned by 
     # the specified user
@@ -139,56 +135,6 @@ def configure(username=None, pwstdin=False, oauth_server=None, myproxy_server=No
 
     db_session.commit()
     selinux_permissions()
-
-def install_config():
-    (distname, distver, distid) = platform.linux_distribution()
-    intdist = distver.split('.')[0]
-
-    srcfile = None
-    dstfile = None
-
-    if distname == 'Ubuntu' and int(intdist) <= 14:
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth'
-        dstfile = '/etc/apache2/conf.d/wsgi-myproxy-oauth.conf'
-    elif distname == 'Ubuntu':
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth-2.4-deb'
-        dstfile = '/etc/apache2/conf-available/wsgi-myproxy-oauth.conf'
-    elif distname == 'debian' and int(intdist) < 8:
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth'
-        dstfile = '/etc/apache2/conf.d/wsgi-myproxy-oauth.conf'
-    elif distname == 'debian':
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth-2.4-deb'
-        dstfile = '/etc/apache2/conf-available/wsgi-myproxy-oauth.conf'
-    elif distname.startswith('SUSE'):
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth-2.4'
-        dstfile = '/etc/apache2/conf.d/wsgi-myproxy-oauth.conf'
-    elif (distname.startswith('CentOS')
-            or distname == 'RedHat'
-            or distname.startswith('Red Hat')
-            or distname.startswith('Scientific')) and int(intdist) == 5:
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth-epel5'
-        dstfile = '/etc/httpd/conf.d/wsgi-myproxy-oauth.conf'
-    elif (distname.startswith('CentOS')
-            or distname == 'RedHat'
-            or distname.startswith('Red Hat')
-            or distname.startswith('Scientific')) and int(intdist) == 6:
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth'
-        dstfile = '/etc/httpd/conf.d/wsgi-myproxy-oauth.conf'
-    elif (((distname.startswith('CentOS')
-            or distname == 'RedHat'
-            or distname.startswith('Red Hat')
-            or distname.startswith('Scientific')) and int(intdist) == 7)
-            or distname.startswith('Fedora')):
-        srcfile = '/usr/share/doc/myproxy-oauth/apache/myproxy-oauth-2.4'
-        dstfile = '/etc/httpd/conf.d/wsgi-myproxy-oauth.conf'
-
-    if srcfile is not None and dstfile is not None:
-        save_uid = os.geteuid()
-        if os.getuid() == 0:
-            os.seteuid(0)
-        shutil.copy(srcfile, dstfile)
-        if os.geteuid() == 0 and save_uid != 0:
-            os.seteuid(save_uid)
 
 def get_access_token(username, password, server):
     """
@@ -353,9 +299,9 @@ def which(name):
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hsu:o:m:n:fi:",
+        opts, args = getopt.getopt(sys.argv[1:], "hsu:o:m:n:i:",
                 ["help", "stdin", "user=", "oauth-server=", "myproxy-server=",
-                 "nexus-api-server=", "five", "id="])
+                 "nexus-api-server=", "id="])
     except getopt.GetoptError, e:
         print >>sys.stderr, "Invalid option " + e.opt
         usage(outstream=sys.stderr)
@@ -367,7 +313,6 @@ if __name__ == '__main__':
     myproxy_server = None
     nexus_server = None
     userid = None
-    five = False
 
     for (o, val) in opts:
         if o in ['-h', '--help']:
@@ -383,8 +328,6 @@ if __name__ == '__main__':
             myproxy_server = val
         elif o in ['-n', '--nexus-api-server']:
             nexus_server = val
-        elif o in ['-f', '--five']:
-            five = True
         elif o in ['-i', '--id']:
             userid = int(val)
         else:
@@ -395,5 +338,5 @@ if __name__ == '__main__':
         os.seteuid(userid)
 
     configure(username=user, pwstdin=pwstdin, oauth_server=oauth_server,
-                myproxy_server=myproxy_server, nexus_server=nexus_server,
-                five=five)
+                myproxy_server=myproxy_server, nexus_server=nexus_server)
+# vim: syntax=python: nospell:
