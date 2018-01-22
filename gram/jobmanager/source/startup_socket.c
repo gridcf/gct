@@ -448,7 +448,7 @@ globus_gram_job_manager_startup_socket_init(
 
     rcvbuf = 10 * GLOBUS_GRAM_PROTOCOL_MAX_MSG_SIZE;
     rc = setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &rcvbuf, sizeof(rcvbuf));
-    if (rc < 0)
+    if (rc < 0 && errno != ENOPROTOOPT)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES;
 
@@ -2136,7 +2136,7 @@ globus_l_create_starter_connect_socket(
     }
     sndbuf = GLOBUS_GRAM_PROTOCOL_MAX_MSG_SIZE;
     rc = setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &sndbuf, sizeof(sndbuf));
-    if (rc < 0)
+    if (rc < 0 && errno != ENOPROTOOPT)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES;
         save_errno = errno;

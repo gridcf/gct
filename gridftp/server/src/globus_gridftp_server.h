@@ -1279,6 +1279,10 @@ globus_gfs_data_get_file_stack_list(
     globus_gfs_operation_t              in_op,
     globus_list_t **                    out_list);
 
+char *
+globus_gfs_data_get_cmd_string(
+    globus_gfs_operation_t              op);
+
 void
 globus_gridftp_server_get_update_interval(
     globus_gfs_operation_t              op,

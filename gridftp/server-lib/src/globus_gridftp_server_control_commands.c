@@ -615,7 +615,7 @@ globus_l_gsc_cmd_cwd_cb(
                     _FSMSL("%s: No such file or directory."), path);
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(_FSMSL("Permission denied."));
                 break;
@@ -769,7 +769,7 @@ globus_l_gsc_cmd_stat_cb(
                     _FSMSL("No such file or directory."));
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(
                     _FSMSL("Permission denied."));
@@ -977,7 +977,7 @@ globus_l_gsc_cmd_size_cb(
                     _FSMSL("No such file."));
                 break;
 
-            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED:
+            case GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED:
                 code = 553;
                 msg = globus_common_create_string(
                     _FSMSL("Permission denied."));
@@ -2042,10 +2042,15 @@ globus_l_gsc_cmd_pasv_cb(
             }
             
             h = host;
-            if(*cs[0] == '[')
+            if(*host == '[')
             {
                 h++;
                 *(p - 1) = 0;
+                if (strncmp(h, "::ffff:", 7) == 0) /* IPv4 mapped address */
+                {
+                    h += 7;
+                    *host = ' ';
+                }
             }
             else
             {
@@ -2062,12 +2067,12 @@ globus_l_gsc_cmd_pasv_cb(
                 goto err;
             }
             
-            if(0)
+            if(op->server_handle->epsv_ip)
             {
                 msg = globus_common_create_string(
                     "%d Entering Passive Mode (|%d|%s|%d|)\r\n",
                         wrapper->reply_code,
-                        *cs[0] == '[' ? 2 : 1,
+                        *host == '[' ? 2 : 1,
                         h,
                         (int) port);
             }

@@ -171,7 +171,7 @@ globus_l_resource_cb(
             break;
         case 3:
             msg = "Ice Cream.";
-            response_type = GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED;
+            response_type = GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED;
             break;
     }
     uid = stat_info.uid;

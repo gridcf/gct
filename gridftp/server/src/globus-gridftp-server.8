@@ -961,9 +961,8 @@ Path to main configuration file that should be loaded\&. Otherwise will attempt 
 .PP
 \fB\-C string\fR
 .RS 4
-Path to directory holding configuration files that should be loaded\&. Files will be loaded in alphabetical order, and in the event of duplicate parameters the last loaded file will take precedence\&. Files with a
-\fI\&.\fR
-in the name (file\&.bak, file\&.rpmsave, etc\&.) will be ignored\&. Note that the main configuration file, if one exists, will always be loaded last\&.
+Path to directory holding configuration files that should be loaded\&. Files will be loaded in alphabetical order, and in the event of duplicate parameters the last loaded file will take precedence\&. Backup files and files created by package updates (e.g. file\&.rpmsave) will be ignored\&.
+Note that the main configuration file, if one exists, will always be loaded last\&.
 .sp
 This option can also be set in the configuration file as
 config_dir\&.

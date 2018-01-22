@@ -6,7 +6,7 @@ Name:		globus-gram-job-manager
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	14.36
+Version:	14.37
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Jobmanager
@@ -203,6 +203,11 @@ mkdir -p %{_localstatedir}/lib/globus
 %{_mandir}/man5/*
 
 %changelog
+* Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.37-1
+- Workaround non-implemented features on GNU/Hurd (socket buffer size)
+- Move grid-proxy-destroy call to before starting personal gatekeeper in
+  the test wrapper
+
 * Tue Apr 25 2017 Globus Toolkit <support@globus.org> - 14.36-1
 - Default to running personal gatekeeper on an ephemeral port
 

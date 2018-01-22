@@ -953,6 +953,20 @@ error_init:
     GlobusGFSDebugExitWithError();
 }
 
+char *
+globus_i_gsc_get_cmd_string(
+    void *                              user_arg)
+{
+    globus_l_gfs_request_info_t *       request;
+    char *                              cmd = NULL;
+    GlobusGFSName(globus_i_gsc_get_cmd_string);
+
+    request = (globus_l_gfs_request_info_t *) user_arg;
+    cmd = globus_gridftp_server_control_get_cmd_string(request->control_op);
+
+    return cmd;
+}
+
 globus_result_t
 globus_i_gsc_cmd_intermediate_reply(
     globus_gridftp_server_control_op_t  op,
@@ -3743,6 +3757,13 @@ globus_i_gfs_control_start(
          ((globus_i_gfs_config_bool("allow_anonymous") ||
             globus_i_gfs_config_string("pw_file")!=NULL) ?
          GLOBUS_GRIDFTP_SERVER_LIBRARY_NONE : 0));
+    if(result != GLOBUS_SUCCESS)
+    {
+        goto error_attr_setup;
+    }
+
+    result = globus_gridftp_server_control_attr_set_epsv_ip(
+        attr, globus_i_gfs_config_bool("epsv_ip"));
     if(result != GLOBUS_SUCCESS)
     {
         goto error_attr_setup;

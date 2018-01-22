@@ -48,6 +48,8 @@ if [ -n "$PERL5LIB" ]; then
     export PERL5LIB
 fi
 
+grid-proxy-destroy 2>/dev/null || true
+
 if [ -n "$CONTACT_STRING" ]; then
     echo "#   Using existing GRAM service at $CONTACT_STRING"
 else
@@ -75,8 +77,6 @@ else
     trap cleanup EXIT
     export CONTACT_STRING="$contact"
 fi
-
-grid-proxy-destroy 2>/dev/null || true 
 
 # Perl scripts pass through, otherwise run the program under valgrind
 # conditionally

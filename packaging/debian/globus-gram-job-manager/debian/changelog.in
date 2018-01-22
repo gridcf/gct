@@ -1,3 +1,11 @@
+globus-gram-job-manager (14.37-1+gct.@distro@) @distro@; urgency=medium
+
+  * Workaround non-implemented features on GNU/Hurd (socket buffer size)
+  * Move grid-proxy-destroy call to before starting personal gatekeeper in
+    the test wrapper
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 20 Jan 2018 07:09:44 +0100
+
 globus-gram-job-manager (14.36-1+gt6.@distro@) @distro@; urgency=low
 
   * Default to running personal gatekeeper on an ephemeral port
