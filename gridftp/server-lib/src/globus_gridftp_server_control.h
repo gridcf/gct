@@ -85,6 +85,10 @@ typedef enum globus_gsc_response_e
     GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_MAX_FTP_ERROR = 599
 } globus_gridftp_server_control_response_t;
 
+// For compatibility with old mispelled name - deprecated
+#define GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED \
+	GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED
+
 #ifdef __GNUC__
 #define GlobusGridFTPServerName(func) static const char * _gridftp_server_name __attribute__((__unused__)) = #func
 #else

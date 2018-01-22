@@ -13,7 +13,7 @@ include /usr/share/quilt/quilt.make
 
 name = globus-gridftp-server
 _name = globus_gridftp_server
-version = 12.4
+version = 13.0
 soname = 6
 
 INSTALLDIR = $(CURDIR)/debian/tmp
@@ -61,7 +61,7 @@ configure-stamp: sed-stamp
 
 	export GRIDMAP=/etc/grid-security/grid-mapfile; \
 	./configure \
- 	   --host=$(DEB_HOST_GNU_TYPE) \
+	   --host=$(DEB_HOST_GNU_TYPE) \
 	   --build=$(DEB_BUILD_GNU_TYPE) \
 	   --prefix=$(_prefix) \
 	   --docdir='$(_docdir)/lib$(name)-dev' \
@@ -130,7 +130,7 @@ install: build-stamp
 
 	$(MAKE) install DESTDIR=$(INSTALLDIR)
 	mv $(INSTALLDIR)/etc/gridftp.conf.default $(INSTALLDIR)/etc/gridftp.conf
-	
+
 	# Remove libtool archives (.la files)
 	find $(INSTALLDIR)$(_libdir) -name 'lib*.la' -exec rm -v '{}' \;
 
