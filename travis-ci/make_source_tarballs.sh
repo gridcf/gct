@@ -36,7 +36,7 @@ rm -rf package-output
 mkdir package-output
 echo '================================================================================'
 sed -i 's/gridftp_hdfs-dist//' Makefile
-make dist
+make dist && mv gct-*.tar.gz package-output/
 time make -j1 tarballs
 
 echo '================================================================================'
