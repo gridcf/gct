@@ -6,7 +6,7 @@ Name:		globus-gsi-sysconfig
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	8.0
+Version:	8.1
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI System Config Library
@@ -183,6 +183,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Wed Jan 24 2018 Globus Toolkit <support@globus.org> - 8.1-1
+- fix typo in windows function name
+
 * Wed Nov 01 2017 Globus Toolkit <support@globus.org> - 8.0-1
 - Add cert and key checks based on different uid
 

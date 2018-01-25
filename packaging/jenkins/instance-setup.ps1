@@ -9,7 +9,7 @@ Start-Transcript -path C:\Windows\Temp\instance-setup.txt
 $password = [Guid]::NewGuid().Guid
 Net user /add jenkins "$password" /yes
 
-$cygwin_core_packages = "autoconf,autoconf2.5,automake1.15,bison,bsdtar,cpio,curl,diffutils,dos2unix,doxygen,findutils,flex,gawk,gccmakedep,gdb,git,graphviz,grep,groff,make,makedepend,openssh,openssl,patch,patchutils,pax,perl-Test-Simple,perl-XML-Simple,pylint,python,rebase,rpm,vim,vim-common,vim-minimal,w3m,zip,zsh"
+$cygwin_core_packages = "autoconf,autoconf2.5,automake,automake1.14,automake1.15,bison,bsdtar,cpio,curl,diffutils,dos2unix,doxygen,findutils,flex,gawk,gccmakedep,gdb,git,graphviz,grep,groff,libtool,make,makedepend,openssh,openssl,patch,patchutils,pax,perl-Test-Simple,perl-XML-Simple,pylint,python,rebase,rpm,vim,vim-common,vim-minimal,w3m,zip,zsh"
 
 $cygwin_dev_packages = "binutils,bzip2,gcc-core,gcc-g++,gcc-tools-autoconf,gcc-tools-automake,gcc4,gcc4-core,gcc4-g++,gettext,gettext-devel,glib2.0-networking,graphviz,grep,groff,libisl10,libcloog-isl4,libffi-devel,libffi6,libgcc1,libglib2.0-devel,libglib2.0_0,libnice-devel,openssl-devel,pkg-config,zlib,zlib-devel"
 

@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (8.1-1+gt6.@distro@) @distro@; urgency=low
+
+  * fix typo in windows function name
+
+ -- Globus Toolkit <support@globus.org>  Wed, 24 Jan 2018 21:24:59 -0600
+
 globus-gsi-sysconfig (8.0-1+gt6.@distro@) @distro@; urgency=low
 
   * Add cert and key checks based on different uid
