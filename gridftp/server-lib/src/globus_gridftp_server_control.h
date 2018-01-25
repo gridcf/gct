@@ -85,6 +85,10 @@ typedef enum globus_gsc_response_e
     GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_MAX_FTP_ERROR = 599
 } globus_gridftp_server_control_response_t;
 
+// For compatibility with old mispelled name - deprecated
+#define GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENINED \
+	GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_ACCESS_DENIED
+
 #ifdef __GNUC__
 #define GlobusGridFTPServerName(func) static const char * _gridftp_server_name __attribute__((__unused__)) = #func
 #else
@@ -554,6 +558,11 @@ globus_gridftp_server_control_attr_set_idle_time(
     int                                     idle_timeout,
     int                                     preauth_timeout);
 
+globus_result_t
+globus_gridftp_server_control_attr_set_epsv_ip(
+    globus_gridftp_server_control_attr_t    in_attr,
+    globus_bool_t                           epsv_ip);
+
 /*
  *  if module name is NULL then it is the default handler
  */
@@ -696,6 +705,10 @@ globus_gridftp_server_control_get_data_auth(
 globus_bool_t
 globus_gridftp_server_control_authenticated(
     globus_gridftp_server_control_t         server);
+
+char *
+globus_gridftp_server_control_get_cmd_string(
+    globus_gridftp_server_control_op_t      op);
 
 /***************************************************************************
  *  data object

@@ -54,7 +54,7 @@ mkdir -p -m 755 "$ROOT_DIR/dev"
 devs="zero null random urandom"
 
 case $(uname) in
-    Linux|Darwin|SunOS)
+    Linux|Darwin|SunOS|GNU|GNU/kFreeBSD)
         (cd /dev; tar chf - $devs) | (cd "$ROOT_DIR/dev"; tar xf -)
         ;;
 esac

@@ -1,3 +1,9 @@
+myproxy-oauth (0.27-1+gt6.@distro@) @distro@; urgency=low
+
+  * Revert previous
+
+ -- Globus Toolkit <support@globus.org>  Mon, 18 Dec 2017 14:45:44 -0500
+
 myproxy-oauth (0.26-1+gt6.@distro@) @distro@; urgency=low
 
   * Move apache config file deployment into setup script

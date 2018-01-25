@@ -6,7 +6,7 @@ Name:		globus-gridftp-server-control
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	6.1
+Version:	7.0
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GridFTP Server Library
@@ -139,6 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.0-1
+- Add option to send IPv6 address in EPSV response
+- Add function to get the command string
+- Terminate the connection if server fails to write the 220 banner
+- Fix typo in GridFTP server response type
+
 * Wed Nov 01 2017 Globus Toolkit <support@globus.org> - 6.1-1
 - Don't error if acquire_cred fails when vhost env is set
 

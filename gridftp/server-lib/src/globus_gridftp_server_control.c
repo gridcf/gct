@@ -1343,7 +1343,7 @@ globus_l_gsc_220_write_cb(
 err:
 
     globus_xio_attr_init(&close_attr);
-    globus_l_gsc_server_ref_check(server_handle);
+    globus_l_gsc_terminate(server_handle);
     globus_mutex_unlock(&server_handle->mutex);
 
     GlobusGridFTPServerDebugInternalExitWithError();
@@ -2970,6 +2970,7 @@ globus_gridftp_server_control_start(
         goto err;
     }
 
+    server_handle->epsv_ip = i_attr->epsv_ip;
     server_handle->security_type = i_attr->security;
     globus_xio_stack_destroy(xio_stack);
     server_handle->ref = 1;

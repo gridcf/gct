@@ -5,7 +5,7 @@ Name:		myproxy-oauth
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	0.26
+Version:	0.27
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	MyProxy OAuth Delegation Serice
@@ -90,6 +90,29 @@ fi
 exec /usr/bin/env PYTHONPATH="$pythonpath" python /usr/share/%{name}/myproxy-oauth-setup "\$@" \${idarg}
 EOF
 chmod a+x $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
+cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+%else
+%if 0%{?rhel} == 05
+mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
+cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-epel5 \
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+%else
+%if 0%{?suse_version} > 0
+mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf.d
+cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
+   $RPM_BUILD_ROOT/etc/apache2/conf.d/wsgi-myproxy-oauth.conf 
+
+%else
+mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
+cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth \
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+%endif
+%endif
+%endif
+
 mkdir -p "$RPM_BUILD_ROOT/var/lib/myproxy-oauth"
 
 %pre
@@ -109,17 +132,23 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %if %{?suse_version}%{!?suse_version:0} >= 1315
+%dir %{_sysconfdir}/apache2
+%dir %{_sysconfdir}/apache2/conf.d
 %dir %{_docdir}/%{name}
 %dir %{_docdir}/%{name}/apache
 %endif
 %doc %{_docdir}/%{name}/README.txt
 %doc %{_docdir}/%{name}/apache/*
+%config(noreplace) /etc/*/conf.d/wsgi-myproxy-oauth.conf
 %dir %attr(0700,myproxyoauth,myproxyoauth) /var/lib/myproxy-oauth
 /usr/share/%{name}
 
 %{_sbindir}/myproxy-oauth-setup
 
 %changelog
+* Mon Dec 18 2017 Globus Toolkit <support@globus.org> - 0.27-1
+- Revert
+
 * Mon Mar 13 2017 Globus Toolkit <support@globus.org> - 0.26-1
 - Move apache config file deployment into setup script
 

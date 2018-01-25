@@ -335,6 +335,7 @@ typedef struct globus_i_gsc_attr_s
     char *                                  post_auth_banner;
     char *                                  pre_auth_banner;
     globus_gridftp_server_control_security_type_t   security;
+    globus_bool_t                           epsv_ip;
 
     int                                     idle_timeout;
     int                                     preauth_timeout;
@@ -470,6 +471,7 @@ typedef struct globus_i_gsc_server_handle_s
     int                                 preauth_timeout;
     
     globus_i_gsc_cmd_wrapper_t *        pasv_info;
+    globus_bool_t                       epsv_ip;
 
     globus_bool_t                       q_backup;
     int                                 max_q_len;
