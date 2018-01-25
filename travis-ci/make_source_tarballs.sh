@@ -36,7 +36,12 @@ rm -rf package-output
 mkdir package-output
 echo '================================================================================'
 sed -i 's/gridftp_hdfs-dist//' Makefile
-make dist && mv gct-*.tar.gz package-output/
+
+# Also create source installer tarball
+package_name=$(grep '^PACKAGE_NAME =' Makefile | cut -d ' ' -f 3)
+package_version=$(grep '^PACKAGE_VERSION =' Makefile | cut -d ' ' -f 3)
+make dist && mv "${package_name}-${package_version}.tar.gz" package-output/
+
 time make -j1 tarballs
 
 echo '================================================================================'
