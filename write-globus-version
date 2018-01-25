@@ -2,5 +2,5 @@
 
 cat <<EOF > common/source/globus_version
 GLOBUS_VERSION="\${GLOBUS_VERSION:-$1}"
-GLOBUS_VERSIONNAME="\${GLOBUS_VERSIONNAME:-Globus Toolkit}"
+GLOBUS_VERSIONNAME="\${GLOBUS_VERSIONNAME:-Grid Community Toolkit}"
 EOF
