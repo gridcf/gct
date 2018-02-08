@@ -13,7 +13,7 @@ include /usr/share/quilt/quilt.make
 
 name = globus-gridftp-server
 _name = globus_gridftp_server
-version = 13.0
+version = 13.1
 soname = 6
 
 INSTALLDIR = $(CURDIR)/debian/tmp

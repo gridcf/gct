@@ -5,7 +5,7 @@ Name:		globus-xio-udt-driver
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	1.28
+Version:	1.29
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO UDT Driver
@@ -163,6 +163,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Jan 25 2018 Globus Toolkit <support@globus.org> - 1.29-1
+- update gettext for win build
+
 * Mon Jun 26 2017 Globus Toolkit <support@globus.org> - 1.28-1
 - Fix Glib build
 

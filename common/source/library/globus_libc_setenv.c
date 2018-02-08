@@ -34,7 +34,7 @@ globus_libc_unsetenv(
     const char *name)
 {
 #ifdef _WIN32
-    size_t len = snprintf(NULL, 0, "%s=", name);
+    size_t len = snprintf(NULL, 0, "%s=", name) + 1;
     char *tmp = malloc(len);
     sprintf(tmp, "%s=", name);
     _putenv(tmp);

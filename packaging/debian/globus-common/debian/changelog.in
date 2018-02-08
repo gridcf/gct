@@ -1,3 +1,15 @@
+globus-common (17.4-1+gt6.@distro@) @distro@; urgency=low
+
+  * win32 fix
+
+ -- Globus Toolkit <support@globus.org>  Wed, 07 Feb 2018 00:25:35 -0600
+
+globus-common (17.3-1+gt6.@distro@) @distro@; urgency=low
+
+  * use win compatible unsetenv
+
+ -- Globus Toolkit <support@globus.org>  Thu, 25 Jan 2018 15:04:55 -0600
+
 globus-common (17.2-1+gt6.@distro@) @distro@; urgency=low
 
   * Merge #110 from ellert: Fix regex for perl 5.26 compatibility

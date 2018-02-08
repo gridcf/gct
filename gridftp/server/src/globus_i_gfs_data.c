@@ -102,27 +102,27 @@ do                                                                      \
 } while(0)
 
 #ifdef WIN32
-#define DriveLetterToWin(_p_path)                                       \
-    do                                                                  \
-    {                                                                   \
-        if(_p_path)                                                     \
-        {                                                               \
-            if(isalpha(_p_path[1]) && _p_path[2] == '/')                \
-            {                                                           \
-                _p_path[0] = _p_path[1];                                \
-                _p_path[1] = ':';                                       \
-            }                                                           \
-            else if(isalpha(_p_path[1]) && _p_path[2] == '\0')          \
-            {                                                           \
-                char                        _driveletter = _p_path[1];  \
-                free(_p_path);                                          \
-                _p_path = globus_malloc(4);                             \
-                _p_path[0] = _driveletter;                              \
-                _p_path[1] = ':';                                       \
-                _p_path[2] = '/';                                       \
-                _p_path[3] = '\0';                                      \
-            }                                                           \
-        }                                                               \
+#define DriveLetterToWin(_p_path)                                         \
+    do                                                                    \
+    {                                                                     \
+        if(_p_path)                                                       \
+        {                                                                 \
+            if(isalpha((_p_path)[1]) && (_p_path)[2] == '/')              \
+            {                                                             \
+                (_p_path)[0] = (_p_path)[1];                              \
+                (_p_path)[1] = ':';                                       \
+            }                                                             \
+            else if(isalpha((_p_path)[1]) && (_p_path)[2] == '\0')        \
+            {                                                             \
+                char                        _driveletter = (_p_path)[1];  \
+                free(_p_path);                                            \
+                (_p_path) = globus_malloc(4);                             \
+                (_p_path)[0] = _driveletter;                              \
+                (_p_path)[1] = ':';                                       \
+                (_p_path)[2] = '/';                                       \
+                (_p_path)[3] = '\0';                                      \
+            }                                                             \
+        }                                                                 \
     } while(0)
 #else
 #define DriveLetterToWin(_p_path)

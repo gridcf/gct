@@ -71,7 +71,7 @@ main(int argc, char *argv[])
         TEST(globus_location_reset_test)
     };
     size_t                              num_tests = sizeof(tests)/sizeof(tests[0]);
-    unsetenv("GLOBUS_LOCATION");
+    globus_libc_unsetenv("GLOBUS_LOCATION");
     globus_module_activate(GLOBUS_COMMON_MODULE);
     printf("1..%zu\n", num_tests);
 
