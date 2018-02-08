@@ -6,7 +6,7 @@ Name:		globus-gridftp-server
 %global apache_license ASL 2.0
 %endif
 %global _name %(tr - _ <<< %{name})
-Version:	13.0
+Version:	13.1
 Release:	1%{?dist}
 Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GridFTP Server
@@ -230,6 +230,9 @@ fi
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 13.1-1
+- win32 fix
+
 * Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.0-1
 - Add option to send IPv6 address in EPSV response
 - Add function to get the command string

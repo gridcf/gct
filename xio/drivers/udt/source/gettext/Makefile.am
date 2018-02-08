@@ -1,4 +1,4 @@
-gettext_version = 0.18.2.1
+gettext_version = 0.19.8.1
 gettext_tarball = gettext-$(gettext_version).tar.gz
 gettext_tarball_url = http://ftp.gnu.org/pub/gnu/gettext/$(gettext_tarball)
 

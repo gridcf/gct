@@ -12,7 +12,7 @@ endif
 include /usr/share/quilt/quilt.make
 
 name = globus-common
-version = 17.2
+version = 17.4
 soname = 0
 
 INSTALLDIR = $(CURDIR)/debian/tmp

@@ -1,3 +1,9 @@
+globus-gridftp-server (13.1-1+gct.@distro@) @distro@; urgency=low
+
+  * win32 fix
+
+ -- Globus Toolkit <support@globus.org>  Wed, 07 Feb 2018 00:23:59 -0600
+
 globus-gridftp-server (13.0-1+gct.@distro@) @distro@; urgency=low
 
   * Add option to send IPv6 address in EPSV response

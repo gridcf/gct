@@ -1,3 +1,9 @@
+globus-xio-udt-driver (1.29-1+gt6.@distro@) @distro@; urgency=low
+
+  * update gettext for win build
+
+ -- Globus Toolkit <support@globus.org>  Thu, 25 Jan 2018 09:30:06 -0600
+
 globus-xio-udt-driver (1.28-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix Glib build
