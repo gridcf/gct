@@ -2,7 +2,6 @@ Name:		globus-data-management-server
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Data Management Server
 
 Group:		System Environment/Libraries

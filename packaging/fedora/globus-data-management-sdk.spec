@@ -2,7 +2,6 @@ Name:		globus-data-management-sdk
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Data Management SDK
 
 Group:		System Environment/Libraries

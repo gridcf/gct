@@ -7,7 +7,6 @@ Name:		globus-gridmap-eppn-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.13
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus gridmap eppn callout
 
 Group:		System Environment/Libraries

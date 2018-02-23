@@ -8,7 +8,6 @@ Name:		globus-gsi-credential
 %global _name %(tr - _ <<< %{name})
 Version:	7.14
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Credential Library
 
 Group:		System Environment/Libraries

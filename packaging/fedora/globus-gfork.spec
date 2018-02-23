@@ -8,7 +8,6 @@ Name:		globus-gfork
 %global _name %(tr - _ <<< %{name})
 Version:	4.9
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GFork
 
 Group:		System Environment/Libraries

@@ -8,7 +8,6 @@ Name:		globus-authz-callout-error
 %global _name %(tr - _ <<< %{name})
 Version:	3.6
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus authz error library
 
 Group:		System Environment/Libraries

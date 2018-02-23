@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-fork
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Fork Job Manager
 
 Group:		Applications/Internet

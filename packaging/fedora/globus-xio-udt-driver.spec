@@ -7,7 +7,6 @@ Name:		globus-xio-udt-driver
 %global _name %(tr - _ <<< %{name})
 Version:	1.29
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO UDT Driver
 
 Group:		System Environment/Libraries

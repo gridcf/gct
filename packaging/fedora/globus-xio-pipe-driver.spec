@@ -7,7 +7,6 @@ Name:		globus-xio-pipe-driver
 %global _name %(tr - _ <<< %{name})
 Version:	3.10
 Release:	1%{?dist}
-Vendor:	        Globus Support
 Summary:	Globus Toolkit - Globus Pipe Driver
 
 Group:		System Environment/Libraries

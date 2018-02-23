@@ -8,7 +8,6 @@ Name:		globus-gass-server-ez
 %global _name %(tr - _ <<< %{name})
 Version:	5.8
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gass Server_ez
 
 Group:		System Environment/Libraries

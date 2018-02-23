@@ -8,7 +8,6 @@ Name:		globus-gssapi-error
 %global _name %(tr - _ <<< %{name})
 Version:	5.5
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GSSAPI Error Library
 
 Group:		System Environment/Libraries

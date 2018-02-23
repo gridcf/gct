@@ -8,7 +8,6 @@ Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
 Version:	14.37
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet

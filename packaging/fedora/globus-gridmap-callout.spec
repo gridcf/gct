@@ -8,7 +8,6 @@ Name:		globus-gridmap-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.1
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gridmap Callout
 
 Group:		System Environment/Libraries

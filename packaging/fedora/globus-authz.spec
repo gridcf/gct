@@ -8,7 +8,6 @@ Name:		globus-authz
 %global _name %(tr - _ <<< %{name})
 Version:	3.15
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus authz library
 
 Group:		System Environment/Libraries

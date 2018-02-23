@@ -9,7 +9,6 @@ Name:		globus-simple-ca
 %endif
 Version:	4.24
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Simple CA
 
 Group:		System Environment/Libraries

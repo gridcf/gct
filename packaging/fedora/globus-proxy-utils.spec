@@ -7,7 +7,6 @@ Name:		globus-proxy-utils
 %global _name %(tr - _ <<< %{name})
 Version:	6.19
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Proxy Utility Programs
 
 Group:		Applications/Internet

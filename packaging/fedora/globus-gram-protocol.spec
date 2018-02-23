@@ -10,7 +10,6 @@ Name:		globus-gram-protocol
 %global _name %(tr - _ <<< %{name})
 Version:	12.15
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Protocol Library
 
 Group:		System Environment/Libraries

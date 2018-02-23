@@ -8,7 +8,6 @@ Name:		globus-xio-gridftp-multicast
 %global _name %(tr - _ <<< %{name})
 Version:	1.7
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO GridFTP Multicast Driver
 
 Group:		System Environment/Libraries

@@ -8,7 +8,6 @@ Name:		globus-gsi-openssl-error
 %global _name %(tr - _ <<< %{name})
 Version:	3.8
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus OpenSSL Error Handling
 
 Group:		System Environment/Libraries

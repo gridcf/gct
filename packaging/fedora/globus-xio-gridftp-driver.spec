@@ -7,7 +7,6 @@ Name:		globus-xio-gridftp-driver
 %global _name %(tr - _ <<< %{name})
 Version:	2.17
 Release:	2%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO GridFTP Driver
 
 Group:		System Environment/Libraries

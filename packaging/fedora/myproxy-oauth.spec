@@ -7,7 +7,6 @@ Name:		myproxy-oauth
 %global _name %(tr - _ <<< %{name})
 Version:	0.27
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	MyProxy OAuth Delegation Serice
 
 Group:		System Environment/Libraries

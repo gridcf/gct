@@ -8,7 +8,6 @@ Name:		globus-gssapi-gsi
 %global _name %(tr - _ <<< %{name})
 Version:	13.6
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GSSAPI library
 
 Group:		System Environment/Libraries

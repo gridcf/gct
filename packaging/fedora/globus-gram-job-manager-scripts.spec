@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-scripts
 %global _name %(tr - _ <<< %{name})
 Version:	6.10
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Job ManagerScripts
 
 Group:		Applications/Internet

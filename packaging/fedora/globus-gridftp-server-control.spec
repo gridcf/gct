@@ -8,7 +8,6 @@ Name:		globus-gridftp-server-control
 %global _name %(tr - _ <<< %{name})
 Version:	7.0
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GridFTP Server Library
 
 Group:		System Environment/Libraries

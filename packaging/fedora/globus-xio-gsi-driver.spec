@@ -8,7 +8,6 @@ Name:		globus-xio-gsi-driver
 %global _name %(tr - _ <<< %{name})
 Version:	4.1
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO GSI Driver
 
 Group:		System Environment/Libraries

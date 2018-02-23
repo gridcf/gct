@@ -8,7 +8,6 @@ Name:		globus-gram-job-manager-callout-error
 %global _name %(tr - _ <<< %{name})
 Version:	3.6
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GRAM Jobmanager Callout Errors
 
 Group:		System Environment/Libraries

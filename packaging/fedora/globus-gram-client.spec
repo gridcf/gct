@@ -8,7 +8,6 @@ Name:		globus-gram-client
 %global _name %(tr - _ <<< %{name})
 Version:	13.19
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Client Library
 
 Group:		System Environment/Libraries

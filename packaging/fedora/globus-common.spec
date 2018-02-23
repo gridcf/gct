@@ -15,7 +15,6 @@ Name:		globus-common
 %global _name %(tr - _ <<< %{name})
 Version:	17.4
 Release:	1%{?dist}
-Vendor:		Globus Support
 Summary:	Globus Toolkit - Common Library
 
 

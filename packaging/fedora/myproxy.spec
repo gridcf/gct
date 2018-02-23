@@ -15,7 +15,6 @@ Name:           myproxy
 %global _name %(tr - _ <<< %{name})
 Version:	6.1.28
 Release:	4%{?dist}
-Vendor: Globus Support
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          System Environment/Daemons

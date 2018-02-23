@@ -8,7 +8,6 @@ Name:		globus-rsl
 %global _name %(tr - _ <<< %{name})
 Version:	10.11
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Resource Specification Language Library
 
 Group:		System Environment/Libraries

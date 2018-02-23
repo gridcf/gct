@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-slurm
 %global _name %(tr - _ <<< %{name})
 Version:	2.8
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - SLURM Job Manager
 
 Group:		Applications/Internet

@@ -7,7 +7,6 @@ Name:           globus-xio-rate-driver
 %global _name %(tr - _ <<< %{name})
 Version:	1.8
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus XIO Rate Limiting Driver
 
 Group:		System Environment/Libraries

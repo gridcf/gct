@@ -8,7 +8,6 @@ Name:		globus-scheduler-event-generator
 %global _name %(tr - _ <<< %{name})
 Version:	5.12
 Release:	5%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries

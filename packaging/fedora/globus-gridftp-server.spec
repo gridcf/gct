@@ -8,7 +8,6 @@ Name:		globus-gridftp-server
 %global _name %(tr - _ <<< %{name})
 Version:	13.1
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GridFTP Server
 
 Group:		System Environment/Libraries

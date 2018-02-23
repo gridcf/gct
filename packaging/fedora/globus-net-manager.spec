@@ -8,7 +8,6 @@ Name:		globus-net-manager
 %global _name %(tr - _ <<< %{name})
 Version:	0.17
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Net Manager Library
 
 Group:		System Environment/Libraries

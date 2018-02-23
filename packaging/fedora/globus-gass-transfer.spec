@@ -8,7 +8,6 @@ Name:		globus-gass-transfer
 %global _name %(tr - _ <<< %{name})
 Version:	8.10
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gass Transfer
 
 Group:		System Environment/Libraries

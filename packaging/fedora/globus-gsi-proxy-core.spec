@@ -8,7 +8,6 @@ Name:		globus-gsi-proxy-core
 %global _name %(tr - _ <<< %{name})
 Version:	8.6
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Proxy Core Library
 
 Group:		System Environment/Libraries

@@ -2,7 +2,6 @@ Name:		globus-resource-management-sdk
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Resource Management SDK
 
 Group:		System Environment/Libraries

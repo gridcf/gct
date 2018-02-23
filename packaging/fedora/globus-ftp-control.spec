@@ -8,7 +8,6 @@ Name:		globus-ftp-control
 %global _name %(tr - _ <<< %{name})
 Version:	8.2
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GridFTP Control Library
 
 Group:		System Environment/Libraries

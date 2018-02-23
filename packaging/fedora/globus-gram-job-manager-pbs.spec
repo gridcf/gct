@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-pbs
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - PBS Job Manager
 
 Group:		Applications/Internet

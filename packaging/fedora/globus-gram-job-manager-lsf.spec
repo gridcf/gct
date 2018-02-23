@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-lsf
 %global _name %(tr - _ <<< %{name})
 Version:	2.7
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - LSF Job Manager
 
 Group:		Applications/Internet

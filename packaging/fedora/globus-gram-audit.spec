@@ -9,7 +9,6 @@ Name:		globus-gram-audit
 %global _name %(tr - _ <<< %{name})
 Version:	4.6
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GRAM Auditing
 
 Group:		Applications/Internet

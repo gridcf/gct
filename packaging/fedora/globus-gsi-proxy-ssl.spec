@@ -9,7 +9,6 @@ Name:		globus-gsi-proxy-ssl
 %global _name %(tr - _ <<< %{name})
 Version:	5.10
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Proxy SSL Library
 
 Group:		System Environment/Libraries

@@ -8,7 +8,6 @@ Name:		globus-gss-assist
 %global _name %(tr - _ <<< %{name})
 Version:	11.1
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - GSSAPI Assist library
 
 Group:		System Environment/Libraries

@@ -8,7 +8,6 @@ Name:		globus-gsi-callback
 %global _name %(tr - _ <<< %{name})
 Version:	5.13
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Callback Library
 
 Group:		System Environment/Libraries

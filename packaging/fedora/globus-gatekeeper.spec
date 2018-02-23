@@ -7,7 +7,6 @@ Name:		globus-gatekeeper
 %global _name %(tr - _ <<< %{name})
 Version:	10.12
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gatekeeper
 
 Group:		Applications/Internet

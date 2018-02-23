@@ -8,7 +8,6 @@ Name:		globus-io
 %global _name %(tr - _ <<< %{name})
 Version:	11.9
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - uniform I/O interface
 
 Group:		System Environment/Libraries

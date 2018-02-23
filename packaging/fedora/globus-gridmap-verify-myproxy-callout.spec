@@ -7,7 +7,6 @@ Name:		globus-gridmap-verify-myproxy-callout
 %global _name %(tr - _ <<< %{name})
 Version:	2.9
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus gridmap myproxy callout
 
 Group:		System Environment/Libraries

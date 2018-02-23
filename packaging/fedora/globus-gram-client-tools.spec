@@ -8,7 +8,6 @@ Name:		globus-gram-client-tools
 %global _name %(tr - _ <<< %{name})
 Version:	11.10
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Job Management Tools (globusrun)
 
 Group:		Applications/Internet

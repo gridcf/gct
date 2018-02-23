@@ -8,7 +8,6 @@ Name:		globus-gsi-cert-utils
 %global _name %(tr - _ <<< %{name})
 Version:	9.16
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus GSI Cert Utils Library
 
 Group:		System Environment/Libraries

@@ -2,7 +2,6 @@ Name:           gridftp-hdfs
 %global _name %(tr - _ <<< %{name})
 Version:	1.5
 Release:	1
-Vendor:	Globus Support
 Summary:        HDFS DSI plugin for GridFTP
 
 Group:          System Environment/Daemons

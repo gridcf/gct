@@ -9,7 +9,6 @@ Name:		globus-gram-job-manager-sge
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	8%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - SGE Job Manager
 
 Group:		Applications/Internet

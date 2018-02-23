@@ -8,7 +8,6 @@ Name:		globus-openssl-module
 %global _name %(tr - _ <<< %{name})
 Version:	4.8
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus OpenSSL Module Wrapper
 
 Group:		System Environment/Libraries

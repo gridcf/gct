@@ -8,7 +8,6 @@ Name:		globus-callout
 %global _name %(tr - _ <<< %{name})
 Version:	3.15
 Release:	3%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Callout Library
 
 Group:		System Environment/Libraries

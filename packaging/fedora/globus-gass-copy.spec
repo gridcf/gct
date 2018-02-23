@@ -8,7 +8,6 @@ Name:		globus-gass-copy
 %global _name %(tr - _ <<< %{name})
 Version:	9.28
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gass Copy
 
 Group:		System Environment/Libraries

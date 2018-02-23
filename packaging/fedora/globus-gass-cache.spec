@@ -8,7 +8,6 @@ Name:		globus-gass-cache
 %global _name %(tr - _ <<< %{name})
 Version:	9.10
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gass Cache
 
 Group:		System Environment/Libraries

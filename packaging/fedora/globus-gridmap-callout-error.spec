@@ -8,7 +8,6 @@ Name:		globus-gridmap-callout-error
 %global _name %(tr - _ <<< %{name})
 Version:	2.5
 Release:	4%{?dist}
-Vendor:	Globus Support
 Summary:	Globus Toolkit - Globus Gridmap Callout Errors
 
 Group:		System Environment/Libraries
