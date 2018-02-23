@@ -8,7 +8,7 @@ Name:		globus-gsi-sysconfig
 %global _name %(tr - _ <<< %{name})
 Version:	8.1
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GSI System Config Library
+Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -54,12 +54,12 @@ BuildRequires:  openssl-devel
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GSI System Config Library
+Summary:	Grid Community Toolkit - Globus GSI System Config Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus GSI System Config Library Development Files
+Summary:	Grid Community Toolkit - Globus GSI System Config Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 15
@@ -79,7 +79,7 @@ Requires:  openssl-devel
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus GSI System Config Library Documentation Files
+Summary:	Grid Community Toolkit - Globus GSI System Config Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

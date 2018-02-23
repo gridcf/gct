@@ -8,7 +8,7 @@ Name:		globus-gsi-proxy-core
 %global _name %(tr - _ <<< %{name})
 Version:	8.6
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GSI Proxy Core Library
+Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -58,12 +58,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GSI Proxy Core Library
+Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus GSI Proxy Core Library Development Files
+Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gsi-proxy-ssl-devel%{?_isa} >= 4
@@ -87,7 +87,7 @@ Requires:  openssl-devel
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus GSI Proxy Core Library Documentation Files
+Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

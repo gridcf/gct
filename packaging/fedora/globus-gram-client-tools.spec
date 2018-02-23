@@ -8,7 +8,7 @@ Name:		globus-gram-client-tools
 %global _name %(tr - _ <<< %{name})
 Version:	11.10
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Job Management Tools (globusrun)
+Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
 Group:		Applications/Internet
 License:	%{apache_license}

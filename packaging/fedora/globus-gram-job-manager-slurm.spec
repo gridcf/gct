@@ -9,7 +9,7 @@ Name:		globus-gram-job-manager-slurm
 %global _name %(tr - _ <<< %{name})
 Version:	2.8
 Release:	3%{?dist}
-Summary:	Globus Toolkit - SLURM Job Manager
+Summary:	Grid Community Toolkit - SLURM Job Manager
 
 Group:		Applications/Internet
 License:	%{apache_license}
@@ -40,7 +40,7 @@ BuildRequires:  libtool >= 2.2
 BuildArch:      noarch
 
 %package setup-poll
-Summary:        Globus Toolkit - SLURM Job Manager Setup Files
+Summary:        Grid Community Toolkit - SLURM Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:      noarch

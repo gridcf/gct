@@ -7,7 +7,7 @@ Name:		globus-gridmap-eppn-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.13
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus gridmap eppn callout
+Summary:	Grid Community Toolkit - Globus gridmap eppn callout
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -51,7 +51,7 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus gridmap eppn callout
+Summary:	Grid Community Toolkit - Globus gridmap eppn callout
 Group:		System Environment/Libraries
 %endif
 

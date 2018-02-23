@@ -8,7 +8,7 @@ Name:		globus-gsi-cert-utils
 %global _name %(tr - _ <<< %{name})
 Version:	9.16
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -62,12 +62,12 @@ BuildRequires:  perl-Test-Simple
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Programs
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?rhel}%{!?rhel:0} == 5
@@ -78,7 +78,7 @@ Requires:	openssl
 Requires:	globus-common-progs >= 14
 
 %package devel
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Development Files
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14
@@ -98,7 +98,7 @@ Requires:  openssl-devel
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Documentation Files
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

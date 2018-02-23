@@ -7,7 +7,7 @@ Name:		globus-gatekeeper
 %global _name %(tr - _ <<< %{name})
 Version:	10.12
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus Gatekeeper
+Summary:	Grid Community Toolkit - Globus Gatekeeper
 
 Group:		Applications/Internet
 License:	%{apache_license}

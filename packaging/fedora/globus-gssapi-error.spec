@@ -8,7 +8,7 @@ Name:		globus-gssapi-error
 %global _name %(tr - _ <<< %{name})
 Version:	5.5
 Release:	3%{?dist}
-Summary:	Globus Toolkit - GSSAPI Error Library
+Summary:	Grid Community Toolkit - GSSAPI Error Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -40,12 +40,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - GSSAPI Error Library
+Summary:	Grid Community Toolkit - GSSAPI Error Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - GSSAPI Error Library Development Files
+Summary:	Grid Community Toolkit - GSSAPI Error Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14
@@ -53,7 +53,7 @@ Requires:	globus-gss-assist-devel%{?_isa} >= 8
 Requires:       globus-gssapi-gsi-devel%{?_isa} >= 9
 
 %package doc
-Summary:	Globus Toolkit - GSSAPI Error Library Documentation Files
+Summary:	Grid Community Toolkit - GSSAPI Error Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

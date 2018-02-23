@@ -9,7 +9,7 @@ Name:		globus-gram-job-manager-scripts
 %global _name %(tr - _ <<< %{name})
 Version:	6.10
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GRAM Job ManagerScripts
+Summary:	Grid Community Toolkit - GRAM Job ManagerScripts
 
 Group:		Applications/Internet
 BuildArch:	noarch
@@ -35,7 +35,7 @@ BuildRequires:  libtool >= 2.2
 %endif
 
 %package doc
-Summary:	Globus Toolkit - GRAM Job ManagerScripts Documentation Files
+Summary:	Grid Community Toolkit - GRAM Job ManagerScripts Documentation Files
 Group:		Documentation
 Requires:	%{name} = %{version}-%{release}
 

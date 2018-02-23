@@ -9,7 +9,7 @@ Name:		globus-gram-audit
 %global _name %(tr - _ <<< %{name})
 Version:	4.6
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GRAM Auditing
+Summary:	Grid Community Toolkit - GRAM Auditing
 
 Group:		Applications/Internet
 License:	%{apache_license}

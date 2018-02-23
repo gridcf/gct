@@ -7,7 +7,7 @@ Name:		globus-xio-udt-driver
 %global _name %(tr - _ <<< %{name})
 Version:	1.29
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus XIO UDT Driver
+Summary:	Grid Community Toolkit - Globus XIO UDT Driver
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -70,12 +70,12 @@ BuildRequires: libselinux-devel
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus XIO UDT Driver
+Summary:	Grid Community Toolkit - Globus XIO UDT Driver
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus XIO UDT Driver Development Files
+Summary:	Grid Community Toolkit - Globus XIO UDT Driver Development Files
 Group:		Development/Libraries
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 3

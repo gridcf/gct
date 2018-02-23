@@ -8,7 +8,7 @@ Name:		globus-scheduler-event-generator
 %global _name %(tr - _ <<< %{name})
 Version:	5.12
 Release:	5%{?dist}
-Summary:	Globus Toolkit - Scheduler Event Generator
+Summary:	Grid Community Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -64,12 +64,12 @@ BuildRequires:       lsb
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Scheduler Event Generator
+Summary:	Grid Community Toolkit - Scheduler Event Generator
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Scheduler Event Generator Programs
+Summary:	Grid Community Toolkit - Scheduler Event Generator Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -96,7 +96,7 @@ Requires(post): globus-common-progs >= 14
 Requires(preun):globus-common-progs >= 14
 
 %package devel
-Summary:	Globus Toolkit - Scheduler Event Generator Development Files
+Summary:	Grid Community Toolkit - Scheduler Event Generator Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gram-protocol-devel%{?_isa} >= 11
@@ -110,7 +110,7 @@ Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
 Requires:	globus-xio-devel%{?_isa} >= 3
 
 %package doc
-Summary:	Globus Toolkit - Scheduler Event Generator Documentation Files
+Summary:	Grid Community Toolkit - Scheduler Event Generator Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

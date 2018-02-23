@@ -2,7 +2,7 @@ Name:		globus-resource-management-sdk
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Summary:	Globus Toolkit - Resource Management SDK
+Summary:	Grid Community Toolkit - Resource Management SDK
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

@@ -8,7 +8,7 @@ Name:		globus-authz
 %global _name %(tr - _ <<< %{name})
 Version:	3.15
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus authz library
+Summary:	Grid Community Toolkit - Globus authz library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -52,12 +52,12 @@ BuildRequires: openssl
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus authz library
+Summary:	Grid Community Toolkit - Globus authz library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus authz library Development Files
+Summary:	Grid Community Toolkit - Globus authz library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-authz-callout-error-devel%{?_isa}
@@ -65,7 +65,7 @@ Requires:	globus-callout-devel%{?_isa}
 Requires:	globus-gssapi-gsi-devel%{?_isa} >= 9
 
 %package doc
-Summary:	Globus Toolkit - Globus authz library Documentation Files
+Summary:	Grid Community Toolkit - Globus authz library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

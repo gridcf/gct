@@ -8,7 +8,7 @@ Name:		globus-gridmap-callout-error
 %global _name %(tr - _ <<< %{name})
 Version:	2.5
 Release:	4%{?dist}
-Summary:	Globus Toolkit - Globus Gridmap Callout Errors
+Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -39,19 +39,19 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Gridmap Callout Errors
+Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus Gridmap Callout Errors Development Files
+Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-gssapi-error-devel%{?_isa} >= 4
 
 %package doc
-Summary:	Globus Toolkit - Globus Gridmap Callout Errors Documentation Files
+Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

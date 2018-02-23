@@ -8,7 +8,7 @@ Name:		globus-io
 %global _name %(tr - _ <<< %{name})
 Version:	11.9
 Release:	1%{?dist}
-Summary:	Globus Toolkit - uniform I/O interface
+Summary:	Grid Community Toolkit - uniform I/O interface
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -57,12 +57,12 @@ BuildRequires:  openssl
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - uniform I/O interface
+Summary:	Grid Community Toolkit - uniform I/O interface
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - uniform I/O interface Development Files
+Summary:	Grid Community Toolkit - uniform I/O interface Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14

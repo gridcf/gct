@@ -7,7 +7,7 @@ Name:		globus-xio-pipe-driver
 %global _name %(tr - _ <<< %{name})
 Version:	3.10
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus Pipe Driver
+Summary:	Grid Community Toolkit - Globus Pipe Driver
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -33,12 +33,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Pipe Driver
+Summary:	Grid Community Toolkit - Globus Pipe Driver
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus Pipe Driver Development Files
+Summary:	Grid Community Toolkit - Globus Pipe Driver Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 3

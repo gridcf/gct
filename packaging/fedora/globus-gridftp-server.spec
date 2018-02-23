@@ -8,7 +8,7 @@ Name:		globus-gridftp-server
 %global _name %(tr - _ <<< %{name})
 Version:	13.1
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GridFTP Server
+Summary:	Grid Community Toolkit - Globus GridFTP Server
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -65,12 +65,12 @@ BuildRequires: fakeroot
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GridFTP Server
+Summary:	Grid Community Toolkit - Globus GridFTP Server
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Globus GridFTP Server Programs
+Summary:	Grid Community Toolkit - Globus GridFTP Server Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -81,7 +81,7 @@ Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 
 
 %package devel
-Summary:	Globus Toolkit - Globus GridFTP Server Development Files
+Summary:	Grid Community Toolkit - Globus GridFTP Server Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gridftp-server-control-devel%{?_isa} >= 7

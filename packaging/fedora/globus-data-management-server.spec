@@ -2,7 +2,7 @@ Name:		globus-data-management-server
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Data Management Server
+Summary:	Grid Community Toolkit - Data Management Server
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

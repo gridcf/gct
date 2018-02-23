@@ -8,7 +8,7 @@ Name:		globus-callout
 %global _name %(tr - _ <<< %{name})
 Version:	3.15
 Release:	3%{?dist}
-Summary:	Globus Toolkit - Globus Callout Library
+Summary:	Grid Community Toolkit - Globus Callout Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -48,18 +48,18 @@ BuildRequires:  perl-Test-Simple
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Callout Library
+Summary:	Grid Community Toolkit - Globus Callout Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus Callout Library Development Files
+Summary:	Grid Community Toolkit - Globus Callout Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 15
 
 %package doc
-Summary:	Globus Toolkit - Globus Callout Library Documentation Files
+Summary:	Grid Community Toolkit - Globus Callout Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

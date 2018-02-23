@@ -7,7 +7,7 @@ Name:		globus-xio-gridftp-driver
 %global _name %(tr - _ <<< %{name})
 Version:	2.17
 Release:	2%{?dist}
-Summary:	Globus Toolkit - Globus XIO GridFTP Driver
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -59,12 +59,12 @@ BuildRequires: openssl
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus XIO GSI Driver
+Summary:	Grid Community Toolkit - Globus XIO GSI Driver
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus XIO GSI Driver Development Files
+Summary:	Grid Community Toolkit - Globus XIO GSI Driver Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-ftp-client-devel%{?_isa} >= 7
@@ -72,7 +72,7 @@ Requires:	globus-xio-devel%{?_isa} >= 3
 Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
 
 %package doc
-Summary:	Globus Toolkit - Globus XIO GSI Driver Documentation Files
+Summary:	Grid Community Toolkit - Globus XIO GSI Driver Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

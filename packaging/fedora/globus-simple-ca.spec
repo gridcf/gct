@@ -9,7 +9,7 @@ Name:		globus-simple-ca
 %endif
 Version:	4.24
 Release:	4%{?dist}
-Summary:	Globus Toolkit - Simple CA
+Summary:	Grid Community Toolkit - Simple CA
 
 Group:		System Environment/Libraries
 License:	%{apache_license}

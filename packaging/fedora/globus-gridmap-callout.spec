@@ -8,7 +8,7 @@ Name:		globus-gridmap-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.1
 Release:	3%{?dist}
-Summary:	Globus Toolkit - Globus Gridmap Callout
+Summary:	Grid Community Toolkit - Globus Gridmap Callout
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -42,12 +42,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Gridmap Callout
+Summary:	Grid Community Toolkit - Globus Gridmap Callout
 Group:		System Environment/Libraries
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus Gridmap Callout Documentation Files
+Summary:	Grid Community Toolkit - Globus Gridmap Callout Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

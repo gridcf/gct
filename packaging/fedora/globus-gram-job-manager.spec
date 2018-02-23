@@ -8,7 +8,7 @@ Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
 Version:	14.37
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GRAM Jobmanager
+Summary:	Grid Community Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet
 License:	%{apache_license}
@@ -84,12 +84,12 @@ BuildRequires:  perl-Test
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %package -n libglobus_seg_job_manager
-Summary:	Globus Toolkit - GRAM Jobmanager SEG Library
+Summary:	Grid Community Toolkit - GRAM Jobmanager SEG Library
 Group:		System Environment/Libraries
 %endif
 
 %package doc
-Summary:	Globus Toolkit - GRAM Jobmanager Documentation Files
+Summary:	Grid Community Toolkit - GRAM Jobmanager Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

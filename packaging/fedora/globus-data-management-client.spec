@@ -2,7 +2,7 @@ Name:		globus-data-management-client
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Data Management Client
+Summary:	Grid Community Toolkit - Data Management Client
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

@@ -7,7 +7,7 @@ Name:           globus-xio-rate-driver
 %global _name %(tr - _ <<< %{name})
 Version:	1.8
 Release:	3%{?dist}
-Summary:	Globus Toolkit - Globus XIO Rate Limiting Driver
+Summary:	Grid Community Toolkit - Globus XIO Rate Limiting Driver
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -33,12 +33,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Toolkit - Globus XIO Rate Limiting Driver
+Summary:	Grid Community Toolkit - Globus Toolkit - Globus XIO Rate Limiting Driver
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus XIO Rate Limiting Driver Development Files
+Summary:	Grid Community Toolkit - Globus XIO Rate Limiting Driver Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 0

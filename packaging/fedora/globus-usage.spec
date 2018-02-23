@@ -8,7 +8,7 @@ Name:		globus-usage
 %global _name %(tr - _ <<< %{name})
 Version:	4.5
 Release:	3%{?dist}
-Summary:	Globus Toolkit - Usage Library
+Summary:	Grid Community Toolkit - Usage Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -34,12 +34,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Usage Library
+Summary:	Grid Community Toolkit - Usage Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Usage Library Development Files
+Summary:	Grid Community Toolkit - Usage Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 3

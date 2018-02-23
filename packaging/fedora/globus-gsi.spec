@@ -2,7 +2,7 @@ Name:		globus-gsi
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Summary:	Globus Toolkit - Security Tools
+Summary:	Grid Community Toolkit - Security Tools
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

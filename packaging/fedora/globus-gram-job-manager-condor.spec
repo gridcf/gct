@@ -9,7 +9,7 @@ Name:		globus-gram-job-manager-condor
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	6%{?dist}
-Summary:	Globus Toolkit - Condor Job Manager
+Summary:	Grid Community Toolkit - Condor Job Manager
 
 Group:		Applications/Internet
 License:	%{apache_license}

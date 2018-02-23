@@ -7,7 +7,7 @@ Name:		globus-xioperf
 %global _name %(tr - _ <<< %{name})
 Version:	4.5
 Release:	3%{?dist}
-Summary:	Globus Toolkit - XIO Performance Tool
+Summary:	Grid Community Toolkit - XIO Performance Tool
 
 Group:		Applications/Internet
 License:	%{apache_license}

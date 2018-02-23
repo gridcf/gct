@@ -8,7 +8,7 @@ Name:		globus-gridftp-server-control
 %global _name %(tr - _ <<< %{name})
 Version:	7.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GridFTP Server Library
+Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -45,14 +45,14 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GridFTP Server Library
+Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 Group:		System Environment/Libraries
 Requires:	libglobus_xio_pipe_driver%{?_isa} >= 2
 Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus GridFTP Server Library Development Files
+Summary:	Grid Community Toolkit - Globus GridFTP Server Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-pipe-driver-devel%{?_isa} >= 2

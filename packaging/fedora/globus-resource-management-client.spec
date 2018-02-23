@@ -2,7 +2,7 @@ Name:		globus-resource-management-client
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Summary:	Globus Toolkit - Resource Management Client Programs
+Summary:	Grid Community Toolkit - Resource Management Client Programs
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

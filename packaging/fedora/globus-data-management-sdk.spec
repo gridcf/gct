@@ -2,7 +2,7 @@ Name:		globus-data-management-sdk
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Data Management SDK
+Summary:	Grid Community Toolkit - Data Management SDK
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

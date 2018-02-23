@@ -7,7 +7,7 @@ Name:		globus-gridmap-verify-myproxy-callout
 %global _name %(tr - _ <<< %{name})
 Version:	2.9
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus gridmap myproxy callout
+Summary:	Grid Community Toolkit - Globus gridmap myproxy callout
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -50,7 +50,7 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus gridmap myproxy callout
+Summary:	Grid Community Toolkit - Globus gridmap myproxy callout
 Group:		System Environment/Libraries
 %endif
 

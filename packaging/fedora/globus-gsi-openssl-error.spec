@@ -8,7 +8,7 @@ Name:		globus-gsi-openssl-error
 %global _name %(tr - _ <<< %{name})
 Version:	3.8
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus OpenSSL Error Handling
+Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -54,12 +54,12 @@ BuildRequires:  perl-Test-Simple
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus OpenSSL Error Handling
+Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus OpenSSL Error Handling Development Files
+Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14
@@ -77,7 +77,7 @@ Requires:  openssl-devel
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus OpenSSL Error Handling Documentation Files
+Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

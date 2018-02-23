@@ -2,7 +2,7 @@ Name:		globus-gridftp
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GridFTP Bundle
+Summary:	Grid Community Toolkit - GridFTP Bundle
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

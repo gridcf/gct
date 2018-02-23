@@ -8,7 +8,7 @@ Name:		globus-gss-assist
 %global _name %(tr - _ <<< %{name})
 Version:	11.1
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GSSAPI Assist library
+Summary:	Grid Community Toolkit - GSSAPI Assist library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -53,18 +53,18 @@ BuildRequires:  openssl
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - GSSAPI Assist library Programs
+Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - GSSAPI Assist library Programs
+Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-progs >= 14
 
 %package devel
-Summary:	Globus Toolkit - GSSAPI Assist library Development Files
+Summary:	Grid Community Toolkit - GSSAPI Assist library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gsi-cert-utils-devel%{?_isa} >= 8
@@ -75,7 +75,7 @@ Requires:	globus-callout-devel%{?_isa} >= 2
 Requires:	globus-gssapi-gsi-devel%{?_isa} >= 13
 
 %package doc
-Summary:	Globus Toolkit - GSSAPI Assist library Documentation Files
+Summary:	Grid Community Toolkit - GSSAPI Assist library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

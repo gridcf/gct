@@ -7,7 +7,7 @@ Name:		globus-gass-cache-program
 %global _name %(tr - _ <<< %{name})
 Version:	6.7
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Tools to manipulate local and remote GASS caches
+Summary:	Grid Community Toolkit - Tools to manipulate local and remote GASS caches
 
 Group:		Applications/Internet
 License:	%{apache_license}

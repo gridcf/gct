@@ -9,7 +9,7 @@ Name:		globus-ftp-client
 %global _name %(tr - _ <<< %{name})
 Version:	8.36
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GridFTP Client Library
+Summary:	Grid Community Toolkit - GridFTP Client Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -61,12 +61,12 @@ BuildRequires: libtool-ltdl-devel
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus XIO Framework
+Summary:	Grid Community Toolkit - Globus XIO Framework
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - GridFTP Client Library Development Files
+Summary:	Grid Community Toolkit - GridFTP Client Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-popen-driver-devel%{?_isa}
@@ -74,7 +74,7 @@ Requires:	globus-common-devel%{?_isa} >= 15
 Requires:	globus-ftp-control-devel%{?_isa} >= 4
 
 %package doc
-Summary:	Globus Toolkit - GridFTP Client Library Documentation Files
+Summary:	Grid Community Toolkit - GridFTP Client Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

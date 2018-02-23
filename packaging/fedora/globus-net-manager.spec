@@ -8,7 +8,7 @@ Name:		globus-net-manager
 %global _name %(tr - _ <<< %{name})
 Version:	0.17
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Net Manager Library
+Summary:	Grid Community Toolkit - Net Manager Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -50,19 +50,19 @@ BuildRequires:  python-devel
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Net Manager Library
+Summary:	Grid Community Toolkit - Net Manager Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Net Manager Library Development Files
+Summary:	Grid Community Toolkit - Net Manager Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 15.27
 Requires:	globus-xio-devel%{?_isa} >= 5
 
 %package -n %{driver_package}
-Summary:	Globus Toolkit - Net Manager Library XIO Driver
+Summary:	Grid Community Toolkit - Net Manager Library XIO Driver
 Group:		System Environment/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 15.27
@@ -73,7 +73,7 @@ Provides:       globus-xio-net-manager-driver
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Net Manager Library Documentation Files
+Summary:	Grid Community Toolkit - Net Manager Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

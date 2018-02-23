@@ -8,7 +8,7 @@ Name:		globus-gsi-callback
 %global _name %(tr - _ <<< %{name})
 Version:	5.13
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Globus GSI Callback Library
+Summary:	Grid Community Toolkit - Globus GSI Callback Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -55,12 +55,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GSI Callback Library
+Summary:	Grid Community Toolkit - Globus GSI Callback Library
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus GSI Callback Library Development Files
+Summary:	Grid Community Toolkit - Globus GSI Callback Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-openssl-module-devel%{?_isa} >= 3
@@ -70,7 +70,7 @@ Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-gsi-sysconfig-devel%{?_isa} >= 5
 
 %package doc
-Summary:	Globus Toolkit - Globus GSI Callback Library Documentation Files
+Summary:	Grid Community Toolkit - Globus GSI Callback Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

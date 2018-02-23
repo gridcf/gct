@@ -8,7 +8,7 @@ Name:		globus-gfork
 %global _name %(tr - _ <<< %{name})
 Version:	4.9
 Release:	4%{?dist}
-Summary:	Globus Toolkit - GFork
+Summary:	Grid Community Toolkit - GFork
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -38,17 +38,17 @@ BuildRequires:  perl-Test-Simple
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - GFork
+Summary:	Grid Community Toolkit - GFork
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - GFork Programs
+Summary:	Grid Community Toolkit - GFork Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 
 %package devel
-Summary:	Globus Toolkit - GFork Development Files
+Summary:	Grid Community Toolkit - GFork Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 3

@@ -8,7 +8,7 @@ Name:		globus-gass-server-ez
 %global _name %(tr - _ <<< %{name})
 Version:	5.8
 Release:	3%{?dist}
-Summary:	Globus Toolkit - Globus Gass Server_ez
+Summary:	Grid Community Toolkit - Globus Gass Server_ez
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -35,17 +35,17 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus Gass Server_ez
+Summary:	Grid Community Toolkit - Globus Gass Server_ez
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Globus Gass Server_ez Programs
+Summary:	Grid Community Toolkit - Globus Gass Server_ez Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 
 %package devel
-Summary:	Globus Toolkit - Globus Gass Server_ez Development Files
+Summary:	Grid Community Toolkit - Globus Gass Server_ez Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14

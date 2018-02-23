@@ -2,7 +2,7 @@ Name:		globus-resource-management-server
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Summary:	Globus Toolkit - Resource Management Server Programs
+Summary:	Grid Community Toolkit - Resource Management Server Programs
 
 Group:		System Environment/Libraries
 License:	ASL 2.0

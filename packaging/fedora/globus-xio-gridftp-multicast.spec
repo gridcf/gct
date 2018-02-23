@@ -8,7 +8,7 @@ Name:		globus-xio-gridftp-multicast
 %global _name %(tr - _ <<< %{name})
 Version:	1.7
 Release:	4%{?dist}
-Summary:	Globus Toolkit - Globus XIO GridFTP Multicast Driver
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Multicast Driver
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -35,12 +35,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus XIO GridFTP Multicast Driver
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Multicast Driver
 Group:		System Environment/Libraries
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Globus XIO GridFTP Multicast Driver Development Files
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Multicast Driver Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-xio-devel%{?_isa} >= 0

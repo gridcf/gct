@@ -9,7 +9,7 @@ Name:		globus-gram-job-manager-sge
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	8%{?dist}
-Summary:	Globus Toolkit - SGE Job Manager
+Summary:	Grid Community Toolkit - SGE Job Manager
 
 Group:		Applications/Internet
 License:	LGPL 2.1 and %{apache_license}
@@ -48,12 +48,12 @@ BuildRequires:  pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %package -n libglobus_seg_sge
-Summary:        Globus Toolkit - SGE Job Manager SEG Module
+Summary:        Grid Community Toolkit - SGE Job Manager SEG Module
 Group:		Applications/Internet
 %endif
 
 %package setup-poll
-Summary:        Globus Toolkit - SGE Job Manager Setup Files
+Summary:        Grid Community Toolkit - SGE Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:      noarch
@@ -66,7 +66,7 @@ Requires(preun): globus-gram-job-manager-scripts >= 4
 Conflicts:      %{name}-setup-seg
 
 %package setup-seg
-Summary:	Globus Toolkit - SGE Job Manager Setup Files
+Summary:	Grid Community Toolkit - SGE Job Manager Setup Files
 Group:		Applications/Internet
 Provides:       %{name}-setup
 Provides:       globus-gram-job-manager-setup

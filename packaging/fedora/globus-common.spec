@@ -15,7 +15,7 @@ Name:		globus-common
 %global _name %(tr - _ <<< %{name})
 Version:	17.4
 Release:	1%{?dist}
-Summary:	Globus Toolkit - Common Library
+Summary:	Grid Community Toolkit - Common Library
 
 
 Group:		System Environment/Libraries
@@ -70,12 +70,12 @@ BuildRequires:  pkgconfig
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Common Library
+Summary:	Grid Community Toolkit - Common Library
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Common Library Programs
+Summary:	Grid Community Toolkit - Common Library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if 0%{?suse_version} > 0
@@ -89,7 +89,7 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
 
 %package devel
-Summary:	Globus Toolkit - Common Library Development Files
+Summary:	Grid Community Toolkit - Common Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if 0%{?suse_version} == 0
@@ -111,7 +111,7 @@ Obsoletes:	globus-duroc-common-devel
 Obsoletes:	globus-duroc-control-devel
 
 %package doc
-Summary:	Globus Toolkit - Common Library Documentation Files
+Summary:	Grid Community Toolkit - Common Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch

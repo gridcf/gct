@@ -2,7 +2,7 @@ Name:		globus-gram5
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	1%{?dist}
-Summary:	Globus Toolkit - GRAM5 Bundle
+Summary:	Grid Community Toolkit - GRAM5 Bundle
 
 Group:		System Environment/Libraries
 License:	ASL 2.0
