@@ -6,7 +6,7 @@ Summary:	Grid Community Toolkit - Resource Management Server Programs
 
 Group:		System Environment/Libraries
 License:	ASL 2.0
-URL:		http://www.globus.org/
+URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       globus-common-progs

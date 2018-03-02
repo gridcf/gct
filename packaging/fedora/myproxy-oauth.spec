@@ -11,7 +11,7 @@ Summary:	MyProxy OAuth Delegation Serice
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
-URL:		http://www.globus.org/
+URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
