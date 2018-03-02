@@ -30,7 +30,10 @@ override_dh_auto_configure:
 	    --disable-static \
 	    --enable-doxygen
 
+override_dh_strip:
+	dh_strip --dbg-package=libglobus-gssapi-gsi-dbg
+
 %:
 	dh $@ --with autotools-dev
 
-.PHONY: override_dh_auto_configure
+.PHONY: override_dh_auto_configure override_dh_strip
