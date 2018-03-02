@@ -1,7 +1,0 @@
-The Debian Package globus-repository
-----------------------------
-
-This package contains the apt repository definition and tasksel definitions
-for the Globus Toolkit.
-
- -- Globus Toolkit <support@globus.org>  Tue, 14 Jun 2011 11:51:33 -0400

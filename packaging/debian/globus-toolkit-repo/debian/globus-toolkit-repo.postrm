@@ -1,6 +1,0 @@
-#! /bin/sh
-
-# Remove the Globus GPG Key
-if apt-key list | grep -q A15F4E98; then
-	apt-key del A15F4E98
-fi

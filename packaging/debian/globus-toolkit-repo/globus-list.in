@@ -1,2 +1,0 @@
-@ENABLED@deb @REPOSITORY_ROOT@/@STABILITY@/deb @RELEASE@ contrib
-# deb-src @REPOSITORY_ROOT@/@STABILITY@/deb @RELEASE@ contrib
