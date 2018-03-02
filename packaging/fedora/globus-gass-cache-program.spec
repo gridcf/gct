@@ -12,7 +12,7 @@ Summary:	Grid Community Toolkit - Tools to manipulate local and remote GASS cach
 Group:		Applications/Internet
 License:	%{apache_license}
 URL:		https://github.com/gridcf/gct/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14

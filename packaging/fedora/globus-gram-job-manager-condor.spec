@@ -14,7 +14,7 @@ Summary:	Grid Community Toolkit - Condor Job Manager
 Group:		Applications/Internet
 License:	%{apache_license}
 URL:		https://github.com/gridcf/gct/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes:      globus-gram-job-manager-setup-condor < 4.5
 Requires:	globus-gram-job-manager-scripts >= 3.4

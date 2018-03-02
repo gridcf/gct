@@ -20,7 +20,7 @@ Summary:        Manage X.509 Public Key Infrastructure (PKI) security credential
 Group:          System Environment/Daemons
 License:        NCSA and %{bsd_license} and %{apache_license}
 URL:            http://grid.ncsa.illinois.edu/myproxy/
-Source0:        http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source0:        %{_name}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

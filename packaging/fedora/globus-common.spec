@@ -21,7 +21,7 @@ Summary:	Grid Community Toolkit - Common Library
 Group:		System Environment/Libraries
 License:	%{apache_license}
 URL:		https://github.com/gridcf/gct/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #		Obsolete dropped packages from Globus Toolkit 4.2.1

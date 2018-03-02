@@ -13,7 +13,7 @@ Summary:	Grid Community Toolkit - Scheduler Event Generator
 Group:		System Environment/Libraries
 License:	%{apache_license}
 URL:		https://github.com/gridcf/gct/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315

@@ -12,7 +12,7 @@ Summary:	MyProxy OAuth Delegation Serice
 Group:		System Environment/Libraries
 License:	%{apache_license}
 URL:		http://www.globus.org/
-Source:		http://www.globus.org/ftppub/gt5/5.2/stable/packages/src/%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	python
