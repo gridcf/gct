@@ -9,13 +9,12 @@ Name:		globus-gram-job-manager-fork
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	1%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - Fork Job Manager
+Summary:	Grid Community Toolkit - Fork Job Manager
 
 Group:		Applications/Internet
 License:	%{apache_license}
-URL:		http://toolkit.globus.org/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:	globus-gram-job-manager-scripts >= 4
@@ -50,12 +49,12 @@ BuildRequires:  pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %package -n libglobus_seg_fork
-Summary:        Globus Toolkit - Fork Job Manager SEG Module
+Summary:        Grid Community Toolkit - Fork Job Manager SEG Module
 Group:		Applications/Internet
 %endif
 
 %package setup-poll
-Summary:	Globus Toolkit - Fork Job Manager Setup Files
+Summary:	Grid Community Toolkit - Fork Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:      noarch
@@ -67,7 +66,7 @@ Requires(preun): globus-gram-job-manager-scripts >= 4
 Conflicts:      %{name}-setup-seg
 
 %package setup-seg
-Summary:	Globus Toolkit - Fork Job Manager Setup Files
+Summary:	Grid Community Toolkit - Fork Job Manager Setup Files
 Group:		Applications/Internet
 Provides:       %{name}-setup
 Requires:	%{name} = %{version}-%{release}
@@ -82,39 +81,43 @@ Requires:	libglobus_seg_fork = %{version}-%{release}
 %endif
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Fork Job Manager 
 
 %description setup-poll
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Fork Job Manager Setup using polling to monitor job state
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %description -n libglobus_seg_fork
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The libglobus_seg_lsf package contains:
 Fork Job Manager SEG Module
 %endif
 
 %description setup-seg
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Fork Job Manager Setup using SEG to monitor job state

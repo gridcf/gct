@@ -7,13 +7,12 @@ Name:		myproxy-oauth
 %global _name %(tr - _ <<< %{name})
 Version:	0.27
 Release:	1%{?dist}
-Vendor:	Globus Support
 Summary:	MyProxy OAuth Delegation Serice
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
-URL:		http://www.globus.org/
-Source:		http://www.globus.org/ftppub/gt5/5.2/stable/packages/src/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	python
@@ -57,10 +56,11 @@ Conflicts:      mod_python
 %endif
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 MyProxy OAuth Delegation Service

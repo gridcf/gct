@@ -8,13 +8,12 @@ Name:		globus-gridftp-server
 %global _name %(tr - _ <<< %{name})
 Version:	13.1
 Release:	1%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - Globus GridFTP Server
+Summary:	Grid Community Toolkit - Globus GridFTP Server
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
-URL:		http://toolkit.globus.org/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -66,12 +65,12 @@ BuildRequires: fakeroot
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GridFTP Server
+Summary:	Grid Community Toolkit - Globus GridFTP Server
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Globus GridFTP Server Programs
+Summary:	Grid Community Toolkit - Globus GridFTP Server Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -82,7 +81,7 @@ Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 
 
 %package devel
-Summary:	Globus Toolkit - Globus GridFTP Server Development Files
+Summary:	Grid Community Toolkit - Globus GridFTP Server Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gridftp-server-control-devel%{?_isa} >= 7
@@ -97,38 +96,42 @@ Requires:	globus-gsi-credential-devel%{?_isa} >= 6
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %description %{?nmainpkg}
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{mainpkg} package contains:
 Globus GridFTP Server
 %endif
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Globus GridFTP Server
 
 %description progs
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-progs package contains:
 Globus GridFTP Server Programs
 
 %description devel
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-devel package contains:
 Globus GridFTP Server Development Files

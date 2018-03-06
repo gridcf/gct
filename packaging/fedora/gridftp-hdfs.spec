@@ -2,13 +2,12 @@ Name:           gridftp-hdfs
 %global _name %(tr - _ <<< %{name})
 Version:	1.5
 Release:	1
-Vendor:	Globus Support
 Summary:        HDFS DSI plugin for GridFTP
 
 Group:          System Environment/Daemons
 License:        ASL 2.0
 URL:            http://twiki.grid.iu.edu/bin/view/Storage/HadoopInstallation
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?suse_version} > 0

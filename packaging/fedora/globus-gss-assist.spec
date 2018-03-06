@@ -8,13 +8,12 @@ Name:		globus-gss-assist
 %global _name %(tr - _ <<< %{name})
 Version:	11.1
 Release:	1%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - GSSAPI Assist library
+Summary:	Grid Community Toolkit - GSSAPI Assist library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
-URL:		http://toolkit.globus.org/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-gsi-cert-utils-devel >= 8
@@ -54,18 +53,18 @@ BuildRequires:  openssl
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - GSSAPI Assist library Programs
+Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - GSSAPI Assist library Programs
+Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-progs >= 14
 
 %package devel
-Summary:	Globus Toolkit - GSSAPI Assist library Development Files
+Summary:	Grid Community Toolkit - GSSAPI Assist library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gsi-cert-utils-devel%{?_isa} >= 8
@@ -76,7 +75,7 @@ Requires:	globus-callout-devel%{?_isa} >= 2
 Requires:	globus-gssapi-gsi-devel%{?_isa} >= 13
 
 %package doc
-Summary:	Globus Toolkit - GSSAPI Assist library Documentation Files
+Summary:	Grid Community Toolkit - GSSAPI Assist library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
@@ -85,47 +84,52 @@ Requires:	%{mainpkg} = %{version}-%{release}
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %description %{?nmainpkg}
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{mainpkg} package contains:
 GSSAPI Assist library
 %endif
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 GSSAPI Assist library
 
 %description progs
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-progs package contains:
 GSSAPI Assist library Programs
 
 %description devel
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-devel package contains:
 GSSAPI Assist library Development Files
 
 %description doc
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-doc package contains:
 GSSAPI Assist library Documentation Files

@@ -2,12 +2,11 @@ Name:		globus-gsi
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
 Release:	2%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - Security Tools
+Summary:	Grid Community Toolkit - Security Tools
 
 Group:		System Environment/Libraries
 License:	ASL 2.0
-URL:		http://www.globus.org/
+URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       globus-common-progs
@@ -17,10 +16,11 @@ Requires:       globus-proxy-utils
 Requires:       globus-simple-ca
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Security Tools

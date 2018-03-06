@@ -8,13 +8,12 @@ Name:		globus-gram-client-tools
 %global _name %(tr - _ <<< %{name})
 Version:	11.10
 Release:	1%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - Job Management Tools (globusrun)
+Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
 Group:		Applications/Internet
 License:	%{apache_license}
-URL:		http://toolkit.globus.org/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:	globus-common-progs%{?_isa} >= 14
@@ -32,10 +31,11 @@ BuildRequires:  libtool >= 2.2
 BuildRequires:  pkgconfig
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Job Management Tools (globusrun)

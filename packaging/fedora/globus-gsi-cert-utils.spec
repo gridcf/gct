@@ -8,13 +8,12 @@ Name:		globus-gsi-cert-utils
 %global _name %(tr - _ <<< %{name})
 Version:	9.16
 Release:	1%{?dist}
-Vendor:	Globus Support
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
-URL:		http://toolkit.globus.org/
-Source:	http://toolkit.globus.org/ftppub/gt6/packages/%{_name}-%{version}.tar.gz
+URL:		https://github.com/gridcf/gct/
+Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?rhel}%{!?rhel:0} == 5
@@ -63,12 +62,12 @@ BuildRequires:  perl-Test-Simple
 
 %if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
 %package %{?nmainpkg}
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 Group:		System Environment/Libraries
 %endif
 
 %package progs
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Programs
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?rhel}%{!?rhel:0} == 5
@@ -79,7 +78,7 @@ Requires:	openssl
 Requires:	globus-common-progs >= 14
 
 %package devel
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Development Files
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 14
@@ -99,7 +98,7 @@ Requires:  openssl-devel
 %endif
 
 %package doc
-Summary:	Globus Toolkit - Globus GSI Cert Utils Library Documentation Files
+Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
@@ -108,10 +107,11 @@ Requires:	%{mainpkg} = %{version}-%{release}
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %description %{?nmainpkg}
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{mainpkg} package contains:
 Globus GSI Cert Utils Library
@@ -119,37 +119,41 @@ Globus GSI Cert Utils Library
 
 
 %description
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name} package contains:
 Globus GSI Cert Utils Library
 
 %description progs
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-progs package contains:
 Globus GSI Cert Utils Library Programs
 
 %description devel
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-devel package contains:
 Globus GSI Cert Utils Library Development Files
 
 %description doc
-The Globus Toolkit is an open source software toolkit used for building Grid
-systems and applications. It is being developed by the Globus Alliance and
-many others all over the world. A growing number of projects and companies are
-using the Globus Toolkit to unlock the potential of grids for their cause.
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
 
 The %{name}-doc package contains:
 Globus GSI Cert Utils Library Documentation Files
