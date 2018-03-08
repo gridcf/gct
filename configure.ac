@@ -1,19 +1,9 @@
-m4_define([globus_buildno], [m4_syscmd([
-if test -e .git ; then
-    git log -n 1 --pretty=format:%ct > globus-version.inc.new;
-    if ! cmp globus-version.inc.new globus-version.inc > /dev/null 2>&1; then
-        mv globus-version.inc.new globus-version.inc
-    else
-        rm globus-version.inc.new
-    fi
-fi])dnl
-m4_[]include(globus-version.inc)])dnl
-m4_define([gtreleasebuild], [6.0.]globus_buildno)
-AC_INIT([globus_toolkit], gtreleasebuild, [https://github.com/globus/globus-toolkit/issues])
+m4_define([gtreleasebuild], [6.9.0])
+AC_INIT([gct], gtreleasebuild, [https://github.com/gridcf/gct/issues])
 
 m4_define([short_version], [m4_substr(AC_PACKAGE_VERSION, [0],
     m4_index(AC_PACKAGE_VERSION, [.]))])
-AC_PREFIX_DEFAULT([/usr/local/globus-]short_version)
+AC_PREFIX_DEFAULT([/usr/local/gct-]short_version)
 export GLOBUS_VERSION=$VERSION
 syscmd([./update-dirt.sh])
 syscmd([test -x ./prep-gsissh && sh -x ./prep-gsissh || true])
