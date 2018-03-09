@@ -6,5 +6,5 @@ path=@abs_builddir@
 perl5lib=@abs_builddir@
 
 Name: globus-gram-job-manager-scripts
-Description: Globus Toolkit - GRAM Job ManagerScripts
+Description: Grid Community Toolkit - GRAM Job ManagerScripts
 Version: @VERSION@

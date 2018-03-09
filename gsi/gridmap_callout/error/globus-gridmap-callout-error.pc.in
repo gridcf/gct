@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gridmap-callout-error
-Description: Globus Toolkit - Globus Gridmap Callout Errors
+Description: Grid Community Toolkit - Globus Gridmap Callout Errors
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gridmap_callout_error

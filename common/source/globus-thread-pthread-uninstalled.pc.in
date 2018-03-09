@@ -8,6 +8,6 @@ dlopen=@PTHREAD_DLOPEN_UNINSTALLED@
 dlpreopen=@PTHREAD_DLPREOPEN_UNINSTALLED@
 
 Name: globus-thread-pthreads
-Description: Globus Toolkit - Common Library Pthreads Bindings
+Description: Grid Community Toolkit - Common Library Pthreads Bindings
 Version: @PACKAGE_VERSION@
 Libs.private: -lglobus_common

@@ -6,6 +6,6 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gram-job-manager-lsf
-Description: Globus Toolkit - LSF Job Manager Support
+Description: Grid Community Toolkit - LSF Job Manager Support
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

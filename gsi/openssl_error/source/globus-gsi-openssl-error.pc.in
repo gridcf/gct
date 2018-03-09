@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gsi-openssl-error
-Description: Globus Toolkit - Globus OpenSSL Error Handling
+Description: Grid Community Toolkit - Globus OpenSSL Error Handling
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: -L${libdir} -lglobus_openssl_error

@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 dlopen=-dlopen @abs_top_builddir@/libglobus_xio_rate_driver.la
 
 Name: globus-xio-rate-driver
-Description: Globus Toolkit - Globus XIO Rate Limiting Driver
+Description: Grid Community Toolkit - Globus XIO Rate Limiting Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${abs_top_srcdir}

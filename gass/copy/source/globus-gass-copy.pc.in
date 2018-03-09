@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gass-copy
-Description: Globus Toolkit - Globus Gass Copy
+Description: Grid Community Toolkit - Globus Gass Copy
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gass_copy

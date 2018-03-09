@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gass-server-ez
-Description: Globus Toolkit - Globus Gass Server_ez
+Description: Grid Community Toolkit - Globus Gass Server_ez
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gass_server_ez.la

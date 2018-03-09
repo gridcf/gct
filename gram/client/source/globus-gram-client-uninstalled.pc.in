@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gram-client
-Description: Globus Toolkit - GRAM Client Library
+Description: Grid Community Toolkit - GRAM Client Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gram_client.la

@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-simple-ca
-Description: Globus Toolkit - Simple CA Utility
+Description: Grid Community Toolkit - Simple CA Utility
 Version: @VERSION@
 Requires.private: globus-common >= 14

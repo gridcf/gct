@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gss-assist
-Description: Globus Toolkit - GSSAPI Assist library
+Description: Grid Community Toolkit - GSSAPI Assist library
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lglobus_gss_assist
 Requires.private: @PACKAGE_DEPS@

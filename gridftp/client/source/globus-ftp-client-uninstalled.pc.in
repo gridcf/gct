@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-ftp-client
-Description: Globus Toolkit - GridFTP Client Library
+Description: Grid Community Toolkit - GridFTP Client Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@ 
 Libs: ${abs_top_builddir}/libglobus_ftp_client.la

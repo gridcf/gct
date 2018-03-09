@@ -4,5 +4,5 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-condor
-Description: Globus Toolkit - Condor Job Manager Support
+Description: Grid Community Toolkit - Condor Job Manager Support
 Version: @VERSION@

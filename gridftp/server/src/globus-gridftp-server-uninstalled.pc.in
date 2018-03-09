@@ -8,7 +8,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gridftp-server
-Description: Globus Toolkit - Globus GridFTP Server
+Description: Grid Community Toolkit - Globus GridFTP Server
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/globus_gridftp_server.la

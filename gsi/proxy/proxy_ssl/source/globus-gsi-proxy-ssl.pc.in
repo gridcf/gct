@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gsi-proxy-ssl
-Description: Globus Toolkit - Globus GSI Proxy SSL Library
+Description: Grid Community Toolkit - Globus GSI Proxy SSL Library
 Version: @PACKAGE_VERSION@
 Requires.private: @OPENSSL_PKGCONFIG@
 Libs: -L${libdir} -lglobus_proxy_ssl

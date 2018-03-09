@@ -5,6 +5,6 @@ includedir=@includedir@
 perl5lib=@abs_builddir@
 
 Name: globus-gram-job-manager-fork
-Description: Globus Toolkit - Fork Job Manager Support
+Description: Grid Community Toolkit - Fork Job Manager Support
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

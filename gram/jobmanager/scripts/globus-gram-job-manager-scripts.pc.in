@@ -4,5 +4,5 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-scripts
-Description: Globus Toolkit - GRAM Job ManagerScripts
+Description: Grid Community Toolkit - GRAM Job ManagerScripts
 Version: @VERSION@

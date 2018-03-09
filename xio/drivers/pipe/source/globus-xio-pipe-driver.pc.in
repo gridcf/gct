@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-pipe-driver
-Description: Globus Toolkit - Globus Pipe Driver
+Description: Grid Community Toolkit - Globus Pipe Driver
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${includedir}

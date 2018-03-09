@@ -7,7 +7,7 @@ abs_top_srcdir=@abs_top_srcdir@
 dlopen=-dlopen @abs_top_builddir@/libglobus_xio_udt_driver.la
 
 Name: globus-xio-gsi-driver
-Description: Globus Toolkit - Globus XIO UDT Driver
+Description: Grid Community Toolkit - Globus XIO UDT Driver
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${abs_top_srcdir}

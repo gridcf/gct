@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gridmap-verify-myproxy-callout
-Description: Globus Toolkit - Globus gridmap myproxy callout
+Description: Grid Community Toolkit - Globus gridmap myproxy callout
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@

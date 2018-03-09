@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-pbs
-Description: Globus Toolkit - PBS Job Manager Support
+Description: Grid Community Toolkit - PBS Job Manager Support
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

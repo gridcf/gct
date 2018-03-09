@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gsi-sysconfig
-Description: Globus Toolkit - Globus GSI System Config Library
+Description: Grid Community Toolkit - Globus GSI System Config Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_gsi_sysconfig.la

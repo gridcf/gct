@@ -7,6 +7,6 @@ abs_top_builddir=@abs_top_builddir@
 path=@abs_builddir@
 
 Name: globus-gram-job-manager
-Description: Globus Toolkit - GRAM Jobmanager
+Description: Grid Community Toolkit - GRAM Jobmanager
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

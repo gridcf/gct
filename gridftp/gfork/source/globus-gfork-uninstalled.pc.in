@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-gfork
-Description: Globus Toolkit - GFork
+Description: Grid Community Toolkit - GFork
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gfork.la

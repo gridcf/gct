@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-callout
-Description: Globus Toolkit - Globus Callout Library
+Description: Grid Community Toolkit - Globus Callout Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_callout

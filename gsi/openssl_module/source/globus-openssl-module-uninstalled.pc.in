@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-openssl-module
-Description: Globus Toolkit - Globus OpenSSL Module Wrapper
+Description: Grid Community Toolkit - Globus OpenSSL Module Wrapper
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_openssl.la

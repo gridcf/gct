@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-client-tools
-Description: Globus Toolkit - Job Management Tools (globusrun)
+Description: Grid Community Toolkit - Job Management Tools (globusrun)
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

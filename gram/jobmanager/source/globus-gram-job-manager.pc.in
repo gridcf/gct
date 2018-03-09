@@ -5,6 +5,6 @@ includedir=@includedir@
 path=@sbindir@:@bindir@
 
 Name: globus-gram-job-manager
-Description: Globus Toolkit - GRAM Jobmanager
+Description: Grid Community Toolkit - GRAM Jobmanager
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

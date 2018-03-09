@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gssapi-gsi
-Description: Globus Toolkit - GSSAPI library
+Description: Grid Community Toolkit - GSSAPI library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: -L${libdir} -lglobus_gssapi_gsi

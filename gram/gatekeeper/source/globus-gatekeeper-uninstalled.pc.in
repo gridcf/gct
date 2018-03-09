@@ -5,6 +5,6 @@ includedir=@includedir@
 path=@abs_builddir@
 
 Name: globus-gatekeeper
-Description: Globus Toolkit - Globus Gatekeeper
+Description: Grid Community Toolkit - Globus Gatekeeper
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

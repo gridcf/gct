@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-rate-driver
-Description: Globus Toolkit - Globus XIO Rate Limiting Driver
+Description: Grid Community Toolkit - Globus XIO Rate Limiting Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${includedir}

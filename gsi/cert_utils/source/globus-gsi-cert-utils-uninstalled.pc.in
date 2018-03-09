@@ -8,7 +8,7 @@ bindir=${abs_top_builddir}/programs
 path=${bindir}
 
 Name: globus-gsi-cert-utils
-Description: Globus Toolkit - Globus GSI Cert Utils Library
+Description: Grid Community Toolkit - Globus GSI Cert Utils Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_gsi_cert_utils.la

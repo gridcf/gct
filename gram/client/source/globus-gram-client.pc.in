@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-client
-Description: Globus Toolkit - GRAM Client Library
+Description: Grid Community Toolkit - GRAM Client Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gram_client

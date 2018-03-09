@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-fork
-Description: Globus Toolkit - Fork Job Manager Support
+Description: Grid Community Toolkit - Fork Job Manager Support
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

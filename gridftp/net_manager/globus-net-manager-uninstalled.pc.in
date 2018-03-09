@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-net-manager
-Description: Globus Toolkit - Network Manager
+Description: Grid Community Toolkit - Network Manager
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_net_manager.la

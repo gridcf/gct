@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-net-manager-driver
-Description: Globus Toolkit - Globus XIO Net Manager Driver
+Description: Grid Community Toolkit - Globus XIO Net Manager Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, globus-net-manager
 Libs: -L${libdir}

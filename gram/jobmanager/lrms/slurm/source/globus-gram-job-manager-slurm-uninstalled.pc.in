@@ -4,5 +4,5 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-slurm
-Description: Globus Toolkit - SLURM Job Manager Support
+Description: Grid Community Toolkit - SLURM Job Manager Support
 Version: @VERSION@

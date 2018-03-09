@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-job-manager-callout-error
-Description: Globus Toolkit - Globus GRAM Jobmanager Callout Errors
+Description: Grid Community Toolkit - Globus GRAM Jobmanager Callout Errors
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gram_job_manager_callout_error
