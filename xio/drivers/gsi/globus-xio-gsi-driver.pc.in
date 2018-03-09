@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-gsi-driver
-Description: Globus Toolkit - Globus XIO GSI Driver
+Description: Grid Community Toolkit - Globus XIO GSI Driver
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${includedir}

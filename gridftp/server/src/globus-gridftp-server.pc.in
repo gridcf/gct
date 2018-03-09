@@ -6,7 +6,7 @@ executable=globus-gridftp-server@EXEEXT@
 path=@sbindir@
 
 Name: globus-gridftp-server
-Description: Globus Toolkit - Globus GridFTP Server
+Description: Grid Community Toolkit - Globus GridFTP Server
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: -L${libdir} -lglobus_gridftp_server

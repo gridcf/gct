@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gsi-proxy-core
-Description: Globus Toolkit - Globus GSI Proxy Core Library
+Description: Grid Community Toolkit - Globus GSI Proxy Core Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_gsi_proxy_core.la

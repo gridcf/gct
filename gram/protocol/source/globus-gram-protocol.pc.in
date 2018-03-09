@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-protocol
-Description: Globus Toolkit - GRAM Protocol Library
+Description: Grid Community Toolkit - GRAM Protocol Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gram_protocol

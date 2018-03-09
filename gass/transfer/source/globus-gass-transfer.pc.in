@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gass-transfer
-Description: Globus Toolkit - Globus Gass Transfer
+Description: Grid Community Toolkit - Globus Gass Transfer
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gass_transfer

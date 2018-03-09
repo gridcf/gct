@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-ftp-control
-Description: Globus Toolkit - GridFTP Control Library
+Description: Grid Community Toolkit - GridFTP Control Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_ftp_control

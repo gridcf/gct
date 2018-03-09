@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-scheduler-event-generator
-Description: Globus Toolkit - Scheduler Event Generator
+Description: Grid Community Toolkit - Scheduler Event Generator
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_scheduler_event_generator

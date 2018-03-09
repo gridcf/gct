@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-callout
-Description: Globus Toolkit - Globus Callout Library
+Description: Grid Community Toolkit - Globus Callout Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/library/libglobus_callout.la

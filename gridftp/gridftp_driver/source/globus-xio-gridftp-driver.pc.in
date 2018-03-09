@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-gridftp-driver
-Description: Globus Toolkit - Globus XIO GridFTP Driver
+Description: Grid Community Toolkit - Globus XIO GridFTP Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${includedir}

@@ -5,7 +5,7 @@ includedir=@includedir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-scheduler-event-generator
-Description: Globus Toolkit - Scheduler Event Generator
+Description: Grid Community Toolkit - Scheduler Event Generator
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: @abs_top_builddir@/libglobus_scheduler_event_generator.la

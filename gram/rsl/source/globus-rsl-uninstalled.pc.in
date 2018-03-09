@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-rsl
-Description: Globus Toolkit - Resource Specification Language Library
+Description: Grid Community Toolkit - Resource Specification Language Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_rsl_assist.la ${abs_top_builddir}/libglobus_rsl.la

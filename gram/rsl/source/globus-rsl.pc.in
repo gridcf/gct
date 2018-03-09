@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-rsl
-Description: Globus Toolkit - Resource Specification Language Library
+Description: Grid Community Toolkit - Resource Specification Language Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_rsl_assist -lglobus_rsl

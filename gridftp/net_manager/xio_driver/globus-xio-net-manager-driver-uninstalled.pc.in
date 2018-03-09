@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 dlopen=-dlopen @abs_builddir@/libglobus_xio_net_manager_driver.la
 
 Name: globus-xio-net-manager-driver
-Description: Globus Toolkit - Globus XIO Net Manager Driver
+Description: Grid Community Toolkit - Globus XIO Net Manager Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, globus-net-manager
 Cflags: -I${abs_top_srcdir}

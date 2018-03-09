@@ -8,7 +8,7 @@ dlpreopen=-dlpreopen @abs_top_builddir@/libglobus_xio_gsi_driver.la
 dlopen=-dlopen @abs_top_builddir@/libglobus_xio_gsi_driver.la
 
 Name: globus-xio-gsi-driver
-Description: Globus Toolkit - Globus XIO GSI Driver
+Description: Grid Community Toolkit - Globus XIO GSI Driver
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${abs_top_srcdir}

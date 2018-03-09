@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-gssapi-error
-Description: Globus Toolkit - GSSAPI Error Library
+Description: Grid Community Toolkit - GSSAPI Error Library
 Version: @PACKAGE_VERSION@
 Libs: ${abs_top_builddir}/library/libglobus_gssapi_error.la
 Requires.private: @PACKAGE_DEPS@

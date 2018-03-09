@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gram-job-manager-callout-error
-Description: Globus Toolkit - Globus GRAM Jobmanager Callout Errors
+Description: Grid Community Toolkit - Globus GRAM Jobmanager Callout Errors
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gram_job_manager_callout_error.la

@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 dlopen=-dlopen @abs_builddir@/libglobus_xio_popen_driver.la
 
 Name: globus-xio-popen-driver
-Description: Globus Toolkit - Globus XIO Pipe Open Driver
+Description: Grid Community Toolkit - Globus XIO Pipe Open Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${abs_top_srcdir}

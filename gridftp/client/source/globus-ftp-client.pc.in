@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-ftp-client
-Description: Globus Toolkit - GridFTP Client Library
+Description: Grid Community Toolkit - GridFTP Client Library
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@ 
 Libs: -L${libdir} -lglobus_ftp_client

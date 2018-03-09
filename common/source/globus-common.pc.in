@@ -6,7 +6,7 @@ includedir=@includedir@
 thread_models=@thread_models@
 
 Name: globus-common
-Description: Globus Toolkit - Common Library
+Description: Grid Community Toolkit - Common Library
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lglobus_common
 Libs.private: @LIBS@

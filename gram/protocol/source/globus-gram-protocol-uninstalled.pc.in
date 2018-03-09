@@ -7,7 +7,7 @@ abs_top_builddir=@abs_top_builddir@
 perl5lib=@abs_builddir@/scripts
 
 Name: globus-gram-protocol
-Description: Globus Toolkit - GRAM Protocol Library
+Description: Grid Community Toolkit - GRAM Protocol Library
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gram_protocol.la

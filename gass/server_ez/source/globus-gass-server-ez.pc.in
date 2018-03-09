@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gass-server-ez
-Description: Globus Toolkit - Globus Gass Server_ez
+Description: Grid Community Toolkit - Globus Gass Server_ez
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_gass_server_ez

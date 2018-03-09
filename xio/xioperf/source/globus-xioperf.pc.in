@@ -4,6 +4,6 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xioperf
-Description: Globus Toolkit - XIO Performance Tool
+Description: Grid Community Toolkit - XIO Performance Tool
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@

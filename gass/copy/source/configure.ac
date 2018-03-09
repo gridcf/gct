@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gass_copy],[9.28],[https://github.com/globus/globus-toolkit/issues])
+AC_INIT([globus_gass_copy],[9.28],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -85,7 +85,7 @@ if test "X$GLOBUS_TOOLKIT_ID" = "X"; then
             GLOBUS_TOOLKIT_ID="unknown"
         fi
     else
-        GLOBUS_TOOLKIT_ID="Globus Toolkit $GLOBUS_VERSION"
+        GLOBUS_TOOLKIT_ID="Grid Community Toolkit $GLOBUS_VERSION"
     fi
 fi
 AC_MSG_RESULT($GLOBUS_TOOLKIT_ID)

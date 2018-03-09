@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-gsi-openssl-error
-Description: Globus Toolkit - Globus OpenSSL Error Handling
+Description: Grid Community Toolkit - Globus OpenSSL Error Handling
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_openssl_error.la

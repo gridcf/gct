@@ -6,6 +6,6 @@ includedir=@includedir@
 path=${bindir}
 
 Name: globus-proxy-utils
-Description: Globus Toolkit - Globus GSI Proxy Utility Programs
+Description: Grid Community Toolkit - Globus GSI Proxy Utility Programs
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@

@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-authz-callout-error
-Description: Globus Toolkit - Globus authz error library (used by globus authz callouts)
+Description: Grid Community Toolkit - Globus authz error library (used by globus authz callouts)
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gsi_authz_callout_error.la

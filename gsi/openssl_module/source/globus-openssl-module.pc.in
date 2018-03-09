@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-openssl-module
-Description: Globus Toolkit - Globus OpenSSL Module Wrapper
+Description: Grid Community Toolkit - Globus OpenSSL Module Wrapper
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: -L${libdir} -lglobus_openssl

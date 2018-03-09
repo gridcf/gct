@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gssapi-error
-Description: Globus Toolkit - GSSAPI Error Library
+Description: Grid Community Toolkit - GSSAPI Error Library
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lglobus_gssapi_error
 Requires.private: @PACKAGE_DEPS@

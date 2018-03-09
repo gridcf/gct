@@ -7,7 +7,7 @@ abs_top_builddir=@abs_top_builddir@
 path=@abs_top_builddir@
 
 Name: globus-gass-copy
-Description: Globus Toolkit - Globus Gass Copy
+Description: Grid Community Toolkit - Globus Gass Copy
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: ${abs_top_builddir}/libglobus_gass_copy.la

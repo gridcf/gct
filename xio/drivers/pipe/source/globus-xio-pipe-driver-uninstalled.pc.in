@@ -8,7 +8,7 @@ dlopen=-dlopen @abs_builddir@/libglobus_xio_pipe_driver.la
 dlpreopen=-dlpreopen @abs_builddir@/libglobus_xio_pipe_driver.la
 
 Name: globus-xio-pipe-driver
-Description: Globus Toolkit - Globus Pipe Driver
+Description: Grid Community Toolkit - Globus Pipe Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${abs_top_srcdir}

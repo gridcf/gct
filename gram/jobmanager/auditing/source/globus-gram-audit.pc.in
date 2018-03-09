@@ -4,5 +4,5 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-gram-audit
-Description: Globus Toolkit - GRAM Jobmanager Auditing
+Description: Grid Community Toolkit - GRAM Jobmanager Auditing
 Version: @VERSION@

@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-net-manager
-Description: Globus Toolkit - Network Manager
+Description: Grid Community Toolkit - Network Manager
 Version: @PACKAGE_VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir} -lglobus_net_manager

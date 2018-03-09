@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-popen-driver
-Description: Globus Toolkit - Globus XIO Pipe Open Driver
+Description: Grid Community Toolkit - Globus XIO Pipe Open Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Libs: -L${libdir}

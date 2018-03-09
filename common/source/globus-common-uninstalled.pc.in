@@ -10,7 +10,7 @@ thread_models=@thread_models@
 perl5lib=@abs_builddir@/scripts/lib/perl
 
 Name: globus-common
-Description: Globus Toolkit - Common Library
+Description: Grid Community Toolkit - Common Library
 Version: @PACKAGE_VERSION@
 Libs: @LDFLAGS@ ${abs_top_builddir}/library/libglobus_common.la
 Libs.private: @LIBS@

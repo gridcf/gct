@@ -6,7 +6,7 @@ abs_top_builddir=@abs_top_builddir@
 abs_top_srcdir=@abs_top_srcdir@
 
 Name: globus-gsi-proxy-ssl
-Description: Globus Toolkit - Globus GSI Proxy SSL Library
+Description: Grid Community Toolkit - Globus GSI Proxy SSL Library
 Version: @PACKAGE_VERSION@
 Requires.private: @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/library/libglobus_proxy_ssl.la

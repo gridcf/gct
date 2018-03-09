@@ -6,7 +6,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 Name: globus-gass-cache
-Description: Globus Toolkit - Globus Gass Cache
+Description: Grid Community Toolkit - Globus Gass Cache
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@
 Libs: ${abs_top_builddir}/libglobus_gass_cache.la

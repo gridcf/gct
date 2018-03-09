@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: globus-xio-gridftp-multicast
-Description: Globus Toolkit - Globus XIO GridFTP Multicast Driver
+Description: Grid Community Toolkit - Globus XIO GridFTP Multicast Driver
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@
 Cflags: -I${includedir}
