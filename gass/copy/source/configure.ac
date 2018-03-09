@@ -85,7 +85,7 @@ if test "X$GLOBUS_TOOLKIT_ID" = "X"; then
             GLOBUS_TOOLKIT_ID="unknown"
         fi
     else
-        GLOBUS_TOOLKIT_ID="Globus Toolkit $GLOBUS_VERSION"
+        GLOBUS_TOOLKIT_ID="Grid Community Toolkit $GLOBUS_VERSION"
     fi
 fi
 AC_MSG_RESULT($GLOBUS_TOOLKIT_ID)
