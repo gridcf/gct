@@ -8,7 +8,7 @@ Name:		globus-xio
 
 
 %global _name %(tr - _ <<< %{name})
-Version:	5.16
+Version:	5.17
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
@@ -172,6 +172,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Fri Mar 09 2018 Globus Toolkit <support@globus.org> - 5.17-1
+- fix udp dual stack sockets when ipv6only is the default
+
 * Wed May 24 2017 Globus Toolkit <support@globus.org> - 5.16-1
 - Fix crash in error handling in http driver
 

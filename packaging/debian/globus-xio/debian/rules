@@ -13,7 +13,7 @@ include /usr/share/quilt/quilt.make
 
 name = globus-xio
 _name = globus_xio
-version = 5.16
+version = 5.17
 soname = 0
 
 INSTALLDIR = $(CURDIR)/debian/tmp

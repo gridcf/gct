@@ -22,10 +22,6 @@
 #include <netinet/udp.h>
 #endif
 
-#ifdef WIN32
-#define ENOTSUP 95
-#endif
-
 static
 int
 globus_l_xio_udp_activate(void);
@@ -864,7 +860,6 @@ globus_l_xio_udp_join_multicast(
     {
         goto error_socket;
     }
-    
     result = globus_l_xio_udp_apply_handle_attrs(
         attr, fd, GLOBUS_FALSE);
     if(result != GLOBUS_SUCCESS)
@@ -982,6 +977,7 @@ globus_l_xio_udp_create_listener(
     char                                portbuf[10];
     char *                              port;
     globus_xio_system_socket_t          fd;
+    globus_bool_t                       try_again = GLOBUS_FALSE;
     GlobusXIOName(globus_l_xio_udp_create_listener);
     
     if(attr->listener_serv)
@@ -997,77 +993,130 @@ globus_l_xio_udp_create_listener(
     /* setup hints for types of connectable sockets we want */
     memset(&addrinfo_hints, 0, sizeof(globus_addrinfo_t));
     addrinfo_hints.ai_flags = GLOBUS_AI_PASSIVE;
-    addrinfo_hints.ai_family = handle->no_ipv6 ? PF_INET : PF_UNSPEC;
     addrinfo_hints.ai_socktype = SOCK_DGRAM;
     addrinfo_hints.ai_protocol = 0;
-    
-    result = globus_libc_getaddrinfo(
-        attr->bind_address, port, &addrinfo_hints, &save_addrinfo);
-    if(result != GLOBUS_SUCCESS && 
-        attr->listener_serv && attr->listener_port > 0)
+    if(attr->bind_address)
     {
-        /* it's possible the service name doesnt exist, since they also
-         * specified a numeric port, lets try that one
-         */
-        snprintf(portbuf, sizeof(portbuf), "%d", attr->listener_port);
-        result = globus_libc_getaddrinfo(
-            attr->bind_address, portbuf, &addrinfo_hints, &save_addrinfo);
+        addrinfo_hints.ai_family = attr->no_ipv6 ? PF_INET : PF_UNSPEC;
+    }
+    else
+    {
+        addrinfo_hints.ai_family = attr->no_ipv6 ? PF_INET : PF_INET6;
     }
 
-    if(result != GLOBUS_SUCCESS)
-    {
-        result = GlobusXIOErrorWrapFailed("globus_libc_getaddrinfo", result);
-        goto error_getaddrinfo;
-    }
-    
-    /* bind to the first one possible --
-     * its not possible to bind multiple interfaces (except on some openbsd)
-     * so, if the system doesnt map its inet interfaces to inet6, we
-     * may have a problem
-     */
-    for(addrinfo = save_addrinfo; addrinfo; addrinfo = addrinfo->ai_next)
-    {
-        if(GlobusLibcProtocolFamilyIsIP(addrinfo->ai_family))
+    /* getaddrinfo now returns results in the 'correct' rfc order of ipv4 
+     * first and ipv6 last, but we want to bind to ipv6 addresses first. 
+     * we'll loop through the whole getaddrinfo+bind twice -- first for V6, 
+     * then for V4 */
+    do
+    {   
+        addrinfo = NULL;
+         
+        result = globus_libc_getaddrinfo(
+            attr->bind_address, port, &addrinfo_hints, &save_addrinfo);
+        if(result != GLOBUS_SUCCESS && 
+            attr->listener_serv && attr->listener_port > 0)
         {
-            result = globus_xio_system_socket_create(
-                &fd,
-                addrinfo->ai_family,
-                addrinfo->ai_socktype,
-                addrinfo->ai_protocol);
-            if(result != GLOBUS_SUCCESS)
-            {
-                result = GlobusXIOErrorWrapFailed(
-                    "globus_xio_system_socket_create", result);
-                continue;
-            }
-            
-            result = globus_l_xio_udp_apply_handle_attrs(
-                attr, fd, GLOBUS_FALSE);
-            if(result != GLOBUS_SUCCESS)
-            {
-                result = GlobusXIOErrorWrapFailed(
-                    "globus_l_xio_udp_apply_handle_attrs", result);
-                globus_xio_system_socket_close(fd);
-                continue;
-            }
-            
-            result = globus_l_xio_udp_bind(
-                fd,
-                addrinfo->ai_addr,
-                addrinfo->ai_addrlen,
-                attr->restrict_port ? attr->listener_min_port : 0,
-                attr->restrict_port ? attr->listener_max_port : 0);
-            if(result != GLOBUS_SUCCESS)
-            {
-                result = GlobusXIOErrorWrapFailed(
-                    "globus_l_xio_udp_bind", result);
-                globus_xio_system_socket_close(fd);
-                continue;
-            }
-            
-            break;
+            /* it's possible the service name doesnt exist, since they also
+             * specified a numeric port, lets try that one
+             */
+            snprintf(portbuf, sizeof(portbuf), "%d", attr->listener_port);
+            result = globus_libc_getaddrinfo(
+                attr->bind_address, portbuf, &addrinfo_hints, &save_addrinfo);
         }
-    }
+
+        if(result != GLOBUS_SUCCESS)
+        {
+            if(addrinfo_hints.ai_family == PF_INET6)
+            {
+                try_again = GLOBUS_TRUE;
+                addrinfo_hints.ai_family = PF_INET;
+                continue;
+            }
+            else
+            {
+                result = GlobusXIOErrorWrapFailed(
+                    "globus_libc_getaddrinfo", result);
+                goto error_getaddrinfo;
+            }
+        }
+    
+    
+        for(addrinfo = save_addrinfo; addrinfo; addrinfo = addrinfo->ai_next)
+        {
+            if(GlobusLibcProtocolFamilyIsIP(addrinfo->ai_family))
+            {
+                globus_bool_t               found = GLOBUS_FALSE;
+                
+                do
+                {
+                    result = globus_xio_system_socket_create(
+                        &fd,
+                        addrinfo->ai_family,
+                        addrinfo->ai_socktype,
+                        addrinfo->ai_protocol);
+                    if(result != GLOBUS_SUCCESS)
+                    {
+                        break;
+                    }
+                    
+                    if(addrinfo->ai_family == AF_INET6 && !attr->bind_address)
+                    {
+                        int             int_zero = 0;
+                        
+                        result = globus_xio_system_socket_setsockopt(
+                            fd, IPPROTO_IPV6, IPV6_V6ONLY, &int_zero, sizeof(int_zero));
+                        if(result != GLOBUS_SUCCESS)
+                        {
+                             result = GlobusXIOErrorWrapFailed(
+                                "Unable to disable V6ONLY sockopt.", result);
+                        }
+                    }
+            
+                    result = globus_l_xio_udp_apply_handle_attrs(
+                        attr, fd, GLOBUS_FALSE);
+                    if(result != GLOBUS_SUCCESS)
+                    {
+                        result = GlobusXIOErrorWrapFailed(
+                            "globus_l_xio_udp_apply_handle_attrs", result);
+                        globus_xio_system_socket_close(fd);
+                        continue;
+                    }
+            
+                    result = globus_l_xio_udp_bind(
+                        fd,
+                        addrinfo->ai_addr,
+                        addrinfo->ai_addrlen,
+                        attr->restrict_port ? attr->listener_min_port : 0,
+                        attr->restrict_port ? attr->listener_max_port : 0);
+                    if(result != GLOBUS_SUCCESS)
+                    {
+                        result = GlobusXIOErrorWrapFailed(
+                            "globus_l_xio_udp_bind", result);
+                        globus_xio_system_socket_close(fd);
+                        break;
+                    }
+                    found = GLOBUS_TRUE;
+                } while(!found);
+                
+                if(found)
+                {
+                    break;
+                }
+            }
+        }
+        
+        if(!addrinfo && addrinfo_hints.ai_family == PF_INET6)
+        {
+            try_again = GLOBUS_TRUE;
+            addrinfo_hints.ai_family = PF_INET;
+            globus_libc_freeaddrinfo(save_addrinfo);
+        }
+        else
+        {
+            try_again = GLOBUS_FALSE;
+        }
+    } while(!addrinfo && try_again);
     
     if(!addrinfo)
     {
@@ -1253,7 +1302,6 @@ globus_l_xio_udp_open(
     }
     
     /* if a peer has been chosen, bind them */
-    /* XXX need to check into ipv4/6 mismatches between local and remote */
     port = contact_info->port ? contact_info->port : contact_info->scheme;
     if(contact_info->host && port)
     {

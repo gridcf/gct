@@ -1,3 +1,9 @@
+globus-xio (5.17-1+gt6.@distro@) @distro@; urgency=low
+
+  * fix udp dual stack sockets when ipv6only is the default
+
+ -- Globus Toolkit <support@globus.org>  Fri, 09 Mar 2018 12:58:00 -0600
+
 globus-xio (5.16-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix crash in error handling in http driver
