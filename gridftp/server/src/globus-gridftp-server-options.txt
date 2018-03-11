@@ -130,14 +130,27 @@ Authentication, Authorization, and Security Options
 *-auth-level number*::
     
 Add levels together to use more than one.
-	
-  0 = Disables all authorization checks.
-  1 = Authorize identity. 
-  2 = Authorize all file/resource accesses.
-  4 = Disable changing process uid to authenticated user (no setuid) -- DO NOT use this when process is started as root.
+    0 = Disables all authorization checks.
+    1 = Authorize identity. 
+    2 = Authorize all file/resource accesses.
+    4 = Disable changing process uid to authenticated user (no setuid) -- DO NOT use this when process is started as root.
 If not set uses level 2 for front ends and level 1 for data nodes.  Note that levels 2 and 4 imply level 1 as well.
 +
 This option can also be set in the configuration file as +auth_level+.
+
+
+*-process-user string*::
+    
+User to setuid to upon login for all connections. Only applies when running as root.
++
+This option can also be set in the configuration file as +process_user+.
+
+
+*-process-group string*::
+    
+Group to setgid to upon login for all connections. If unset, the default group of process_user will be used.
++
+This option can also be set in the configuration file as +process_group+.
 
 
 *-ipc-allow-from string*::
@@ -659,6 +672,14 @@ Port range to use for incoming connections. The format is "startport,endport". T
 This option can also be set in the configuration file as +port_range+.
 
 
+*-epsv-ip*::
+    
+Adds an IPv6 address to EPSV response. Breaks RFC 2428, but allows redirection to work with IPv6.
++
+This option can also be set in the configuration file as +epsv_ip+.
+    The default value of this option is +FALSE+.
+
+
 
 User Messages
 ~~~~~~~~~~~~~
@@ -782,7 +803,7 @@ Path to main configuration file that should be loaded.  Otherwise will attempt t
 
 *-C string*::
     
-Path to directory holding configuration files that should be loaded. Files will be loaded in alphabetical order, and in the event of duplicate parameters the last loaded file will take precedence.  Files with a '.' in the name (file.bak, file.rpmsave, etc.) will be ignored.  Note that the main configuration file, if one exists, will always be loaded last.
+Path to directory holding configuration files that should be loaded. Files will be loaded in alphabetical order, and in the event of duplicate parameters the last loaded file will take precedence.  Backup files and files created by package updates (e.g. file.rpmsave) will be ignored.  Note that the main configuration file, if one exists, will always be loaded last.
 +
 This option can also be set in the configuration file as +config_dir+.
 
