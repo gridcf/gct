@@ -26,7 +26,7 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
 
 if [[ $TASK == tests ]]; then
     set +e
-    [[ $COMPONENTS == *udt* ]]     && packages+=(glib2 xz)
+    [[ $COMPONENTS == *udt* ]]     && packages+=(glib2 xz libffi-devel)
     [[ $COMPONENTS == *myproxy* ]] && packages+=(which)
     [[ $COMPONENTS == *gram* ]]    && packages+=('perl(Pod::Html)')
     set -e
