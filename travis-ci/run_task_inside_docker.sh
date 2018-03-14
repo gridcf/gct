@@ -16,6 +16,14 @@ case $(</etc/redhat-release) in
     *) OS=unknown ;;
 esac
 
+# EPEL required for UDT
+case $OS in
+    centos6)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+              ;;
+    centos7)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+              ;;
+esac
+
 # Clean the yum cache
 yum clean all
 
@@ -26,17 +34,11 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
 
 if [[ $TASK == tests ]]; then
     set +e
-    [[ $COMPONENTS == *udt* ]]     && packages+=(glib2 xz libffi-devel)
+    [[ $COMPONENTS == *udt* ]]     && packages+=(udt-devel libnice-devel)
     [[ $COMPONENTS == *myproxy* ]] && packages+=(which)
     [[ $COMPONENTS == *gram* ]]    && packages+=('perl(Pod::Html)')
     set -e
 elif [[ $TASK == *rpms ]]; then
-    case $OS in
-        centos6)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-                  ;;
-        centos7)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-                  ;;
-    esac
     packages+=(rpm-build doxygen graphviz 'perl(Pod::Html)')
     # for globus-gridftp-server:
     packages+=(fakeroot)
