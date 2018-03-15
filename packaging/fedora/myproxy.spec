@@ -202,7 +202,7 @@ Package %{name}-libs contains runtime libs for MyProxy to use VOMS.
 
 rm -f pkgdata/Makefile.am
 
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7
+%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 rm -rf autom4te.cache
 autoreconf -if
 %endif
