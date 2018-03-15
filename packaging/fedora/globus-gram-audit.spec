@@ -14,9 +14,7 @@ License:	%{apache_license}
 URL:		https://github.com/gridcf/gct/
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildArch:      noarch
-%endif
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
 Requires:     perl = %{perl_version}
