@@ -5,7 +5,7 @@ Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Data Management SDK
 
 Group:		System Environment/Libraries
-License:	ASL 2.0
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

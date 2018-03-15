@@ -1,9 +1,3 @@
-%if %{?suse_Version}%{!?suse_Version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
-
 Name:		globus-common
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -12,7 +6,7 @@ Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

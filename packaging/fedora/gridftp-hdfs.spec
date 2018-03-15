@@ -5,7 +5,7 @@ Release:	1
 Summary:        HDFS DSI plugin for GridFTP
 
 Group:          System Environment/Daemons
-License:        ASL 2.0
+License:        %{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:            http://twiki.grid.iu.edu/bin/view/Storage/HadoopInstallation
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

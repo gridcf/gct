@@ -1,24 +1,13 @@
 %{!?_initddir: %global _initddir %{_initrddir}}
 Name:           myproxy
 %global soname 6
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%global bsd_license BSD-4-Clause
-%global libpkg libmyproxy%{soname}
-%global nlibpkg -n libmyproxy%{soname}
-%else
-%global apache_license ASL 2.0
-%global bsd_license BSD
-%global libpkg  myproxy-libs
-%global nlibpkg libs
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	6.1.28
 Release:	4%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          System Environment/Daemons
-License:        NCSA and %{bsd_license} and %{apache_license}
+License:        NCSA and %{?suse_version:BSD-4-clause and BSD-2-clause and Apache-2.0}%{!?suse_version:BSD and ASL 2.0}
 URL:            http://grid.ncsa.illinois.edu/myproxy/
 Source0:        %{_name}-%{version}.tar.gz
 
@@ -55,6 +44,14 @@ BuildRequires:      globus-common-devel >= 14
 BuildRequires:      globus-xio-devel >= 3
 BuildRequires:      globus-usage-devel >= 3
 BuildRequires:      globus-gss-assist-devel >= 8
+
+%if %{?suse_version}%{!?suse_version:0} >= 1315
+%global libpkg libmyproxy%{soname}
+%global nlibpkg -n libmyproxy%{soname}
+%else
+%global libpkg myproxy-libs
+%global nlibpkg libs
+%endif
 
 Requires:      globus-proxy-utils >= 5
 Requires:      %{libpkg}%{?_isa} = %{version}-%{release}

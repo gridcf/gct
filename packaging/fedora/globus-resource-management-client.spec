@@ -5,7 +5,7 @@ Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Resource Management Client Programs
 
 Group:		System Environment/Libraries
-License:	ASL 2.0
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
