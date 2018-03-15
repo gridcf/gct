@@ -1,8 +1,3 @@
-%if %{?fedora}%{!?fedora:0} <= 16 || %{?rhel}%{!?rhel:0} < 7
-%global backwardcompat "--with-backward-compatibility-hack"
-%endif
-%global soname 0
-
 %if %{?suse_Version}%{!?suse_Version:0} >= 1315
 %global apache_license Apache-2.0
 %else
@@ -10,6 +5,7 @@
 %endif
 
 Name:		globus-common
+%global soname 0
 %global _name %(tr - _ <<< %{name})
 Version:	17.4
 Release:	1%{?dist}
@@ -173,7 +169,7 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static %{backwardcompat} \
+           --disable-static --with-backward-compatibility-hack \
            --docdir=%{_docdir}/%{name}-%{version} \
            --includedir=%{_includedir}/globus \
            --datadir=%{_datadir}/globus \
