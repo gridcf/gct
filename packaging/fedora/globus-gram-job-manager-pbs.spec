@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-pbs
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -36,9 +34,6 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60
@@ -140,11 +135,7 @@ export MPIRUN=no
 export QDEL=/usr/bin/qdel-torque
 export QSTAT=/usr/bin/qstat-torque
 export QSUB=/usr/bin/qsub-torque
-%if %{?fedora}%{!?fedora:0} == 13 || %{?rhel}%{!?rhel:0} == 5
-   %global pbs_log_path /var/torque/server_logs
-%else
-   %global pbs_log_path /var/log/torque/server_logs 
-%endif
+%global pbs_log_path /var/log/torque/server_logs
 
 %configure \
            --disable-static \
@@ -158,7 +149,6 @@ export QSUB=/usr/bin/qsub-torque
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 # Remove jobmanager-pbs from install dir so that it can be
 # added/removed by post scripts
@@ -166,9 +156,6 @@ rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-pbs
 
 # Remove libtool archives (.la files)
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post setup-poll
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-pbs-poll -n jobmanager-pbs > /dev/null 2>&1 || :
@@ -261,7 +248,6 @@ fi
 %if %{?suse_version}%{!?suse_version:0} < 1315
 %{_libdir}/libglobus_*
 %endif
-
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-4

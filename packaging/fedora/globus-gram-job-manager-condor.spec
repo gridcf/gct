@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-condor
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -74,14 +72,10 @@ export CONDOR_SUBMIT=/usr/bin/condor_submit
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 # Remove jobmanager-condor from install dir so that it can be
 # added/removed by post scripts
 rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-condor
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ $1 -eq 1 ]; then

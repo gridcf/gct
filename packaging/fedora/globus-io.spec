@@ -42,11 +42,7 @@ BuildRequires: libtool
 %else
 BuildRequires: libtool-ltdl-devel
 %endif
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-%else
 BuildRequires:  openssl
-%endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global mainpkg lib%{_name}%{soname}
@@ -115,10 +111,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -128,7 +120,6 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -137,9 +128,6 @@ rm -rvf $RPM_BUILD_ROOT%{_mandir}
 
 %check
 GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

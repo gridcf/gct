@@ -20,14 +20,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
-%endif
 %endif
 BuildRequires:	globus-openssl-module-devel >= 3
 BuildRequires:	globus-gsi-openssl-error-devel >= 2
@@ -36,9 +30,6 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -130,11 +121,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
-%if %{?rhel}%{!?rhel:0}
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -144,14 +130,10 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

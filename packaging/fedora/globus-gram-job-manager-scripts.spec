@@ -1,4 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
 Name:		globus-gram-job-manager-scripts
 %global soname 0
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -70,7 +69,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -81,11 +79,7 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
@@ -106,7 +100,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_docdir}/%{name}-%{version}/perl/Globus
 %dir %{_docdir}/%{name}-%{version}/perl/Globus/GRAM
 %{_docdir}/%{name}-%{version}/perl/Globus/GRAM/*.html
-
 
 %changelog
 * Thu Sep 28 2017 Globus Toolkit <support@globus.org> - 6.10-1

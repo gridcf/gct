@@ -24,18 +24,13 @@ Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 
 BuildRequires:	globus-gram-protocol-devel >= 11
 %if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
 BuildRequires:	libtool-ltdl-devel
-%endif
 %endif
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60
@@ -101,9 +96,7 @@ Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gram-protocol-devel%{?_isa} >= 11
 %if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
 Requires:  libtool-ltdl-devel
-%endif
 %endif
 Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
@@ -200,7 +193,6 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -213,9 +205,6 @@ sed -i -e 's/Required-Stop:.*/Required-Stop: $null/' $RPM_BUILD_ROOT%{_sysconfdi
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

@@ -40,11 +40,7 @@ BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60
 BuildRequires:  libtool >= 2.2
 %endif
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-%else
 BuildRequires:  openssl
-%endif
 BuildRequires:  pkgconfig
 %if 0%{?suse_version} > 0
 BuildRequires: libtool
@@ -78,7 +74,6 @@ Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
 %else
 Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 %endif
-
 
 %package devel
 Summary:	Grid Community Toolkit - Globus GridFTP Server Development Files
@@ -153,10 +148,6 @@ export GRIDMAP=/etc/grid-security/grid-mapfile
 %global default_runlevels --with-default-runlevels=235
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -167,7 +158,6 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf.default $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d
@@ -184,9 +174,6 @@ sed -i -e 's/Required-Stop:.*/Required-Stop: $network $local_fs/' $RPM_BUILD_ROO
 
 %check
 make %{_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 %postun %{?nmainpkg} -p /sbin/ldconfig

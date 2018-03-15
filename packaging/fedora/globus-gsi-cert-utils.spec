@@ -16,11 +16,7 @@ URL:		https://github.com/gridcf/gct/
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?rhel}%{!?rhel:0} == 5
-Requires:	openssl101e
-%else
 Requires:	openssl
-%endif
 
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-openssl-module-devel >= 3
@@ -29,20 +25,11 @@ BuildRequires:	globus-gsi-openssl-error-devel >= 2
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
 %endif
-%endif
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -70,11 +57,7 @@ Group:		System Environment/Libraries
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-%if %{?rhel}%{!?rhel:0} == 5
-Requires:	openssl101e
-%else
 Requires:	openssl
-%endif
 Requires:	globus-common-progs >= 14
 
 %package devel
@@ -88,13 +71,8 @@ Requires:	globus-gsi-openssl-error-devel%{?_isa} >= 2
 Requires:  openssl
 Requires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-Requires:  openssl101e
-Requires:  openssl101e-devel
-%else
 Requires:  openssl
 Requires:  openssl-devel
-%endif
 %endif
 
 %package doc
@@ -116,7 +94,6 @@ software packages in grid computing.
 The %{mainpkg} package contains:
 Globus GSI Cert Utils Library
 %endif
-
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -169,10 +146,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -182,7 +155,6 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -190,9 +162,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

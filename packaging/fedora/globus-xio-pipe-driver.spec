@@ -86,7 +86,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -96,13 +95,9 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -vf "{}" \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

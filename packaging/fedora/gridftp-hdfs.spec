@@ -25,12 +25,7 @@ BuildRequires: libhdfs
 BuildRequires: hadoop-libhdfs-devel
 Requires: hadoop-libhdfs
 %endif
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl-devel
-%endif
 BuildRequires: globus-gridftp-server-devel >= 11
 BuildRequires: globus-common-devel
 BuildRequires: pkgconfig
@@ -58,7 +53,6 @@ HDFS DSI plugin for GridFTP
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
@@ -67,9 +61,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Remove the init script - in GT5.2, this gets bootstrapped appropriately
 rm $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/gridftp.conf.d/%{name}-environment-bootstrap
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig

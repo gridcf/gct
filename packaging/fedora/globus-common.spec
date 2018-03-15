@@ -9,14 +9,11 @@
 %global apache_license ASL 2.0
 %endif
 
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-common
 %global _name %(tr - _ <<< %{name})
 Version:	17.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
-
 
 Group:		System Environment/Libraries
 License:	%{apache_license}
@@ -41,23 +38,12 @@ Obsoletes:      globus-common-setup%{?_isa} < 3
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 %if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
 BuildRequires:	libtool-ltdl-devel
 %endif
-%endif
-%if 0%{?suse_version} >= 1315
-BuildRequires:   autoconf
-BuildRequires:   automake
-BuildRequires:   libtool
-%endif
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%else
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7
+%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
-%endif
 %endif
 BuildRequires:  pkgconfig
 
@@ -93,13 +79,9 @@ Summary:	Grid Community Toolkit - Common Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
 Requires:	libtool-ltdl-devel
 %endif
-%endif
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
 Obsoletes:	globus-libtool-devel%{?_isa}
-%endif
 #		Obsolete dropped packages from Globus Toolkit 4.2.1
 Obsoletes:	globus-core
 Obsoletes:	globus-data-conversion-devel
@@ -204,7 +186,6 @@ make %{?_smp_mflags}
 cd -
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -215,9 +196,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 export NO_EXTERNAL_NET=1
 %endif
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

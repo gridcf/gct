@@ -30,12 +30,8 @@ GridFTP Client and Server Programs and Libraries
 %build
 
 %install
-rm -rf "$RPM_BUILD_ROOT"
-mkdir "$RPM_BUILD_ROOT"
 
 %files
-
-%clean
 
 %post
 

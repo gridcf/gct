@@ -45,7 +45,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -55,14 +54,10 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)

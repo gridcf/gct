@@ -72,7 +72,6 @@ MyProxy OAuth Delegation Service
 :
 
 %install
-rm -rf $RPM_BUILD_ROOT
 python setup.py install \
     --install-lib /usr/share/%{name} \
     --install-scripts /usr/share/%{name} \
@@ -126,9 +125,6 @@ mkdir -p /srv/www/run
 %endif
 
 exit 0
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(-,root,root,-)
 %if %{?suse_version}%{!?suse_version:0} >= 1315

@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-sge
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -36,9 +34,6 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60
@@ -156,7 +151,6 @@ export SUN_MPRUN=no
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 # Remove jobmanager-sge from install dir so that it can be
 # added/removed by post scripts
@@ -167,9 +161,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post setup-poll
 if [ $1 -eq 1 ]; then

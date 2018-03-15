@@ -44,9 +44,6 @@ BuildRequires:  xz
 BuildRequires:  curl
 BuildRequires:  zlib-devel
 %endif
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  python26
-%endif
 BuildRequires:  libffi-devel
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
@@ -123,7 +120,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
 %if 0%{?suse_version} > 0 && %{?suse_version}%{!?suse_version:0} < 1315
 # SuSE 11 doesn't include libffi's pkg-config file, but the library
 # is available natively. LIBFFI_CFLAGS must be non-empty for autoconf to
@@ -141,13 +137,9 @@ export LIBFFI_LIBS="-lffi"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

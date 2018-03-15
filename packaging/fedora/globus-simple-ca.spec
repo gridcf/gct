@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-simple-ca
 %global _name %(tr - _ <<< %{name})
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -48,7 +46,6 @@ BuildRequires:  perl-Test-Simple
 %endif
 BuildArch:      noarch
 
-
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -83,14 +80,10 @@ make %{?_smp_mflags}
 cd -
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %pre
 getent group simpleca >/dev/null || groupadd -r simpleca

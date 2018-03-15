@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-audit
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -62,7 +60,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -72,15 +69,11 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 rm -rf $RPM_BUILD_ROOT%{_localstatedir}/lib/globus/gram-audit
 %endif
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ $1 -eq 1 ]; then

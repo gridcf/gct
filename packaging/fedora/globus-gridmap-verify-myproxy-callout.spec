@@ -19,14 +19,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
-%endif
 %endif
 
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
@@ -87,10 +81,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -100,7 +90,6 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -108,9 +97,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg}
 /sbin/ldconfig

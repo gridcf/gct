@@ -86,12 +86,8 @@ Data Management SDK
 %build
 
 %install
-rm -rf "$RPM_BUILD_ROOT"
-mkdir "$RPM_BUILD_ROOT"
 
 %files
-
-%clean
 
 %post
 

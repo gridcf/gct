@@ -15,11 +15,7 @@ URL:		https://github.com/gridcf/gct/
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?rhel}%{!?rhel:0} == 5
-Requires:  openssl101e%{?_isa}
-%else
 Requires:  openssl%{?_isa}
-%endif
 
 BuildRequires:	globus-gsi-credential-devel >= 5
 BuildRequires:	globus-gsi-callback-devel >= 4
@@ -45,16 +41,9 @@ BuildRequires:  perl-Test-Simple
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
 %endif
-%endif
-
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -78,10 +67,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -91,14 +76,10 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)

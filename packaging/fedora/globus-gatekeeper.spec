@@ -32,14 +32,8 @@ Requires:       lsb
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
-%endif
 %endif
 
 Requires(post): globus-common-progs >= 13.4
@@ -91,10 +85,6 @@ autoreconf -if
 %global initscript_config_path %{_sysconfdir}/sysconfig/%{name} 
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -108,16 +98,12 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir $RPM_BUILD_ROOT/etc/grid-services
 mkdir $RPM_BUILD_ROOT/etc/grid-services/available
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -159,7 +145,6 @@ fi
 %{_sysconfdir}/init.d/%{name}
 %{_sbindir}/*
 %{_mandir}/man8/*
-
 
 %changelog
 * Fri Sep 09 2016 Globus Toolkit <support@globus.org> - 10.12-1

@@ -28,14 +28,8 @@ Requires:	psmisc
 BuildRequires:  openssl
 BuildRequires:  libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
 BuildRequires:  openssl
 BuildRequires:  openssl-devel
-%endif
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -140,10 +134,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
 %configure \
            --disable-static \
            --docdir=%{_docdir}/%{name}-%{version} \
@@ -153,7 +143,6 @@ export OPENSSL="$(which openssl101e)"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find ${RPM_BUILD_ROOT} -name 'libglobus*.la' -exec rm -vf '{}' \;
@@ -164,9 +153,6 @@ rm -rf ${RPM_BUILD_ROOT}%{_localstatedir}/log/globus
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %post

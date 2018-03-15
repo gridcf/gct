@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-lsf
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -144,7 +142,6 @@ export MPIRUN=no
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 # Remove jobmanager-lsf from install dir so that it can be
 # added/removed by post scripts
@@ -157,9 +154,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name '*.pc' -exec rm -v '{}' \;
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post setup-poll
 if [ $1 -eq 1 ]; then

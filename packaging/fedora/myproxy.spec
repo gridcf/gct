@@ -172,7 +172,6 @@ trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-doc contains the MyProxy documentation.
 
-
 %if %{?rhel}%{!?rhel:0} > 5 || %{?fedora}%{!?fedora:0} > 0
 %package voms
 Summary:       Manage X.509 Public Key Infrastructure (PKI) security credentials 
@@ -227,7 +226,6 @@ with_sasl2=--with-sasl2=%{_usr}
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
@@ -241,7 +239,6 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/myproxy-test-wrapper
 # No need for myproxy-server-setup since the rpm will perform
 # the needed setup
 rm $RPM_BUILD_ROOT%{_sbindir}/myproxy-server-setup
-
 
 # We are going to zip the man pages later in the package so we need to
 # correct the gpt data in anticipation.
@@ -282,12 +279,10 @@ done
 #%{_datadir}/globus/globus-gpt2pkg-config pkgdata/pkg_data_%{flavor}_dev.gpt > \
 #  $RPM_BUILD_ROOT%{_libdir}/pkgconfig/%{name}.pc
 
-
 # Move example configuration file into place.
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/myproxy-server.config \
    $RPM_BUILD_ROOT%{_sysconfdir}
-
 
 mkdir -p $RPM_BUILD_ROOT%{_initddir}
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -426,10 +421,6 @@ mkdir -p $RPM_BUILD_ROOT%{_var}/lib/myproxy
 
 # Create a directory to hold myproxy owned host certificates.
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security/myproxy
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 
 %check 
 PATH=.:$PATH make check

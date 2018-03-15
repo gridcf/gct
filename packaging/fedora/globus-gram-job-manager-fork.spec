@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-fork
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -37,9 +35,6 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60
@@ -147,7 +142,6 @@ export MPIRUN=no
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove jobmanager-fork from install dir so that it can be
@@ -156,9 +150,6 @@ rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-fork
 
 # Remove libtool archives (.la files)
 find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post setup-poll
 if [ $1 -eq 1 ]; then
@@ -258,7 +249,6 @@ fi
 %dir %{_sysconfdir}/globus/scheduler-event-generator/available
 %{_sysconfdir}/globus/scheduler-event-generator/available/fork
 %{_libdir}/libglobus_seg_fork.so*
-
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-1

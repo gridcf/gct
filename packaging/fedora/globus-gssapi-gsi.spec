@@ -16,7 +16,6 @@ URL:		https://github.com/gridcf/gct/
 Source:	%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-
 BuildRequires:	globus-gsi-credential-devel >= 5
 BuildRequires:	globus-gsi-callback-devel >= 4
 BuildRequires:	globus-openssl-module-devel >= 3
@@ -146,7 +145,6 @@ autoreconf -if
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
@@ -154,9 +152,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 

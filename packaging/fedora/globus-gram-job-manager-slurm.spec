@@ -1,5 +1,3 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
-
 Name:		globus-gram-job-manager-slurm
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global apache_license Apache-2.0
@@ -97,15 +95,11 @@ export MPIRUN=no
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT/etc/grid-services/jobmanager-slurm
 
 %check
 make %{_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post setup-poll
 if [ $1 -eq 1 ]; then
@@ -137,7 +131,6 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/globus-slurm.conf
 %dir %{_datadir}/globus/globus_gram_job_manager
 %{_datadir}/globus/globus_gram_job_manager/slurm.rvf
-
 
 %files setup-poll
 %defattr(-,root,root,-)
