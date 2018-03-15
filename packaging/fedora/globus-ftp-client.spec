@@ -25,7 +25,6 @@ BuildRequires:	globus-ftp-control-devel >= 4
 BuildRequires:	globus-ftp-control-doc >= 4
 BuildRequires:	globus-gridftp-server-progs
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 BuildRequires:	globus-gridftp-server-devel >= 0
 BuildRequires:	globus-xio-pipe-driver-devel >= 0
 

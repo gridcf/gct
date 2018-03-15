@@ -35,7 +35,6 @@ BuildRequires:	globus-gridftp-server-devel
 BuildRequires:	globus-xio-gsi-driver-devel
 BuildRequires:	globus-xio-pipe-driver-devel
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60

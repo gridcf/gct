@@ -36,7 +36,6 @@ Provides:       globus-common-setup%{?_isa}
 Obsoletes:      globus-libtool%{?_isa} < 2
 Obsoletes:      globus-common-setup%{?_isa} < 3
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 %if 0%{?suse_version} == 0
 BuildRequires:	libtool-ltdl-devel
 %endif

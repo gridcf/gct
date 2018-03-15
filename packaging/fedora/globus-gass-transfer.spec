@@ -20,7 +20,6 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-io-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60

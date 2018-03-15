@@ -24,7 +24,6 @@ BuildRequires:	globus-gssapi-gsi-devel >= 13
 BuildRequires:	globus-gsi-credential-devel >= 6
 BuildRequires:	globus-common-progs >= 14
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:  automake >= 1.11
 BuildRequires:  autoconf >= 2.60

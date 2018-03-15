@@ -21,7 +21,6 @@ BuildRequires:	globus-gss-assist-devel >= 11
 BuildRequires:	globus-io-devel >= 11
 BuildRequires:	globus-gssapi-gsi-devel >= 13
 BuildRequires:	doxygen
-BuildRequires:	graphviz
 BuildRequires:  globus-xio-devel >= 3
 BuildRequires:  globus-gssapi-error-devel >= 4
 
