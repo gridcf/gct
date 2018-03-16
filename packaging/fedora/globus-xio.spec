@@ -96,11 +96,7 @@ The %{name}-doc package contains:
 Globus XIO Framework Documentation Files
 
 %prep
-
 %setup -q -n %{_name}-%{version}
-
-unset GLOBUS_LOCATION
-unset GPT_LOCATION
 
 %build
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315

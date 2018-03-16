@@ -145,15 +145,6 @@ Common Library Documentation Files
 %prep
 %setup -q -n %{_name}-%{version}
 
-# custom perl requires that removes dependency on gpt perl modules
-cat << EOF > %{name}-req
-#!/bin/sh
-%{__perl_requires} $* |\
-sed -e '/perl(Grid::GPT::.*)/d'
-EOF
-%global __perl_requires %{_builddir}/%{_name}-%{version}/%{name}-req
-chmod +x %{__perl_requires}
-
 %build
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 # Remove files that should be replaced during bootstrap
