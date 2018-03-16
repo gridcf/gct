@@ -7,10 +7,10 @@ Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:  openssl%{?_isa}
+Requires:	openssl%{?_isa}
 
 BuildRequires:	globus-gsi-credential-devel >= 5
 BuildRequires:	globus-gsi-callback-devel >= 4
@@ -23,21 +23,21 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
 BuildRequires:	globus-gssapi-gsi-devel >= 4
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 %if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
+BuildRequires:	perl-Test-Simple
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
+BuildRequires:	openssl
+BuildRequires:	libopenssl-devel
 %else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
+BuildRequires:	openssl
+BuildRequires:	openssl-devel
 %endif
 
 %description
@@ -63,10 +63,10 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 

@@ -1,13 +1,13 @@
 Name:           gridftp-hdfs
 %global _name %(tr - _ <<< %{name})
-Version:	1.5
-Release:	1
+Version:        1.5
+Release:        1
 Summary:        HDFS DSI plugin for GridFTP
 
 Group:          System Environment/Daemons
 License:        %{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:            http://twiki.grid.iu.edu/bin/view/Storage/HadoopInstallation
-Source:	%{_name}-%{version}.tar.gz
+Source:         %{_name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?suse_version} > 0
@@ -40,7 +40,7 @@ Requires(postun): initscripts
 Requires(postun): xinetd
 
 %description
-HDFS DSI plugin for GridFTP 
+HDFS DSI plugin for GridFTP
 
 %prep
 

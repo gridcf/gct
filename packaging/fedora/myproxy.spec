@@ -2,8 +2,8 @@
 Name:           myproxy
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	6.1.28
-Release:	4%{?dist}
+Version:        6.1.28
+Release:        4%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          System Environment/Daemons
@@ -66,24 +66,24 @@ Obsoletes:     myproxy-client < 5.1-3
 Provides:      myproxy-client = %{version}-%{release}
 
 %description
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 %package %{nlibpkg}
-Summary:       Manage X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:       Manage X.509 Public Key Infrastructure (PKI) security credentials
 Group:         System Environment/Daemons
 
 %description %{nlibpkg}
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-libs contains runtime libs for MyProxy.
 
@@ -92,16 +92,16 @@ Requires:      %{libpkg}%{?_isa}  = %{version}-%{release}
 Requires:      globus-gss-assist-devel%{?_isa}  > 8
 Requires:      globus-usage-devel%{?_isa} >= 3
 
-Summary:       Develop X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:       Develop X.509 Public Key Infrastructure (PKI) security credentials
 Group:         System Environment/Daemons
 
 %description devel
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-devel contains development files for MyProxy.
 
@@ -120,16 +120,16 @@ Requires(preun):  aaa_base
 Requires(postun): sysconfig
 Requires(postun): aaa_base
 %endif
-Summary:          Server for X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:          Server for X.509 Public Key Infrastructure (PKI) security credentials
 Group:            System Environment/Daemons
 
 %description server
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-server contains the MyProxy server.
 
@@ -141,48 +141,48 @@ Requires:      %{libpkg}%{?_isa} = %{version}-%{release}
 Requires:      myproxy-server = %{version}-%{release}
 Requires:      myproxy = %{version}-%{release}
 Requires:      globus-gsi-cert-utils-progs >= 8
-Summary:       Server for X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:       Server for X.509 Public Key Infrastructure (PKI) security credentials
 Group:         System Environment/Daemons
 
 %description admin
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-admin contains the MyProxy server admin commands.
 
 %package doc
 Requires:      myproxy = %{version}-%{release}
-Summary:       Documentation for X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:       Documentation for X.509 Public Key Infrastructure (PKI) security credentials
 Group:         Documentation
 
 %description doc
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-doc contains the MyProxy documentation.
 
 %if %{?rhel}%{!?rhel:0} > 5 || %{?fedora}%{!?fedora:0} > 0
 %package voms
-Summary:       Manage X.509 Public Key Infrastructure (PKI) security credentials 
+Summary:       Manage X.509 Public Key Infrastructure (PKI) security credentials
 Group:         System Environment/Daemons
 Obsoletes:     myproxy < 5.1-3
 Requires:      voms-clients
 
 %description voms
-MyProxy is open source software for managing X.509 Public Key Infrastructure 
-(PKI) security credentials (certificates and private keys). MyProxy 
-combines an online credential repository with an online certificate 
+MyProxy is open source software for managing X.509 Public Key Infrastructure
+(PKI) security credentials (certificates and private keys). MyProxy
+combines an online credential repository with an online certificate
 authority to allow users to securely obtain credentials when and where needed.
-Users run myproxy-logon to authenticate and obtain credentials, including 
-trusted CA certificates and Certificate Revocation Lists (CRLs). 
+Users run myproxy-logon to authenticate and obtain credentials, including
+trusted CA certificates and Certificate Revocation Lists (CRLs).
 
 Package %{name}-libs contains runtime libs for MyProxy to use VOMS.
 %endif
@@ -194,7 +194,7 @@ Package %{name}-libs contains runtime libs for MyProxy to use VOMS.
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global initscript_config_path %{_localstatedir}/adm/fillup-templates/sysconfig.myproxy-server
 %else
-%global initscript_config_path %{_sysconfdir}/sysconfig/myproxy-server 
+%global initscript_config_path %{_sysconfdir}/sysconfig/myproxy-server
 %endif
 
 rm -f pkgdata/Makefile.am
@@ -244,7 +244,7 @@ mkdir -p  $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-doc-%{version}/extras
 
 for FILE in login.html myproxy-accepted-credentials-mapapp myproxy-cert-checker myproxy-certificate-mapapp \
              myproxy-certreq-checker myproxy-crl.cron myproxy.cron myproxy-get-delegation.cgi \
-             myproxy-get-trustroots.cron myproxy-passphrase-policy myproxy-revoke 
+             myproxy-get-trustroots.cron myproxy-passphrase-policy myproxy-revoke
 do
    mv $RPM_BUILD_ROOT%{_usr}/share/%{name}/$FILE \
       $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-doc-%{version}/extras/.
@@ -252,7 +252,7 @@ done
 
 mkdir -p $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
 for FILE in INSTALL LICENSE LICENSE.* PROTOCOL README VERSION
-do 
+do
 %if 0%{?suse_version} == 0
   mv  $RPM_BUILD_ROOT%{_usr}/share/%{name}/$FILE \
       $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}/.
@@ -340,7 +340,7 @@ if [ "$(id -u)" = 0 ]; then
     fi
 fi
 
-# A few sanity checks 
+# A few sanity checks
 if [ "$1" != "status" ]; then
         [ ! -f $X509_USER_KEY ]  && log_failure_msg "$prog: No hostkey file"  && exit 0
         [ ! -r $X509_USER_KEY ]  && log_failure_msg "$prog: Unable to read hostkey file $X509_USER_KEY"  && exit 0
@@ -419,7 +419,7 @@ mkdir -p $RPM_BUILD_ROOT%{_var}/lib/myproxy
 # Create a directory to hold myproxy owned host certificates.
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security/myproxy
 
-%check 
+%check
 PATH=.:$PATH make check
 
 %post %{nlibpkg} -p /sbin/ldconfig
@@ -492,7 +492,7 @@ fi
 %{_initddir}/myproxy-server
 %config(noreplace)    %{_sysconfdir}/myproxy-server.config
 %config(noreplace)    %{initscript_config_path}
-# myproxy-server wants exactly 700 permission on its data 
+# myproxy-server wants exactly 700 permission on its data
 # which is just fine.
 %attr(0700,myproxy,myproxy) %dir %{_var}/lib/myproxy
 %dir %{_sysconfdir}/grid-security/myproxy
@@ -771,7 +771,7 @@ fi
 - Add myproxy as requires to myproxy-admin to install clients.
 * Sat May 15 2010 Steve Traylen <steve.traylen@cern.ch> - 5.1-2
 - rhbz#585189 rearrange packaging.
-  clients moved from now obsoleted -client package 
+  clients moved from now obsoleted -client package
   to main package.
   libs moved from main package to new libs package.
 * Tue Mar 9 2010 Steve Traylen <steve.traylen@cern.ch> - 5.1-1
@@ -791,7 +791,7 @@ fi
 * Wed Oct 7 2009 Steve Traylen <steve.traylen@cern.ch> -  4.8-4
 - Add ASL 2.0 license as well.
 - Explicitly add /etc/grid-security to files list
-- For .el4/5 build only add globus-gss-assist-devel as requirment 
+- For .el4/5 build only add globus-gss-assist-devel as requirment
   to myproxy-devel package.
 * Thu Oct 1 2009 Steve Traylen <steve.traylen@cern.ch> -  4.8-3
 - Set _initddir for .el4 and .el5 building.

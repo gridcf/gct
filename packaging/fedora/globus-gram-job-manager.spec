@@ -8,7 +8,7 @@ Summary:	Grid Community Toolkit - GRAM Jobmanager
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:	globus-xio-popen-driver%{?_isa} >= 2
@@ -20,15 +20,15 @@ Requires:	globus-gatekeeper >= 9
 Requires:	psmisc
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
+BuildRequires:	openssl
+BuildRequires:	libopenssl-devel
 %else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
+BuildRequires:	openssl
+BuildRequires:	openssl-devel
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:       libglobus_seg_job_manager%{?_isa} = %{version}-%{release}
+Requires:	libglobus_seg_job_manager%{?_isa} = %{version}-%{release}
 BuildRequires:	procps
 %endif
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
@@ -47,28 +47,28 @@ BuildRequires:	libxml2-devel >= 2.6.11
 BuildRequires:	globus-gass-transfer-devel >= 7
 BuildRequires:	globus-gram-protocol-doc >= 11
 BuildRequires:	globus-common-doc >= 14
-BuildRequires:  globus-gram-client-tools >= 10
+BuildRequires:	globus-gram-client-tools >= 10
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 # For and tests
-BuildRequires:  libtool-ltdl-devel >= 2.2
+BuildRequires:	libtool-ltdl-devel >= 2.2
 %endif
-BuildRequires:  pkgconfig
-BuildRequires:  globus-gsi-cert-utils-progs >= 0
-BuildRequires:  globus-gatekeeper >= 0
-BuildRequires:  globus-gram-job-manager-scripts >= 0
-BuildRequires:  globus-gram-job-manager-fork-setup-poll >= 0
-BuildRequires:  globus-gram-client-devel >= 0
+BuildRequires:	pkgconfig
+BuildRequires:	globus-gsi-cert-utils-progs >= 0
+BuildRequires:	globus-gatekeeper >= 0
+BuildRequires:	globus-gram-job-manager-scripts >= 0
+BuildRequires:	globus-gram-job-manager-fork-setup-poll >= 0
+BuildRequires:	globus-gram-client-devel >= 0
 BuildRequires:	globus-gass-copy-progs >= 8
 BuildRequires:	globus-gass-server-ez-devel >= 0
 BuildRequires:	globus-proxy-utils >= 5
 %if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
+BuildRequires:	perl-Test-Simple
 %endif
 %if %{?fedora}%{!?fedora:0} >= 24
-BuildRequires:  perl-Test
+BuildRequires:	perl-Test
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -130,10 +130,10 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 
@@ -452,7 +452,7 @@ mkdir -p %{_localstatedir}/lib/globus
 - GRAM-232: Incorrect directory permissions cause an infinite loop
 - GRAM-302: Incorrect error when state file write fails
 - GRAM-301: GRAM validation file parser doesn't handle empty quoted values
-            correctly
+	    correctly
 - GRAM-300: GRAM job manager doxygen refers to obsolete command-line options
 - GRAM-299: Not all job log messages obey loglevel RSL attribute
 - GRAM-296: Compile Failure on Solaris

@@ -7,31 +7,31 @@ Summary:	Grid Community Toolkit - Condor Job Manager
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes:      globus-gram-job-manager-setup-condor < 4.5
+Obsoletes:	globus-gram-job-manager-setup-condor < 4.5
 Requires:	globus-gram-job-manager-scripts >= 3.4
 Requires:	globus-gass-cache-program >= 2
 Requires:	globus-common-progs >= 2
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
+Requires:	perl = %{perl_version}
     %else
 %{perl_requires}
     %endif
 %else
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Provides:       globus-gram-job-manager-setup
+Requires(post):		globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Provides:	globus-gram-job-manager-setup
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
-BuildArch:      noarch
+BuildRequires:	pkgconfig
+BuildArch:	noarch
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -41,7 +41,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Condor Job Manager 
+Condor Job Manager
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -58,11 +58,11 @@ export CONDOR_RM=/usr/bin/condor_rm
 export CONDOR_SUBMIT=/usr/bin/condor_submit
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-perlmoduledir=%{perl_vendorlib}
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
 
@@ -76,7 +76,7 @@ rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-condor
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-condor > /dev/null 2>&1 || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-condor -n jobmanager || :
+	globus-gatekeeper-admin -e jobmanager-condor -n jobmanager || :
     fi
 fi
 

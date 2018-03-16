@@ -9,17 +9,17 @@ License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       globus-gatekeeper
-Requires:       globus-gram-job-manager
-Requires:       globus-gram-job-manager-scripts
-Requires:       globus-gram-job-manager-fork-setup-poll
-Requires:       globus-gram-client-tools
-Requires:       globus-gass-cache-program
-Requires:       globus-gass-server-ez-progs
-Requires:       globus-gss-assist-progs
-Requires:       globus-common-progs
-Requires:       globus-gsi-cert-utils-progs
-Requires:       globus-proxy-utils
+Requires:	globus-gatekeeper
+Requires:	globus-gram-job-manager
+Requires:	globus-gram-job-manager-scripts
+Requires:	globus-gram-job-manager-fork-setup-poll
+Requires:	globus-gram-client-tools
+Requires:	globus-gass-cache-program
+Requires:	globus-gass-server-ez-progs
+Requires:	globus-gss-assist-progs
+Requires:	globus-common-progs
+Requires:	globus-gsi-cert-utils-progs
+Requires:	globus-proxy-utils
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for

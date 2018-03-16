@@ -7,16 +7,16 @@ Summary:	Grid Community Toolkit - SGE Job Manager
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0 and LGPL-2.1}%{!?suse_version:ASL 2.0 and LGPLv2}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes:      globus-gram-job-manager-setup-sge < 4.5
+Obsoletes:	globus-gram-job-manager-setup-sge < 4.5
 
-Requires:       globus-gram-job-manager-scripts >= 4
+Requires:	globus-gram-job-manager-scripts >= 4
 Requires:	globus-gass-cache-program >= 4
 Requires:	globus-common-progs >= 14
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
+Requires:	perl = %{perl_version}
     %else
 %{perl_requires}
     %endif
@@ -29,43 +29,43 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %package -n libglobus_seg_sge
-Summary:        Grid Community Toolkit - SGE Job Manager SEG Module
+Summary:	Grid Community Toolkit - SGE Job Manager SEG Module
 Group:		Applications/Internet
 %endif
 
 %package setup-poll
-Summary:        Grid Community Toolkit - SGE Job Manager Setup Files
+Summary:	Grid Community Toolkit - SGE Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:      noarch
+BuildArch:	noarch
 %endif
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
+Provides:	%{name}-setup
+Provides:	globus-gram-job-manager-setup
 Requires:	%{name} = %{version}-%{release}
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Conflicts:      %{name}-setup-seg
+Requires(post):		globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Conflicts:	%{name}-setup-seg
 
 %package setup-seg
 Summary:	Grid Community Toolkit - SGE Job Manager Setup Files
 Group:		Applications/Internet
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
+Provides:	%{name}-setup
+Provides:	globus-gram-job-manager-setup
 Requires:	%{name} = %{version}-%{release}
-Requires:       globus-scheduler-event-generator-progs >= 4
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(post): globus-scheduler-event-generator-progs >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-scheduler-event-generator-progs >= 4
-Conflicts:      %{name}-setup-poll
+Requires:	globus-scheduler-event-generator-progs >= 4
+Requires(post):		globus-gram-job-manager-scripts >= 4
+Requires(post):		globus-scheduler-event-generator-progs >= 4
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-scheduler-event-generator-progs >= 4
+Conflicts:	%{name}-setup-poll
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -75,7 +75,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-SGE Job Manager 
+SGE Job Manager
 
 %description setup-poll
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -130,17 +130,17 @@ export MPIRUN=no
 export SUN_MPRUN=no
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-perlmoduledir=%{perl_vendorlib} \
-           --with-globus-state-dir=%{_localstatedir}/lib/globus \
-           --with-sge-config=/etc/sysconfig/gridengine \
-           --with-sge-root=undefined \
-           --with-sge-cell=undefined \
-           --without-queue-validation \
-           --without-pe-validation
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-perlmoduledir=%{perl_vendorlib} \
+	   --with-globus-state-dir=%{_localstatedir}/lib/globus \
+	   --with-sge-config=/etc/sysconfig/gridengine \
+	   --with-sge-root=undefined \
+	   --with-sge-cell=undefined \
+	   --without-queue-validation \
+	   --without-pe-validation
 
 make %{?_smp_mflags}
 
@@ -160,7 +160,7 @@ make %{?_smp_mflags} check
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-sge-poll -n jobmanager-sge > /dev/null 2>&1 || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-sge-poll -n jobmanager
+	globus-gatekeeper-admin -e jobmanager-sge-poll -n jobmanager
     fi
 fi
 

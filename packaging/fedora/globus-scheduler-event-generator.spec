@@ -8,7 +8,7 @@ Summary:	Grid Community Toolkit - Scheduler Event Generator
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -26,21 +26,21 @@ BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 %if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
+BuildRequires:	perl-Test-Simple
 %endif
 %if %{?suse_version}%{!?suse_version:0} > 0
-BuildRequires:       insserv
+BuildRequires:	insserv
 %else
 %if %{?rhel}%{!?rhel:0} >= 6 || %{?fedora}%{!?fedora:0} >= 20
-BuildRequires:       lsb-core-noarch
+BuildRequires:	lsb-core-noarch
 %else
-BuildRequires:       lsb
+BuildRequires:	lsb
 %endif
 %endif
 
@@ -62,17 +62,17 @@ Summary:	Grid Community Toolkit - Scheduler Event Generator Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires(pre): %insserv_prereq %fillup_prereq
-Requires(post): %insserv_prereq %fillup_prereq
+Requires(pre):		%insserv_prereq %fillup_prereq
+Requires(post):		%insserv_prereq %fillup_prereq
 %endif
 
-%if %{?suse_version}%{!?suse_version:0}  > 0
-Requires:       insserv
+%if %{?suse_version}%{!?suse_version:0} > 0
+Requires:	insserv
 %else
-%if %{?rhel}%{!?rhel:0}  >= 6 || %{?fedora}%{!?fedora:0} >= 20
-Requires:       lsb-core-noarch
+%if %{?rhel}%{!?rhel:0} >= 6 || %{?fedora}%{!?fedora:0} >= 20
+Requires:	lsb-core-noarch
 %else
-Requires:       lsb
+Requires:	lsb
 %endif
 %endif
 
@@ -81,8 +81,8 @@ Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
 %else
 Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 %endif
-Requires(post): globus-common-progs >= 14
-Requires(preun):globus-common-progs >= 14
+Requires(post):		globus-common-progs >= 14
+Requires(preun):	globus-common-progs >= 14
 
 %package devel
 Summary:	Grid Community Toolkit - Scheduler Event Generator Development Files
@@ -90,7 +90,7 @@ Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-gram-protocol-devel%{?_isa} >= 11
 %if 0%{?suse_version} == 0
-Requires:  libtool-ltdl-devel
+Requires:	libtool-ltdl-devel
 %endif
 Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
@@ -171,18 +171,18 @@ autoreconf -if
 %global default_runlevels --with-default-runlevels=235
 %global initscript_config_path %{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
 %else
-%global initscript_config_path %{_sysconfdir}/sysconfig/%{name} 
+%global initscript_config_path %{_sysconfdir}/sysconfig/%{name}
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-lsb \
-           %{?default_runlevels} \
-           --with-initscript-config-path=%{initscript_config_path} \
-           --with-lockfile-path='${localstatedir}/lock/subsys/%{name}'
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-lsb \
+	   %{?default_runlevels} \
+	   --with-initscript-config-path=%{initscript_config_path} \
+	   --with-lockfile-path='${localstatedir}/lock/subsys/%{name}'
 
 make %{?_smp_mflags}
 

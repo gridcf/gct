@@ -9,11 +9,11 @@ License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       globus-common-progs
-Requires:       globus-gsi-cert-utils-progs
-Requires:       globus-ftp-client
-Requires:       globus-gass-copy-progs
-Requires:       globus-proxy-utils
+Requires:	globus-common-progs
+Requires:	globus-gsi-cert-utils-progs
+Requires:	globus-ftp-client
+Requires:	globus-gass-copy-progs
+Requires:	globus-proxy-utils
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for

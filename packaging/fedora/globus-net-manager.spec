@@ -8,19 +8,19 @@ Summary:	Grid Community Toolkit - Net Manager Library
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 15.27
 BuildRequires:	globus-xio-devel >= 5
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
-BuildRequires:  python-devel
+BuildRequires:	pkgconfig
+BuildRequires:	python-devel
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global mainpkg lib%{_name}%{soname}
@@ -54,9 +54,9 @@ Group:		System Environment/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	globus-common-devel%{?_isa} >= 15.27
 Requires:	globus-xio-devel%{?_isa} >= 5
-Provides:       globus-net-manager-xio-driver
+Provides:	globus-net-manager-xio-driver
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-Provides:       globus-xio-net-manager-driver
+Provides:	globus-xio-net-manager-driver
 %endif
 
 %package doc
@@ -131,11 +131,11 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --enable-python 
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --enable-python
 
 make %{?_smp_mflags}
 

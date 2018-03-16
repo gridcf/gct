@@ -9,31 +9,31 @@ License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       globus-common-progs
-Requires:       globus-callout
-Requires:       globus-gsi-openssl-error
-Requires:       globus-gsi-proxy-ssl
-Requires:       globus-rsl
-Requires:       globus-openssl-module
-Requires:       globus-gsi-cert-utils-progs
-Requires:       globus-simple-ca
-Requires:       globus-gsi-sysconfig
-Requires:       globus-gsi-callback
-Requires:       globus-gsi-credential
-Requires:       globus-gsi-proxy-core
-Requires:       globus-gssapi-gsi
-Requires:       globus-proxy-utils
-Requires:       globus-gss-assist
-Requires:       globus-gss-assist-progs
-Requires:       globus-xio
-Requires:       globus-xio-gsi-driver
-Requires:       globus-io
-Requires:       globus-gssapi-error
-Requires:       globus-gass-transfer
-Requires:       globus-gram-protocol
-Requires:       globus-gass-server-ez-progs
-Requires:       globus-gram-client
-Requires:       globus-gram-client-tools
+Requires:	globus-common-progs
+Requires:	globus-callout
+Requires:	globus-gsi-openssl-error
+Requires:	globus-gsi-proxy-ssl
+Requires:	globus-rsl
+Requires:	globus-openssl-module
+Requires:	globus-gsi-cert-utils-progs
+Requires:	globus-simple-ca
+Requires:	globus-gsi-sysconfig
+Requires:	globus-gsi-callback
+Requires:	globus-gsi-credential
+Requires:	globus-gsi-proxy-core
+Requires:	globus-gssapi-gsi
+Requires:	globus-proxy-utils
+Requires:	globus-gss-assist
+Requires:	globus-gss-assist-progs
+Requires:	globus-xio
+Requires:	globus-xio-gsi-driver
+Requires:	globus-io
+Requires:	globus-gssapi-error
+Requires:	globus-gass-transfer
+Requires:	globus-gram-protocol
+Requires:	globus-gass-server-ez-progs
+Requires:	globus-gram-client
+Requires:	globus-gram-client-tools
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for

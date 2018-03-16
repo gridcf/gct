@@ -8,15 +8,15 @@ Summary:	Grid Community Toolkit - Globus GridFTP Server
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-Requires:       libglobus_xio_udt_driver%{?_isa} >= 1
+Requires:	libglobus_xio_udt_driver%{?_isa} >= 1
 %else
 Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-Requires:       globus-xio-udt-driver%{?_isa} >= 1
+Requires:	globus-xio-udt-driver%{?_isa} >= 1
 %endif
 
 BuildRequires:	globus-gridftp-server-control-devel >= 7
@@ -27,24 +27,24 @@ BuildRequires:	globus-authz-devel >= 2
 BuildRequires:	globus-gfork-devel >= 3
 BuildRequires:	globus-ftp-control-devel >= 7
 BuildRequires:	globus-gss-assist-devel >= 9
-BuildRequires:  globus-common-progs >= 17
+BuildRequires:	globus-common-progs >= 17
 BuildRequires:	globus-gsi-credential-devel >= 6
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  zlib-devel
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	zlib-devel
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  openssl
-BuildRequires:  pkgconfig
+BuildRequires:	openssl
+BuildRequires:	pkgconfig
 %if 0%{?suse_version} > 0
-BuildRequires: libtool
+BuildRequires:	libtool
 %else
-BuildRequires: libtool-ltdl-devel
+BuildRequires:	libtool-ltdl-devel
 %endif
 %if %{?fedora}%{!?fedora:0} >= 21 || %{?rhel}%{!?rhel:0} >= 5
 # Used for some tests which are skipped if not present
-BuildRequires: fakeroot
+BuildRequires:	fakeroot
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -144,11 +144,11 @@ export GRIDMAP=/etc/grid-security/grid-mapfile
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           %{?default_runlevels} \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   %{?default_runlevels} \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 
@@ -248,7 +248,7 @@ fi
 - fix error response for MDTM/UTIME on windows
 
 * Tue Oct 04 2016 Globus Toolkit <support@globus.org> - 11.6-1
-- add zlib autoconf checks and only link in file module 
+- add zlib autoconf checks and only link in file module
 
 * Tue Oct 04 2016 Globus Toolkit <support@globus.org> - 11.5-1
 - add adler32 checksum support
@@ -633,7 +633,7 @@ fi
 - GRIDFTP-218: add -fork-fallback
 - GRIDFTP-219: allow prot without gsi
 - GRIDFTP-221: backwards compatibility fix and future binary compatibility
-               stability additions
+	       stability additions
 - GRIDFTP-222: fix threaded issues with streaming dir info for mlsd and mlsc
 - RIC-226: Some dependencies are missing in GPT metadata
 - RIC-229: Clean up GPT metadata

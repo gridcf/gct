@@ -7,7 +7,7 @@ Summary:	Grid Community Toolkit - Fork Job Manager
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:	globus-gram-job-manager-scripts >= 4
@@ -15,30 +15,30 @@ Requires:	globus-gass-cache-program >= 5
 Requires:	globus-common-progs >= 14
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
+Requires:	perl = %{perl_version}
     %else
 %{perl_requires}
     %endif
 %else
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
-Requires:       %{name}-setup
-Obsoletes:      globus-gram-job-manager-setup-fork < 4.3
+Requires:	%{name}-setup
+Obsoletes:	globus-gram-job-manager-setup-fork < 4.3
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %package -n libglobus_seg_fork
-Summary:        Grid Community Toolkit - Fork Job Manager SEG Module
+Summary:	Grid Community Toolkit - Fork Job Manager SEG Module
 Group:		Applications/Internet
 %endif
 
@@ -46,25 +46,25 @@ Group:		Applications/Internet
 Summary:	Grid Community Toolkit - Fork Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:      noarch
+BuildArch:	noarch
 %endif
-Provides:       %{name}-setup
+Provides:	%{name}-setup
 Requires:	%{name} = %{version}-%{release}
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Conflicts:      %{name}-setup-seg
+Requires(post):		globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Conflicts:	%{name}-setup-seg
 
 %package setup-seg
 Summary:	Grid Community Toolkit - Fork Job Manager Setup Files
 Group:		Applications/Internet
-Provides:       %{name}-setup
+Provides:	%{name}-setup
 Requires:	%{name} = %{version}-%{release}
-Requires:       globus-scheduler-event-generator-progs >= 4
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(post): globus-scheduler-event-generator-progs >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-scheduler-event-generator-progs >= 4
-Conflicts:      %{name}-setup-poll
+Requires:	globus-scheduler-event-generator-progs >= 4
+Requires(post):		globus-gram-job-manager-scripts >= 4
+Requires(post):		globus-scheduler-event-generator-progs >= 4
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-scheduler-event-generator-progs >= 4
+Conflicts:	%{name}-setup-poll
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 Requires:	libglobus_seg_fork = %{version}-%{release}
 %endif
@@ -77,7 +77,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Fork Job Manager 
+Fork Job Manager
 
 %description setup-poll
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -126,12 +126,12 @@ export MPIEXEC=no
 export MPIRUN=no
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-globus-state-dir=%{_localstatedir}/lib/globus \
-           --with-perlmoduledir=%{perl_vendorlib}
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-globus-state-dir=%{_localstatedir}/lib/globus \
+	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
 
@@ -149,7 +149,7 @@ find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager-fork || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager || :
+	globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager || :
     fi
 fi
 
@@ -162,7 +162,7 @@ fi
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager-fork || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager || :
+	globus-gatekeeper-admin -e jobmanager-fork-poll -n jobmanager || :
     fi
 elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
     globus-gatekeeper-admin -E > /dev/null 2>&1 || :
@@ -185,12 +185,12 @@ if [ $1 -eq 1 ]; then
     globus-scheduler-event-generator-admin -e fork || :
     /sbin/service globus-scheduler-event-generator condrestart fork || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager || :
+	globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager || :
     fi
     if [ ! -f /var/lib/globus/globus-fork.log ]; then
-        mkdir -p /var/lib/globus
-        touch /var/lib/globus/globus-fork.log
-        chmod 0622 /var/lib/globus/globus-fork.log
+	mkdir -p /var/lib/globus
+	touch /var/lib/globus/globus-fork.log
+	chmod 0622 /var/lib/globus/globus-fork.log
     fi
 fi
 
@@ -210,7 +210,7 @@ if [ $1 -eq 1 ]; then
     globus-scheduler-event-generator-admin -e fork > /dev/null 2>&1 || :
     service globus-scheduler-event-generator condrestart fork > /dev/null 2>&1 || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager || :
+	globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager || :
     fi
 fi
 

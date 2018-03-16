@@ -8,12 +8,12 @@ Summary:	Grid Community Toolkit - GRAM Protocol Library
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
+Requires:	perl = %{perl_version}
     %else
 %{perl_requires}
     %endif
@@ -26,17 +26,17 @@ BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 %if 0%{?suse_version} > 0
-BuildRequires: libtool
+BuildRequires:	libtool
 %else
-BuildRequires: libtool-ltdl-devel
+BuildRequires:	libtool-ltdl-devel
 %endif
-BuildRequires: openssl
+BuildRequires:	openssl
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global mainpkg lib%{_name}%{soname}
@@ -122,11 +122,11 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-perlmoduledir=%{perl_vendorlib}
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
 

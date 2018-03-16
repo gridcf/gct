@@ -1,19 +1,19 @@
-Name:		myproxy-oauth
+Name:           myproxy-oauth
 %global _name %(tr - _ <<< %{name})
-Version:	0.27
-Release:	1%{?dist}
-Summary:	MyProxy OAuth Delegation Serice
+Version:        0.27
+Release:        1%{?dist}
+Summary:        MyProxy OAuth Delegation Serice
 
-Group:		System Environment/Libraries
-License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
-URL:		https://github.com/gridcf/gct/
-Source:		%{_name}-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Group:          System Environment/Libraries
+License:        %{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
+URL:            https://github.com/gridcf/gct/
+Source:         %{_name}-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	python
+BuildRequires:  python
 BuildArch:      noarch
 
-Requires:	pyOpenSSL
+Requires:       pyOpenSSL
 
 %if 0%{?suse_version} == 0
 Requires:       mod_ssl
@@ -28,7 +28,7 @@ BuildRequires:   shadow
 Requires(pre):   shadow
 %endif
 
-%if 0%{?rhel} != 0 
+%if 0%{?rhel} != 0
 Requires:       python-crypto
 Requires:       m2crypto
 %if %{rhel} < 6
@@ -76,7 +76,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}
 cp README.md $RPM_BUILD_ROOT%{_docdir}/%{name}/README.txt
 mkdir -p $RPM_BUILD_ROOT/%{_sbindir}
 pythonpath="/usr/share/%{name}"
-cat > $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup <<EOF 
+cat > $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup <<EOF
 #! /bin/sh
 if [ "\$(id -u)" = 0 ]; then
     idarg="-i \$(id -u myproxyoauth)"
@@ -87,22 +87,22 @@ chmod a+x $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
 cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
-   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
 %else
 %if 0%{?rhel} == 05
 mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
 cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-epel5 \
-   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
 %else
 %if 0%{?suse_version} > 0
 mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf.d
 cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
-   $RPM_BUILD_ROOT/etc/apache2/conf.d/wsgi-myproxy-oauth.conf 
+   $RPM_BUILD_ROOT/etc/apache2/conf.d/wsgi-myproxy-oauth.conf
 
 %else
 mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
 cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth \
-   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf 
+   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
 %endif
 %endif
 %endif

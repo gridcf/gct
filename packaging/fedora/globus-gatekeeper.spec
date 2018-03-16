@@ -7,49 +7,49 @@ Summary:	Grid Community Toolkit - Globus Gatekeeper
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       psmisc
+Requires:	psmisc
 
 %if 0%{?suse_version} > 0
-Requires:       insserv
-Requires(post): %insserv_prereq  %fillup_prereq
+Requires:	insserv
+Requires(post):		%insserv_prereq %fillup_prereq
 %else
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 20
-Requires:       lsb-core-noarch
+Requires:	lsb-core-noarch
 %else
-Requires:       lsb
+Requires:	lsb
 %endif
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
+BuildRequires:	openssl
+BuildRequires:	libopenssl-devel
 %else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
+BuildRequires:	openssl
+BuildRequires:	openssl-devel
 %endif
 
-Requires(post): globus-common-progs >= 13.4
-Requires(preun):globus-common-progs >= 13.4
+Requires(post):		globus-common-progs >= 13.4
+Requires(preun):	globus-common-progs >= 13.4
 %if 0%{?suse_version} > 0
-BuildRequires:       insserv
+BuildRequires:	insserv
 %else
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 20
-BuildRequires:       lsb-core-noarch
+BuildRequires:	lsb-core-noarch
 %else
-BuildRequires:       lsb
+BuildRequires:	lsb
 %endif
 %endif
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 9
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -77,18 +77,18 @@ autoreconf -if
 %global default_runlevels --with-default-runlevels=235
 %global initscript_config_path %{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
 %else
-%global initscript_config_path %{_sysconfdir}/sysconfig/%{name} 
+%global initscript_config_path %{_sysconfdir}/sysconfig/%{name}
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-lsb \
-           %{?default_runlevels} \
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-lsb \
+	   %{?default_runlevels} \
 	   --with-initscript-config-path=%{initscript_config_path} \
-           --with-lockfile-path='${localstatedir}/lock/subsys/globus-gatekeeper'
+	   --with-lockfile-path='${localstatedir}/lock/subsys/globus-gatekeeper'
 
 make %{?_smp_mflags}
 

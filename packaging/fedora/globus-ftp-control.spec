@@ -8,7 +8,7 @@ Summary:	Grid Community Toolkit - GridFTP Control Library
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14
@@ -16,20 +16,20 @@ BuildRequires:	globus-gss-assist-devel >= 11
 BuildRequires:	globus-io-devel >= 11
 BuildRequires:	globus-gssapi-gsi-devel >= 13
 BuildRequires:	doxygen
-BuildRequires:  globus-xio-devel >= 3
-BuildRequires:  globus-gssapi-error-devel >= 4
+BuildRequires:	globus-xio-devel >= 3
+BuildRequires:	globus-gssapi-error-devel >= 4
 
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
+BuildRequires:	openssl
 %else
-BuildRequires:  openssl
+BuildRequires:	openssl
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -53,8 +53,8 @@ Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-gss-assist-devel%{?_isa} >= 11
 Requires:	globus-io-devel%{?_isa} >= 11
 Requires:	globus-gssapi-gsi-devel%{?_isa} >= 13
-Requires:       globus-xio-devel%{?_isa} >= 3
-Requires:       globus-gssapi-error-devel%{?_isa} >= 4
+Requires:	globus-xio-devel%{?_isa} >= 3
+Requires:	globus-gssapi-error-devel%{?_isa} >= 4
 
 %package doc
 Summary:	Grid Community Toolkit - GridFTP Control Library Documentation Files
@@ -118,10 +118,10 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 

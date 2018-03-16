@@ -7,7 +7,7 @@ Summary:	Grid Community Toolkit - Globus XIO UDT Driver
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	gcc-c++
@@ -23,34 +23,34 @@ BuildRequires:	udt-devel
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-common-devel >= 14
 %if %{?fedora}%{!?fedora:0} >= 18
-BuildRequires:  glib2-devel >= 2.32
-BuildRequires:  libnice-devel >= 0.0.12
+BuildRequires:	glib2-devel >= 2.32
+BuildRequires:	libnice-devel >= 0.0.12
 %else
 %if %{?rhel}%{!?rhel:0} >= 5 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:       glib2-devel%{?_isa} >= 2.12
-BuildRequires:       libnice-devel%{?_isa} >= 0.0.9
+BuildRequires:	glib2-devel%{?_isa} >= 2.12
+BuildRequires:	libnice-devel%{?_isa} >= 0.0.9
 %endif
 %if 0%{?suse_version} > 0
-BuildRequires:  gettext-tools
+BuildRequires:	gettext-tools
 %else
-BuildRequires:  gettext-devel
+BuildRequires:	gettext-devel
 %endif
-BuildRequires:  xz
-BuildRequires:  curl
-BuildRequires:  zlib-devel
+BuildRequires:	xz
+BuildRequires:	curl
+BuildRequires:	zlib-devel
 %endif
-BuildRequires:  libffi-devel
+BuildRequires:	libffi-devel
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 %if %{?fedora}%{!?fedora:0} >= 21
-BuildRequires:  gupnp-igd-devel
+BuildRequires:	gupnp-igd-devel
 %endif
 %if %{?fedora}%{!?fedora:0} >= 22 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires: libselinux-devel
+BuildRequires:	libselinux-devel
 %endif
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
@@ -124,10 +124,10 @@ export LIBFFI_LIBS="-lffi"
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 

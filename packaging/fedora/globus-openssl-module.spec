@@ -8,7 +8,7 @@ Summary:	Grid Community Toolkit - Globus OpenSSL Module Wrapper
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-gsi-proxy-ssl-devel >= 4
@@ -16,11 +16,11 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gsi-openssl-error-devel >= 2
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
+BuildRequires:	openssl
+BuildRequires:	libopenssl-devel
 %else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
+BuildRequires:	openssl
+BuildRequires:	openssl-devel
 %endif
 
 BuildRequires:	doxygen
@@ -29,7 +29,7 @@ BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:  pkgconfig
+BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
 %global mainpkg libglobus_openssl%{soname}
@@ -53,11 +53,11 @@ Requires:	globus-common-devel%{?_isa} >= 14
 Requires:	globus-gsi-openssl-error-devel%{?_isa} >= 2
 
 %if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:  openssl
-Requires:  libopenssl-devel
+Requires:	openssl
+Requires:	libopenssl-devel
 %else
-Requires:  openssl
-Requires:  openssl-devel
+Requires:	openssl
+Requires:	openssl-devel
 %endif
 
 %package doc
@@ -122,10 +122,10 @@ autoreconf -if
 %endif
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 

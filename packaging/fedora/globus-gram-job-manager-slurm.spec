@@ -7,15 +7,15 @@ Summary:	Grid Community Toolkit - SLURM Job Manager
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0 and BSD-2-clause}%{!?suse_version:ASL 2.0 and BSD}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       globus-gram-job-manager-scripts >= 5
+Requires:	globus-gram-job-manager-scripts >= 5
 Requires:	globus-gass-cache-program >= 5
 Requires:	globus-common-progs >= 14
 %if 0%{?suse_version} > 0
     %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
+Requires:	perl = %{perl_version}
     %else
 %{perl_requires}
     %endif
@@ -26,24 +26,24 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-gram-protocol-devel >= 11
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
+BuildRequires:	automake >= 1.11
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	libtool >= 2.2
 %endif
-BuildArch:      noarch
+BuildArch:	noarch
 
 %package setup-poll
-Summary:        Grid Community Toolkit - SLURM Job Manager Setup Files
+Summary:	Grid Community Toolkit - SLURM Job Manager Setup Files
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:      noarch
+BuildArch:	noarch
 %endif
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
+Provides:	%{name}-setup
+Provides:	globus-gram-job-manager-setup
 Requires:	%{name} = %{version}-%{release}
-requires(post): globus-gram-job-manager-scripts >= 5
-requires(preun): globus-gram-job-manager-scripts >= 5
-Conflicts:      %{name}-setup-seg
+requires(post):		globus-gram-job-manager-scripts >= 5
+requires(preun):	globus-gram-job-manager-scripts >= 5
+Conflicts:	%{name}-setup-seg
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -53,7 +53,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-SLURM Job Manager 
+SLURM Job Manager
 
 %description setup-poll
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -80,12 +80,12 @@ export MPIEXEC=no
 export MPIRUN=no
 
 %configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-globus-state-dir=%{_localstatedir}/lib/globus \
-           --with-perlmoduledir=%{perl_vendorlib}
+	   --disable-static \
+	   --docdir=%{_docdir}/%{name}-%{version} \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --with-globus-state-dir=%{_localstatedir}/lib/globus \
+	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
 
@@ -100,7 +100,7 @@ make %{_smp_mflags} check
 if [ $1 -eq 1 ]; then
     globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager-slurm > /dev/null 2>&1 || :
     if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager
+	globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager
     fi
 fi
 
