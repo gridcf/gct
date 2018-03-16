@@ -19,31 +19,28 @@ BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
-%if %{?suse_version}%{!?suse_version:0} == 0
-BuildRequires:	libtool-ltdl-devel
-%endif
+#		Additional requirements for make check
+BuildRequires:	perl(Test::More)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package devel
 Summary:	Grid Community Toolkit - Globus XIO Framework Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
 
 %package doc
 Summary:	Grid Community Toolkit - Globus XIO Framework Documentation Files
@@ -51,9 +48,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -72,7 +68,7 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{mainpkg} package contains:
+The %{name} package contains:
 Globus XIO Framework
 
 %description devel
@@ -118,16 +114,10 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-# Fix doxygen glitches
-for f in $RPM_BUILD_ROOT%{_mandir}/man3/globus_xio_driver.3 \
-	 $RPM_BUILD_ROOT%{_mandir}/man3/GLOBUS_XIO_API_ASSIST.3 ; do
-  sed 's/P\.RS/P\n.RS/' -i $f
-done
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -135,21 +125,23 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_xio.so.*
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus_*so.*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/globus/*.h
-%{_libdir}/libglobus_*so
+%{_includedir}/globus/*
+%{_libdir}/libglobus_xio.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/*/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Mar 09 2018 Globus Toolkit <support@globus.org> - 5.17-1

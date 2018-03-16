@@ -2,7 +2,7 @@ Name:		globus-gridmap-eppn-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.13
 Release:	1%{?dist}
-Summary:	Grid Community Toolkit - Globus gridmap eppn callout
+Summary:	Grid Community Toolkit - Globus gridmap ePPN callout
 
 Group:		System Environment/Libraries
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
@@ -10,20 +10,20 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
-%else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
-%endif
-
+BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-gssapi-gsi-devel >= 9
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gridmap-callout-error-devel
-BuildRequires:	globus-gssapi-gsi-devel >= 9
 BuildRequires:	globus-gsi-credential-devel >= 6
 BuildRequires:	globus-gsi-cert-utils-devel >= 8
+BuildRequires:	globus-gsi-openssl-error-devel >= 2
+BuildRequires:	globus-gssapi-error-devel >= 4
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -31,20 +31,22 @@ BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
-Summary:	Grid Community Toolkit - Globus gridmap eppn callout
+Summary:	Grid Community Toolkit - Globus gridmap ePPN callout
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -53,7 +55,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{mainpkg} package contains:
-Globus gridmap eppn callout
+Globus gridmap eduPersonPrincipalName (ePPN) callout
 %endif
 
 %description
@@ -64,7 +66,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Globus gridmap eppn callout
+Globus gridmap eduPersonPrincipalName (ePPN) callout
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -89,22 +91,19 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%check
-make %{?_smp_mflags} check
-
-%post %{?nmainpkg}
-/sbin/ldconfig
+%post %{?nmainpkg} -p /sbin/ldconfig
 
 %postun %{?nmainpkg} -p /sbin/ldconfig
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_gridmap_eppn_callout.so
 %config(noreplace) %{_sysconfdir}/gridmap_eppn_callout-gsi_authz.conf
-%{_libdir}/libglobus*
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 1.13-1

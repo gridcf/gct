@@ -2,36 +2,39 @@ Name:		globus-gram-job-manager-condor
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	6%{?dist}
-Summary:	Grid Community Toolkit - Condor Job Manager
+Summary:	Grid Community Toolkit - Condor Job Manager Support
 
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes:	globus-gram-job-manager-setup-condor < 4.5
-Requires:	globus-gram-job-manager-scripts >= 3.4
-Requires:	globus-gass-cache-program >= 2
-Requires:	globus-common-progs >= 2
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:	perl = %{perl_version}
-    %else
-%{perl_requires}
-    %endif
-%else
-Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+BuildArch:	noarch
+
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
 %endif
-Requires(post):		globus-gram-job-manager-scripts >= 4
-Requires(preun):	globus-gram-job-manager-scripts >= 4
-Provides:	globus-gram-job-manager-setup
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-BuildArch:	noarch
+
+Requires:	globus-gram-job-manager >= 13
+Requires:	globus-gram-job-manager-scripts >= 4
+Requires:	globus-gass-cache-program >= 5
+Requires:	globus-gatekeeper >= 9
+%if %{?suse_version}%{!?suse_version:0}
+%{perl_requires}
+%else
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%endif
+Provides:	globus-gram-job-manager-setup-condor = 4.5
+Obsoletes:	globus-gram-job-manager-setup-condor < 4.5
+Obsoletes:	globus-gram-job-manager-setup-condor-doc < 4.5
+
+Requires(preun):	globus-gram-job-manager-scripts >= 4
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -41,7 +44,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Condor Job Manager
+Condor Job Manager Support
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -54,58 +57,41 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-export CONDOR_RM=/usr/bin/condor_rm
-export CONDOR_SUBMIT=/usr/bin/condor_submit
-
+export CONDOR_RM=%{_bindir}/condor_rm
+export CONDOR_SUBMIT=%{_bindir}/condor_submit
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
-	   --with-perlmoduledir=%{perl_vendorlib}
+	   --with-perlmoduledir=%{perl_vendorlib} \
+	   --with-condor-os=LINUX \
+	   --with-condor-arch=""
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-# Remove jobmanager-condor from install dir so that it can be
-# added/removed by post scripts
-rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-condor
 
-%post
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-condor > /dev/null 2>&1 || :
-    if [ ! -f /etc/grid-services/jobmanager ]; then
-	globus-gatekeeper-admin -e jobmanager-condor -n jobmanager || :
-    fi
-fi
+# Remove jobmanager-condor from install dir - leave it for admin configuration
+rm $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/jobmanager-condor
 
 %preun
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-condor > /dev/null 2>&1 || :
 fi
 
-%postun
-if [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
-fi
-
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%dir %{_sysconfdir}/grid-services
-%dir %{_sysconfdir}/grid-services/available
-%dir %{_sysconfdir}/globus
+%{_datadir}/globus/globus_gram_job_manager/condor.rvf
 %dir %{perl_vendorlib}/Globus
 %dir %{perl_vendorlib}/Globus/GRAM
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
-%dir %{_datadir}/globus
-%dir %{_datadir}/globus/globus_gram_job_manager
-%config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-condor
-%config(noreplace) %{_sysconfdir}/globus/globus-condor.conf
 %{perl_vendorlib}/Globus/GRAM/JobManager/condor.pm
-%{_datadir}/globus/globus_gram_job_manager/condor.rvf
+%config(noreplace) %{_sysconfdir}/globus/globus-condor.conf
+%config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-condor
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-6

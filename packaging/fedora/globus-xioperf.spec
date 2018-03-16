@@ -51,14 +51,11 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%check
-make %{?_smp_mflags} check
-
 %files
 %defattr(-,root,root,-)
+%{_bindir}/globus-xioperf
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/%{name}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 4.5-3

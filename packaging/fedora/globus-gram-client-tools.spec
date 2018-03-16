@@ -11,19 +11,21 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	globus-common-progs%{?_isa} >= 14
-
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gass-server-ez-devel >= 4
 BuildRequires:	globus-gram-client-devel >= 12
-BuildRequires:	globus-gss-assist-devel >= 8
+BuildRequires:	globus-gram-protocol-devel >= 11
+BuildRequires:	globus-gass-transfer-devel >= 7
+BuildRequires:	globus-gass-server-ez-devel >= 4
 BuildRequires:	globus-rsl-devel >= 9
+BuildRequires:	globus-gss-assist-devel >= 8
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
+
+Requires:	globus-common-progs >= 14
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -59,10 +61,23 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
+%{_bindir}/globus-job-cancel
+%{_bindir}/globus-job-clean
+%{_bindir}/globus-job-get-output
+%{_bindir}/globus-job-get-output-helper
+%{_bindir}/globus-job-run
+%{_bindir}/globus-job-status
+%{_bindir}/globus-job-submit
+%{_bindir}/globusrun
+%doc %{_mandir}/man1/globus-job-cancel.1*
+%doc %{_mandir}/man1/globus-job-clean.1*
+%doc %{_mandir}/man1/globus-job-get-output.1*
+%doc %{_mandir}/man1/globus-job-run.1*
+%doc %{_mandir}/man1/globus-job-status.1*
+%doc %{_mandir}/man1/globus-job-submit.1*
+%doc %{_mandir}/man1/globusrun.1*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
-%{_mandir}/man1/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 11.10-1

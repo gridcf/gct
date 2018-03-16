@@ -7,8 +7,8 @@
 #
 ### BEGIN INIT INFO
 # Provides: myproxy-server
-# Required-Start:  $local_fs $network $syslog
-# Required-Stop:  $local_fs $syslog
+# Required-Start:  $remote_fs $network $syslog
+# Required-Stop:  $remote_fs $syslog
 # Should-Start:  $syslog
 # Should-Stop:  $network $syslog
 # Default-Stop:

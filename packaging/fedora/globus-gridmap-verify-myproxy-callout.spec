@@ -10,19 +10,18 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
-%else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
-%endif
-
+BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-gssapi-gsi-devel >= 9
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gridmap-callout-error-devel
-BuildRequires:	globus-gssapi-gsi-devel >= 9
 BuildRequires:	globus-gsi-credential-devel >= 6
+BuildRequires:	globus-gssapi-error-devel >= 4
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -30,20 +29,22 @@ BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus gridmap myproxy callout
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -88,22 +89,19 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%check
-make %{?_smp_mflags} check
-
-%post %{?nmainpkg}
-/sbin/ldconfig
+%post %{?nmainpkg} -p /sbin/ldconfig
 
 %postun %{?nmainpkg} -p /sbin/ldconfig
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_gridmap_verify_myproxy_callout.so
 %config(noreplace) %{_sysconfdir}/gridmap_verify_myproxy_callout-gsi_authz.conf
-%{_libdir}/libglobus_*
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.9-1

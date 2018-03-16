@@ -11,23 +11,14 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#		Obsolete dropped packages from Globus Toolkit 4.2.1
-Obsoletes:	globus-data-conversion
-Obsoletes:	globus-mp
-Obsoletes:	globus-nexus
-Obsoletes:	globus-duct-common
-Obsoletes:	globus-duct-control
-Obsoletes:	globus-duroc-common
-Obsoletes:	globus-duroc-control
-%if %{?fedora}%{!?fedora:0} <= 16 || %{?rhel}%{!?rhel:0} < 7
-Provides:	globus-libtool%{?_isa}
-Provides:	globus-common-setup%{?_isa}
-%endif
-Obsoletes:	globus-libtool%{?_isa} < 2
-Obsoletes:	globus-common-setup%{?_isa} < 3
-BuildRequires:	doxygen
-%if 0%{?suse_version} == 0
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libtool
+%else
 BuildRequires:	libtool-ltdl-devel
+%endif
+BuildRequires:	doxygen
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
 %endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
@@ -36,50 +27,74 @@ BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Common Library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+%if %{?suse_version}%{!?suse_version:0}
+%{perl_requires}
+%else
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%endif
+#		Obsolete dropped packages from Globus Toolkit 4.2.1
+Obsoletes:	globus-data-conversion < 3
+Obsoletes:	globus-mp < 3
+Obsoletes:	globus-nexus < 7
+Obsoletes:	globus-duct-common < 3
+Obsoletes:	globus-duct-control < 3
+Obsoletes:	globus-duroc-common < 3
+Obsoletes:	globus-duroc-control < 3
+#		Obsolete dropped packages from Globus Toolkit 5.2.0
+Obsoletes:	globus-libtool < 2
+Obsoletes:	globus-openssl < 6
+Obsoletes:	globus-libxml2 < 2
+#		Obsolete dropped packages from Globus Toolkit 6.0
+Obsoletes:	globus-rls-client < 6
+Obsoletes:	globus-rls-client-doc < 6
+Obsoletes:	globus-rls-client-progs < 6
+Obsoletes:	globus-rls-server < 5
 
 %package progs
 Summary:	Grid Community Toolkit - Common Library Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:	perl = %{perl_version}
-    %else
-%{perl_requires}
-    %endif
-%else
-Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
-%endif
 
 %package devel
 Summary:	Grid Community Toolkit - Common Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-%if 0%{?suse_version} == 0
+%if %{?suse_version}%{!?suse_version:0}
+Requires:	libtool
+%else
 Requires:	libtool-ltdl-devel
 %endif
-Obsoletes:	globus-libtool-devel%{?_isa}
 #		Obsolete dropped packages from Globus Toolkit 4.2.1
-Obsoletes:	globus-core
-Obsoletes:	globus-data-conversion-devel
-Obsoletes:	globus-mp-devel
-Obsoletes:	globus-nexus-devel
-Obsoletes:	globus-duct-common-devel
-Obsoletes:	globus-duct-control-devel
-Obsoletes:	globus-duroc-common-devel
-Obsoletes:	globus-duroc-control-devel
+Obsoletes:	globus-data-conversion-devel < 3
+Obsoletes:	globus-mp-devel < 3
+Obsoletes:	globus-nexus-devel < 7
+Obsoletes:	globus-duct-common-devel < 3
+Obsoletes:	globus-duct-control-devel < 3
+Obsoletes:	globus-duroc-common-devel < 3
+Obsoletes:	globus-duroc-control-devel < 3
+#		Obsolete dropped packages from Globus Toolkit 5.2.0
+Obsoletes:	globus-libtool-devel < 2
+Obsoletes:	globus-openssl-devel < 6
+Obsoletes:	globus-libxml2-devel < 2
+#		Obsolete dropped packages from Globus Toolkit 6.0
+Obsoletes:	grid-packaging-tools < 3.7
+Obsoletes:	globus-core < 9
+Obsoletes:	globus-rls-client-devel < 6
 
 %package doc
 Summary:	Grid Community Toolkit - Common Library Documentation Files
@@ -87,9 +102,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -120,7 +134,6 @@ software packages in grid computing.
 
 The %{name}-progs package contains:
 Common Library Programs
-Common Setup
 
 %description devel
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -153,29 +166,29 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
+export GLOBUS_VERSION=6.0
 %configure \
-	   --disable-static --with-backward-compatibility-hack \
+	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
 	   --includedir=%{_includedir}/globus \
-	   --datadir=%{_datadir}/globus \
 	   --libexecdir=%{_datadir}/globus \
-	   --with-perlmoduledir=%{perl_vendorlib}
+	   --with-perlmoduledir=%{perl_vendorlib} \
+	   --with-backward-compatibility-hack
 
 make %{?_smp_mflags}
-
-cd -
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
+
+# Remove environment scripts
+rm $RPM_BUILD_ROOT%{_datadir}/globus-user-env.csh
+rm $RPM_BUILD_ROOT%{_datadir}/globus-user-env.sh
 
 %check
-%if %{?suse_version}%{!?suse_version:0} >= 1315 || %{?fedora}%{!?fedora:0} >= 26
-export NO_EXTERNAL_NET=1
-%endif
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -183,35 +196,54 @@ make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_datadir}/globus
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%{_libdir}/libglobus_common.so.*
+%{_libdir}/libglobus_memory_debug.so.*
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_thread_pthread.so
 %dir %{perl_vendorlib}/Globus
 %dir %{perl_vendorlib}/Globus/Core
-%{perl_vendorlib}/Globus/Core/*
-%{_libdir}/libglobus_*so.*
-%{_libdir}/libglobus_thread*.so
+%{perl_vendorlib}/Globus/Core/Config.pm
+%{perl_vendorlib}/Globus/Core/Paths.pm
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
-%{_bindir}/*
-%{_sbindir}/*
-%{_datadir}/man/man1/*
-%{_datadir}/globus/*
+%{_bindir}/globus-domainname
+%{_bindir}/globus-hostname
+%{_bindir}/globus-sh-exec
+%{_bindir}/globus-version
+%{_sbindir}/globus-libc-hostname
+%{_sbindir}/globus-redia
+%dir %{_datadir}/globus
+%{_datadir}/globus/config.guess
+%{_datadir}/globus/globus-args-parser-header
+%{_datadir}/globus/globus-script-initializer*
+%{_datadir}/globus/globus-sh-tools.sh
+%{_datadir}/globus/globus-sh-tools-vars.sh
+%doc %{_mandir}/man1/globus-domainname.1*
+%doc %{_mandir}/man1/globus-hostname.1*
+%doc %{_mandir}/man1/globus-sh-exec.1*
+%doc %{_mandir}/man1/globus-version.1*
 
 %files devel
 %defattr(-,root,root,-)
 %dir %{_includedir}/globus
-%{_includedir}/globus/*.h
-%{_libdir}/libglobus_*so
-%exclude %{_libdir}/libglobus_thread*.so
+%{_includedir}/globus/*
+%{_libdir}/libglobus_common.so
+%{_libdir}/libglobus_memory_debug.so
 %{_libdir}/pkgconfig/%{name}.pc
+%{_bindir}/globus-makefile-header
+%dir %{_datadir}/globus
+%{_datadir}/globus/globus-vararg-enums-doxygen-filter.pl
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_datadir}/man/man3/*
-%{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 17.4-1

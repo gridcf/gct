@@ -10,35 +10,30 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	openssl%{?_isa}
-
+BuildRequires:	globus-common-devel >= 14
+BuildRequires:	globus-openssl-module-devel >= 3
+BuildRequires:	globus-gsi-openssl-error-devel >= 2
+BuildRequires:	globus-gsi-cert-utils-devel >= 8
+BuildRequires:	globus-gsi-sysconfig-devel >= 5
 BuildRequires:	globus-gsi-credential-devel >= 5
 BuildRequires:	globus-gsi-callback-devel >= 4
-BuildRequires:	globus-openssl-module-devel >= 3
-BuildRequires:	globus-gss-assist-devel >= 8
-BuildRequires:	globus-gsi-openssl-error-devel >= 2
 BuildRequires:	globus-gsi-proxy-core-devel >= 6
-BuildRequires:	globus-gsi-cert-utils-devel >= 8
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 4
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+#		Additional requirements for make check
 BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
-%else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
-%endif
+BuildRequires:	perl(Test::More)
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -54,7 +49,6 @@ Globus GSI Proxy Utility Programs
 %setup -q -n %{_name}-%{version}
 
 %build
-# Remove files that should be replaced during bootstrap
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 # Remove files that should be replaced during bootstrap
 rm -rf autom4te.cache
@@ -74,14 +68,20 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check VERBOSE=1
 
 %files
 %defattr(-,root,root,-)
+%{_bindir}/grid-cert-diagnostics
+%{_bindir}/grid-proxy-destroy
+%{_bindir}/grid-proxy-info
+%{_bindir}/grid-proxy-init
+%doc %{_mandir}/man1/grid-cert-diagnostics.1*
+%doc %{_mandir}/man1/grid-proxy-destroy.1*
+%doc %{_mandir}/man1/grid-proxy-info.1*
+%doc %{_mandir}/man1/grid-proxy-init.1*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
-%{_mandir}/man1/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 6.19-1

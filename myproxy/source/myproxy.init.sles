@@ -2,17 +2,17 @@
 #
 # myproxy-server - Server for X.509 Public Key Infrastructure (PKI) security credentials
 #
-# chkconfig: - 55 25
+# chkconfig: 235 55 25
 # description:  Server for X.509 Public Key Infrastructure (PKI) security credentials
 #
 ### BEGIN INIT INFO
 # Provides: myproxy-server
-# Required-Start:  $local_fs $network $syslog
-# Required-Stop:  $local_fs $syslog
+# Required-Start:  $remote_fs $network $syslog
+# Required-Stop:  $remote_fs $syslog
 # Should-Start:  $syslog
 # Should-Stop:  $network $syslog
-# Default-Stop: 0 1 6
-# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 4 6
+# Default-Start: 2 3 5
 # Short-Description: Startup the MyProxy server daemon
 # Description: Server for X.509 Public Key Infrastructure (PKI) security credentials
 ### END INIT INFO

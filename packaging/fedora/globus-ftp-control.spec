@@ -13,48 +13,45 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gss-assist-devel >= 11
-BuildRequires:	globus-io-devel >= 11
 BuildRequires:	globus-gssapi-gsi-devel >= 13
-BuildRequires:	doxygen
+BuildRequires:	globus-io-devel >= 11
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-gssapi-error-devel >= 4
-
+BuildRequires:	globus-xio-gsi-driver-devel >= 4
+BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+#		Additional requirements for make check
 BuildRequires:	openssl
-%else
-BuildRequires:	openssl
-%endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
-Summary:	Grid Community Toolkit - GSSAPI library
+Summary:	Grid Community Toolkit - GridFTP Control Library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-gss-assist%{?_isa} >= 11
+Requires:	globus-gssapi-gsi%{?_isa} >= 13
+Requires:	globus-io%{?_isa} >= 11
+Requires:	globus-xio-gsi-driver%{?_isa} >= 4
 
 %package devel
 Summary:	Grid Community Toolkit - GridFTP Control Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-gss-assist-devel%{?_isa} >= 11
-Requires:	globus-io-devel%{?_isa} >= 11
-Requires:	globus-gssapi-gsi-devel%{?_isa} >= 13
-Requires:	globus-xio-devel%{?_isa} >= 3
-Requires:	globus-gssapi-error-devel%{?_isa} >= 4
 
 %package doc
 Summary:	Grid Community Toolkit - GridFTP Control Library Documentation Files
@@ -62,9 +59,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -129,10 +125,10 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -140,21 +136,23 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_ftp_control.so.*
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus_*.so.*
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
+%{_libdir}/libglobus_ftp_control.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Sep 22 2017 Globus Toolkit <support@globus.org> - 8.2-1

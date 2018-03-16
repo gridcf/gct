@@ -8,9 +8,9 @@
 #
 
 ### BEGIN INIT INFO
-# Provides: globus-gridftp-server
-# Required-Start: $network $local_fs
-# Required-Stop:
+# Provides:          globus-gridftp-server
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog
 @DEFAULT_START_LINE@
 @DEFAULT_STOP_LINE@
 # Short-Description: Globus GridFTP Server

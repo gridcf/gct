@@ -19,21 +19,20 @@ BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - GFork
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package progs
@@ -45,9 +44,8 @@ Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Summary:	Grid Community Toolkit - GFork Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-xio-devel%{?_isa} >= 3
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -56,7 +54,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{mainpkg} package contains:
-Globus XIO Framework
+GFork Library
 %endif
 
 %description
@@ -96,7 +94,6 @@ GFork Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 # Remove files that should be replaced during bootstrap
 rm -rf autom4te.cache
@@ -116,7 +113,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Add empty default configuration file
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
@@ -129,21 +126,21 @@ echo "# This is the default gfork configuration file" > \
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_gfork.so.*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
+%{_sbindir}/gfork
 %config(noreplace) %{_sysconfdir}/gfork.conf
 %doc %{_docdir}/%{name}-%{version}/README.txt
-%{_sbindir}/gfork
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/globus/globus_gfork.h
-%{_libdir}/libglobus_*.so
-%{_libdir}/pkgconfig/globus-gfork.pc
+%{_includedir}/globus/*
+%{_libdir}/libglobus_gfork.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 4.9-4

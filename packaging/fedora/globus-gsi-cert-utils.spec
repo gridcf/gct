@@ -11,63 +11,57 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	openssl
-
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-openssl-module-devel >= 3
 BuildRequires:	globus-gsi-openssl-error-devel >= 2
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	openssl
+%if %{?suse_version}%{!?suse_version:0}
 BuildRequires:	libopenssl-devel
 %else
-BuildRequires:	openssl
 BuildRequires:	openssl-devel
 %endif
+BuildRequires:	openssl
 BuildRequires:	doxygen
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package progs
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Programs
 Group:		Applications/Internet
-Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Requires:	openssl
-Requires:	globus-common-progs >= 14
+#		Obsolete dropped packages from Globus Toolkit 5.2.0
+Obsoletes:	globus-openssl-progs < 6
+#		Obsolete dropped packages from Globus Toolkit 6.0
+Obsoletes:	globus-openssl-module-progs < 4
+%if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
+BuildArch:	noarch
+%endif
 
 %package devel
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-openssl-module-devel%{?_isa} >= 3
-Requires:	globus-gsi-openssl-error-devel%{?_isa} >= 2
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	openssl
-Requires:	libopenssl-devel
-%else
-Requires:	openssl
-Requires:	openssl-devel
-%endif
 
 %package doc
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library Documentation Files
@@ -75,9 +69,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -140,6 +133,7 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
+export GLOBUS_VERSION=6.0
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
@@ -152,10 +146,10 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -163,28 +157,38 @@ make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_gsi_cert_utils.so.*
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
 
 %files progs
 %defattr(-,root,root,-)
-%{_bindir}/*
-%{_sbindir}/*
-%{_mandir}/man1/*
-%{_mandir}/man8/*
+%{_bindir}/grid-cert-info
+%{_bindir}/grid-cert-request
+%{_bindir}/grid-change-pass-phrase
+%{_sbindir}/globus-update-certificate-dir
+%{_sbindir}/grid-default-ca
+%doc %{_mandir}/man1/grid-cert-info.1*
+%doc %{_mandir}/man1/grid-cert-request.1*
+%doc %{_mandir}/man1/grid-change-pass-phrase.1*
+%doc %{_mandir}/man8/globus-update-certificate-dir.8*
+%doc %{_mandir}/man8/grid-default-ca.8*
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
+%{_libdir}/libglobus_gsi_cert_utils.so
 %{_libdir}/pkgconfig/%{name}.pc
-%{_libdir}/libglobus*.so
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 9.16-1

@@ -1,37 +1,35 @@
 Name:		globus-gram-job-manager-scripts
-%global soname 0
 %global _name %(tr - _ <<< %{name})
 Version:	6.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Job ManagerScripts
 
 Group:		Applications/Internet
-BuildArch:	noarch
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	noarch
 
-Requires:	globus-common-progs >= 14
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:	perl = %{perl_version}
-    %else
-%{perl_requires}
-    %endif
-%else
-Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
 %endif
+BuildRequires:	perl(Pod::Html)
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 
+%if %{?suse_version}%{!?suse_version:0}
+%{perl_requires}
+%else
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%endif
+
 %package doc
 Summary:	Grid Community Toolkit - GRAM Job ManagerScripts Documentation Files
 Group:		Documentation
-Requires:	%{name} = %{version}-%{release}
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -78,23 +76,26 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_datadir}/globus
+%{_sbindir}/globus-gatekeeper-admin
+%dir %{_datadir}/globus
 %{_datadir}/globus/globus-job-manager-script.pl
 %dir %{perl_vendorlib}/Globus
 %dir %{perl_vendorlib}/Globus/GRAM
-%{perl_vendorlib}/Globus/GRAM/*.pm
+%{perl_vendorlib}/Globus/GRAM/JobDescription.pm
+%{perl_vendorlib}/Globus/GRAM/JobManager.pm
+%{perl_vendorlib}/Globus/GRAM/StdioMerger.pm
+%doc %{_mandir}/man8/globus-gatekeeper-admin.8*
 %dir %{_docdir}/%{name}-%{version}
-%{_mandir}/man8/*
-%{_sbindir}/globus-gatekeeper-admin
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files doc
 %defattr(-,root,root,-)
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/perl
 %dir %{_docdir}/%{name}-%{version}/perl/Globus
 %dir %{_docdir}/%{name}-%{version}/perl/Globus/GRAM
-%{_docdir}/%{name}-%{version}/perl/Globus/GRAM/*.html
+%doc %{_docdir}/%{name}-%{version}/perl/Globus/GRAM/*.html
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 28 2017 Globus Toolkit <support@globus.org> - 6.10-1

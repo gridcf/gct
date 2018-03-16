@@ -11,24 +11,19 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	openssl
+BuildRequires:	globus-common-devel >= 15
+BuildRequires:	globus-ftp-client-devel >= 7
+BuildRequires:	globus-ftp-control-devel >= 4
+BuildRequires:	globus-gsi-sysconfig-devel >= 4
+BuildRequires:	globus-gass-transfer-devel >= 7
+BuildRequires:	globus-io-devel >= 8
+BuildRequires:	globus-gssapi-gsi-devel >= 9
+BuildRequires:	globus-gssapi-error-devel >= 4
+%if %{?suse_version}%{!?suse_version:0}
 BuildRequires:	libopenssl-devel
 %else
-BuildRequires:	openssl
 BuildRequires:	openssl-devel
 %endif
-
-BuildRequires:	globus-ftp-client-devel >= 7
-BuildRequires:	globus-common-devel >= 15
-BuildRequires:	globus-gssapi-gsi-devel >= 9
-BuildRequires:	globus-io-devel >= 8
-BuildRequires:	globus-gass-transfer-devel >= 7
-BuildRequires:	globus-ftp-control-devel >= 4
-BuildRequires:	globus-gridftp-server-progs
-BuildRequires:	globus-gridftp-server-devel
-BuildRequires:	globus-xio-gsi-driver-devel
-BuildRequires:	globus-xio-pipe-driver-devel
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
@@ -36,27 +31,26 @@ BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
+#		Additional requirements for make check
+BuildRequires:	globus-gridftp-server-devel >= 7
+BuildRequires:	globus-gridftp-server-progs >= 7
+BuildRequires:	openssl
+BuildRequires:	perl(Test::More)
 BuildRequires:	perl(URI)
-%if 0%{?suse_version} > 0
-BuildRequires:	libtool
-%else
-BuildRequires:	libtool-ltdl-devel
-%endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package progs
@@ -68,12 +62,6 @@ Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Summary:	Grid Community Toolkit - Globus Gass Copy Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-ftp-client-devel%{?_isa} >= 7
-Requires:	globus-common-devel%{?_isa} >= 15
-Requires:	globus-gssapi-gsi-devel%{?_isa} >= 9
-Requires:	globus-io-devel%{?_isa} >= 8
-Requires:	globus-gass-transfer-devel%{?_isa} >= 7
-Requires:	globus-ftp-control-devel%{?_isa} >= 4
 
 %package doc
 Summary:	Grid Community Toolkit - Globus Gass Copy Documentation Files
@@ -81,9 +69,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -146,6 +133,7 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
+export GLOBUS_VERSION=6.0
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
@@ -158,10 +146,10 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -169,26 +157,28 @@ make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_gass_copy.so.*
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
 
 %files progs
 %defattr(-,root,root,-)
-%{_bindir}/*
-%{_mandir}/man1/*
+%{_bindir}/globus-url-copy
+%doc %{_mandir}/man1/globus-url-copy.1*
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gass_copy.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Mon Sep 25 2017 Globus Toolkit <support@globus.org> - 9.28-1

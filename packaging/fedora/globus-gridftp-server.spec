@@ -11,80 +11,84 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-Requires:	libglobus_xio_udt_driver%{?_isa} >= 1
-%else
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-Requires:	globus-xio-udt-driver%{?_isa} >= 1
-%endif
-
-BuildRequires:	globus-gridftp-server-control-devel >= 7
-BuildRequires:	globus-usage-devel >= 3
-BuildRequires:	globus-xio-gsi-driver-devel >= 2
+BuildRequires:	globus-common-devel >= 17
 BuildRequires:	globus-xio-devel >= 5
-BuildRequires:	globus-authz-devel >= 2
+BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-gfork-devel >= 3
+BuildRequires:	globus-gridftp-server-control-devel >= 7
 BuildRequires:	globus-ftp-control-devel >= 7
+BuildRequires:	globus-authz-devel >= 2
+BuildRequires:	globus-usage-devel >= 3
+BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	globus-gss-assist-devel >= 9
-BuildRequires:	globus-common-progs >= 17
 BuildRequires:	globus-gsi-credential-devel >= 6
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
+BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-io-devel >= 9
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
 BuildRequires:	zlib-devel
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
+%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:	openssl
 BuildRequires:	pkgconfig
-%if 0%{?suse_version} > 0
-BuildRequires:	libtool
-%else
-BuildRequires:	libtool-ltdl-devel
-%endif
+#		Additional requirements for make check
+BuildRequires:	openssl
 %if %{?fedora}%{!?fedora:0} >= 21 || %{?rhel}%{!?rhel:0} >= 5
-# Used for some tests which are skipped if not present
+#		Used for some tests which are skipped if not present
 BuildRequires:	fakeroot
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-xio-gsi-driver%{?_isa} >= 2
+Requires:	globus-xio-udt-driver%{?_isa} >= 1
+Requires:	globus-common%{?_isa} >= 17
+Requires:	globus-xio%{?_isa} >= 5
+Requires:	globus-gridftp-server-control%{?_isa} >= 7
+Requires:	globus-ftp-control%{?_isa} >= 7
 
 %package progs
 Summary:	Grid Community Toolkit - Globus GridFTP Server Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
+%if %{?suse_version}%{!?suse_version:0}
+Requires(post):		aaa-base
+Requires(preun):	aaa-base
+Requires(postun):	aaa-base
 %else
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
+Requires(post):		chkconfig
+Requires(preun):	chkconfig
+Requires(preun):	initscripts
+Requires(postun):	initscripts
 %endif
 
 %package devel
 Summary:	Grid Community Toolkit - Globus GridFTP Server Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-gridftp-server-control-devel%{?_isa} >= 7
-Requires:	globus-usage-devel%{?_isa} >= 3
-Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
-Requires:	globus-xio-devel%{?_isa} >= 5
-Requires:	globus-authz-devel%{?_isa} >= 2
-Requires:	globus-gfork-devel%{?_isa} >= 3
-Requires:	globus-ftp-control-devel%{?_isa} >= 7
-Requires:	globus-gss-assist-devel%{?_isa} >= 9
-Requires:	globus-gsi-credential-devel%{?_isa} >= 6
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -137,82 +141,92 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-export GRIDMAP=/etc/grid-security/grid-mapfile
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global default_runlevels --with-default-runlevels=235
-%endif
-
+export GRIDMAP=%{_sysconfdir}/grid-security/grid-mapfile
+export GLOBUS_VERSION=6.0
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
 	   --includedir=%{_includedir}/globus \
-	   %{?default_runlevels} \
+%if %{?suse_version}%{!?suse_version:0}
+	   --with-default-runlevels=235 \
+%endif
 	   --libexecdir=%{_datadir}/globus
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf.default $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d
-mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.xinetd.default $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/gridftp
-mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork.default $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-sed -i -e 's/Required-Stop:.*/Required-Stop: $network $local_fs/' $RPM_BUILD_ROOT%{_sysconfdir}/init.d/%{name}
-sed -i -e 's/Required-Stop:.*/Required-Stop: $network $local_fs/' $RPM_BUILD_ROOT%{_sysconfdir}/init.d/globus-gridftp-sshftp
-%endif
+mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf.default \
+   $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d
+mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.xinetd.default \
+   $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/gridftp
+mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork.default \
+   $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork
+
+# No need for environment in conf files
+sed '/ env /d' -i $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork
+sed '/^env /d' -i $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/gridftp
 
 %check
-make %{_smp_mflags} check
+make %{_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
+
 %postun %{?nmainpkg} -p /sbin/ldconfig
 
 %post progs
 if [ $1 -eq 1 ]; then
-    /sbin/chkconfig --add globus-gridftp-server
+    /sbin/chkconfig --add %{name}
     /sbin/chkconfig --add globus-gridftp-sshftp
 fi
 
 %preun progs
 if [ $1 -eq 0 ]; then
-    /sbin/chkconfig --del globus-gridftp-server
+    /sbin/service %{name} stop > /dev/null 2>&1 || :
+    /sbin/service globus-gridftp-sshftp stop > /dev/null 2>&1 || :
+    /sbin/chkconfig --del %{name}
     /sbin/chkconfig --del globus-gridftp-sshftp
-    /sbin/service globus-gridftp-server stop
-    /sbin/service globus-gridftp-sshftp stop
 fi
 
 %postun progs
-if [ $1 -eq 1 ]; then
-    /sbin/service globus-gridftp-server condrestart > /dev/null 2>&1 || :
+if [ $1 -ge 1 ]; then
+    /sbin/service %{name} condrestart > /dev/null 2>&1 || :
     /sbin/service globus-gridftp-sshftp condrestart > /dev/null 2>&1 || :
 fi
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_gridftp_server.so.*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
+%{_sbindir}/gfs-dynbe-client
+%{_sbindir}/gfs-gfork-master
+%{_sbindir}/globus-gridftp-password
+%{_sbindir}/globus-gridftp-server
+%{_sbindir}/globus-gridftp-server-enable-sshftp
+%{_sbindir}/globus-gridftp-server-setup-chroot
 %config(noreplace) %{_sysconfdir}/gridftp.conf
 %config(noreplace) %{_sysconfdir}/gridftp.gfork
 %config(noreplace) %{_sysconfdir}/xinetd.d/gridftp
-%{_sysconfdir}/init.d/*
-%{_sbindir}/*
-%{_mandir}/man8/*
+%{_initddir}/%{name}
+%{_initddir}/globus-gridftp-sshftp
+%doc %{_mandir}/man8/globus-gridftp-password.8*
+%doc %{_mandir}/man8/globus-gridftp-server.8*
+%doc %{_mandir}/man8/globus-gridftp-server-setup-chroot.8*
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gridftp_server.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
 * Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 13.1-1

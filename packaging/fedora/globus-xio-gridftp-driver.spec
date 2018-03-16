@@ -10,15 +10,10 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-
+BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-ftp-client-devel >= 7
 BuildRequires:	globus-xio-gsi-driver-devel >= 2
-BuildRequires:	globus-xio-pipe-driver-devel >= 0
-BuildRequires:	globus-gridftp-server-progs >= 0
-BuildRequires:	globus-gridftp-server-devel >= 0
-BuildRequires:	globus-xio-doc >= 3
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
@@ -26,47 +21,42 @@ BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
-%if 0%{?suse_version} > 0
-BuildRequires:	libtool
-%else
-BuildRequires:	libtool-ltdl-devel
-%endif
-
+#		Additional requirements for make check
+BuildRequires:	globus-gridftp-server-devel >= 7
+BuildRequires:	globus-gridftp-server-progs >= 7
 BuildRequires:	openssl
+BuildRequires:	perl(Test::More)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
-Summary:	Grid Community Toolkit - Globus XIO GSI Driver
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
+Requires:	globus-xio-gsi-driver%{?_isa} >= 2
+
 %package devel
-Summary:	Grid Community Toolkit - Globus XIO GSI Driver Development Files
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-ftp-client-devel%{?_isa} >= 7
-Requires:	globus-xio-devel%{?_isa} >= 3
-Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
 
 %package doc
-Summary:	Grid Community Toolkit - Globus XIO GSI Driver Documentation Files
+Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -130,10 +120,11 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -vf '{}' \;
+# Remove libtool archives (.la files)
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -141,9 +132,10 @@ make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_xio_gridftp_driver.so
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so*
 
 %files devel
 %defattr(-,root,root,-)
@@ -152,9 +144,11 @@ make %{?_smp_mflags} check
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.17-2

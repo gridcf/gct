@@ -2,44 +2,37 @@ Name:		globus-simple-ca
 %global _name %(tr - _ <<< %{name})
 Version:	4.24
 Release:	4%{?dist}
-Summary:	Grid Community Toolkit - Simple CA
+Summary:	Grid Community Toolkit - Simple CA Utility
 
-Group:		System Environment/Libraries
+Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	noarch
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	shadow
-Requires(pre):	shadow
-%endif
-Requires:	globus-common-progs
-Requires:	openssl
-Requires(post):	openssl
-Requires(post):	globus-gsi-cert-utils-progs
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
-BuildRequires:	globus-common-progs >= 14
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gsi-cert-utils-progs
 BuildRequires:	pkgconfig
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
+#		Additional requirements for make check
+BuildRequires:	globus-common-progs >= 14
+BuildRequires:	perl(Test::More)
+
+Requires:	globus-common-progs >= 14
+Requires:	globus-gsi-cert-utils-progs
+Requires:	openssl
+%if %{?suse_version}%{!?suse_version:0}
+Requires(pre):	shadow
 %else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
+Requires(pre):	shadow-utils
 %endif
-
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
-BuildArch:	noarch
+Requires(post):	globus-common-progs >= 14
+Requires(post):	globus-gsi-cert-utils-progs
+Requires(post):	openssl
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -49,7 +42,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Globus Simple CA
+Simple CA Utility
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -62,8 +55,6 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%global openssl openssl
-
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
@@ -72,13 +63,11 @@ autoreconf -if
 
 make %{?_smp_mflags}
 
-cd -
-
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check VERBOSE=1
 
 %pre
 getent group simpleca >/dev/null || groupadd -r simpleca
@@ -96,7 +85,7 @@ if [ ! -f ${simplecadir}/cacert.pem ] ; then
     cd "$tempdir"
     grid-ca-create -noint -nobuild -dir "${simplecadir}"
     (umask 077; echo globus > ${simplecadir}/passwd)
-    simplecahash=`%openssl x509 -hash -noout -in ${simplecadir}/cacert.pem`
+    simplecahash=`openssl x509 -hash -noout -in ${simplecadir}/cacert.pem`
     cd $simplecadir
     grid-ca-package -cadir ${simplecadir}
     tar --strip 1 --no-same-owner -zx --exclude debian -C /etc/grid-security/certificates -f ${simplecadir}/globus_simple_ca_$simplecahash.tar.gz
@@ -118,12 +107,17 @@ if [ ! -f ${simplecadir}/cacert.pem ] ; then
     cd -
     rm -rf "$tempdir"
 fi
+
 %files
 %defattr(-,root,root,-)
+%{_bindir}/grid-ca-create
+%{_bindir}/grid-ca-package
+%{_bindir}/grid-ca-sign
+%doc %{_mandir}/man1/grid-ca-create.1*
+%doc %{_mandir}/man1/grid-ca-package.1*
+%doc %{_mandir}/man1/grid-ca-sign.1*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
-%{_mandir}/man1/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri May 12 2017 Globus Toolkit <support@globus.org> - 4.24-4

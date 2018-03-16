@@ -10,46 +10,38 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	psmisc
-
-%if 0%{?suse_version} > 0
-Requires:	insserv
-Requires(post):		%insserv_prereq %fillup_prereq
-%else
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 20
-Requires:	lsb-core-noarch
-%else
-Requires:	lsb
-%endif
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
-%else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
-%endif
-
-Requires(post):		globus-common-progs >= 13.4
-Requires(preun):	globus-common-progs >= 13.4
-%if 0%{?suse_version} > 0
-BuildRequires:	insserv
-%else
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 20
-BuildRequires:	lsb-core-noarch
-%else
-BuildRequires:	lsb
-%endif
-%endif
+BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 9
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	insserv
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
+
+%if %{?suse_version}%{!?suse_version:0}
+Requires(post):		%insserv_prereq %fillup_prereq
+Requires(preun):	%insserv_prereq %fillup_prereq
+Requires(postun):	%insserv_prereq %fillup_prereq
+%else
+Requires(post):		chkconfig
+Requires(preun):	chkconfig
+Requires(preun):	initscripts
+Requires(postun):	initscripts
+Requires(preun):	lsb-core-noarch
+Requires(postun):	lsb-core-noarch
+%endif
+Requires(preun):	globus-common-progs >= 14
+Requires(postun):	globus-common-progs >= 14
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -60,7 +52,6 @@ software packages in grid computing.
 
 The %{name} package contains:
 Globus Gatekeeper
-Globus Gatekeeper Setup
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -73,36 +64,31 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global default_runlevels --with-default-runlevels=235
-%global initscript_config_path %{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
-%else
-%global initscript_config_path %{_sysconfdir}/sysconfig/%{name}
-%endif
-
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
 	   --with-lsb \
-	   %{?default_runlevels} \
-	   --with-initscript-config-path=%{initscript_config_path} \
-	   --with-lockfile-path='${localstatedir}/lock/subsys/globus-gatekeeper'
+%if %{?suse_version}%{!?suse_version:0}
+	   --with-default-runlevels=235 \
+	   --with-initscript-config-path=%{_localstatedir}/adm/fillup-templates/sysconfig.%{name} \
+%else
+	   --with-initscript-config-path=%{_sysconfdir}/sysconfig/%{name} \
+%endif
+	   --with-lockfile-path=%{_localstatedir}/lock/subsys/%{name}
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-mkdir $RPM_BUILD_ROOT/etc/grid-services
-mkdir $RPM_BUILD_ROOT/etc/grid-services/available
 
-%check
-make %{?_smp_mflags} check
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-services
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/available
 
 %post
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%fillup_and_insserv globus-gatekeeper
+%if %{?suse_version}%{!?suse_version:0}
+%fillup_and_insserv %{name}
 %else
 if [ $1 -eq 1 ]; then
     /sbin/chkconfig --add %{name}
@@ -110,36 +96,42 @@ fi
 %endif
 
 %preun
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%stop_on_removal service
+%if %{?suse_version}%{!?suse_version:0}
+%stop_on_removal %{name}
 %else
 if [ $1 -eq 0 ]; then
-    /sbin/chkconfig --del %{name}
     /sbin/service %{name} stop > /dev/null 2>&1 || :
+    /sbin/chkconfig --del %{name}
 fi
 %endif
 
 %postun
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%restart_on_update service
+%if %{?suse_version}%{!?suse_version:0}
+%restart_on_update %{name}
 %insserv_cleanup
 %else
-if [ $1 -eq 1 ]; then
+if [ $1 -ge 1 ]; then
     /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
 %endif
 
 %files
 %defattr(-,root,root,-)
+%{_sbindir}/globus-gatekeeper
+%{_sbindir}/globus-k5
+%{_initddir}/%{name}
+%if %{?suse_version}%{!?suse_version:0}
+%{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
+%else
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%endif
+%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%dir %{_sysconfdir}/grid-services
+%dir %{_sysconfdir}/grid-services/available
+%doc %{_mandir}/man8/globus-gatekeeper.8*
+%doc %{_mandir}/man8/globus-k5.8*
 %dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%dir /etc/grid-services
-%dir /etc/grid-services/available
-%config(noreplace) %{initscript_config_path}
-%config(noreplace) /etc/logrotate.d/%{name}
-%{_sysconfdir}/init.d/%{name}
-%{_sbindir}/*
-%{_mandir}/man8/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Sep 09 2016 Globus Toolkit <support@globus.org> - 10.12-1

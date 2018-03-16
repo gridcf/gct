@@ -2,31 +2,19 @@ Name:		globus-gram-job-manager-lsf
 %global _name %(tr - _ <<< %{name})
 Version:	2.7
 Release:	4%{?dist}
-Summary:	Grid Community Toolkit - LSF Job Manager
+Summary:	Grid Community Toolkit - LSF Job Manager Support
 
 Group:		Applications/Internet
 License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes:	globus-gram-job-manager-setup-lsf < 4.5
 
-Requires:	globus-gram-job-manager-scripts >= 4
-Requires:	globus-gass-cache-program >= 5
-Requires:	globus-common-progs >= 14
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:	perl = %{perl_version}
-    %else
-%{perl_requires}
-    %endif
-%else
-Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
-%endif
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
-BuildRequires:	globus-gram-protocol-devel >= 11
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -34,41 +22,51 @@ BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%package -n libglobus_seg_lsf
-Summary:	Grid Community Toolkit - LSF Job Manager SEG Module
-Group:		Applications/Internet
+Requires:	globus-gram-job-manager >= 13
+Requires:	globus-gram-job-manager-scripts >= 4
+Requires:	globus-gass-cache-program >= 5
+Requires:	globus-gatekeeper >= 9
+%if %{?suse_version}%{!?suse_version:0}
+%{perl_requires}
+%else
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
+Requires:	%{name}-setup = %{version}-%{release}
+Provides:	globus-gram-job-manager-setup-lsf = 2.6
+Obsoletes:	globus-gram-job-manager-setup-lsf < 2.6
+Obsoletes:	globus-gram-job-manager-setup-lsf-doc < 2.6
 
 %package setup-poll
-Summary:	Grid Community Toolkit - LSF Job Manager Setup Files
+Summary:	Grid Community Toolkit - LSF Job Manager Support using polling
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Provides:	%{name}-setup
-Provides:	globus-gram-job-manager-setup
+Provides:	%{name}-setup = %{version}-%{release}
 Requires:	%{name} = %{version}-%{release}
-requires(post):		globus-gram-job-manager-scripts >= 3.4
-requires(preun):	globus-gram-job-manager-scripts >= 3.4
-Conflicts:	%{name}-setup-seg
+
+Requires(preun):	globus-gram-job-manager-scripts >= 4
 
 %package setup-seg
-Summary:	Grid Community Toolkit - LSF Job Manager Setup Files
+Summary:	Grid Community Toolkit - LSF Job Manager Support using SEG
 Group:		Applications/Internet
-Provides:	%{name}-setup
-Provides:	globus-gram-job-manager-setup
-Requires:	%{name} = %{version}-%{release}
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_seg_lsf = %{version}-%{release}
-%endif
+Provides:	%{name}-setup = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	globus-scheduler-event-generator-progs >= 4
-Requires:	globus-gram-job-manager-scripts >= 4
-Requires(post):		globus-gram-job-manager-scripts >= 4
-Requires(post):		globus-scheduler-event-generator-progs >= 4
+%if %{?suse_version}%{!?suse_version:0}
+Obsoletes:	libglobus_seg_lsf < %{version}-%{release}
+%endif
+
 Requires(preun):	globus-gram-job-manager-scripts >= 4
 Requires(preun):	globus-scheduler-event-generator-progs >= 4
-Conflicts:	%{name}-setup-poll
+Requires(postun):	globus-scheduler-event-generator-progs >= 4
+%if %{?suse_version}%{!?suse_version:0}
+Requires(preun):	aaa-base
+Requires(postun):	aaa-base
+%else
+Requires(preun):	initscripts
+Requires(postun):	initscripts
+%endif
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -78,7 +76,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-LSF Job Manager
+LSF Job Manager Support
 
 %description setup-poll
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -87,20 +85,8 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name} package contains:
-LSF Job Manager Setup using polling to monitor job state
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%description -n libglobus_seg_lsf
-The Grid Community Toolkit (GCT) is an open source software toolkit used for
-building grid systems and applications. It is a fork of the Globus Toolkit
-originally created by the Globus Alliance. It is supported by the Grid
-Community Forum (GridCF) that provides community-based support for core
-software packages in grid computing.
-
-The libglobus_seg_lsf package contains:
-LSF Job Manager SEG Module
-%endif
+The %{name}-setup-poll package contains:
+LSF Job Manager Support using polling to monitor job state
 
 %description setup-seg
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -109,8 +95,9 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name} package contains:
-LSF Job Manager Setup using SEG to monitor job state
+The %{name}-setup-seg package contains:
+LSF Job Manager Support using the scheduler event generator to monitor job
+state
 
 %prep
 %setup -q -n %{_name}-%{version}
@@ -123,122 +110,74 @@ rm -rf autom4te.cache
 autoreconf -if
 %endif
 
+export BSUB=%{_bindir}/bsub
+export BQUEUES=%{_bindir}/bqueues
+export BJOBS=%{_bindir}/bjobs
+export BKILL=%{_bindir}/bkill
+export BHIST=%{_bindir}/bhist
+export BACCT=%{_bindir}/bacct
 export MPIEXEC=no
 export MPIRUN=no
-
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \
 	   --includedir=%{_includedir}/globus \
-	   --with-globus-state-dir=%{_localstatedir}/lib/globus \
 	   --libexecdir=%{_datadir}/globus \
-	   --with-perlmoduledir=%{perl_vendorlib}
+	   --with-perlmoduledir=%{perl_vendorlib} \
+	   --with-globus-state-dir=%{_localstatedir}/log/globus
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-# Remove jobmanager-lsf from install dir so that it can be
-# added/removed by post scripts
-rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-lsf
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-# Remove pkg-config files (.pc files)
-find $RPM_BUILD_ROOT%{_libdir} -name '*.pc' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%check
-make %{?_smp_mflags} check
-
-%post setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-lsf-poll -n jobmanager-lsf > /dev/null 2>&1 || :
-    if [ ! -f /etc/grid-services/jobmanager ]; then
-	globus-gatekeeper-admin -e jobmanager-lsf-poll -n jobmanager
-    fi
-fi
+# Remove jobmanager-lsf from install dir - leave it for admin configuration
+rm $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/jobmanager-lsf
 
 %preun setup-poll
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-lsf-poll > /dev/null 2>&1 || :
 fi
 
-%postun setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-lsf-poll -n jobmanager-lsf > /dev/null 2>&1 || :
-elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
-fi
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%post -n libglobus_seg_lsf
-ldconfig
-
-%postun -n libglobus_seg_lsf
-ldconfig
-%endif
-
-%post setup-seg
-%if %{?suse_version}%{!?suse_version:0} == 0
-ldconfig
-%endif
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-lsf-seg -n jobmanager-lsf > /dev/null 2>&1 || :
-    globus-scheduler-event-generator-admin -e lsf > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator condrestart lsf
-fi
-
 %preun setup-seg
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-lsf-seg > /dev/null 2>&1 || :
+    /sbin/service globus-scheduler-event-generator stop lsf > /dev/null 2>&1 || :
     globus-scheduler-event-generator-admin -d lsf > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator stop lsf > /dev/null 2>&1 || :
 fi
 
+%post setup-seg -p /sbin/ldconfig
+
 %postun setup-seg
-%if %{?suse_version}%{!?suse_version:0} == 0
-ldconfig
-%endif
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-lsf-seg > /dev/null 2>&1 || :
-    globus-scheduler-event-generator-admin -e lsf > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator condrestart lsf > /dev/null 2>&1 || :
-elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
+/sbin/ldconfig
+if [ $1 -ge 1 ]; then
+    /sbin/service globus-scheduler-event-generator condrestart lsf > /dev/null 2>&1 || :
 fi
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%dir %{_sysconfdir}/globus
-%config(noreplace) %{_sysconfdir}/globus/globus-lsf.conf
-%dir %{_datadir}/globus/globus_gram_job_manager
 %{_datadir}/globus/globus_gram_job_manager/lsf.rvf
+%dir %{perl_vendorlib}/Globus
+%dir %{perl_vendorlib}/Globus/GRAM
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
 %{perl_vendorlib}/Globus/GRAM/JobManager/lsf.pm
+%config(noreplace) %{_sysconfdir}/globus/globus-lsf.conf
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %files setup-poll
 %defattr(-,root,root,-)
-%dir %{_sysconfdir}/grid-services
-%dir %{_sysconfdir}/grid-services/available
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-lsf-poll
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%files -n libglobus_seg_lsf
-%defattr(-,root,root,-)
-%{_libdir}/libglobus*
-%endif
 
 %files setup-seg
 %defattr(-,root,root,-)
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_seg_lsf.so
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-lsf-seg
-%dir %{_sysconfdir}/globus/scheduler-event-generator
-%dir %{_sysconfdir}/globus/scheduler-event-generator/available
-%{_sysconfdir}/globus/scheduler-event-generator/available/lsf
-%if %{?suse_version}%{!?suse_version:0} == 0
-%{_libdir}/libglobus*
-%endif
+%config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/lsf
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.7-4

@@ -11,10 +11,14 @@ Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gram-client-devel >= 12
-BuildRequires:	globus-gass-server-ez-devel >= 4
-BuildRequires:	globus-gass-copy-devel >= 8
 BuildRequires:	globus-gass-cache-devel >= 8
+BuildRequires:	globus-gass-copy-devel >= 8
+BuildRequires:	globus-gass-transfer-devel >= 7
+BuildRequires:	globus-gass-server-ez-devel >= 4
+BuildRequires:	globus-gram-client-devel >= 12
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
 BuildRequires:	autoconf >= 2.60
@@ -56,11 +60,13 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
+%{_bindir}/globus-gass-cache
+%{_bindir}/globus-gass-cache-destroy
+%{_bindir}/globus-gass-cache-util
 %dir %{_datadir}/globus
 %{_datadir}/globus/globus-gass-cache-util.pl
+%dir %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Fri Apr 21 2017 Globus Toolkit <support@globus.org> - 6.7-1

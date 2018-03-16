@@ -11,14 +11,24 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	globus-gsi-credential-devel >= 5
-BuildRequires:	globus-gsi-callback-devel >= 4
+BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-openssl-module-devel >= 3
 BuildRequires:	globus-gsi-openssl-error-devel >= 2
-BuildRequires:	globus-gsi-proxy-core-devel >= 6
 BuildRequires:	globus-gsi-cert-utils-devel >= 8
-BuildRequires:	globus-common-devel >= 14
+BuildRequires:	globus-gsi-credential-devel >= 5
+BuildRequires:	globus-gsi-callback-devel >= 4
+BuildRequires:	globus-gsi-proxy-core-devel >= 8
 BuildRequires:	globus-gsi-sysconfig-devel >= 8
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
+%endif
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libtool
+%else
+BuildRequires:	libtool-ltdl-devel
+%endif
 BuildRequires:	doxygen
 %if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
 BuildRequires:	automake >= 1.11
@@ -26,48 +36,31 @@ BuildRequires:	autoconf >= 2.60
 BuildRequires:	libtool >= 2.2
 %endif
 BuildRequires:	pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:	perl-Test-Simple
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+#		Additional requirements for make check
 BuildRequires:	openssl
-BuildRequires:	libopenssl-devel
-%else
-BuildRequires:	openssl
-BuildRequires:	openssl-devel
-%endif
+BuildRequires:	perl(Test::More)
 
-%if 0%{?suse_version} > 0
-BuildRequires:	libtool
-%else
-BuildRequires:	libtool-ltdl-devel
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - GSSAPI library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-gsi-sysconfig%{?_isa} >= 8
 
 %package devel
 Summary:	Grid Community Toolkit - GSSAPI library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-gsi-credential-devel%{?_isa} >= 5
-Requires:	globus-gsi-callback-devel%{?_isa} >= 4
-Requires:	globus-openssl-module-devel%{?_isa} >= 3
-Requires:	globus-gsi-openssl-error-devel%{?_isa} >= 2
-Requires:	globus-gsi-proxy-core-devel%{?_isa} >= 6
-Requires:	globus-gsi-cert-utils-devel%{?_isa} >= 8
-Requires:	globus-common-devel%{?_isa} >= 14
 
 %package doc
 Summary:	Grid Community Toolkit - GSSAPI library Documentation Files
@@ -75,9 +68,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -142,10 +134,10 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -153,22 +145,24 @@ make %{?_smp_mflags} check
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
+%{_libdir}/libglobus_gssapi_gsi.so.*
+%config(noreplace) %{_sysconfdir}/grid-security/gsi.conf
 %dir %{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%config(noreplace) %{_sysconfdir}/grid-security/gsi.conf
-%{_libdir}/libglobus_*.so.*
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus_*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gssapi_gsi.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
+%dir %{_docdir}/%{name}-%{version}
 %dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_docdir}/%{name}-%{version}/html/*
+%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
 
 %changelog
 * Thu Jan 25 2018 Globus Toolkit <support@globus.org> - 13.6-1
