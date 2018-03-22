@@ -198,7 +198,7 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 - Fix Source path
 
 * Wed Jul 23 2014 Globus Toolkit <support@globus.org> - 13.7-2
-- Add %check to build
+- Add %%check to build
 
 * Mon Jun 09 2014 Globus Toolkit <support@globus.org> - 13.7-1
 - Merge changes from Mattias Ellert
@@ -222,7 +222,7 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 12.4-8
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Feb 20 2013 Globus Toolkit <support@globus.org> - 12.4-7
 - Workaround missing F18 doxygen/latex dependency

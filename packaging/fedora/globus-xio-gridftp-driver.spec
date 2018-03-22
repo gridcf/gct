@@ -227,7 +227,7 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 1.2-2
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Jun 19 2013 Globus Toolkit <support@globus.org> - 1.2-1
 - add GLOBUS_LICENSE

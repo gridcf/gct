@@ -235,7 +235,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 * Tue Feb 14 2012 Joseph Bester <bester@mcs.anl.gov> - 2.4-1
 - RIC-226: Some dependencies are missing in GPT metadata
 
-* Mon Dec 06 2011 Joseph Bester <bester@mcs.anl.gov> - 2.3-1
+* Tue Dec 06 2011 Joseph Bester <bester@mcs.anl.gov> - 2.3-1
 - fix mlst double space
 
 * Mon Dec 05 2011 Joseph Bester <bester@mcs.anl.gov> - 2.2-4

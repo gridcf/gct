@@ -94,5 +94,5 @@ Data Management SDK
 %postun
 
 %changelog
-* Mon Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
 - GT 5.2.2 New Metapackage

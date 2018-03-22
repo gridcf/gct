@@ -218,7 +218,7 @@ fi
 - GT-344: Cut and past error in gpt metadata for GRAM LSF module
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 1.1-2
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Mon Nov 26 2012 Globus Toolkit <support@globus.org> - 1.1-1
 - 5.2.3

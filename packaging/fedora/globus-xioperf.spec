@@ -89,7 +89,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 - Add openssl dependency
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 3.1-7
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Mar 13 2013 Globus Toolkit <support@globus.org> - 3.1-6
 - More dependencies

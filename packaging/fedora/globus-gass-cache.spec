@@ -189,7 +189,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 8.1-10
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Mon Nov 26 2012 Globus Toolkit <support@globus.org> - 8.1-9
 - 5.2.3

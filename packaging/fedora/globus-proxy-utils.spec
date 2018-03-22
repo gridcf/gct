@@ -174,7 +174,7 @@ make %{?_smp_mflags} check VERBOSE=1
 - openssl-libs for newer fedora
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 5.1-2
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed May 15 2013 Globus Toolkit <support@globus.org> - 5.1-1
 - GT-272: Increase default proxy key size

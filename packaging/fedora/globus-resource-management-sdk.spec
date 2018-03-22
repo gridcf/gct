@@ -107,5 +107,5 @@ Resource Management SDK
 * Wed Aug 26 2015 Joseph Bester <bester@mcs.anl.gov> - 6.0-2
 - Remove obsolete globus-core dependency
 
-* Mon Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
 - GT 5.2.2 New Metapackage

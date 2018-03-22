@@ -303,7 +303,7 @@ fi
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 4.7-4
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Feb 20 2013 Globus Toolkit <support@globus.org> - 4.7-3
 - Workaround missing F18 doxygen/latex dependency
@@ -351,7 +351,7 @@ fi
 * Mon Oct 24 2011 Joseph Bester <bester@mcs.anl.gov> - 4.2-2
 - Add explicit dependencies on >= 5.2 libraries
 - Add backward-compatibility aging
-- Fix %post* scripts to check for -eq 1
+- Fix %%post* scripts to check for -eq 1
 
 * Fri Sep 23 2011 Joseph Bester <bester@mcs.anl.gov> - 4.1-1
 - GRAM-260: Detect and workaround bug in start_daemon for LSB < 4
