@@ -31,12 +31,6 @@ BuildRequires:	libopenssl-devel
 BuildRequires:	openssl-devel
 %endif
 BuildRequires:	libxml2-devel
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 #		Additional requirements for make check
 BuildRequires:	globus-io-devel >= 9
 BuildRequires:	globus-gram-client-devel >= 3
@@ -105,13 +99,6 @@ Scheduler Event Generator Job Manager
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 export GLOBUS_VERSION=6.0
 %configure \
 	   --disable-static \

@@ -14,12 +14,6 @@ BuildArch:	noarch
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
 %endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 
 Requires:	globus-gram-job-manager >= 13
 Requires:	globus-gram-job-manager-scripts >= 4
@@ -50,13 +44,6 @@ Condor Job Manager Support
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 export CONDOR_RM=%{_bindir}/condor_rm
 export CONDOR_SUBMIT=%{_bindir}/condor_submit
 %configure \

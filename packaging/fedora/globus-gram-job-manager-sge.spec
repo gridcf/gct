@@ -16,12 +16,6 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
 %endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 
 Requires:	globus-gram-job-manager >= 13
 Requires:	globus-gram-job-manager-scripts >= 4
@@ -104,13 +98,6 @@ job state
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 export QSUB=%{_bindir}/qsub-ge
 export QSTAT=%{_bindir}/qstat-ge
 export QDEL=%{_bindir}/qdel-ge

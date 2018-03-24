@@ -34,12 +34,6 @@ BuildRequires:  voms-devel >= 1.9.12.1
 %if %{?suse_version}%{!?suse_version:0}
 BuildRequires:  insserv
 %endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
 #               Additional requirements for make check
 BuildRequires:  globus-proxy-utils
 BuildRequires:  globus-gsi-cert-utils-progs
@@ -188,13 +182,6 @@ Package %{name}-doc contains the MyProxy documentation.
 %setup -q
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 %configure \
            --disable-static \
            --includedir=%{_includedir}/globus \

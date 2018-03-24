@@ -16,12 +16,6 @@ BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-io-devel >= 8
 BuildRequires:	doxygen
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -96,13 +90,6 @@ Globus Gass Transfer Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \

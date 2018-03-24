@@ -14,12 +14,6 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-gssapi-error-devel >= 4
 BuildRequires:	doxygen
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -94,13 +88,6 @@ Globus Gridmap Callout Errors Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 %configure \
 	   --disable-static \
 	   --docdir=%{_docdir}/%{name}-%{version} \

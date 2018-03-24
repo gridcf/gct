@@ -20,12 +20,6 @@ BuildRequires:	doxygen
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
 %endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:	pkgconfig
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -159,13 +153,6 @@ Common Library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 export GLOBUS_VERSION=6.0
 %configure \
 	   --disable-static \
