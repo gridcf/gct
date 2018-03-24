@@ -1,24 +1,25 @@
 Source: globus-io
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev (>= 14), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gss-assist-dev (>= 8), libglobus-xio-dev (>= 3), libglobus-gssapi-error-dev (>= 4), pkg-config, openssl
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 10), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gssapi-error-dev (>= 4), openssl
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-io
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-io
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-io3
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-gsi-driver
-Description: Globus Toolkit - uniform I/O interface
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Replaces: libglobus-io-doc (<< 10.12)
+Conflicts: libglobus-io-doc (<< 10.12)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-gsi-driver (>= 2)
+Description: Grid Community Toolkit - uniform I/O interface
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-io3 package contains:
  uniform I/O interface to stream and datagram style communications
@@ -26,30 +27,15 @@ Description: Globus Toolkit - uniform I/O interface
 Package: libglobus-io-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-io3 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libglobus-xio-gsi-driver-dev, libglobus-gss-assist-dev, libglobus-xio-dev
-Description: Globus Toolkit - uniform I/O interface Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-io3 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 10), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gssapi-error-dev (>= 4)
+Description: Grid Community Toolkit - uniform I/O interface Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-io-dev package contains:
  uniform I/O interface to stream and datagram style communications
  Development Files
-
-Package: libglobus-io-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-io3 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - uniform I/O interface Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-io-dbg package contains:
- uniform I/O interface to stream and datagram style communications
- Debug Symbols

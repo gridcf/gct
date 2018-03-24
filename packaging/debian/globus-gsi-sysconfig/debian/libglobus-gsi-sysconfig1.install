@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/*/libglobus_gsi_sysconfig.so.*
+debian/tmp/etc/grid-security

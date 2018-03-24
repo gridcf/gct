@@ -1,0 +1,6 @@
+debian/tmp/usr/sbin/globus-gatekeeper-admin
+debian/tmp/usr/share/globus/globus-job-manager-script.pl
+debian/tmp/usr/share/man/man8/globus-gatekeeper-admin.8
+debian/tmp/usr/share/perl5/Globus/GRAM/StdioMerger.pm
+debian/tmp/usr/share/perl5/Globus/GRAM/JobDescription.pm
+debian/tmp/usr/share/perl5/Globus/GRAM/JobManager.pm

@@ -1,0 +1,4 @@
+# The globus-makefile-header program is obsolete and should not be used
+# The preferred alternative is pkg-config
+# The current globus-makefile-header is a wrapper around pkg-config anyway
+binary-without-manpage usr/bin/globus-makefile-header

@@ -1,7 +1,7 @@
 Document: globus-gsi-proxy-ssl
 Title: Debian globus-gsi-proxy-ssl Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, Globus GSI Proxy SSL Library
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, Globus GSI Proxy SSL Library
 Section: Programming
 
 Format: HTML

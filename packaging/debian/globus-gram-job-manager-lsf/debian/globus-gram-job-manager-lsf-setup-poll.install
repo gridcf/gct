@@ -1,2 +1,1 @@
-#! /usr/bin/dh-exec
-etc/grid-services/available/*poll
+debian/tmp/etc/grid-services/available/jobmanager-lsf-poll

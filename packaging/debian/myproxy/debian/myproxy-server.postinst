@@ -1,28 +1,25 @@
-#! /bin/sh
+#!/bin/sh
 
-case "$1" in
-	configure)
-		getent group myproxy > /dev/null || groupadd -r myproxy
+set -e
 
-		getent passwd myproxy > /dev/null || \
-			useradd -r -g myproxy -d /var/lib/myproxy \
-			-s /bin/nologin \
-			-c "User to run the MyProxy service" myproxy
-		install -o myproxy -g myproxy -m 700 -d /var/lib/myproxy
-		install -o myproxy -g myproxy -m 755 -d /var/run/myproxy
-		;;
-	abort-upgrade)
-		;;
-	abort-remove)
-		;;
-esac
+if test "$1" = "configure" -o "$1" = "reconfigure" ; then
 
-if [ -r /etc/grid-security/myproxy/hostcert.pem ] && \
-   [ -r /etc/grid-security/myproxy/hostkey.pem ]; then
-	:
-#DEBHELPER#
-else
-	update-rc.d myproxy-server defaults >/dev/null
+    test -r /etc/default/myproxy-server && . /etc/default/myproxy-server
+
+    if test -z "$MYPROXY_USER" -o "$MYPROXY_USER" = "myproxy" ; then
+
+	getent group myproxy > /dev/null || \
+	    addgroup --quiet --system myproxy
+
+	getent passwd myproxy > /dev/null || \
+	    adduser --quiet --system --home /var/lib/myproxy \
+	    --shell /bin/false --ingroup myproxy --disabled-password \
+	    --disabled-login --gecos "User to run the MyProxy service" myproxy
+
+	chown myproxy:myproxy /var/lib/myproxy
+
+    fi
+
 fi
 
-exit 0
+#DEBHELPER#

@@ -1,39 +1,22 @@
 Source: globus-gram-client-tools
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-common-dev, libglobus-gass-server-ez-dev, libglobus-gram-client-dev, libglobus-gss-assist-dev, libglobus-rsl-dev
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gram-client-dev (>= 12), libglobus-gram-protocol-dev (>= 11), libglobus-gass-transfer-dev (>= 7), libglobus-gass-server-ez-dev (>= 4), libglobus-rsl-dev (>= 9), libglobus-gss-assist-dev (>= 8)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gram-client-tools
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gram-client-tools
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-gram-client-tools
 Section: net
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, globus-common-progs
-Description: Globus Toolkit - Job Management Tools (globusrun)
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends}, globus-common-progs (>= 15)
+Description: Grid Community Toolkit - Job Management Tools (globusrun)
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-gram-client-tools package contains:
  Job Management Tools (globusrun)
-
-Package: globus-gram-client-tools-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-gram-client-tools (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Job Management Tools (globusrun) Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gram-client-tools-dbg package contains:
- Job Management Tools (globusrun) Debug Symbols

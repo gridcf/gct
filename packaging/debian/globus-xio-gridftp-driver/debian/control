@@ -1,24 +1,25 @@
 Source: globus-xio-gridftp-driver
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-xio-dev (>= 3), libglobus-common-dev (>= 14), libglobus-ftp-client-dev (>= 7), libglobus-xio-gsi-driver-dev, libglobus-xio-pipe-driver-dev, libglobus-gridftp-server-dev, globus-gridftp-server-progs, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config, openssl, libltdl-dev
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-ftp-client-dev (>= 7), libglobus-xio-gsi-driver-dev (>= 2), doxygen, libglobus-gridftp-server-dev (>= 7), globus-gridftp-server-progs (>= 7), openssl
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-xio-gridftp-driver
 Section: libs
 Architecture: any
-Provides: libglobus-xio-gridftp-driver1
-Conflicts: libglobus-xio-gridftp-driver1
-Replaces: libglobus-xio-gridftp-driver1
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GridFTP Driver
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Replaces: libglobus-xio-gridftp-driver-dev (<< 2)
+Breaks: libglobus-xio-gridftp-driver-dev (<< 2)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-gsi-driver (>= 2)
+Description: Grid Community Toolkit - Globus XIO GridFTP Driver
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gridftp-driver package contains:
  Globus XIO GridFTP Driver
@@ -26,43 +27,31 @@ Description: Globus Toolkit - Globus XIO GridFTP Driver
 Package: libglobus-xio-gridftp-driver-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-xio-gridftp-driver (= ${binary:Version}), ${misc:Depends}, libglobus-xio-dev
-Recommends: libglobus-xio-gridftp-driver-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus XIO GridFTP Driver Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-xio-gridftp-driver (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-ftp-client-dev (>= 7), libglobus-xio-gsi-driver-dev (>= 2)
+Suggests: libglobus-xio-gridftp-driver-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus XIO GridFTP Driver Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gridftp-driver-dev package contains:
  Globus XIO GridFTP Driver Development Files
 
 Package: libglobus-xio-gridftp-driver-doc
 Section: doc
-Architecture: any
-Depends: libglobus-xio-gridftp-driver-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GridFTP Driver Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus XIO GridFTP Driver Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The libglobus-xio-gridftp-driver-dev package contains:
+ The libglobus-xio-gridftp-driver-doc package contains:
  Globus XIO GridFTP Driver Documentation Files
-
-Package: libglobus-xio-gridftp-driver-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-xio-gridftp-driver (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GridFTP Driver Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-xio-gridftp-driver-dbg package contains:
- Globus XIO GridFTP Driver Debug Symbols

@@ -1,39 +1,22 @@
 Source: globus-proxy-utils
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-gsi-credential-dev, libglobus-gsi-callback-dev, libglobus-openssl-module-dev, libglobus-gss-assist-dev, libglobus-gsi-openssl-error-dev, libglobus-gsi-proxy-core-dev, libglobus-gsi-cert-utils-dev, libglobus-common-dev, libglobus-gsi-sysconfig-dev, libglobus-gssapi-gsi-dev, openssl
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 4), libssl-dev, openssl
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-proxy-utils
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-proxy-utils
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-proxy-utils
 Section: net
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Proxy Utility Programs
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus GSI Proxy Utility Programs
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-proxy-utils package contains:
  Globus GSI Proxy Utility Programs
-
-Package: globus-proxy-utils-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-proxy-utils (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Proxy Utility Programs Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-proxy-utils-dbg package contains:
- Globus GSI Proxy Utility Programs Debug Symbols

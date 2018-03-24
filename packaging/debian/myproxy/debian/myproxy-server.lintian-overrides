@@ -1,0 +1,2 @@
+# The server will not start if the permissions are too permissive
+myproxy-server: non-standard-dir-perm var/lib/myproxy/ 0700 != 0755

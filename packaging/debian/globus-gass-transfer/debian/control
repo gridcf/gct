@@ -1,24 +1,23 @@
 Source: globus-gass-transfer
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev (>= 14), libglobus-io-dev (>= 8), libglobus-gssapi-gsi-dev (>= 10), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 8), libglobus-io-dev (>= 8), doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gass-transfer
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gass-transfer
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gass-transfer2
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Transfer
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus Gass Transfer
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-transfer2 package contains:
  Globus Gass Transfer
@@ -26,43 +25,31 @@ Description: Globus Toolkit - Globus Gass Transfer
 Package: libglobus-gass-transfer-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gass-transfer2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libglobus-io-dev, libglobus-gssapi-gsi-dev
-Recommends: libglobus-gass-transfer-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus Gass Transfer Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gass-transfer2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 8), libglobus-io-dev (>= 8)
+Suggests: libglobus-gass-transfer-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus Gass Transfer Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-transfer-dev package contains:
  Globus Gass Transfer Development Files
 
 Package: libglobus-gass-transfer-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gass-transfer-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Transfer Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus Gass Transfer Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-transfer-doc package contains:
  Globus Gass Transfer Documentation Files
-
-Package: libglobus-gass-transfer-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gass-transfer2 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Transfer Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gass-transfer-dbg package contains:
- Globus Gass Transfer Debug Symbols

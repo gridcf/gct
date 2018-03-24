@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ] ; then
+    globus-gram-audit --query 'select 1 from gram_audit_table' 2> /dev/null || \
+    globus-gram-audit --create --quiet || :
+fi
+
+#DEBHELPER#

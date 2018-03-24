@@ -1,43 +1,13 @@
-#! /bin/sh
+#!/bin/sh
 
-if [ -x /usr/sbin/globus-gatekeeper-admin ]; then
-    case "$1" in
-        configure)
-            globus-gatekeeper-admin -e jobmanager-lsf-seg -n jobmanager-lsf
-            if [ ! -f /etc/grid-services/jobmanager ]; then
-                globus-gatekeeper-admin -e jobmanager-lsf-seg -n jobmanager
-            fi
-            ;;
-        abort-upgrade)
-            :
-            ;;
-        abort-remove)
-            :
-            ;;
-        abort-deconfigure)
-            :
-            ;;
-    esac
+set -e
+
+if [ -x "/etc/init.d/globus-scheduler-event-generator" ]; then
+	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+		invoke-rc.d globus-scheduler-event-generator start lsf || :
+	else
+		/etc/init.d/globus-scheduler-event-generator start lsf || :
+	fi
 fi
 
-if [ -x /usr/sbin/globus-scheduler-event-generator-admin ]; then
-    case "$1" in
-        configure)
-            globus-scheduler-event-generator-admin -e lsf
-            if which invoke-rc.d >/dev/null 2>&1; then
-                invoke-rc.d globus-scheduler-event-generator start lsf || :
-            elif [ -x /etc/init.d/globus-scheduler-event-generator ]; then
-                /etc/init.d/globus-scheduler-event-generator start lsf || :
-            fi
-            ;;
-        abort-upgrade)
-            :
-            ;;
-        abort-remove)
-            :
-            ;;
-        abort-deconfigure)
-            :
-            ;;
-    esac
-fi
+#DEBHELPER#

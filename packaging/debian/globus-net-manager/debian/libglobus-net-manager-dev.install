@@ -1,0 +1,4 @@
+debian/tmp/usr/include/globus/globus_net_manager.h
+debian/tmp/usr/include/globus/globus_net_manager_attr.h
+debian/tmp/usr/lib/*/libglobus_net_manager.so
+debian/tmp/usr/lib/*/pkgconfig/globus-net-manager.pc

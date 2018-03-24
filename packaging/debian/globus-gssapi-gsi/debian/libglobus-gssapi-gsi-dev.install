@@ -1,4 +1,3 @@
-#! /usr/bin/dh-exec
-usr/include/globus/*.h
-usr/lib/*/*.so
-usr/lib/*/pkgconfig/*.pc
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/libglobus_gssapi_gsi.so
+debian/tmp/usr/lib/*/pkgconfig/globus-gssapi-gsi.pc

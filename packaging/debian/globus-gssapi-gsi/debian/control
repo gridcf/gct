@@ -1,21 +1,23 @@
 Source: globus-gssapi-gsi
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 9), autotools-dev, quilt, libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-cert-utils-dev (>= 8), libglobus-common-dev (>= 14), libglobus-gsi-sysconfig-dev (>= 8), doxygen (>> 1.6.2-1), graphviz, pkg-config, openssl, libssl-dev, libltdl3-dev, dh-exec
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-gsi-proxy-core-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 8), libssl-dev, libltdl-dev, doxygen, openssl
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://toolkit.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gssapi-gsi4
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-gsi-cert-utils0
-Description: Globus Toolkit - GSSAPI library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Grid Community Toolkit - GSSAPI library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-gsi4 package contains:
  GSSAPI library
@@ -23,43 +25,31 @@ Description: Globus Toolkit - GSSAPI library
 Package: libglobus-gssapi-gsi-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gssapi-gsi4 (= ${binary:Version}), ${misc:Depends}, libglobus-gsi-credential-dev, libglobus-gsi-callback-dev, libglobus-openssl-module-dev, libglobus-gsi-openssl-error-dev, libglobus-gsi-proxy-core-dev, libglobus-gsi-cert-utils-dev, libglobus-common-dev
-Recommends: libglobus-gssapi-gsi-doc (= ${binary:Version})
-Description: Globus Toolkit - GSSAPI library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gssapi-gsi4 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 8), libssl-dev
+Suggests: libglobus-gssapi-gsi-doc (= ${source:Version})
+Description: Grid Community Toolkit - GSSAPI library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-gsi-dev package contains:
  GSSAPI library Development Files
 
 Package: libglobus-gssapi-gsi-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gssapi-gsi-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GSSAPI library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - GSSAPI library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-gsi-doc package contains:
  GSSAPI library Documentation Files
-
-Package: libglobus-gssapi-gsi-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gssapi-gsi4 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GSSAPI library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gssapi-gsi-dbg package contains:
- GSSAPI library Debug Symbols

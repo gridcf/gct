@@ -1,7 +1,0 @@
-#! /bin/sh
-
-if [ -x /usr/sbin/globus-gatekeeper-admin ]; then
-    if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -E > /dev/null 2>&1 || :
-    fi
-fi

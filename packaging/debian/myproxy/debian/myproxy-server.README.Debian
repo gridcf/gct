@@ -1,0 +1,8 @@
+You must install host certificates for myproxy-server.
+
+These should be located at
+
+/etc/grid-security/myproxy/hostcert.pem  , permissions 644
+/etc/grid-security/myproxy/hostkey.pem   , permission  600
+
+and owned by user/group  myproxy/myproxy.

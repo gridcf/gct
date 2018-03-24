@@ -1,24 +1,23 @@
 Source: globus-gfork
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-xio-dev (>= 3), libglobus-common-dev (>= 14), pkg-config
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gfork
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gfork
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gfork0
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - GFork
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - GFork
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gfork0 package contains:
  GFork Library
@@ -26,13 +25,14 @@ Description: Globus Toolkit - GFork
 Package: globus-gfork-progs
 Section: net
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - GFork Programs
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - GFork Programs
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-gfork-progs package contains:
  GFork Programs - GFork is user configurable super-server daemon very similar
@@ -43,43 +43,15 @@ Description: Globus Toolkit - GFork Programs
 Package: libglobus-gfork-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gfork0 (= ${binary:Version}), ${misc:Depends}, libglobus-xio-dev, libglobus-common-dev
-Description: Globus Toolkit - GFork Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: libglobus-gfork0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3)
+Description: Grid Community Toolkit - GFork Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gfork-dev package contains:
  GFork Development Files
-
-Package: libglobus-gfork-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gfork0 (= ${binary:Version})
-Description: Globus Toolkit - GFork Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gfork-dbg package contains:
- GFork Library Debug Symbols
-
-Package: globus-gfork-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-gfork-progs (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GFork Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gfork-dbg package contains:
- GFork Debug Symbols

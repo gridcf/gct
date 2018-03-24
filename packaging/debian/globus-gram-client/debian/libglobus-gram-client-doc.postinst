@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gram-client-doc \
+    libglobus-gram-client-dev 13.20 \
+    libglobus-gram-client-doc -- "$@"

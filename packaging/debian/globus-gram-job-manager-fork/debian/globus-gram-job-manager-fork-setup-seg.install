@@ -1,6 +1,3 @@
-#! /usr/bin/dh-exec
-etc/grid-services/available/jobmanager-fork-seg
-etc/globus/scheduler-event-generator/available/fork
-usr/sbin/globus-fork-starter
-usr/share/man/man8/globus-fork-starter.8
-usr/lib/${DEB_HOST_MULTIARCH}/libglobus_seg_fork.so
+debian/tmp/usr/lib/*/libglobus_seg_fork.so
+debian/tmp/etc/grid-services/available/jobmanager-fork-seg
+debian/tmp/etc/globus/scheduler-event-generator/available/fork

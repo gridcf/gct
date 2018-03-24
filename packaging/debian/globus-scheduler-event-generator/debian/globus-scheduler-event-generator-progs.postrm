@@ -1,7 +1,12 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if [ "$1" = purge ]; then
-    if which update-rc.d > /dev/null 2>&1; then
-    	update-rc.d globus-scheduler-event-generator remove
-    fi
+if [ "$1" = "purge" ] ; then
+	update-rc.d globus-scheduler-event-generator remove >/dev/null
 fi
+
+if [ -d /run/systemd/system ] ; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+
+#DEBHELPER#

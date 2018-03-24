@@ -1,36 +1,23 @@
 Source: globus-gridmap-eppn-callout
 Priority: optional
-Maintainer: Globus Toolkit <support@globus.org>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-common-dev, libglobus-gsi-sysconfig-dev (>= 5), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gridmap-callout-error-dev (>= 0), libglobus-gsi-credential-dev (>= 6), libglobus-gsi-cert-utils-dev (>= 8), pkg-config
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gridmap-callout-error-dev, libglobus-gsi-credential-dev (>= 6), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gssapi-error-dev (>= 4), libssl-dev
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
-Package: libglobus-gridmap-eppn-callout0
+Package: libglobus-gridmap-eppn-callout
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Gridmap EPPN Callout
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus gridmap ePPN callout
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The libglobus-gridmap-eppn-callout0 package contains:
- Globus Gridmap EPPN Callout
-
-Package: libglobus-gridmap-eppn-callout-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gridmap-eppn-callout0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gridmap EPPN Callout Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gridmap-eppn-callout-dbg package contains:
- Globus Gridmap EPPN Callout Debug Symbols
+ The libglobus-gridmap-eppn-callout package contains:
+ Globus gridmap ePPN callout

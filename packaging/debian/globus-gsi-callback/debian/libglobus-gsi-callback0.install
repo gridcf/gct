@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/*/libglobus_gsi_callback.so.*
+debian/tmp/usr/lib/*/libglobus_oldgaa.so.*

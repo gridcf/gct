@@ -1,24 +1,24 @@
-Name: globus-gridftp-server
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Source: http://toolkit.globus.org/ftppub/gt6/packages/globus_gridftp_server-7.25.tar.gz
-
-
-Upstream-Authors: The Globus Alliance - http://www.globus.org/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: globus_gridftp_server
+Upstream-Contact: https://github.com/gridcf/gct/
 
 Files: *
-Copyright: Copyright 1999-2010 University of Chicago
+Copyright:
+ 1999-2017 University of Chicago
+ 2018 Grid Community Forum
 License: Apache-2.0
 
-Files: globus_gridftp_server_embed.h, globus_i_gfs_embed.c,
-       embed/globus_gridftp_server_embedded.c
-Copyright: Copyright 1999-2005 University of Chicago
-           Copyright 1999-2005 The University of Southern California
+Files: globus-gridftp-password.txt globus-gridftp-password.8
+Copyright:
+ 2012 Initiative for Globus in Europe (IGE), http://www.ige-project.eu/
 License: Apache-2.0
 
 Files: debian/*
-Copyright: © 2008-2010, Mattias Ellert <mattias.ellert@fysast.uu.se>
+Copyright:
+ 2008-2018 Mattias Ellert <mattias.ellert@physics.uu.se>
+ 2010-2013 Initiative for Globus in Europe (IGE), http://www.ige-project.eu/
 License: Apache-2.0
 
 License: Apache-2.0
- On Debian systems the full text of the Apache-2.0 license can be found in
- the /usr/share/common-licenses/Apache-2.0 file.
+ On Debian systems the full text of the Apache license version 2 can
+ be found in /usr/share/common-licenses/Apache-2.0.

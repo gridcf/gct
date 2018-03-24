@@ -1,0 +1,3 @@
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/libglobus_scheduler_event_generator.so
+debian/tmp/usr/lib/*/pkgconfig/globus-scheduler-event-generator.pc

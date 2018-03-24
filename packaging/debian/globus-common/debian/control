@@ -1,86 +1,80 @@
 Source: globus-common
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 6.0.7~), autotools-dev, quilt, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, libltdl-dev
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libltdl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-common
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-common
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-common0
 Section: libs
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Common Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Replaces: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5), globus-common-progs (<< 14)
+Conflicts: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5)
+Breaks: globus-common-progs (<< 14)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Description: Grid Community Toolkit - Common Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-common0 package contains:
  Common Library
 
 Package: globus-common-progs
 Section: net
-Multi-Arch: same
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
-Description: Globus Toolkit - Common Library Programs
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Replaces: grid-packaging-tools (<< 3.4)
+Breaks: grid-packaging-tools (<< 3.4)
+Depends: libglobus-common0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Grid Community Toolkit - Common Library Programs
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-common-progs package contains:
  Common Library Programs
 
 Package: libglobus-common-dev
 Section: libdevel
-Multi-Arch: same
 Architecture: any
-Depends: libglobus-common0 (= ${binary:Version}), ${misc:Depends}, globus-common-progs (= ${binary:Version}), ${perl:Depends}
-Recommends: libglobus-common-doc (= ${binary:Version})
-Description: Globus Toolkit - Common Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Replaces: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-common-progs (<< 17.5)
+Conflicts: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7)
+Breaks: globus-common-progs (<< 17.5)
+Depends: libglobus-common0 (= ${binary:Version}), ${misc:Depends}, ${perl:Depends}, libltdl-dev
+Suggests: libglobus-common-doc (= ${source:Version})
+Description: Grid Community Toolkit - Common Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-common-dev package contains:
  Common Library Development Files
 
 Package: libglobus-common-doc
 Section: doc
+Architecture: all
 Multi-Arch: foreign
-Architecture: any
-Depends: libglobus-common-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Common Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Replaces: libglobus-rsl-doc (<< 10)
+Breaks: libglobus-rsl-doc (<< 10)
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Common Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-common-doc package contains:
  Common Library Documentation Files
-
-Package: globus-common-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-common0 (= ${binary:Version}) | globus-common-progs (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Common Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-common-dbg package contains:
- Common Library Debug Symbols

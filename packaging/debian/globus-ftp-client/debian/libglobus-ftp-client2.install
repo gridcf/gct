@@ -1,5 +1,2 @@
-#! /usr/bin/dh-exec
-
-usr/lib/*/libglobus*.so.*
-usr/share/globus/gridftp-ssh
-usr/share/doc/libglobus-ftp-client-doc/GLOBUS_LICENSE => usr/share/doc/libglobus-ftp-client2/GLOBUS_LICENSE
+debian/tmp/usr/lib/*/libglobus_ftp_client.so.*
+debian/tmp/usr/share/globus/gridftp-ssh

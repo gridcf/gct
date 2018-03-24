@@ -1,21 +1,22 @@
 Source: globus-simple-ca
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 9), autotools-dev, quilt, libglobus-common-dev, openssl, pkg-config
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, globus-common-progs (>= 15), openssl
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://toolkit.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-simple-ca
 Section: net
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, globus-gsi-cert-utils-progs, globus-common-progs (>= 13)
-Description: Globus Simple CA
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: ${misc:Depends}, globus-common-progs (>= 15), globus-gsi-cert-utils-progs, openssl
+Description: Grid Community Toolkit - Simple CA Utility
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-simple-ca package contains:
- Globus Simple CA Programs
+ Simple CA Utility

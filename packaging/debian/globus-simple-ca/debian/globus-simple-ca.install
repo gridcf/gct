@@ -1,0 +1,6 @@
+debian/tmp/usr/bin/grid-ca-create
+debian/tmp/usr/bin/grid-ca-package
+debian/tmp/usr/bin/grid-ca-sign
+debian/tmp/usr/share/man/man1/grid-ca-create.1
+debian/tmp/usr/share/man/man1/grid-ca-package.1
+debian/tmp/usr/share/man/man1/grid-ca-sign.1

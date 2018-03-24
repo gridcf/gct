@@ -1,24 +1,23 @@
 Source: globus-gass-cache
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev, libssl-dev
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libssl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gass-cache
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gass-cache
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gass-cache5
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends} 
-Description: Globus Toolkit - Globus Gass Cache
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Grid Community Toolkit - Globus Gass Cache
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-cache5 package contains:
  Globus Gass Cache
@@ -26,43 +25,30 @@ Description: Globus Toolkit - Globus Gass Cache
 Package: libglobus-gass-cache-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gass-cache5 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libssl-dev
-Recommends: libglobus-gass-cache-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus Gass Cache Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gass-cache5 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libssl-dev
+Suggests: libglobus-gass-cache-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus Gass Cache Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-cache-dev package contains:
  Globus Gass Cache Development Files
 
 Package: libglobus-gass-cache-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gass-cache-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Cache Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus Gass Cache Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-cache-doc package contains:
  Globus Gass Cache Documentation Files
-
-Package: libglobus-gass-cache-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gass-cache5 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Cache Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gass-cache-dbg package contains:
- Globus Gass Cache Debug Symbols

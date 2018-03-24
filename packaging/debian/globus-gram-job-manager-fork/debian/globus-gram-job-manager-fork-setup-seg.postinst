@@ -1,48 +1,13 @@
-#! /bin/sh
+#!/bin/sh
 
-if [ -x /usr/sbin/globus-gatekeeper-admin ]; then
-    case "$1" in
-        configure)
-            globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager-fork
-            if [ ! -f /etc/grid-services/jobmanager ]; then
-                globus-gatekeeper-admin -e jobmanager-fork-seg -n jobmanager
-            fi
-            ;;
-        abort-upgrade)
-            :
-            ;;
-        abort-remove)
-            :
-            ;;
-        abort-deconfigure)
-            :
-            ;;
-    esac
+set -e
+
+if [ -x "/etc/init.d/globus-scheduler-event-generator" ]; then
+	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+		invoke-rc.d globus-scheduler-event-generator start fork || :
+	else
+		/etc/init.d/globus-scheduler-event-generator start fork || :
+	fi
 fi
 
-if [ -x /usr/sbin/globus-scheduler-event-generator-admin ]; then
-    case "$1" in
-        configure)
-            globus-scheduler-event-generator-admin -e fork
-            if [ ! -f /var/lib/globus/globus-fork.log ]; then
-                mkdir -p /var/lib/globus
-                touch /var/lib/globus/globus-fork.log
-                chmod 0622 /var/lib/globus/globus-fork.log
-            fi
-            if which invoke-rc.d >/dev/null 2>&1; then
-                invoke-rc.d globus-scheduler-event-generator start fork || :
-            elif [ -x /etc/init.d/globus-scheduler-event-generator ]; then
-                /etc/init.d/globus-scheduler-event-generator start fork || :
-            fi
-            ;;
-        abort-upgrade)
-            :
-            ;;
-        abort-remove)
-            :
-            ;;
-        abort-deconfigure)
-            :
-            ;;
-    esac
-fi
+#DEBHELPER#

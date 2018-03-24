@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/*/libglobus_gridmap_eppn_callout.so
+debian/tmp/etc/gridmap_eppn_callout-gsi_authz.conf

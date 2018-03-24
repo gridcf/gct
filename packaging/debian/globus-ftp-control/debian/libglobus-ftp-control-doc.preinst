@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-ftp-control-doc \
+    libglobus-ftp-control-dev 8.3 \
+    libglobus-ftp-control-doc -- "$@"

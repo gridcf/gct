@@ -1,24 +1,23 @@
 Source: globus-gsi-callback
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-common-dev (>= 14), libglobus-gsi-sysconfig-dev (>= 5), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libssl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gsi-callback
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gsi-callback
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gsi-callback0
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Callback Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus GSI Callback Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-callback0 package contains:
  Globus GSI Callback Library
@@ -26,43 +25,31 @@ Description: Globus Toolkit - Globus GSI Callback Library
 Package: libglobus-gsi-callback-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gsi-callback0 (= ${binary:Version}), ${misc:Depends}, libglobus-openssl-module-dev, libglobus-gsi-openssl-error-dev, libglobus-gsi-cert-utils-dev, libglobus-common-dev, libglobus-gsi-sysconfig-dev
-Recommends: libglobus-gsi-callback-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus GSI Callback Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gsi-callback0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libssl-dev
+Suggests: libglobus-gsi-callback-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus GSI Callback Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-callback-dev package contains:
  Globus GSI Callback Library Development Files
 
 Package: libglobus-gsi-callback-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gsi-callback-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Callback Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus GSI Callback Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-callback-doc package contains:
  Globus GSI Callback Library Documentation Files
-
-Package: libglobus-gsi-callback-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gsi-callback0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Callback Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gsi-callback-dbg package contains:
- Globus GSI Callback Library Debug Symbols

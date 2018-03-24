@@ -1,21 +1,23 @@
 Source: globus-gram-client
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 9), autotools-dev, libglobus-gram-protocol-dev, libglobus-common-dev, libglobus-rsl-dev, libglobus-io-dev, libglobus-gram-protocol-doc (>= 3), libglobus-common-doc, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, libltdl-dev, openssl, dh-exec
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gram-protocol-dev (>= 11), libglobus-io-dev (>= 9), libglobus-rsl-dev (>= 9), libglobus-gss-assist-dev (>= 8), doxygen, openssl
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://toolkit.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gram-client3
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - GRAM Client Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - GRAM Client Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gram-client3 package contains:
  GRAM Client Library
@@ -23,43 +25,31 @@ Description: Globus Toolkit - GRAM Client Library
 Package: libglobus-gram-client-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gram-client3 (= ${binary:Version}), ${misc:Depends}, libglobus-gram-protocol-dev, libglobus-common-dev, libglobus-rsl-dev, libglobus-io-dev
-Recommends: libglobus-gram-client-doc (= ${binary:Version})
-Description: Globus Toolkit - GRAM Client Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gram-client3 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-gram-protocol-dev (>= 11), libglobus-io-dev (>= 9), libglobus-rsl-dev (>= 9), libglobus-gss-assist-dev (>= 8)
+Suggests: libglobus-gram-client-doc (= ${source:Version})
+Description: Grid Community Toolkit - GRAM Client Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gram-client-dev package contains:
  GRAM Client Library Development Files
 
 Package: libglobus-gram-client-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gram-client-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GRAM Client Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - GRAM Client Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gram-client-doc package contains:
  GRAM Client Library Documentation Files
-
-Package: libglobus-gram-client-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gram-client3 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GRAM Client Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gram-client-dbg package contains:
- GRAM Client Library Debug Symbols

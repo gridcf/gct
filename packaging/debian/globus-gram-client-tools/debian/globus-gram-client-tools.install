@@ -1,0 +1,15 @@
+debian/tmp/usr/bin/globus-job-cancel
+debian/tmp/usr/bin/globus-job-clean
+debian/tmp/usr/bin/globus-job-get-output
+debian/tmp/usr/bin/globus-job-get-output-helper
+debian/tmp/usr/bin/globus-job-run
+debian/tmp/usr/bin/globus-job-status
+debian/tmp/usr/bin/globus-job-submit
+debian/tmp/usr/bin/globusrun
+debian/tmp/usr/share/man/man1/globus-job-cancel.1
+debian/tmp/usr/share/man/man1/globus-job-clean.1
+debian/tmp/usr/share/man/man1/globus-job-get-output.1
+debian/tmp/usr/share/man/man1/globus-job-run.1
+debian/tmp/usr/share/man/man1/globus-job-status.1
+debian/tmp/usr/share/man/man1/globus-job-submit.1
+debian/tmp/usr/share/man/man1/globusrun.1

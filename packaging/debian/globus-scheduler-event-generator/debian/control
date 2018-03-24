@@ -1,24 +1,23 @@
 Source: globus-scheduler-event-generator
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-gram-protocol-dev (>= 11), libltdl3-dev, libglobus-common-dev (>= 14), libglobus-xio-gsi-driver-dev (>= 2), libglobus-xio-dev, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-gram-protocol-dev (>= 11), libglobus-xio-gsi-driver-dev (>= 2), libltdl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-scheduler-event-generator
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-scheduler-event-generator
-Homepage: http://toolkit.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-scheduler-event-generator0
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-gsi-driver
-Description: Globus Toolkit - Scheduler Event Generator
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-gsi-driver (>= 2)
+Description: Grid Community Toolkit - Scheduler Event Generator
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-scheduler-event-generator0 package contains:
  Scheduler Event Generator
@@ -26,13 +25,14 @@ Description: Globus Toolkit - Scheduler Event Generator
 Package: globus-scheduler-event-generator-progs
 Section: net
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, globus-common-progs, libglobus-xio-gsi-driver
-Description: Globus Toolkit - Scheduler Event Generator Programs
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: libglobus-scheduler-event-generator0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Grid Community Toolkit - Scheduler Event Generator Programs
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-scheduler-event-generator-progs package contains:
  Scheduler Event Generator Programs
@@ -40,58 +40,31 @@ Description: Globus Toolkit - Scheduler Event Generator Programs
 Package: libglobus-scheduler-event-generator-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-scheduler-event-generator0 (= ${binary:Version}), ${misc:Depends}, libglobus-gram-protocol-dev, libltdl3-dev, libglobus-common-dev, libglobus-xio-gsi-driver-dev, libglobus-xio-dev
-Recommends: libglobus-scheduler-event-generator-doc (= ${binary:Version})
-Description: Globus Toolkit - Scheduler Event Generator Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-scheduler-event-generator0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-gram-protocol-dev (>= 11), libglobus-xio-gsi-driver-dev (>= 2), libltdl-dev
+Suggests: libglobus-scheduler-event-generator-doc (= ${source:Version})
+Description: Grid Community Toolkit - Scheduler Event Generator Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-scheduler-event-generator-dev package contains:
  Scheduler Event Generator Development Files
 
 Package: libglobus-scheduler-event-generator-doc
 Section: doc
-Architecture: any
-Depends: libglobus-scheduler-event-generator-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Scheduler Event Generator Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Scheduler Event Generator Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-scheduler-event-generator-doc package contains:
  Scheduler Event Generator Documentation Files
-
-Package: libglobus-scheduler-event-generator-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-scheduler-event-generator0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Scheduler Event Generator Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-scheduler-event-generator-dbg package contains:
- Scheduler Event Generator Debug Symbols
-
-Package: globus-scheduler-event-generator-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-scheduler-event-generator-progs (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Scheduler Event Generator Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-scheduler-event-generator-dbg package contains:
- Scheduler Event Generator Debug Symbols

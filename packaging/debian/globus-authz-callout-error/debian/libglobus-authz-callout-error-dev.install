@@ -1,0 +1,3 @@
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/libglobus_gsi_authz_callout_error.so
+debian/tmp/usr/lib/*/pkgconfig/globus-authz-callout-error.pc

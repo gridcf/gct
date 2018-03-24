@@ -1,0 +1,6 @@
+# The package name is given by the upstream package name
+# Changing it would confuse the users
+package-name-doesnt-match-sonames libglobus-xio-gridftp-multicast-driver
+# This is a loadable plugin - unversioned soname expected
+dev-pkg-without-shlib-symlink */libglobus_xio_gridftp_multicast_driver.so *
+shlib-without-versioned-soname */libglobus_xio_gridftp_multicast_driver.so *

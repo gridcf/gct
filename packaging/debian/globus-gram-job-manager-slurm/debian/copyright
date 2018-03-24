@@ -1,18 +1,46 @@
-Name: globus-gram-job-manager-setup-slurm
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Source: http://toolkit.globus.org/ftppub/gt6/packages/globus_gram_job_manager_slurm-2.5.tar.gz
-
-
-Upstream-Authors: The Globus Alliance - http://www.globus.org/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: globus_gram_job_manager_slurm
+Upstream-Contact: https://github.com/gridcf/gct/
 
 Files: *
-Copyright: Copyright 1999-2010 University of Chicago
+Copyright:
+ 1999-2016 University of Chicago
+ 2018 Grid Community Forum
 License: Apache-2.0
+
+Files: slurm.pm
+Copyright:
+ 2010-2011 Kurakin Roman, <rik@inse.ru>
+License: BSD-2-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above
+       copyright notice, this list of conditions and the following
+       disclaimer in the documentation and/or other materials provided
+       with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Files: debian/*
-Copyright: © 2008-2010, Mattias Ellert <mattias.ellert@fysast.uu.se>
+Copyright:
+ 2008-2018 Mattias Ellert <mattias.ellert@physics.uu.se>
+ 2010-2013 Initiative for Globus in Europe (IGE), http://www.ige-project.eu/
 License: Apache-2.0
 
 License: Apache-2.0
- On Debian systems the full text of the Apache-2.0 license can be found in
- the /usr/share/common-licenses/Apache-2.0 file.
+ On Debian systems the full text of the Apache license version 2 can
+ be found in /usr/share/common-licenses/Apache-2.0.

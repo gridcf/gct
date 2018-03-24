@@ -1,24 +1,23 @@
 Source: globus-gssapi-error
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev (>= 14), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 9), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 9), doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gssapi-error
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gssapi-error
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gssapi-error2
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - GSSAPI Error Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - GSSAPI Error Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-error2 package contains:
  GSSAPI Error Library
@@ -26,43 +25,31 @@ Description: Globus Toolkit - GSSAPI Error Library
 Package: libglobus-gssapi-error-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gssapi-error2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libglobus-gss-assist-dev, libglobus-gssapi-gsi-dev
-Recommends: libglobus-gssapi-error-doc (= ${binary:Version})
-Description: Globus Toolkit - GSSAPI Error Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gssapi-error2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-gss-assist-dev (>= 8), libglobus-gssapi-gsi-dev (>= 9)
+Suggests: libglobus-gssapi-error-doc (= ${source:Version})
+Description: Grid Community Toolkit - GSSAPI Error Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-error-dev package contains:
  GSSAPI Error Library Development Files
 
 Package: libglobus-gssapi-error-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gssapi-error-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GSSAPI Error Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - GSSAPI Error Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gssapi-error-doc package contains:
  GSSAPI Error Library Documentation Files
-
-Package: libglobus-gssapi-error-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gssapi-error2 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - GSSAPI Error Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gssapi-error-dbg package contains:
- GSSAPI Error Library Debug Symbols

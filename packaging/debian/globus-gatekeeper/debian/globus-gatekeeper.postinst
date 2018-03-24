@@ -1,11 +1,11 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if which update-rc.d  > /dev/null 2>&1; then
-	update-rc.d globus-gatekeeper defaults
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/globus-gatekeeper" ]; then
+		update-rc.d globus-gatekeeper defaults >/dev/null
+		invoke-rc.d globus-gatekeeper start || exit 1
+	fi
 fi
 
-if which invoke-rc.d >/dev/null 2>&1; then
-	invoke-rc.d globus-gatekeeper start || true
-else
-	/etc/init.d/globus-gatekeeper start || true
-fi
+#DEBHELPER#

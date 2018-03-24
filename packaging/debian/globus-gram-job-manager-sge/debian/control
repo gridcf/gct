@@ -1,68 +1,57 @@
 Source: globus-gram-job-manager-sge
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-scheduler-event-generator-dev (>= 4), pkg-config, dh-exec
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-scheduler-event-generator-dev (>= 4)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-gram-job-manager-sge
 Section: net
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gass-cache-program, globus-common-progs, globus-gram-job-manager, gridengine-client, globus-gram-job-manager-setup-sge
-Description: Globus Toolkit - Oracle Grid Engine Job Manager Adapter
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Provides: globus-gram-job-manager-setup-sge
+Replaces: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6)
+Conflicts: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6)
+Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager (>= 13), globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
+Recommends: globus-gram-job-manager-sge-setup-poll | globus-gram-job-manager-sge-setup-seg
+Description: Grid Community Toolkit - Grid Engine Job Manager Support
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-setup-sge package contains:
- Oracle Grid Engine Job Manager
+ The globus-gram-job-manager-sge package contains:
+ Grid Engine Job Manager Support
 
 Package: globus-gram-job-manager-sge-setup-poll
 Section: net
 Architecture: all
-Provides: globus-gram-job-manager-setup-sge
-Conflicts: globus-gram-job-manager-sge-setup-seg
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gass-cache-program, globus-common-progs, globus-gram-job-manager-sge
-Description: Globus Toolkit - Oracle Grid Engine Job Manager Polling Setup
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: globus-gram-job-manager-sge (= ${source:Version}), globus-gram-job-manager-scripts (>= 4), ${misc:Depends}
+Description: Grid Community Toolkit - Grid Engine Job Manager Support using polling
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-setup-sge package contains:
- Oracle Grid Engine Job Manager
+ The globus-gram-job-manager-sge-setup-poll package contains:
+ Grid Engine Job Manager Support using polling to monitor job state
 
 Package: globus-gram-job-manager-sge-setup-seg
 Section: net
 Architecture: any
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gass-cache-program, globus-common-progs, globus-gram-job-manager-sge, globus-scheduler-event-generator-progs
-Provides: globus-gram-job-manager-setup-sge
-Conflicts: globus-gram-job-manager-sge-setup-poll
-Description: Globus Toolkit - Oracle Grid Engine Job Manager SEG Setup
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: globus-gram-job-manager-sge (= ${source:Version}), globus-gram-job-manager-scripts (>= 4), globus-scheduler-event-generator-progs (>= 4), ${misc:Depends}, ${shlibs:Depends}
+Description: Grid Community Toolkit - Grid Engine Job Manager Support using SEG
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-setup-sge package contains:
- Oracle Grid Engine Job Manager SEG Setup
-
-Package: globus-gram-job-manager-sge-doc
-Section: doc
-Architecture: all
-Depends: globus-gram-job-manager-sge (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Oracle Grid Engine Job Manager Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gram-job-manager-fork-doc package contains:
- Oracle Grid Engine Job Manager Documentation Files
+ The globus-gram-job-manager-sge-setup-seg package contains:
+ Grid Engine Job Manager Support using the scheduler event generator to monitor
+ job state

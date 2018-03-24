@@ -1,0 +1,3 @@
+# This is a loadable plugin - unversioned soname expected
+dev-pkg-without-shlib-symlink */libglobus_thread_pthread.so *
+shlib-without-versioned-soname */libglobus_thread_pthread.so *

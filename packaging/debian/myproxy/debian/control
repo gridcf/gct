@@ -1,79 +1,31 @@
 Source: myproxy
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev, libglobus-xio-dev, libglobus-gss-assist-dev, libglobus-usage-dev, libbsd-dev, libpam0g-dev, openssl, globus-proxy-utils, globus-gsi-cert-utils-progs, procps
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 14), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libpam0g-dev, libldap2-dev, libkrb5-dev, voms-dev, libsasl2-dev, libbsd-dev, globus-proxy-utils, globus-gsi-cert-utils-progs, voms-clients, procps
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gass-copy
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gass-copy
-Homepage: http://www.globus.org/
-
-Package: libmyproxy6
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: MyProxy Library
- MyProxy is open source software for managing X.509 Public Key Infrastructure
- (PKI) security credentials (certificates and private keys). MyProxy
- combines an online credential repository with an online certificate
- authority to allow users to securely obtain credentials when and where needed.
- Users run myproxy-logon to authenticate and obtain credentials, including
- trusted CA certificates and Certificate Revocation Lists (CRLs).
- .
- The libmyproxy6 package contains:
- MyProxy Library
-
-Package: libmyproxy-dev
-Section: libdevel
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: MyProxy Development Files
- MyProxy is open source software for managing X.509 Public Key Infrastructure
- (PKI) security credentials (certificates and private keys). MyProxy
- combines an online credential repository with an online certificate
- authority to allow users to securely obtain credentials when and where needed.
- Users run myproxy-logon to authenticate and obtain credentials, including
- trusted CA certificates and Certificate Revocation Lists (CRLs).
- .
- The myproxy-progs package contains:
- MyProxy Development Files
-
-Package: libmyproxy-doc
-Section: doc
-Architecture: any
-Depends: libmyproxy-dev (= ${binary:Version}), ${misc:Depends}
-Description: MyProxy Library Documentation
- MyProxy is open source software for managing X.509 Public Key Infrastructure
- (PKI) security credentials (certificates and private keys). MyProxy
- combines an online credential repository with an online certificate
- authority to allow users to securely obtain credentials when and where needed.
- Users run myproxy-logon to authenticate and obtain credentials, including
- trusted CA certificates and Certificate Revocation Lists (CRLs).
- .
- The myproxy-progs package contains:
- MyProxy Library Documentation Files
+Homepage: http://grid.ncsa.illinois.edu/myproxy/
 
 Package: myproxy
 Section: net
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libmyproxy6, libglobus-gss-assist3, libglobus-usage0
-Description: MyProxy Client Programs
+Multi-Arch: foreign
+Depends: libmyproxy6 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Credential Management Service Client
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
  combines an online credential repository with an online certificate
  authority to allow users to securely obtain credentials when and where needed.
  Users run myproxy-logon to authenticate and obtain credentials, including
  trusted CA certificates and Certificate Revocation Lists (CRLs).
- .
- The myproxy package contains:
- MyProxy Client Programs
 
-Package: myproxy-admin
-Section: net
+Package: libmyproxy6
+Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libmyproxy6
-Description: MyProxy Administrator Programs
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, globus-proxy-utils
+Description: Credential Management Service Library
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
  combines an online credential repository with an online certificate
@@ -81,14 +33,46 @@ Description: MyProxy Administrator Programs
  Users run myproxy-logon to authenticate and obtain credentials, including
  trusted CA certificates and Certificate Revocation Lists (CRLs).
  .
- The myproxy-progs package contains:
- MyProxy Administrator Programs
+ This package contains runtime libs for MyProxy.
+
+Package: libmyproxy-voms
+Section: libs
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: libmyproxy6 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, voms-clients | voms-clients-java
+Description: Credential Management Service VOMS Library
+ MyProxy is open source software for managing X.509 Public Key Infrastructure
+ (PKI) security credentials (certificates and private keys). MyProxy
+ combines an online credential repository with an online certificate
+ authority to allow users to securely obtain credentials when and where needed.
+ Users run myproxy-logon to authenticate and obtain credentials, including
+ trusted CA certificates and Certificate Revocation Lists (CRLs).
+ .
+ This package contains runtime libs for MyProxy to use VOMS.
+
+Package: libmyproxy-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libmyproxy6 (= ${binary:Version}), libglobus-common-dev (>= 14), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), ${misc:Depends}
+Suggests: libmyproxy-doc (= ${source:Version})
+Description: Credential Management Service Development
+ MyProxy is open source software for managing X.509 Public Key Infrastructure
+ (PKI) security credentials (certificates and private keys). MyProxy
+ combines an online credential repository with an online certificate
+ authority to allow users to securely obtain credentials when and where needed.
+ Users run myproxy-logon to authenticate and obtain credentials, including
+ trusted CA certificates and Certificate Revocation Lists (CRLs).
+ .
+ This package contains development files for MyProxy.
 
 Package: myproxy-server
 Section: net
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libmyproxy6
-Description: MyProxy Server Programs
+Multi-Arch: foreign
+Depends: libmyproxy6 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, adduser, lsb-base (>= 3.0-6)
+Description: Credential Management Service Server
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
  combines an online credential repository with an online certificate
@@ -96,15 +80,14 @@ Description: MyProxy Server Programs
  Users run myproxy-logon to authenticate and obtain credentials, including
  trusted CA certificates and Certificate Revocation Lists (CRLs).
  .
- The myproxy-progs package contains:
- MyProxy Server Programs
+ This package contains the MyProxy server.
 
-Package: libmyproxy-dbg
-Section: debug
-Priority: extra
+Package: myproxy-admin
+Section: net
 Architecture: any
-Depends: libmyproxy6 (= ${binary:Version})
-Description: MyProxy Debug Symbols
+Multi-Arch: foreign
+Depends: libmyproxy6 (= ${binary:Version}), myproxy-server (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Description: Credential Management Service Administration Tools
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
  combines an online credential repository with an online certificate
@@ -112,21 +95,20 @@ Description: MyProxy Debug Symbols
  Users run myproxy-logon to authenticate and obtain credentials, including
  trusted CA certificates and Certificate Revocation Lists (CRLs).
  .
- The libmyproxy-dbg package contains:
- MyProxy Debug Symbols
+ This package contains the MyProxy server admin commands.
 
-Package: myproxy-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: myproxy-progs (= ${binary:Version}) | myproxy-server (= ${binary:Version})
-Description: MyProxy Debug Symbols
+Package: libmyproxy-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Credential Management Service Documentation
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
  combines an online credential repository with an online certificate
- authority to allow users to securely obtain credentials when and where needed.
+ authority to allow users to securely obtain credentials when and where needed-
  Users run myproxy-logon to authenticate and obtain credentials, including
  trusted CA certificates and Certificate Revocation Lists (CRLs).
  .
- The myproxy-dbg package contains:
- MyProxy Debug Symbols
+ This package contains the MyProxy documentation.
