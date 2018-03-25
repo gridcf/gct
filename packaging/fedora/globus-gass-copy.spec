@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(tr - _ <<< %{name})
@@ -121,11 +123,10 @@ Globus Gass Copy Documentation Files
 
 %build
 export GLOBUS_VERSION=6.0
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -145,8 +146,8 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gass_copy.so.*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
@@ -162,10 +163,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %files doc
 %defattr(-,root,root,-)
 %doc %{_mandir}/man3/*
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/html
-%doc %{_docdir}/%{name}-%{version}/html/*
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Mon Sep 25 2017 Globus Toolkit <support@globus.org> - 9.28-1

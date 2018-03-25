@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
@@ -109,11 +111,10 @@ GSSAPI library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -134,8 +135,8 @@ make %{?_smp_mflags} check VERBOSE=1
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gssapi_gsi.so.*
 %config(noreplace) %{_sysconfdir}/grid-security/gsi.conf
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
@@ -146,10 +147,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %files doc
 %defattr(-,root,root,-)
 %doc %{_mandir}/man3/*
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/html
-%doc %{_docdir}/%{name}-%{version}/html/*
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Jan 25 2018 Globus Toolkit <support@globus.org> - 13.6-1

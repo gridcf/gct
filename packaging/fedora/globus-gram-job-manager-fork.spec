@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-fork
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
@@ -106,11 +108,10 @@ state
 %build
 export MPIEXEC=no
 export MPIRUN=no
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib} \
 	   --with-globus-state-dir=%{_localstatedir}/log/globus
 
@@ -153,8 +154,8 @@ fi
 %{perl_vendorlib}/Globus/GRAM/JobManager/fork.pm
 %dir %{_sysconfdir}/globus
 %config(noreplace) %{_sysconfdir}/globus/globus-fork.conf
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files setup-poll
 %defattr(-,root,root,-)

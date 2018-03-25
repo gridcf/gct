@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-scripts
 %global _name %(tr - _ <<< %{name})
 Version:	6.10
@@ -50,11 +52,10 @@ GRAM Job ManagerScripts Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
@@ -73,17 +74,17 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{perl_vendorlib}/Globus/GRAM/JobManager.pm
 %{perl_vendorlib}/Globus/GRAM/StdioMerger.pm
 %doc %{_mandir}/man8/globus-gatekeeper-admin.8*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/perl
-%dir %{_docdir}/%{name}-%{version}/perl/Globus
-%dir %{_docdir}/%{name}-%{version}/perl/Globus/GRAM
-%doc %{_docdir}/%{name}-%{version}/perl/Globus/GRAM/*.html
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/perl
+%dir %{_pkgdocdir}/perl/Globus
+%dir %{_pkgdocdir}/perl/Globus/GRAM
+%doc %{_pkgdocdir}/perl/Globus/GRAM/*.html
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 28 2017 Globus Toolkit <support@globus.org> - 6.10-1

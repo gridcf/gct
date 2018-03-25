@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -79,11 +81,10 @@ Globus GridFTP Server Library Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -100,8 +101,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gridftp_server_control.so.*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)

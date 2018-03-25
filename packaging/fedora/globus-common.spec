@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-common
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -154,11 +156,10 @@ Common Library Documentation Files
 
 %build
 export GLOBUS_VERSION=6.0
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib} \
 	   --with-backward-compatibility-hack
 
@@ -191,8 +192,8 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %dir %{perl_vendorlib}/Globus/Core
 %{perl_vendorlib}/Globus/Core/Config.pm
 %{perl_vendorlib}/Globus/Core/Paths.pm
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
@@ -227,10 +228,10 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %files doc
 %defattr(-,root,root,-)
 %doc %{_mandir}/man3/*
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/html
-%doc %{_docdir}/%{name}-%{version}/html/*
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 17.4-1

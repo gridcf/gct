@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(tr - _ <<< %{name})
@@ -101,11 +103,10 @@ GRAM Protocol Library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
@@ -133,8 +134,8 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{perl_vendorlib}/Globus/GRAM/JobState.pm
 %dir %{_datadir}/globus
 %{_datadir}/globus/globus-gram-protocol-constants.sh
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
@@ -145,14 +146,14 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %files doc
 %defattr(-,root,root,-)
 %doc %{_mandir}/man3/*
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/html
-%doc %{_docdir}/%{name}-%{version}/html/*
-%dir %{_docdir}/%{name}-%{version}/perl
-%dir %{_docdir}/%{name}-%{version}/perl/Globus
-%dir %{_docdir}/%{name}-%{version}/perl/Globus/GRAM
-%doc %{_docdir}/%{name}-%{version}/perl/Globus/GRAM/*
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%dir %{_pkgdocdir}/perl
+%dir %{_pkgdocdir}/perl/Globus
+%dir %{_pkgdocdir}/perl/Globus/GRAM
+%doc %{_pkgdocdir}/perl/Globus/GRAM/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 12.15-1

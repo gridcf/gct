@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-sge
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
@@ -104,11 +106,10 @@ export QDEL=%{_bindir}/qdel-ge
 export QCONF=%{_bindir}/qconf
 export MPIRUN=no
 export SUN_MPRUN=no
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib} \
 	   --with-globus-state-dir=%{_localstatedir}/log/globus \
 	   --with-sge-config=%{_sysconfdir}/sysconfig/gridengine \
@@ -156,11 +157,11 @@ fi
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
 %{perl_vendorlib}/Globus/GRAM/JobManager/sge.pm
 %config(noreplace) %{_sysconfdir}/globus/globus-sge.conf
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/AUTHORS
-%doc %{_docdir}/%{name}-%{version}/CREDITS
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%doc %{_docdir}/%{name}-%{version}/LICENSE*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/AUTHORS
+%doc %{_pkgdocdir}/CREDITS
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
+%doc %{_pkgdocdir}/LICENSE*
 
 %files setup-poll
 %defattr(-,root,root,-)

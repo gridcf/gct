@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gridmap-eppn-callout
 %global _name %(tr - _ <<< %{name})
 Version:	1.13
@@ -66,11 +68,10 @@ Globus gridmap eduPersonPrincipalName (ePPN) callout
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -89,8 +90,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 # This is a loadable module (plugin)
 %{_libdir}/libglobus_gridmap_eppn_callout.so
 %config(noreplace) %{_sysconfdir}/gridmap_eppn_callout-gsi_authz.conf
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 1.13-1

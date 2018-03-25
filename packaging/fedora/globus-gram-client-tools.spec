@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-client-tools
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -35,11 +37,10 @@ Job Management Tools (globusrun)
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -63,8 +64,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_mandir}/man1/globus-job-status.1*
 %doc %{_mandir}/man1/globus-job-submit.1*
 %doc %{_mandir}/man1/globusrun.1*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 11.10-1

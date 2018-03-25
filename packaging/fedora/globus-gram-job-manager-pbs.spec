@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-pbs
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
@@ -102,11 +104,10 @@ export MPIRUN=no
 export QDEL=%{_bindir}/qdel-torque
 export QSTAT=%{_bindir}/qstat-torque
 export QSUB=%{_bindir}/qsub-torque
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib} \
 	   --with-globus-state-dir=%{_localstatedir}/log/globus \
 	   --with-log-path=%{_localstatedir}/log/torque/server_logs
@@ -150,8 +151,8 @@ fi
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
 %{perl_vendorlib}/Globus/GRAM/JobManager/pbs.pm
 %config(noreplace) %{_sysconfdir}/globus/globus-pbs.conf
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files setup-poll
 %defattr(-,root,root,-)

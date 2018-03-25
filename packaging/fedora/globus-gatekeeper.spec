@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gatekeeper
 %global _name %(tr - _ <<< %{name})
 Version:	10.12
@@ -51,11 +53,10 @@ Globus Gatekeeper
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-lsb \
 %if %{?suse_version}%{!?suse_version:0}
 	   --with-default-runlevels=235 \
@@ -117,8 +118,8 @@ fi
 %dir %{_sysconfdir}/grid-services/available
 %doc %{_mandir}/man8/globus-gatekeeper.8*
 %doc %{_mandir}/man8/globus-k5.8*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Fri Sep 09 2016 Globus Toolkit <support@globus.org> - 10.12-1

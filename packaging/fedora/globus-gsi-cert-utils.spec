@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -121,11 +123,10 @@ Globus GSI Cert Utils Library Documentation Files
 
 %build
 export GLOBUS_VERSION=6.0
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -145,8 +146,8 @@ make %{?_smp_mflags} check VERBOSE=1
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gsi_cert_utils.so.*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
@@ -160,8 +161,8 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_mandir}/man1/grid-change-pass-phrase.1*
 %doc %{_mandir}/man8/globus-update-certificate-dir.8*
 %doc %{_mandir}/man8/grid-default-ca.8*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
@@ -172,10 +173,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %files doc
 %defattr(-,root,root,-)
 %doc %{_mandir}/man3/*
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_docdir}/%{name}-%{version}/html
-%doc %{_docdir}/%{name}-%{version}/html/*
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 9.16-1

@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-proxy-utils
 %global _name %(tr - _ <<< %{name})
 Version:	6.19
@@ -43,11 +45,10 @@ Globus GSI Proxy Utility Programs
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -67,8 +68,8 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_mandir}/man1/grid-proxy-destroy.1*
 %doc %{_mandir}/man1/grid-proxy-info.1*
 %doc %{_mandir}/man1/grid-proxy-init.1*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 6.19-1

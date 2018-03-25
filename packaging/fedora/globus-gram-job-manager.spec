@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
 Version:	14.37
@@ -100,11 +102,10 @@ Scheduler Event Generator Job Manager
 
 %build
 export GLOBUS_VERSION=6.0
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -143,8 +144,8 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_mandir}/man8/globus-job-manager.8*
 %doc %{_mandir}/man8/globus-rvf-check.8*
 %doc %{_mandir}/man8/globus-rvf-edit.8*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files -n %{libpkg}
 %defattr(-,root,root,-)

@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gass-cache-program
 %global _name %(tr - _ <<< %{name})
 Version:	6.7
@@ -34,11 +36,10 @@ Tools to manipulate local and remote GASS caches
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/globus
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -52,8 +53,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_bindir}/globus-gass-cache-util
 %dir %{_datadir}/globus
 %{_datadir}/globus/globus-gass-cache-util.pl
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Fri Apr 21 2017 Globus Toolkit <support@globus.org> - 6.7-1

@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-slurm
 %global _name %(tr - _ <<< %{name})
 Version:	2.8
@@ -49,11 +51,10 @@ export SBATCH=%{_bindir}/sbatch
 export SALLOC=%{_bindir}/salloc
 export SCANCEL=%{_bindir}/scancel
 export SCONTROL=%{_bindir}/scontrol
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
@@ -78,9 +79,9 @@ fi
 %{perl_vendorlib}/Globus/GRAM/JobManager/slurm.pm
 %config(noreplace) %{_sysconfdir}/globus/globus-slurm.conf
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-slurm-poll
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%doc %{_docdir}/%{name}-%{version}/LICENSE*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
+%doc %{_pkgdocdir}/LICENSE*
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.8-3

@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gfork
 %global soname 0
 %global _name %(tr - _ <<< %{name})
@@ -88,11 +90,10 @@ GFork Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
-	   --libexecdir=%{_datadir}/share/globus
+	   --libexecdir=%{_datadir}/share/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
@@ -114,14 +115,14 @@ echo "# This is the default gfork configuration file" > \
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gfork.so.*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
 %{_sbindir}/gfork
 %config(noreplace) %{_sysconfdir}/gfork.conf
-%doc %{_docdir}/%{name}-%{version}/README.txt
+%doc %{_pkgdocdir}/README.txt
 
 %files devel
 %defattr(-,root,root,-)

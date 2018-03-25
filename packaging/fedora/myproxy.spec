@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:           myproxy
 %global soname 6
 Version:        6.1.28
@@ -182,8 +184,7 @@ Package %{name}-doc contains the MyProxy documentation.
 %setup -q
 
 %build
-%configure \
-           --disable-static \
+%configure --disable-static \
            --includedir=%{_includedir}/globus \
            --with-openldap=%{_prefix} \
 %if %{?suse_version}%{!?suse_version:0}
@@ -206,20 +207,20 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 # the needed setup
 rm $RPM_BUILD_ROOT%{_sbindir}/myproxy-server-setup
 
-mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/extras
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}/extras
 for FILE in login.html myproxy-accepted-credentials-mapapp \
             myproxy-cert-checker myproxy-certificate-mapapp \
             myproxy-certreq-checker myproxy-crl.cron myproxy.cron \
             myproxy-get-delegation.cgi myproxy-get-trustroots.cron \
             myproxy-passphrase-policy myproxy-revoke ; do
    mv $RPM_BUILD_ROOT%{_datadir}/%{name}/$FILE \
-      $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/extras
+      $RPM_BUILD_ROOT%{_pkgdocdir}/extras
 done
 
-mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}
 for FILE in LICENSE LICENSE.* PROTOCOL README VERSION ; do
    mv $RPM_BUILD_ROOT%{_datadir}/%{name}/$FILE \
-      $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+      $RPM_BUILD_ROOT%{_pkgdocdir}
 done
 
 # Remove irrelavent example configuration files
@@ -317,11 +318,11 @@ fi
 %files %{nlibpkg}
 %defattr(-,root,root,-)
 %{_libdir}/libmyproxy.so.*
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/PROTOCOL
-%doc %{_docdir}/%{name}-%{version}/README
-%doc %{_docdir}/%{name}-%{version}/VERSION
-%doc %{_docdir}/%{name}-%{version}/LICENSE*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/PROTOCOL
+%doc %{_pkgdocdir}/README
+%doc %{_pkgdocdir}/VERSION
+%doc %{_pkgdocdir}/LICENSE*
 
 %files devel
 %defattr(-,root,root,-)
@@ -373,9 +374,9 @@ fi
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/extras
-%doc %{_docdir}/%{name}-%{version}/LICENSE*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/extras
+%doc %{_pkgdocdir}/LICENSE*
 
 %changelog
 * Mon Jul 10 2017 Globus Toolkit <support@globus.org> - 6.1.28-4

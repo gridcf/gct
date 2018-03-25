@@ -1,3 +1,5 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager-condor
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
@@ -46,11 +48,10 @@ Condor Job Manager Support
 %build
 export CONDOR_RM=%{_bindir}/condor_rm
 export CONDOR_SUBMIT=%{_bindir}/condor_submit
-%configure \
-	   --disable-static \
-	   --docdir=%{_docdir}/%{name}-%{version} \
+%configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
 	   --with-perlmoduledir=%{perl_vendorlib} \
 	   --with-condor-os=LINUX \
 	   --with-condor-arch=""
@@ -77,8 +78,8 @@ fi
 %{perl_vendorlib}/Globus/GRAM/JobManager/condor.pm
 %config(noreplace) %{_sysconfdir}/globus/globus-condor.conf
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-condor
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-6
