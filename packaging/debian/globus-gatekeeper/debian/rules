@@ -57,8 +57,6 @@ clean:
 
 	dh_autoreconf_clean
 
-	rm -f gatekeeper.logrotate
-
 	rm -f build-stamp configure-stamp
 
 	dh_clean
