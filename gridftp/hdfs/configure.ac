@@ -16,11 +16,7 @@ AC_PROG_CC_C99
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"],
-    [
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e])
-        OPENSSL_PKGCONFIG="openssl101e"
-    ])
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 
 AC_ARG_WITH(logdir, 
     AC_HELP_STRING([--with-logdir=LOG], [Log directory location]),

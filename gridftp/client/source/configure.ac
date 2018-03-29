@@ -78,12 +78,8 @@ GRIDFTP_SERVER_EXE=`$PKG_CONFIG --variable=executable globus-gridftp-server`
 AC_SUBST(GRIDFTP_SERVER_PATH)
 AC_SUBST(GRIDFTP_SERVER_EXE)
 
-PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0], 
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"], 
-    [ 
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e]) 
-        OPENSSL_PKGCONFIG="openssl101e" 
-    ])
+PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 
 AC_SUBST([OPENSSL_PKGCONFIG])
 

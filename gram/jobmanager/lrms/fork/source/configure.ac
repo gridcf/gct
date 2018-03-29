@@ -69,7 +69,7 @@ esac
 AC_SUBST(SEG_CLAUSE)
 AM_CONDITIONAL(SEG_ENABLED_COND, [test "$SEG_ENABLED" = "yes"])
 
-AC_PATH_PROG([A2X], [a2x a2x.py])
+AC_PATH_PROGS([A2X], [a2x a2x.py])
 AM_CONDITIONAL(BUILD_MANPAGES, [test "x$A2X" != x])
 
 AC_ARG_WITH([perlmoduledir],

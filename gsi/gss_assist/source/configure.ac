@@ -37,13 +37,13 @@ AC_PATH_PROGS([DOXYGEN], doxygen)
 
 AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != ""])
 
-AC_PATH_PROGS([OPENSSL], [openssl])
-AM_CONDITIONAL([ENABLE_TESTS], [test "x$OPENSSL" != ""])
+AC_PATH_PROGS([OPENSSL], openssl)
+AM_CONDITIONAL([ENABLE_TESTS], [test "$OPENSSL" != ""])
 
 AC_PATH_PROGS(PERL, [perl perl5])
 
-AC_PATH_PROGS([A2X], [a2x])
-AM_CONDITIONAL(BUILD_MANPAGES, [test "x$A2X" != xno])
+AC_PATH_PROGS([A2X], [a2x a2x.py])
+AM_CONDITIONAL(BUILD_MANPAGES, [test "x$A2X" != x])
 
 AC_CONFIG_FILES([
         globus-gss-assist-uninstalled.pc
