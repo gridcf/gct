@@ -11,16 +11,12 @@ AM_INIT_AUTOMAKE([1.11 foreign parallel-tests tar-pax])
 LT_INIT([dlopen win32-dll])
 
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"],
-    [
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e])
-        OPENSSL_PKGCONFIG="openssl101e"
-    ])
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 
 AC_SUBST([OPENSSL_PKGCONFIG])
 
 AC_PATH_PROGS([DOXYGEN], doxygen)
-AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != "no"])
+AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != ""])
 
 AC_CONFIG_FILES(
         Makefile

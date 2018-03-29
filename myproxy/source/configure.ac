@@ -178,17 +178,11 @@ fi
 PKG_CHECK_MODULES([GLOBUS], [$PACKAGE_DEPS], [], [AC_MSG_ERROR([GLOBUS_PKG_ERRORS])])
 fi
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"],
-    [
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e])
-        OPENSSL_PKGCONFIG="openssl101e"
-        openssl_progs="openssl101e"
-    ])
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 CPPFLAGS="$OPENSSL_CFLAGS $CPPFLAGS"
 LIBS="$OPENSSL_LIBS $LIBS"
-openssl_progs="$openssl_progs openssl"
 
-AC_PATH_PROG([OPENSSL],[$openssl_progs])
+AC_PATH_PROGS([OPENSSL], openssl)
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$OPENSSL" != x])
 
 dnl
