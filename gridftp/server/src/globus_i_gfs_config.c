@@ -150,9 +150,12 @@ static const globus_l_gfs_config_option_t option_list[] =
     "globus-gridftp-server-setup-chroot can help create a suitable directory structure.", NULL, NULL,GLOBUS_FALSE, NULL},
 {NULL, "Authentication, Authorization, and Security Options", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL},
  {"auth_level", "auth_level", NULL, "auth-level", NULL, GLOBUS_L_GFS_CONFIG_INT, -1, NULL,
-    "Add levels together to use more than one.\n    0 = Disables all authorization checks.\n    1 = Authorize identity. "
-    "\n    2 = Authorize all file/resource accesses.\n    4 = Disable changing process uid to authenticated user (no setuid) -- DO NOT use this when process is started as root.\n"
-    "If not set uses level 2 for front ends and level 1 for data nodes.  Note that levels 2 and 4 imply level 1 as well.", NULL, NULL,GLOBUS_FALSE, NULL},
+    "Add levels together to use more than one.  If not set uses level 2 for front ends and level 1 for data nodes.  Note that levels 2 and 4 imply level 1 as well.\n\t\n"
+    "  0 = Disables all authorization checks.\n"
+    "  1 = Authorize identity.\n"
+    "  2 = Authorize all file/resource accesses.\n"
+    "  4 = Disable changing process uid to authenticated user (no\n"
+    "      setuid) -- DO NOT use this when process is started as root.", NULL, NULL, GLOBUS_FALSE, NULL},
  {"process_user", "process_user", NULL, "process-user", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "User to setuid to upon login for all connections. Only applies when running as root.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"process_group", "process_group", NULL, "process-group", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
@@ -319,7 +322,7 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"log_filemode", "log_filemode", NULL, "log-filemode", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "File access permissions of log files. Should be an octal number such as "
     "0644.", NULL, NULL,GLOBUS_FALSE, NULL},
- {"disable_usage_stats", "disable_usage_stats", "GLOBUS_USAGE_OPTOUT", "disable-usage-stats", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
+ {"disable_usage_stats", "disable_usage_stats", "GLOBUS_USAGE_OPTOUT", "disable-usage-stats", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_TRUE, NULL,
     "Disable transmission of per-transfer usage statistics.  See the Usage Statistics "
     "section in the online documentation for more information.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"usage_stats_target", "usage_stats_target", NULL, "usage-stats-target", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
@@ -344,14 +347,14 @@ static const globus_l_gfs_config_option_t option_list[] =
     "  *(a) APP - guc, rft, generic library app, etc. (client supplied)\n"
     "  *(V) APPVER - version string of above. (client supplied)\n"
     "  (f) FILE - name of file/data transferred\n"
-    "  (i) CLIENTIP - ip address of host running client (control channel)\n"
-    "  (I) DATAIP - ip address of source/dest host of data (data channel)\n"
+    "  (i) CLIENTIP - ip address of host running client (control chan)\n"
+    "  (I) DATAIP - ip address of source/dest host of data (data chan)\n"
     "  (u) USER - local user name the transfer was performed as\n"
     "  (d) USERDN - DN that was mapped to user id\n"
     "  (C) CONFID - ID defined by -usage-stats-id config option\n"
-    "  (U) SESSID - unique id that can be used to match transfers in a session and\n"
-    "      transfers across source/dest of a third party transfer. (client supplied)"
-    , NULL, NULL,GLOBUS_FALSE, NULL},
+    "  (U) SESSID - unique id that can be used to match transfers in\n"
+    "               a session and transfers across source/dest of a\n"
+    "               third party transfer. (client supplied)", NULL, NULL, GLOBUS_FALSE, NULL},
  {"usage_stats_id", "usage_stats_id", NULL, "usage-stats-id", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Identifying tag to include in usage statistics data.  If this is set and usage-stats-target is unset, "
     "CONFID will be added to the default usage stats data.", NULL, NULL, GLOBUS_FALSE, NULL},
@@ -374,7 +377,7 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"brain", "brain", NULL, "brain", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     NULL /* switch out the default remote brain [unsupported] */, NULL, NULL, GLOBUS_FALSE, NULL},
  {"stripe_layout", "stripe_layout", NULL, "stripe-layout", "sl", GLOBUS_L_GFS_CONFIG_INT, GLOBUS_GFS_LAYOUT_BLOCKED, NULL,
-    "Stripe layout.\n    1 = Partitioned\n   2 = Blocked.", NULL, NULL,GLOBUS_FALSE, NULL},
+    "Stripe layout.\n\t\n  1 = Partitioned\n  2 = Blocked", NULL, NULL, GLOBUS_FALSE, NULL},
  {"stripe_blocksize_locked", "stripe_blocksize_locked", NULL, "stripe-blocksize-locked", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "Do not allow client to override stripe blocksize with the OPTS RETR command", NULL, NULL,GLOBUS_FALSE, NULL},
  {"stripe_layout_locked", "stripe_layout_locked", NULL, "stripe-layout-locked", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
@@ -2841,12 +2844,6 @@ globus_l_gfs_config_misc()
         globus_l_gfs_config_set("single", 1, NULL);
     }
 
-    if(globus_i_gfs_config_string("usage_stats_target") != NULL &&
-        globus_i_gfs_config_bool("disable_usage_stats"))
-    {
-        globus_l_gfs_config_set("disable_usage_stats", GLOBUS_FALSE, NULL);        
-    }
-    
     if(globus_i_gfs_config_bool("data_node") &&
         !globus_i_gfs_config_bool("disable_usage_stats"))
     {

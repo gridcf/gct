@@ -13,7 +13,7 @@ globus-job-manager - Execute and monitor jobs
 
 SYNOPSIS
 --------
-**globus-job-manager** -type 'LRM' [-conf 'CONFIG_PATH'] [-help ] [-globus-host-manufacturer 'MANUFACTURER'] [-globus-host-cputype 'CPUTYPE'] [-globus-host-osname 'OSNAME'] [-globus-host-osversion 'OSVERSION'] [-globus-gatekeeper-host 'HOST'] [-globus-gatekeeper-port 'PORT'] [-globus-gatekeeper-subject 'SUBJECT'] [-home 'GLOBUS_LOCATION'] [-target-globus-location 'TARGET_GLOBUS_LOCATION'] [-condor-arch 'ARCH'] [-condor-os 'OS'] [-history 'HISTORY_DIRECTORY'] [-scratch-dir-base 'SCRATCH_DIRECTORY'] [-enable-syslog ] [-stdio-log 'LOG_DIRECTORY'] [-log-pattern 'PATTERN'] [-log-levels 'LEVELS'] [-state-file-dir 'STATE_DIRECTORY'] [-globus-tcp-port-range 'PORT_RANGE'] [-globus-tcp-source-range 'SOURCE_RANGE'] [-x509-cert-dir 'TRUSTED_CERTIFICATE_DIRECTORY'] [-cache-location 'GASS_CACHE_DIRECTORY'] [-k ] [-extra-envvars 'VAR=VAL,...'] [-seg-module 'SEG_MODULE'] [-audit-directory 'AUDIT_DIRECTORY'] [-globus-toolkit-version 'TOOLKIT_VERSION'] [-disable-streaming ] [-disable-usagestats ] [-usagestats-targets 'TARGET'] [-service-tag 'SERVICE_TAG'] 
+**globus-job-manager** -type 'LRM' [-conf 'CONFIG_PATH'] [-help] [-globus-host-manufacturer 'MANUFACTURER'] [-globus-host-cputype 'CPUTYPE'] [-globus-host-osname 'OSNAME'] [-globus-host-osversion 'OSVERSION'] [-globus-gatekeeper-host 'HOST'] [-globus-gatekeeper-port 'PORT'] [-globus-gatekeeper-subject 'SUBJECT'] [-home 'GLOBUS_LOCATION'] [-target-globus-location 'TARGET_GLOBUS_LOCATION'] [-condor-arch 'ARCH'] [-condor-os 'OS'] [-history 'HISTORY_DIRECTORY'] [-scratch-dir-base 'SCRATCH_DIRECTORY'] [-enable-syslog] [-stdio-log 'LOG_DIRECTORY'] [-log-pattern 'PATTERN'] [-log-levels 'LEVELS'] [-state-file-dir 'STATE_DIRECTORY'] [-globus-tcp-port-range 'PORT_RANGE'] [-globus-tcp-source-range 'SOURCE_RANGE'] [-x509-cert-dir 'TRUSTED_CERTIFICATE_DIRECTORY'] [-cache-location 'GASS_CACHE_DIRECTORY'] [-k] [-extra-envvars 'VAR=VAL,...'] [-seg-module 'SEG_MODULE'] [-audit-directory 'AUDIT_DIRECTORY'] [-globus-toolkit-version 'TOOLKIT_VERSION'] [-disable-streaming] [-no-disable-usagestats] [-usagestats-targets 'TARGET'] [-service-tag 'SERVICE_TAG']
 
 DESCRIPTION
 -----------
@@ -40,8 +40,7 @@ consists of:
 **-conf 'CONFIG_PATH'**::
      Read additional command-line arguments from the file 'CONFIG_PATH'. If present, this must be the first command-line argument to the **globus-job-manager** program.
 
-**-globus-host-manufacturer
-                'MANUFACTURER'**::
+**-globus-host-manufacturer 'MANUFACTURER'**::
      Indicate the manufacturer of the system which the jobs will execute on. This parameter sets the value of the $(GLOBUS_HOST_MANUFACTURER) RSL substitution to 'MANUFACTURER'
 
 **-globus-host-cputype 'CPUTYPE'**::
@@ -122,8 +121,8 @@ consists of:
 **-disable-streaming**::
      Configure the job manager to disable file streaming. This is propagated to the LRM script interface but has no effect in GRAM5.
 
-**-disable-usagestats**::
-     Disable sending of any usage stats data, even if '-usagestats-targets' is present in the configuration.
+**-no-disable-usagestats**::
+     Enable sending of usage stats data.
 
 **-usagestats-targets 'TARGET'**::
      Send usage packets to a data collection service for analysis. The 'TARGET' string consists of a comma-separated list of HOST:PORT combinations, each contaiing an optional list of data to send. See http://confluence.globus.org/display/~bester/GRAM5+Usage+Stats+Packets[Usage Stats Packets] for more information about the tags. Special tag strings of all (which enables all tags) and default may be used, or a sequence of characters for the various tags. If this option is not present in the configuration, then the default of usage-stats.globus.org:4810 is used.

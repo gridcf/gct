@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: globus-job-manager
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 09/08/2016
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 03/29/2018
 .\"    Manual: Globus Toolkit Manual
 .\"    Source: Globus Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-JOB\-MANAGER" "8" "09/08/2016" "Globus Toolkit 6" "Globus Toolkit Manual"
+.TH "GLOBUS\-JOB\-MANAGER" "8" "03/29/2018" "Globus Toolkit 6" "Globus Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 globus-job-manager \- Execute and monitor jobs
 .SH "SYNOPSIS"
 .sp
-\fBglobus\-job\-manager\fR \-type \fILRM\fR [\-conf \fICONFIG_PATH\fR] [\-help ] [\-globus\-host\-manufacturer \fIMANUFACTURER\fR] [\-globus\-host\-cputype \fICPUTYPE\fR] [\-globus\-host\-osname \fIOSNAME\fR] [\-globus\-host\-osversion \fIOSVERSION\fR] [\-globus\-gatekeeper\-host \fIHOST\fR] [\-globus\-gatekeeper\-port \fIPORT\fR] [\-globus\-gatekeeper\-subject \fISUBJECT\fR] [\-home \fIGLOBUS_LOCATION\fR] [\-target\-globus\-location \fITARGET_GLOBUS_LOCATION\fR] [\-condor\-arch \fIARCH\fR] [\-condor\-os \fIOS\fR] [\-history \fIHISTORY_DIRECTORY\fR] [\-scratch\-dir\-base \fISCRATCH_DIRECTORY\fR] [\-enable\-syslog ] [\-stdio\-log \fILOG_DIRECTORY\fR] [\-log\-pattern \fIPATTERN\fR] [\-log\-levels \fILEVELS\fR] [\-state\-file\-dir \fISTATE_DIRECTORY\fR] [\-globus\-tcp\-port\-range \fIPORT_RANGE\fR] [\-globus\-tcp\-source\-range \fISOURCE_RANGE\fR] [\-x509\-cert\-dir \fITRUSTED_CERTIFICATE_DIRECTORY\fR] [\-cache\-location \fIGASS_CACHE_DIRECTORY\fR] [\-k ] [\-extra\-envvars \fIVAR=VAL,\&...\fR] [\-seg\-module \fISEG_MODULE\fR] [\-audit\-directory \fIAUDIT_DIRECTORY\fR] [\-globus\-toolkit\-version \fITOOLKIT_VERSION\fR] [\-disable\-streaming ] [\-disable\-usagestats ] [\-usagestats\-targets \fITARGET\fR] [\-service\-tag \fISERVICE_TAG\fR]
+\fBglobus\-job\-manager\fR \-type \fILRM\fR [\-conf \fICONFIG_PATH\fR] [\-help] [\-globus\-host\-manufacturer \fIMANUFACTURER\fR] [\-globus\-host\-cputype \fICPUTYPE\fR] [\-globus\-host\-osname \fIOSNAME\fR] [\-globus\-host\-osversion \fIOSVERSION\fR] [\-globus\-gatekeeper\-host \fIHOST\fR] [\-globus\-gatekeeper\-port \fIPORT\fR] [\-globus\-gatekeeper\-subject \fISUBJECT\fR] [\-home \fIGLOBUS_LOCATION\fR] [\-target\-globus\-location \fITARGET_GLOBUS_LOCATION\fR] [\-condor\-arch \fIARCH\fR] [\-condor\-os \fIOS\fR] [\-history \fIHISTORY_DIRECTORY\fR] [\-scratch\-dir\-base \fISCRATCH_DIRECTORY\fR] [\-enable\-syslog] [\-stdio\-log \fILOG_DIRECTORY\fR] [\-log\-pattern \fIPATTERN\fR] [\-log\-levels \fILEVELS\fR] [\-state\-file\-dir \fISTATE_DIRECTORY\fR] [\-globus\-tcp\-port\-range \fIPORT_RANGE\fR] [\-globus\-tcp\-source\-range \fISOURCE_RANGE\fR] [\-x509\-cert\-dir \fITRUSTED_CERTIFICATE_DIRECTORY\fR] [\-cache\-location \fIGASS_CACHE_DIRECTORY\fR] [\-k] [\-extra\-envvars \fIVAR=VAL,\&...\fR] [\-seg\-module \fISEG_MODULE\fR] [\-audit\-directory \fIAUDIT_DIRECTORY\fR] [\-globus\-toolkit\-version \fITOOLKIT_VERSION\fR] [\-disable\-streaming] [\-no\-disable\-usagestats] [\-usagestats\-targets \fITARGET\fR] [\-service\-tag \fISERVICE_TAG\fR]
 .SH "DESCRIPTION"
 .sp
 The \fBglobus\-job\-manager\fR program is a servivce which starts and controls GRAM jobs which are executed by a local resource management system, such as LSF or Condor\&. The \fBglobus\-job\-manager\fR program is typically started by the \fBglobus\-gatekeeper\fR program and not directly by a user\&. It runs until all jobs it is managing have terminated or its delegated credentials have expired\&.
@@ -58,8 +58,12 @@ Read additional command\-line arguments from the file
 \fBglobus\-job\-manager\fR
 program\&.
 .RE
-.sp
-\fB\-globus\-host\-manufacturer \fR\fB\fIMANUFACTURER\fR\fR:: Indicate the manufacturer of the system which the jobs will execute on\&. This parameter sets the value of the $(GLOBUS_HOST_MANUFACTURER) RSL substitution to \fIMANUFACTURER\fR
+.PP
+\fB\-globus\-host\-manufacturer \fR\fB\fIMANUFACTURER\fR\fR
+.RS 4
+Indicate the manufacturer of the system which the jobs will execute on\&. This parameter sets the value of the $(GLOBUS_HOST_MANUFACTURER) RSL substitution to
+\fIMANUFACTURER\fR
+.RE
 .PP
 \fB\-globus\-host\-cputype \fR\fB\fICPUTYPE\fR\fR
 .RS 4
@@ -228,11 +232,9 @@ as a unique identifier to allow multiple GRAM instances to use the same job stat
 Configure the job manager to disable file streaming\&. This is propagated to the LRM script interface but has no effect in GRAM5\&.
 .RE
 .PP
-\fB\-disable\-usagestats\fR
+\fB\-no\-disable\-usagestats\fR
 .RS 4
-Disable sending of any usage stats data, even if
-\fI\-usagestats\-targets\fR
-is present in the configuration\&.
+Enable sending of usage stats data\&.
 .RE
 .PP
 \fB\-usagestats\-targets \fR\fB\fITARGET\fR\fR

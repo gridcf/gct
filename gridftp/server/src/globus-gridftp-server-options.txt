@@ -129,12 +129,13 @@ Authentication, Authorization, and Security Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *-auth-level number*::
     
-Add levels together to use more than one.
-    0 = Disables all authorization checks.
-    1 = Authorize identity. 
-    2 = Authorize all file/resource accesses.
-    4 = Disable changing process uid to authenticated user (no setuid) -- DO NOT use this when process is started as root.
-If not set uses level 2 for front ends and level 1 for data nodes.  Note that levels 2 and 4 imply level 1 as well.
+Add levels together to use more than one.  If not set uses level 2 for front ends and level 1 for data nodes.  Note that levels 2 and 4 imply level 1 as well.
+	
+  0 = Disables all authorization checks.
+  1 = Authorize identity.
+  2 = Authorize all file/resource accesses.
+  4 = Disable changing process uid to authenticated user (no
+      setuid) -- DO NOT use this when process is started as root.
 +
 This option can also be set in the configuration file as +auth_level+.
 
@@ -439,7 +440,7 @@ This option can also be set in the configuration file as +log_filemode+.
 Disable transmission of per-transfer usage statistics.  See the Usage Statistics section in the online documentation for more information.
 +
 This option can also be set in the configuration file as +disable_usage_stats+.
-    The default value of this option is +FALSE+.
+    The default value of this option is +TRUE+.
 
 
 *-usage-stats-target string*::
@@ -462,13 +463,14 @@ Comma separated list of contact strings (host:port) for usage statistics receive
   *(a) APP - guc, rft, generic library app, etc. (client supplied)
   *(V) APPVER - version string of above. (client supplied)
   (f) FILE - name of file/data transferred
-  (i) CLIENTIP - ip address of host running client (control channel)
-  (I) DATAIP - ip address of source/dest host of data (data channel)
+  (i) CLIENTIP - ip address of host running client (control chan)
+  (I) DATAIP - ip address of source/dest host of data (data chan)
   (u) USER - local user name the transfer was performed as
   (d) USERDN - DN that was mapped to user id
   (C) CONFID - ID defined by -usage-stats-id config option
-  (U) SESSID - unique id that can be used to match transfers in a session and
-      transfers across source/dest of a third party transfer. (client supplied)
+  (U) SESSID - unique id that can be used to match transfers in
+               a session and transfers across source/dest of a
+               third party transfer. (client supplied)
 +
 This option can also be set in the configuration file as +usage_stats_target+.
 
@@ -524,8 +526,9 @@ This option can also be set in the configuration file as +stripe_count+.
 *-sl number,-stripe-layout number*::
     
 Stripe layout.
-    1 = Partitioned
-   2 = Blocked.
+	
+  1 = Partitioned
+  2 = Blocked
 +
 This option can also be set in the configuration file as +stripe_layout+.
     The default value of this option is +2+.
