@@ -1,0 +1,5 @@
+debian/tmp/usr/share/perl5/Globus/GRAM/JobManager/slurm.pm
+debian/tmp/usr/share/globus/globus_gram_job_manager/slurm.rvf
+debian/tmp/etc/globus/globus-slurm.conf
+debian/tmp/etc/grid-services/available/jobmanager-slurm-poll
+

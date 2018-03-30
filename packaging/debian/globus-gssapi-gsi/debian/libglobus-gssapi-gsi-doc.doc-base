@@ -1,7 +1,7 @@
 Document: globus-gssapi-gsi
 Title: Debian globus-gssapi-gsi Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, GSSAPI library
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, GSSAPI library
 Section: Programming
 
 Format: HTML

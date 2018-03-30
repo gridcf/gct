@@ -1,0 +1,8 @@
+debian/tmp/usr/share/man/man1/grid-cert-diagnostics.1
+debian/tmp/usr/share/man/man1/grid-proxy-destroy.1
+debian/tmp/usr/share/man/man1/grid-proxy-info.1
+debian/tmp/usr/share/man/man1/grid-proxy-init.1
+debian/tmp/usr/bin/grid-cert-diagnostics
+debian/tmp/usr/bin/grid-proxy-destroy
+debian/tmp/usr/bin/grid-proxy-info
+debian/tmp/usr/bin/grid-proxy-init

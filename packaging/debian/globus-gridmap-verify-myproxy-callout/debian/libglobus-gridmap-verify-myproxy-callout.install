@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/*/libglobus_gridmap_verify_myproxy_callout.so
+debian/tmp/etc/gridmap_verify_myproxy_callout-gsi_authz.conf

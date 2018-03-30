@@ -1,113 +1,75 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-scheduler-event-generator
 %global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	5.12
 Release:	5%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-%else
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-%endif
-
+BuildRequires:	globus-common-devel >= 14
+BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	globus-gram-protocol-devel >= 11
-%if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
+BuildRequires:	globus-xio-gsi-driver-devel >= 2
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libtool
+%else
 BuildRequires:	libtool-ltdl-devel
 %endif
-%endif
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-gsi-driver-devel >= 2
-BuildRequires:	globus-xio-devel >= 3
 BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
 %if %{?suse_version}%{!?suse_version:0} > 0
-BuildRequires:       insserv
-%else
-%if %{?rhel}%{!?rhel:0} >= 6 || %{?fedora}%{!?fedora:0} >= 20
-BuildRequires:       lsb-core-noarch
-%else
-BuildRequires:       lsb
+BuildRequires:	insserv
 %endif
-%endif
+#		Additional requirements for make check
+BuildRequires:	perl(Test::More)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 
 %package progs
 Summary:	Grid Community Toolkit - Scheduler Event Generator Programs
 Group:		Applications/Internet
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires(pre): %insserv_prereq %fillup_prereq
-Requires(post): %insserv_prereq %fillup_prereq
-%endif
 
-%if %{?suse_version}%{!?suse_version:0}  > 0
-Requires:       insserv
+%if %{?suse_version}%{!?suse_version:0}
+Requires(post):		%insserv_prereq %fillup_prereq
+Requires(preun):	%insserv_prereq %fillup_prereq
+Requires(postun):	%insserv_prereq %fillup_prereq
 %else
-%if %{?rhel}%{!?rhel:0}  >= 6 || %{?fedora}%{!?fedora:0} >= 20
-Requires:       lsb-core-noarch
-%else
-Requires:       lsb
+Requires(post):		chkconfig
+Requires(preun):	chkconfig
+Requires(preun):	initscripts
+Requires(postun):	initscripts
+Requires(preun):	lsb-core-noarch
+Requires(postun):	lsb-core-noarch
 %endif
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-%else
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-%endif
-Requires(post): globus-common-progs >= 14
-Requires(preun):globus-common-progs >= 14
+Requires(post):		globus-common-progs >= 14
+Requires(postun):	globus-common-progs >= 14
 
 %package devel
 Summary:	Grid Community Toolkit - Scheduler Event Generator Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-gram-protocol-devel%{?_isa} >= 11
-%if 0%{?suse_version} == 0
-%if 0%{?rhel} > 4 || 0%{?rhel} == 0
-Requires:  libtool-ltdl-devel
-%endif
-%endif
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
-Requires:	globus-xio-devel%{?_isa} >= 3
 
 %package doc
 Summary:	Grid Community Toolkit - Scheduler Event Generator Documentation Files
@@ -115,9 +77,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -173,56 +134,36 @@ Scheduler Event Generator Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global default_runlevels --with-default-runlevels=235
-%global initscript_config_path %{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
+	   --with-lsb \
+%if %{?suse_version}%{!?suse_version:0}
+	   --with-default-runlevels=235 \
+	   --with-initscript-config-path=%{_localstatedir}/adm/fillup-templates/sysconfig.%{name} \
 %else
-%global initscript_config_path %{_sysconfdir}/sysconfig/%{name} 
+	   --with-initscript-config-path=%{_sysconfdir}/sysconfig/%{name} \
 %endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-lsb \
-           %{?default_runlevels} \
-           --with-initscript-config-path=%{initscript_config_path} \
-           --with-lockfile-path='${localstatedir}/lock/subsys/%{name}'
+	   --with-lockfile-path=%{_localstatedir}/lock/subsys/%{name}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-sed -i -e '/Required-Start/s/:/: $remote_fs/' $RPM_BUILD_ROOT%{_sysconfdir}/init.d/globus-scheduler-event-generator
-sed -i -e 's/Required-Stop:.*/Required-Stop: $null/' $RPM_BUILD_ROOT%{_sysconfdir}/init.d/globus-scheduler-event-generator
-%endif
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
 %postun %{?nmainpkg} -p /sbin/ldconfig
 
 %post progs
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %fillup_and_insserv %{name}
 %else
 if [ $1 -eq 1 ]; then
@@ -231,7 +172,7 @@ fi
 %endif
 
 %preun progs
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %stop_on_removal %{name}
 %else
 if [ $1 -eq 0 ]; then
@@ -241,39 +182,50 @@ fi
 %endif
 
 %postun progs
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %restart_on_update %{name}
 %insserv_cleanup
 %else
-if [ $1 -eq 1 ]; then
+if [ $1 -ge 1 ]; then
     /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
 %endif
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%{_libdir}/libglobus_scheduler_event_generator.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
-%config(noreplace) %{initscript_config_path}
-%{_sysconfdir}/init.d/%{name}
-%{_sbindir}/*
-%{_mandir}/man8/*
+%{_sbindir}/globus-scheduler-event-generator
+%{_sbindir}/globus-scheduler-event-generator-admin
+%{_mandir}/man8/globus-scheduler-event-generator.8*
+%{_mandir}/man8/globus-scheduler-event-generator-admin.8*
+%if %{?suse_version}%{!?suse_version:0}
+%{_localstatedir}/adm/fillup-templates/sysconfig.%{name}
+%else
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%endif
+%{_initddir}/%{name}
+%dir %{_sysconfdir}/globus
+%dir %{_sysconfdir}/globus/scheduler-event-generator
+%dir %{_sysconfdir}/globus/scheduler-event-generator/available
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_scheduler_event_generator.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_mandir}/man3/*
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 5.12-5
@@ -339,7 +291,7 @@ fi
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 4.7-4
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Feb 20 2013 Globus Toolkit <support@globus.org> - 4.7-3
 - Workaround missing F18 doxygen/latex dependency
@@ -387,7 +339,7 @@ fi
 * Mon Oct 24 2011 Joseph Bester <bester@mcs.anl.gov> - 4.2-2
 - Add explicit dependencies on >= 5.2 libraries
 - Add backward-compatibility aging
-- Fix %post* scripts to check for -eq 1
+- Fix %%post* scripts to check for -eq 1
 
 * Fri Sep 23 2011 Joseph Bester <bester@mcs.anl.gov> - 4.1-1
 - GRAM-260: Detect and workaround bug in start_daemon for LSB < 4

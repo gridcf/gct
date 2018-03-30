@@ -1,24 +1,25 @@
 Source: globus-xio-gsi-driver
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev (>= 14), libglobus-gssapi-error-dev (>= 4), libglobus-gss-assist-dev (>= 11), libglobus-xio-dev (>= 3), libglobus-gssapi-gsi-dev (>= 13), libglobus-xio-doc (>= 0), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-xio-dev (>= 3), libglobus-gss-assist-dev (>= 11), libglobus-gssapi-error-dev (>= 4), libglobus-gssapi-gsi-dev (>= 13), libglobus-common-dev (>= 15), doxygen
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-xio-gsi-driver
 Section: libs
 Architecture: any
-Provides: libglobus-xio-gsi-driver0
-Conflicts: libglobus-xio-gsi-driver0
-Replaces: libglobus-xio-gsi-driver0
+Multi-Arch: same
+Replaces: libglobus-xio-gsi-driver-dev (<< 3)
+Breaks: libglobus-xio-gsi-driver-dev (<< 3)
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GSI Driver
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus XIO GSI Driver
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gsi-driver package contains:
  Globus XIO GSI Driver
@@ -26,43 +27,31 @@ Description: Globus Toolkit - Globus XIO GSI Driver
 Package: libglobus-xio-gsi-driver-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-xio-gsi-driver (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libglobus-gssapi-error-dev, libglobus-gss-assist-dev, libglobus-xio-dev, libglobus-gssapi-gsi-dev
-Recommends: libglobus-xio-gsi-driver-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus XIO GSI Driver Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-xio-gsi-driver (= ${binary:Version}), ${misc:Depends}, libglobus-xio-dev (>= 3), libglobus-gss-assist-dev (>= 11), libglobus-gssapi-error-dev (>= 4), libglobus-gssapi-gsi-dev (>= 13), libglobus-common-dev (>= 15)
+Suggests: libglobus-xio-gsi-driver-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus XIO GSI Driver Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gsi-driver-dev package contains:
  Globus XIO GSI Driver Development Files
 
 Package: libglobus-xio-gsi-driver-doc
 Section: doc
-Architecture: any
-Depends: libglobus-xio-gsi-driver-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GSI Driver Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus XIO GSI Driver Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gsi-driver-doc package contains:
  Globus XIO GSI Driver Documentation Files
-
-Package: libglobus-xio-gsi-driver-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-xio-gsi-driver (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GSI Driver Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-xio-gsi-driver-dbg package contains:
- Globus XIO GSI Driver Debug Symbols

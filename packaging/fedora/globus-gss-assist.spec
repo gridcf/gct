@@ -1,78 +1,61 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gss-assist
 %global soname 3
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	11.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	globus-gsi-cert-utils-devel >= 8
-BuildRequires:	globus-gsi-sysconfig-devel >= 7
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-callout-devel >= 2
+BuildRequires:	globus-gsi-sysconfig-devel >= 7
+BuildRequires:	globus-gsi-cert-utils-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 13
+BuildRequires:	globus-callout-devel >= 2
 BuildRequires:	globus-gsi-credential-devel >= 6
-BuildRequires:	globus-common-progs >= 14
 BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
 %endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
+#		Additional requirements for make check
+BuildRequires:	openssl
+BuildRequires:	perl(Test::More)
 
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-%else
-BuildRequires:  openssl
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
-Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
+Summary:	Grid Community Toolkit - GSSAPI Assist library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-gsi-sysconfig%{?_isa} >= 7
+Requires:	globus-gssapi-gsi%{?_isa} >= 13
 
 %package progs
 Summary:	Grid Community Toolkit - GSSAPI Assist library Programs
 Group:		Applications/Internet
-Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-progs >= 14
+%if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
+BuildArch:	noarch
+%endif
 
 %package devel
 Summary:	Grid Community Toolkit - GSSAPI Assist library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-gsi-cert-utils-devel%{?_isa} >= 8
-Requires:	globus-gsi-credential-devel%{?_isa} >= 6
-Requires:	globus-gsi-sysconfig-devel%{?_isa} >= 7
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-callout-devel%{?_isa} >= 2
-Requires:	globus-gssapi-gsi-devel%{?_isa} >= 13
 
 %package doc
 Summary:	Grid Community Toolkit - GSSAPI Assist library Documentation Files
@@ -80,9 +63,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -138,37 +120,21 @@ GSSAPI Assist library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -176,26 +142,34 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%{_libdir}/libglobus_gss_assist.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
-%{_sbindir}/*
-%{_mandir}/man8/*
+%{_sbindir}/grid-mapfile-add-entry
+%{_sbindir}/grid-mapfile-check-consistency
+%{_sbindir}/grid-mapfile-delete-entry
+%doc %{_mandir}/man8/grid-mapfile-add-entry.8*
+%doc %{_mandir}/man8/grid-mapfile-check-consistency.8*
+%doc %{_mandir}/man8/grid-mapfile-delete-entry.8*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gss_assist.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_mandir}/man3/*
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Tue Sep 12 2017 Globus Toolkit <support@globus.org> - 11.1-1

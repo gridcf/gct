@@ -1,5 +1,5 @@
-#! /usr/bin/dh-exec
-etc/globus/globus-sge.conf
-usr/share/globus/globus_gram_job_manager/sge.rvf
-${perl_vendorlib}/Globus/GRAM/JobManager/sge.pm
-usr/share/doc/globus-gram-job-manager-sge/GLOBUS_LICENSE
+debian/tmp/usr/share/perl5/Globus/GRAM/JobManager/sge.pm
+debian/tmp/usr/share/globus/globus_gram_job_manager/sge.rvf
+debian/tmp/etc/globus/globus-sge.conf
+debian/tmp/usr/share/doc/globus-gram-job-manager-sge/AUTHORS
+debian/tmp/usr/share/doc/globus-gram-job-manager-sge/CREDITS

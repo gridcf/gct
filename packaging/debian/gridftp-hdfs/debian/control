@@ -5,8 +5,6 @@ Build-Depends: debhelper (>= 5), autotools-dev, quilt, libhdfs0-dev, libglobus-g
 Standards-Version: 3.9.2
 Section: net
 DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/gridftp-hdfs
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/gridftp-hdfs
 Homepage: http://www.globus.org/
 
 Package: libglobus-gridftp-server-hdfs

@@ -1,3 +1,2 @@
-# /var/lib/globus/gram-audit has non-standard dir permission
-# since only the owner of the subdirectories can be delete their content
-globus-gram-audit binary: non-standard-dir-perm
+# These are intentional
+non-standard-dir-perm var/lib/globus/gram-audit/ 1733 != 0755

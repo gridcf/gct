@@ -1,4 +1,4 @@
-#! /usr/bin/dh-exec
-etc/globus/*.conf
-${perl_vendorlib}/Globus/GRAM/JobManager/*.pm
-usr/share/doc/globus-gram-job-manager-fork/GLOBUS_LICENSE
+debian/tmp/usr/share/perl5/Globus/GRAM/JobManager/fork.pm
+debian/tmp/etc/globus/globus-fork.conf
+debian/tmp/usr/sbin/globus-fork-starter
+debian/tmp/usr/share/man/man8/globus-fork-starter.8

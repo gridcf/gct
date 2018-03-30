@@ -1,0 +1,3 @@
+debian/tmp/usr/sbin/gfork
+debian/tmp/etc/gfork.conf
+debian/tmp/usr/share/doc/libglobus-gfork-dev/README.txt

@@ -1,7 +1,8 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if which invoke-rc.d >/dev/null 2>&1; then
-	invoke-rc.d globus-scheduler-event-generator stop
-else
-	/etc/init.d/globus-scheduler-event-generator stop
+if [ -x "/etc/init.d/globus-scheduler-event-generator" ]; then
+	invoke-rc.d globus-scheduler-event-generator stop || exit 1
 fi
+
+#DEBHELPER#

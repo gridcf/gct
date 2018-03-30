@@ -1,4 +1,2 @@
-#! /usr/bin/dh-exec
-
-usr/include/globus/*.h
-usr/lib/*/pkgconfig/*.pc
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/pkgconfig/globus-xio-udt-driver.pc

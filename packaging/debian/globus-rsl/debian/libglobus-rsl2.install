@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/*/libglobus_rsl.so.*
+debian/tmp/usr/lib/*/libglobus_rsl_assist.so.*

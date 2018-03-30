@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-authz-doc \
+    libglobus-authz-dev 3.16 \
+    libglobus-authz-doc -- "$@"

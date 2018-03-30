@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/globus-gram-job-manager-scripts-doc \
+    globus-gram-job-manager-scripts 6.11 \
+    globus-gram-job-manager-scripts-doc -- "$@"

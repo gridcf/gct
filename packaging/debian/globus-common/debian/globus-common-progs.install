@@ -1,0 +1,15 @@
+debian/tmp/usr/bin/globus-domainname
+debian/tmp/usr/bin/globus-hostname
+debian/tmp/usr/bin/globus-sh-exec
+debian/tmp/usr/bin/globus-version
+debian/tmp/usr/sbin/globus-libc-hostname
+debian/tmp/usr/sbin/globus-redia
+debian/tmp/usr/share/globus/config.guess
+debian/tmp/usr/share/globus/globus-args-parser-header
+debian/tmp/usr/share/globus/globus-script-initializer*
+debian/tmp/usr/share/globus/globus-sh-tools.sh
+debian/tmp/usr/share/globus/globus-sh-tools-vars.sh
+debian/tmp/usr/share/man/man1/globus-domainname.1
+debian/tmp/usr/share/man/man1/globus-hostname.1
+debian/tmp/usr/share/man/man1/globus-sh-exec.1
+debian/tmp/usr/share/man/man1/globus-version.1

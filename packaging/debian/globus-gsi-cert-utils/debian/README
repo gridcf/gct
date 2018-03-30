@@ -1,22 +1,28 @@
 This package is part of the Grid Security Infrastructure in C (GSI C) component
-of the Globus Toolkit. For more information visit:
+of the Grid Community Toolkit. For more information visit:
 
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/
+https://gridcf.org/gct-docs/gsic/
+
+Key Concepts:
+https://gridcf.org/gct-docs/gsic/key/
 
 Admin Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/admin/
+https://gridcf.org/gct-docs/gsic/admin/
+
+User's Guide:
+https://gridcf.org/gct-docs/gsic/user/
 
 Developer's Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/developer/
+https://gridcf.org/gct-docs/gsic/developer/
 
 Release Notes:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/rn/
+https://gridcf.org/gct-docs/gsic/rn/
 
 Public Interface Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/pi/
+https://gridcf.org/gct-docs/gsic/pi/
 
 Quality Profile:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/qp/
+https://gridcf.org/gct-docs/gsic/qp/
 
 Migrating Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/gsic/mig/
+https://gridcf.org/gct-docs/gsic/mig/

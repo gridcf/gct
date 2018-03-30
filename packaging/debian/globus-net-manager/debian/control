@@ -1,83 +1,95 @@
 Source: globus-net-manager
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-common-dev (>= 15.27), libglobus-xio-dev (>= 5), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, python-dev, libltdl-dev
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15.27), libglobus-xio-dev (>= 5), python-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-net-manager
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-net-manager
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-net-manager0
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Net Manager Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-common0 (>= 15.27)
+Description: Grid Community Toolkit - Network Manager Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-net-manager0 package contains:
- Net Manager Library
+ Network Manager Library
+ .
+ The Globus Network Manager Library is a plug-in point for network management
+ tasks, such as:
+  - selectively open ports in a firewall and allow these ports to be closed
+    when transfers are complete
+  - configure a virtual circuit based on a site policy and route traffic
+    over this circuit
+  - route network traffic related to a task over a particular network
 
 Package: libglobus-net-manager-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-net-manager0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev
-Recommends: libglobus-net-manager-doc (= ${binary:Version})
-Description: Globus Toolkit - Net Manager Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-net-manager0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15.27), libglobus-xio-dev (>= 5)
+Suggests: libglobus-net-manager-doc (= ${source:Version})
+Description: Grid Community Toolkit - Network Manager Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-net-manager-dev package contains:
- Net Manager Library Development Files
+ Network Manager Library Development Files
 
 Package: libglobus-xio-net-manager-driver
 Section: libs
 Architecture: any
-Depends: libglobus-net-manager0 (= ${binary:Version}), ${misc:Depends}, libglobus-common0, libglobus-xio0
-Recommends: libglobus-net-manager-doc (= ${binary:Version})
-Description: Globus Toolkit - Net Manager Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Grid Community Toolkit - Globus XIO Network Manager Driver
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The libglobus-net-manager-dev package contains:
- Net Manager Library Development Files
+ The libglobus-xio-net-manager-driver package contains:
+ Globus XIO Network Manager Driver
+
+Package: libglobus-xio-net-manager-driver-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libglobus-xio-net-manager-driver (= ${binary:Version}), libglobus-net-manager-dev (= ${binary:Version}), ${misc:Depends}
+Replaces: libglobus-net-manager-dev (<< 0.18)
+Breaks: libglobus-net-manager-dev (<< 0.18)
+Description: Grid Community Toolkit - Globus XIO Network Manager Driver Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
+ .
+ The libglobus-xio-net-manager-driver-dev package contains:
+ Globus XIO Network Manager Driver Development Files
 
 Package: libglobus-net-manager-doc
 Section: doc
-Architecture: any
-Depends: libglobus-net-manager-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Net Manager Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Network Manager Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-net-manager-doc package contains:
- Net Manager Library Documentation Files
-
-Package: libglobus-net-manager-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-net-manager0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Net Manager Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-net-manager-dbg package contains:
- Net Manager Library Debug Symbols
+ Network Manager Library Documentation Files

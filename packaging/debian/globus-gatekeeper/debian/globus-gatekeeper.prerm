@@ -1,7 +1,8 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if which invoke-rc.d >/dev/null 2>&1; then
-	invoke-rc.d globus-gatekeeper stop
-else
-	/etc/init.d/globus-gatekeeper stop
+if [ -x "/etc/init.d/globus-gatekeeper" ]; then
+	invoke-rc.d globus-gatekeeper stop || exit 1
 fi
+
+#DEBHELPER#

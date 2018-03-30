@@ -1,0 +1,5 @@
+debian/tmp/usr/lib/*/libglobus_common.so.*
+debian/tmp/usr/lib/*/libglobus_memory_debug.so.*
+debian/tmp/usr/lib/*/libglobus_thread_pthread.so
+debian/tmp/usr/share/perl5/Globus/Core/Config.pm
+debian/tmp/usr/share/perl5/Globus/Core/Paths.pm

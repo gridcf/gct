@@ -1,0 +1,2 @@
+debian/tmp/usr/bin/globus-gass-server
+debian/tmp/usr/bin/globus-gass-server-shutdown

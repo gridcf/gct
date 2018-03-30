@@ -1,7 +1,7 @@
 Document: globus-gssapi-error
 Title: Debian globus-gssapi-error Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, GSSAPI Error Library
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, GSSAPI Error Library
 Section: Programming
 
 Format: HTML

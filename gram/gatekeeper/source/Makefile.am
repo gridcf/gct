@@ -36,6 +36,8 @@ SUFFIXES = .logrotatein .logrotate
 .logrotatein.logrotate:
 	sed -e 's|@LOGDIR@|${localstatedir}/log|' < $< > $@
 
+CLEANFILES = gatekeeper.logrotate
+
 EXTRA_DIST=$(doc_DATA) $(man_MANS) \
         globus-gatekeeper.txt \
         globus-k5.txt \

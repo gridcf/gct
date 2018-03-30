@@ -5,21 +5,21 @@ Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Data Management Server
 
 Group:		System Environment/Libraries
-License:	ASL 2.0
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires: globus-common-progs
-Requires: globus-gfork-progs
-Requires: globus-xio-pipe-driver
-Requires: globus-gsi-cert-utils-progs
-Requires: globus-gss-assist-progs
-Requires: globus-ftp-control
-Requires: globus-authz-callout-error
-Requires: globus-authz
-Requires: globus-usage
-Requires: globus-xioperf
-Requires: globus-gridftp-server-progs
+Requires:	globus-common-progs
+Requires:	globus-gfork-progs
+Requires:	globus-xio-pipe-driver
+Requires:	globus-gsi-cert-utils-progs
+Requires:	globus-gss-assist-progs
+Requires:	globus-ftp-control
+Requires:	globus-authz-callout-error
+Requires:	globus-authz
+Requires:	globus-usage
+Requires:	globus-xioperf
+Requires:	globus-gridftp-server-progs
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -36,17 +36,13 @@ Data Management Server Programs
 %build
 
 %install
-rm -rf "$RPM_BUILD_ROOT"
-mkdir "$RPM_BUILD_ROOT"
 
 %files
-
-%clean
 
 %post
 
 %postun
 
 %changelog
-* Mon Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
 - GT 5.2.2 New Metapackage

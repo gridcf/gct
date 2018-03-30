@@ -1,24 +1,25 @@
 Source: globus-xio-pipe-driver
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev (>= 14), libglobus-xio-dev (>= 3), pkg-config
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3)
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-xio-pipe-driver
 Section: libs
 Architecture: any
-Provides: libglobus-xio-pipe-driver0
-Conflicts: libglobus-xio-pipe-driver0
-Replaces: libglobus-xio-pipe-driver0
+Multi-Arch: same
+Replaces: libglobus-xio-pipe-driver-dev (<< 3)
+Breaks: libglobus-xio-pipe-driver-dev (<< 3)
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Pipe Driver
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus Pipe Driver
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-pipe-driver package contains:
  Globus Pipe Driver
@@ -26,28 +27,14 @@ Description: Globus Toolkit - Globus Pipe Driver
 Package: libglobus-xio-pipe-driver-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-xio-pipe-driver (= ${binary:Version}), ${misc:Depends}, libglobus-xio-dev
-Description: Globus Toolkit - Globus Pipe Driver Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-xio-pipe-driver (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3)
+Description: Grid Community Toolkit - Globus Pipe Driver Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-pipe-driver-dev package contains:
  Globus Pipe Driver Development Files
-
-Package: libglobus-xio-pipe-driver-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-xio-pipe-driver (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Pipe Driver Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-xio-pipe-driver-dbg package contains:
- Globus Pipe Driver Debug Symbols

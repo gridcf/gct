@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-callout-doc \
+    libglobus-callout-dev 3.16 \
+    libglobus-callout-doc -- "$@"

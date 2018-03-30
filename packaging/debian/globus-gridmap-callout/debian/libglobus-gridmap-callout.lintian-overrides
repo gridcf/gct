@@ -1,0 +1,2 @@
+# This is a loadable plugin - unversioned soname expected
+shlib-without-versioned-soname */libglobus_gridmap_callout.so *

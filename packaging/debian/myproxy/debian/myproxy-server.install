@@ -1,0 +1,8 @@
+debian/tmp/usr/sbin/myproxy-server
+debian/tmp/etc/myproxy-server.config
+debian/tmp/var/lib/myproxy
+debian/tmp/etc/grid-security
+debian/tmp/etc/grid-security/myproxy
+
+debian/tmp/usr/share/man/man8/myproxy-server.8
+debian/tmp/usr/share/man/man5/myproxy-server.config.5

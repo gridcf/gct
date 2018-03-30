@@ -1,20 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 #
-# myproxy-server - Server for X.509 Public Key Infrastructure (PKI) security credentials
+# myproxy-server - Server for X.509 Public Key Infrastructure (PKI) credentials
 #
-# chkconfig: - 55 25
-# description:  Server for X.509 Public Key Infrastructure (PKI) security credentials
+# chkconfig: 2345 55 25
+# description: Server for X.509 Public Key Infrastructure (PKI) credentials
 #
 ### BEGIN INIT INFO
 # Provides: myproxy-server
-# Required-Start:  $local_fs $network $syslog
-# Required-Stop:  $local_fs $syslog
-# Should-Start:  $syslog
-# Should-Stop:  $network $syslog
+# Required-Start: $local_fs $network $syslog
+# Required-Stop: $local_fs $syslog
+# Should-Start: $syslog
+# Should-Stop: $network $syslog
 # Default-Stop: 0 1 6
 # Default-Start: 2 3 4 5
 # Short-Description: Startup the MyProxy server daemon
-# Description: Server for X.509 Public Key Infrastructure (PKI) security credentials
+# Description: Server for X.509 Public Key Infrastructure (PKI) credentials
 ### END INIT INFO
 
 # Source function library.
@@ -28,56 +28,32 @@ MYPROXY_USER=myproxy
 MYPROXY_OPTIONS="-s /var/lib/myproxy"
 X509_USER_CERT=/etc/grid-security/myproxy/hostcert.pem
 X509_USER_KEY=/etc/grid-security/myproxy/hostkey.pem
-export X509_USER_CERT
-export X509_USER_KEY
-PIDFILE=/var/run/myproxy/myproxy.pid
 
 # Override defaults here.
-[ -e /etc/default/$prog ] && . /etc/default/$prog
+[ -r /etc/default/$prog ] && . /etc/default/$prog
 
-# Start/Stop the myproxy daemon as user $MYPROXY_USER
-# Is there a better LSB idiom for this?
-if [ "$(id -u)" = 0 ]; then
-    userexist="$(getent passwd "$MYPROXY_USER" | cut -d: -f3)"
-    if [ "$userexist" != "" ] && [ "$userexist" != 0 ]; then
-        exec su "$MYPROXY_USER" -s /bin/sh -c "$0 ${1+"$@"}"
-    fi
-fi
+# A few sanity checks
+[ ! -r $X509_USER_KEY ]  && echo -n "$prog: No hostkey file"  && log_failure_msg && echo && exit 0
+[ ! -r $X509_USER_CERT ] && echo -n "$prog: No hostcert file" && log_failure_msg && echo && exit 0
 
-# A few sanity checks 
-if [ "$1" != "status" ]; then
-	[ ! -f $X509_USER_KEY ]  && log_failure_msg "$prog: No hostkey file"  && exit 0
-	[ ! -r $X509_USER_KEY ]  && log_failure_msg "$prog: Unable to read hostkey file $X509_USER_KEY"  && exit 0
-	[ ! -r $X509_USER_CERT ] && log_failure_msg "$prog: No hostcert file" && exit 0
-	[ ! -r $X509_USER_CERT ] && log_failure_msg "$prog: Unable to read hostcert file" && exit 0
-fi
+lockfile=/var/lock/$prog
 
 start() {
-    pidofproc -p $PIDFILE $prog > /dev/null && log_warning_msg "$prog already running" && exit 0
-    cd /
-    X509_USER_CERT=$X509_USER_CERT X509_USER_KEY=$X509_USER_KEY start_daemon -p $PIDFILE "$exec" ${MYPROXY_OPTIONS} -P $PIDFILE
-    retval="$?"
-    if [ "$retval" -eq 0 ]; then
-	log_success_msg "Started $prog"
-    else
-	log_failure_msg "Error starting $prog"
-    fi
+    echo Starting myproxy server
+    export X509_USER_CERT X509_USER_KEY
+    start-stop-daemon --start --oknodo -c $MYPROXY_USER --exec $exec -- $MYPROXY_OPTIONS
+    retval=$?
+    [ $retval -eq 0 ] && touch $lockfile
+    [ $retval -eq 0 ] && log_success_msg || log_failure_msg
     return $retval
 }
 
 stop() {
-    killproc -p $PIDFILE "$exec"
+    echo Stopping myproxy server
+    start-stop-daemon --stop --oknodo --exec $exec
     retval=$?
-    if [ "$retval" -eq 0 ]; then
-        log_success_msg "Stopped $prog"
-        # lsb says this should be removed automatically, but not all debian
-        # ones do
-        if [ -f "$PIDFILE" ]; then
-            rm -f "$PIDFILE"
-        fi
-    else
-        log_success_msg "Error stopping $prog"
-    fi
+    [ $retval -eq 0 ] && rm -f $lockfile
+    [ $retval -eq 0 ] && log_success_msg || log_failure_msg
     return $retval
 }
 
@@ -87,35 +63,25 @@ restart() {
 }
 
 case "$1" in
-    start|stop|restart)
-        $1
+    start)
+        start
         ;;
-    force-reload)
+    stop)
+        stop
+        ;;
+    force-reload|restart)
         restart
         ;;
     status)
-        pidofproc -p $PIDFILE $prog > /dev/null
-	result="$?"
-	if [ "$result" -eq 0 ]; then
-	    log_success_msg "$prog is running"
-	else
-	    log_failure_msg "$prog is not running"
-	fi
-	exit $result
+        status_of_proc $prog
         ;;
     try-restart|condrestart)
-        if pidofproc -p $PIDFILE $prog >/dev/null ; then
-            restart
-        fi
-	;;
+        [ -r $lockfile ] && restart
+        ;;
     reload)
-        # If config can be reloaded without restarting, implement it here,
-        # remove the "exit", and add "reload" to the usage message below.
-        # For example:
-        pidofproc -p $PIDFILE $prog >/dev/null || exit 3
-        killproc -p $PIDFILE $prog -HUP
+        start-stop-daemon --stop --oknodo --signal HUP --exec $exec
         ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|reload|try-restart|force-reload}"
+        echo "Usage: $0 {start|stop|status|restart|reload|try-restart|force-reload}"
         exit 2
 esac

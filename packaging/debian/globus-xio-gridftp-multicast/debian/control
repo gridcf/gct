@@ -1,24 +1,23 @@
 Source: globus-xio-gridftp-multicast
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-xio-dev (>= 0), libglobus-common-dev (>= 14), libglobus-ftp-client-dev (>= 2), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-ftp-client-dev (>= 7)
+Standards-Version: 4.1.3
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-xio-gridftp-multicast
 Section: libs
 Architecture: any
-Provides: libglobus-xio-gridftp-multicast0
-Conflicts: libglobus-xio-gridftp-multicast0
-Replaces: libglobus-xio-gridftp-multicast0
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GridFTP Multicast Driver
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus XIO GridFTP Multicast Driver
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gridftp-multicast package contains:
  Globus XIO GridFTP Multicast Driver
@@ -26,31 +25,14 @@ Description: Globus Toolkit - Globus XIO GridFTP Multicast Driver
 Package: libglobus-xio-gridftp-multicast-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-xio-gridftp-multicast0 (= ${binary:Version}), ${misc:Depends}, libglobus-xio-dev
-Description: Globus Toolkit - Globus XIO GridFTP Multicast Driver Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-xio-gridftp-multicast (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-ftp-client-dev (>= 7)
+Description: Grid Community Toolkit - Globus XIO GridFTP Multicast Driver Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-xio-gridftp-multicast-dev package contains:
  Globus XIO GridFTP Multicast Driver Development Files
-
-Package: libglobus-xio-gridftp-multicast-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Provides: globus-xio-gridftp-multicast-dbg
-Conflicts: globus-xio-gridftp-multicast-dbg
-Replaces: globus-xio-gridftp-multicast-dbg
-Depends: libglobus-xio-gridftp-multicast0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus XIO GridFTP Multicast Driver Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-xio-gridftp-multicast-dbg package contains:
- Globus XIO GridFTP Multicast Driver Debug Symbols

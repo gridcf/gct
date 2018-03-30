@@ -1,11 +1,11 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if which update-rc.d  > /dev/null 2>&1; then
-	update-rc.d globus-scheduler-event-generator defaults
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/globus-scheduler-event-generator" ]; then
+		update-rc.d globus-scheduler-event-generator defaults >/dev/null
+		invoke-rc.d globus-scheduler-event-generator start || exit 1
+	fi
 fi
 
-if which invoke-rc.d >/dev/null 2>&1; then
-	invoke-rc.d globus-scheduler-event-generator start
-else
-	/etc/init.d/globus-scheduler-event-generator start
-fi
+#DEBHELPER#

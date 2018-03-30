@@ -1,86 +1,68 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-gram-job-manager-pbs
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	2.6
 Release:	4%{?dist}
-Summary:	Grid Community Toolkit - PBS Job Manager
+Summary:	Grid Community Toolkit - PBS Job Manager Support
 
 Group:		Applications/Internet
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes:      globus-gram-job-manager-setup-pbs < 4.5
 
-Requires:       globus-gram-job-manager-scripts >= 4
+BuildRequires:	globus-common-devel >= 14
+BuildRequires:	globus-scheduler-event-generator-devel >= 4
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
+
+Requires:	globus-gram-job-manager >= 13
+Requires:	globus-gram-job-manager-scripts >= 4
 Requires:	globus-gass-cache-program >= 5
-Requires:	globus-common-progs >= 14
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
-    %else
+Requires:	globus-gatekeeper >= 9
+%if %{?suse_version}%{!?suse_version:0}
 %{perl_requires}
-    %endif
 %else
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-devel >= 3
-BuildRequires:	globus-scheduler-event-generator-devel >= 4
-BuildRequires:	globus-gram-protocol-devel >= 11
-BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%package -n libglobus_seg_pbs
-Summary:        Grid Community Toolkit - PBS Job Manager SEG Module
-Group:		Applications/Internet
-%endif
+Requires:	%{name}-setup = %{version}-%{release}
+Provides:	globus-gram-job-manager-setup-pbs = 4.5
+Obsoletes:	globus-gram-job-manager-setup-pbs < 4.5
+Obsoletes:	globus-gram-job-manager-setup-pbs-doc < 4.5
 
 %package setup-poll
-Summary:        Grid Community Toolkit - PBS Job Manager Setup Files
+Summary:	Grid Community Toolkit - PBS Job Manager Support using polling
 Group:		Applications/Internet
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:      noarch
+BuildArch:	noarch
 %endif
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
+Provides:	%{name}-setup = %{version}-%{release}
 Requires:	%{name} = %{version}-%{release}
-requires(post): globus-gram-job-manager-scripts >= 3.4
-requires(preun): globus-gram-job-manager-scripts >= 3.4
-Conflicts:      %{name}-setup-seg
+
+Requires(preun):	globus-gram-job-manager-scripts >= 4
 
 %package setup-seg
-Summary:	Grid Community Toolkit - PBS Job Manager Setup Files
+Summary:	Grid Community Toolkit - PBS Job Manager Support using SEG
 Group:		Applications/Internet
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
-Requires:	%{name} = %{version}-%{release}
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_seg_pbs = %{version}-%{release}
+Provides:	%{name}-setup = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	globus-scheduler-event-generator-progs >= 4
+%if %{?suse_version}%{!?suse_version:0}
+Obsoletes:	libglobus_seg_pbs < %{version}-%{release}
 %endif
-PreReq:         globus-scheduler-event-generator-progs >= 4
-PreReq: 	globus-gram-job-manager-scripts >= 4
-Requires(post): globus-gram-job-manager-scripts >= 4
-Requires(post): globus-scheduler-event-generator-progs >= 4
-Requires(preun): globus-gram-job-manager-scripts >= 4
-Requires(preun): globus-scheduler-event-generator-progs >= 4
-Conflicts:      %{name}-setup-poll
+
+Requires(preun):	globus-gram-job-manager-scripts >= 4
+Requires(preun):	globus-scheduler-event-generator-progs >= 4
+Requires(postun):	globus-scheduler-event-generator-progs >= 4
+%if %{?suse_version}%{!?suse_version:0}
+Requires(preun):	aaa-base
+Requires(postun):	aaa-base
+%else
+Requires(preun):	initscripts
+Requires(postun):	initscripts
+%endif
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -90,7 +72,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-PBS Job Manager 
+PBS Job Manager Support
 
 %description setup-poll
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -99,20 +81,8 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name} package contains:
-PBS Job Manager Setup using polling to monitor job state
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%description -n libglobus_seg_pbs
-The Grid Community Toolkit (GCT) is an open source software toolkit used for
-building grid systems and applications. It is a fork of the Globus Toolkit
-originally created by the Globus Alliance. It is supported by the Grid
-Community Forum (GridCF) that provides community-based support for core
-software packages in grid computing.
-
-The libglobus_seg_pbs package contains:
-PBS Job Manager SEG Module
-%endif
+The %{name}-setup-poll package contains:
+PBS Job Manager Support using polling to monitor job state
 
 %description setup-seg
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -121,147 +91,79 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name} package contains:
-PBS Job Manager Setup using SEG to monitor job state
+The %{name}-setup-seg package contains:
+PBS Job Manager Support using the scheduler event generator to monitor job
+state
 
 %prep
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
 export MPIEXEC=no
 export MPIRUN=no
-export QDEL=/usr/bin/qdel-torque
-export QSTAT=/usr/bin/qstat-torque
-export QSUB=/usr/bin/qsub-torque
-%if %{?fedora}%{!?fedora:0} == 13 || %{?rhel}%{!?rhel:0} == 5
-   %global pbs_log_path /var/torque/server_logs
-%else
-   %global pbs_log_path /var/log/torque/server_logs 
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-globus-state-dir=%{_localstatedir}/lib/globus \
-           --with-log-path=%{pbs_log_path} \
-           --with-perlmoduledir=%{perl_vendorlib}
+export QDEL=%{_bindir}/qdel-torque
+export QSTAT=%{_bindir}/qstat-torque
+export QSUB=%{_bindir}/qsub-torque
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
+	   --with-perlmoduledir=%{perl_vendorlib} \
+	   --with-globus-state-dir=%{_localstatedir}/log/globus \
+	   --with-log-path=%{_localstatedir}/log/torque/server_logs
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-# Remove jobmanager-pbs from install dir so that it can be
-# added/removed by post scripts
-rm $RPM_BUILD_ROOT/etc/grid-services/jobmanager-pbs
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%post setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-pbs-poll -n jobmanager-pbs > /dev/null 2>&1 || :
-    if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-pbs-poll -n jobmanager
-    fi
-fi
+# Remove jobmanager-pbs from install dir - leave it for admin configuration
+rm $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/jobmanager-pbs
 
 %preun setup-poll
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-pbs-poll > /dev/null 2>&1 || :
 fi
 
-%postun setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-pbs-poll -n jobmanager-pbs > /dev/null 2>&1 || :
-elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
-fi
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%post -n libglobus_seg_pbs
-ldconfig
-
-%postun -n libglobus_seg_pbs
-ldconfig
-%endif
-
-%post setup-seg
-%if %{?suse_version}%{!?suse_version:0} < 1315
-ldconfig
-%endif
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-pbs-seg -n jobmanager-pbs > /dev/null 2>&1 || :
-    globus-scheduler-event-generator-admin -e pbs > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator condrestart pbs
-fi
-
 %preun setup-seg
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-pbs-seg > /dev/null 2>&1 || :
+    /sbin/service globus-scheduler-event-generator stop pbs > /dev/null 2>&1 || :
     globus-scheduler-event-generator-admin -d pbs > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator stop pbs > /dev/null 2>&1 || :
 fi
 
+%post setup-seg -p /sbin/ldconfig
+
 %postun setup-seg
-%if %{?suse_version}%{!?suse_version:0} < 1315
-ldconfig
-%endif
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-pbs-seg > /dev/null 2>&1 || :
-    globus-scheduler-event-generator-admin -e pbs > /dev/null 2>&1 || :
-    service globus-scheduler-event-generator condrestart pbs > /dev/null 2>&1 || :
-elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
+/sbin/ldconfig
+if [ $1 -ge 1 ]; then
+    /sbin/service globus-scheduler-event-generator condrestart pbs > /dev/null 2>&1 || :
 fi
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%dir %{_sysconfdir}/globus
-%config(noreplace) %{_sysconfdir}/globus/globus-pbs.conf
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%dir %{_datadir}/globus
-%dir %{_datadir}/globus/globus_gram_job_manager
 %{_datadir}/globus/globus_gram_job_manager/pbs.rvf
 %dir %{perl_vendorlib}/Globus
 %dir %{perl_vendorlib}/Globus/GRAM
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
-%dir %{_sysconfdir}/grid-services
-%dir %{_sysconfdir}/grid-services/available
 %{perl_vendorlib}/Globus/GRAM/JobManager/pbs.pm
+%config(noreplace) %{_sysconfdir}/globus/globus-pbs.conf
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files setup-poll
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-pbs-poll
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%files -n libglobus_seg_pbs
-%defattr(-,root,root,-)
-%{_libdir}/libglobus*
-%endif
-
 %files setup-seg
 %defattr(-,root,root,-)
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_seg_pbs.so
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-pbs-seg
-%dir %{_sysconfdir}/globus/scheduler-event-generator
-%dir %{_sysconfdir}/globus/scheduler-event-generator/available
-%{_sysconfdir}/globus/scheduler-event-generator/available/pbs
-%if %{?suse_version}%{!?suse_version:0} < 1315
-%{_libdir}/libglobus_*
-%endif
-
+%config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/pbs
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-4

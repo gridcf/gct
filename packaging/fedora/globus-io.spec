@@ -1,78 +1,52 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-io
 %global soname 3
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	11.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-%else
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-%endif
-
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-gsi-driver-devel >= 2
-BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-xio-devel >= 3
+BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 10
+BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-gssapi-error-devel >= 4
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7
-BuildRequires:	automake >= 1.11
-BuildRequires:	autoconf >= 2.60
-BuildRequires:	libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
-%if 0%{?suse_version} > 0
-BuildRequires: libtool
-%else
-BuildRequires: libtool-ltdl-devel
-%endif
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-%else
-BuildRequires:  openssl
-%endif
+#		Additional requirements for make check
+BuildRequires:	openssl
+BuildRequires:	perl(Test::More)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - uniform I/O interface
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-xio-gsi-driver%{?_isa} >= 2
+Obsoletes:	%{name}-doc < 10.12
 
 %package devel
 Summary:	Grid Community Toolkit - uniform I/O interface Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
-Requires:	globus-gss-assist-devel%{?_isa} >= 8
-Requires:	globus-xio-devel%{?_isa} >= 3
-Requires:	globus-gssapi-gsi-devel%{?_isa} >= 10
-Requires:	globus-gssapi-error-devel%{?_isa} >= 4
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -108,38 +82,21 @@ uniform I/O interface Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-rm -rvf $RPM_BUILD_ROOT%{_mandir}
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -147,14 +104,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus_*.so.*
+%{_libdir}/libglobus_io.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/lib*.so
+%{_libdir}/libglobus_io.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog

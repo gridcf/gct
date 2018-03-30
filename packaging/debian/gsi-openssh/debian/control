@@ -4,7 +4,6 @@ Maintainer: Globus Support <support@globus.org>
 Build-Depends: debhelper (>= 5), autotools-dev, quilt, libldap2-dev, zlib1g-dev, libaudit-dev, libpam-dev, libwrap0-dev, libssl-dev, libglobus-gss-assist-dev, libglobus-usage-dev, globus-common-progs, libedit-dev, pkg-config, libglobus-gssapi-gsi-dev (>= 12.12)
 Standards-Version: 3.9.2
 Section: net
-Vcs-Browser: https://github.com/globus/globus-toolkit/tree/globus_6_branch/packaging/debian/gsi-openssh/debian
 Homepage: http://www.globus.org/
 
 Package: gsi-openssh
