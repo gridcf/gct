@@ -1,0 +1,14 @@
+debian/tmp/usr/sbin/gfs-dynbe-client
+debian/tmp/usr/sbin/gfs-gfork-master
+debian/tmp/usr/sbin/globus-gridftp-password
+debian/tmp/usr/sbin/globus-gridftp-server
+debian/tmp/usr/sbin/globus-gridftp-server-enable-sshftp
+debian/tmp/usr/sbin/globus-gridftp-server-setup-chroot
+debian/tmp/usr/share/man/man8/globus-gridftp-password.8
+debian/tmp/usr/share/man/man8/globus-gridftp-server.8
+debian/tmp/usr/share/man/man8/globus-gridftp-server-setup-chroot.8
+debian/tmp/etc/init.d/globus-gridftp-server
+debian/tmp/etc/init.d/globus-gridftp-sshftp
+debian/tmp/etc/gridftp.gfork
+debian/tmp/etc/gridftp.conf
+debian/tmp/etc/xinetd.d/gridftp

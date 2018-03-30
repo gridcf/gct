@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gsi-cert-utils-doc \
+    libglobus-gsi-cert-utils-dev 9.17 \
+    libglobus-gsi-cert-utils-doc -- "$@"

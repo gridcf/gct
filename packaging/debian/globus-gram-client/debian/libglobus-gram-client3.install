@@ -1,3 +1,1 @@
-#! /usr/bin/dh-exec
-usr/lib/*/libglobus*.so.*
-usr/share/doc/libglobus-gram-client/GLOBUS_LICENSE => usr/share/doc/libglobus-gram-client3/GLOBUS_LICENSE
+debian/tmp/usr/lib/*/libglobus_gram_client.so.*

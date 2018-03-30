@@ -1,0 +1,3 @@
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/libglobus_gram_job_manager_callout_error.so
+debian/tmp/usr/lib/*/pkgconfig/globus-gram-job-manager-callout-error.pc

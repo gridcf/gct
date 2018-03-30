@@ -1,32 +1,101 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/default.mk
+-include /usr/share/dpkg/buildflags.mk
 
 name = globus-xio-udt-driver
+_name = globus_xio_udt_driver
+
+INSTALLDIR = $(CURDIR)/debian/tmp
+
 _prefix = /usr
 _bindir = $(_prefix)/bin
 _sbindir = $(_prefix)/sbin
-_sysconfdir = /etc
 _includedir = $(_prefix)/include
+_libdir = $(_prefix)/lib
 _datadir = $(_prefix)/share
 _mandir = $(_datadir)/man
-_docdir = $(_datadir)/doc
+_docdir = $(_datadir)/doc/lib$(name)-dev
 
-override_dh_auto_configure:
+configure: configure-stamp
+
+configure-stamp:
+	dh_testdir
+
+	dh_autoreconf
+
 	dh_auto_configure -- \
-	    --sysconfdir=$(_sysconfdir) \
-	    --enable-silent-rules \
-	    --docdir='$(_docdir)/lib$(name)' \
-	    --includedir='$(_includedir)/globus' \
-	    --datadir='$(_datadir)/globus' \
-	    --libexecdir='$(_datadir)/globus' \
-	    --disable-static
+	   --disable-static \
+	   --includedir=$(_includedir)/globus \
+	   --libexecdir=$(_datadir)/globus \
+	   --docdir=$(_docdir)
 
-override_dh_strip:
-	dh_strip --dbg-package=lib$(name)-dbg
+	touch $@
 
-%:
-	dh $@ --with autotools-dev
+build: build-arch build-indep
 
-.PHONY: override_dh_auto_configure override_dh_strip
+build-arch: build-stamp
+
+build-indep:
+
+build-stamp: configure-stamp
+	dh_testdir
+
+	$(MAKE)
+
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	if [ -r Makefile ] ; then $(MAKE) distclean ; fi
+
+	dh_autoreconf_clean
+
+	rm -f build-stamp configure-stamp
+
+	dh_clean
+
+install: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_prep
+
+	$(MAKE) install DESTDIR=$(INSTALLDIR)
+
+	# Remove libtool archives (.la files)
+	rm $(INSTALLDIR)$(_libdir)/*/*.la
+
+	# Remove installed license file
+	rm $(INSTALLDIR)$(_docdir)/GLOBUS_LICENSE
+
+binary: binary-arch binary-indep
+
+binary-arch: install
+	dh_testdir
+	dh_testroot
+	dh_installdocs debian/README
+	dh_installchangelogs
+	dh_install --fail-missing
+	dh_installman
+	dh_lintian
+	dh_link
+	if dpkg --compare-versions $$(dpkg-query -W -f '$${Version}' debhelper) ge 9.20160114 ; then \
+		dh_strip --dbgsym-migration='lib$(name)-dbg (<< 1.30)' ; \
+	else \
+		dh_strip ; \
+	fi
+	dh_compress
+	dh_fixperms
+	dh_perl
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-indep:
+
+.PHONY: binary binary-arch binary-indep build build-arch build-indep clean configure install

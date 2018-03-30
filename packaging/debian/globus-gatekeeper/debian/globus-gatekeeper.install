@@ -1,0 +1,8 @@
+debian/tmp/usr/sbin/globus-gatekeeper
+debian/tmp/usr/sbin/globus-k5
+debian/tmp/usr/share/man/man8/globus-gatekeeper.8
+debian/tmp/usr/share/man/man8/globus-k5.8
+debian/tmp/etc/default/globus-gatekeeper
+debian/tmp/etc/init.d/globus-gatekeeper
+debian/tmp/etc/logrotate.d/globus-gatekeeper
+debian/tmp/etc/grid-services/available

@@ -286,7 +286,7 @@ clear_server_context(myproxy_server_context_t *context)
     free_ptr(&myproxy_sasl_serverFQDN);
     free_ptr(&myproxy_sasl_user_realm);
 #endif
-    context->disable_usage_stats = 0;
+    context->disable_usage_stats = 1;
     free_ptr(&context->usage_stats_target);
     memset(&context->usage, 0, sizeof(context->usage));
     free_ptr(&context->voms_userconf);
@@ -702,12 +702,12 @@ line_parse_callback(void *context_arg,
 #endif
     }
     else if (strcmp(directive, "disable_usage_stats") == 0) {
-        if ((!strcasecmp(tokens[1], "true")) ||
-            (!strcasecmp(tokens[1], "enabled")) ||
-            (!strcasecmp(tokens[1], "yes")) ||
-            (!strcasecmp(tokens[1], "on")) ||
-            (!strcmp(tokens[1], "1"))) {
-            context->disable_usage_stats = 1;
+        if ((!strcasecmp(tokens[1], "false")) ||
+            (!strcasecmp(tokens[1], "disabled")) ||
+            (!strcasecmp(tokens[1], "no")) ||
+            (!strcasecmp(tokens[1], "off")) ||
+            (!strcmp(tokens[1], "0"))) {
+            context->disable_usage_stats = 0;
         }
     }
     else if (strcmp(directive, "usage_stats_target") == 0) {

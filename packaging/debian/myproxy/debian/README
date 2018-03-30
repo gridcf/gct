@@ -1,21 +1,25 @@
-This package is part of of the Globus Toolkit. For more information visit:
+This package is part of the Myproxy component
+of the Grid Community Toolkit. For more information visit:
 
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/
+https://gridcf.org/gct-docs/myproxy/
 
 Admin Guide:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/admin/
+https://gridcf.org/gct-docs/myproxy/admin/
+
+User's Guide:
+https://gridcf.org/gct-docs/myproxy/user/
 
 Developer's Guide:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/developer/
+https://gridcf.org/gct-docs/myproxy/developer/
 
 Release Notes:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/rn/
+https://gridcf.org/gct-docs/myproxy/rn/
 
 Public Interface Guide:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/pi/
+https://gridcf.org/gct-docs/myproxy/pi/
 
 Quality Profile:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/qp/
+https://gridcf.org/gct-docs/myproxy/qp/
 
 Migrating Guide:
-http://www.globus.org/toolkit/docs/latest-stable/myproxy/mig/
+https://gridcf.org/gct-docs/myproxy/mig/

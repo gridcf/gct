@@ -1,7 +1,7 @@
 Document: globus-authz-callout-error
 Title: Debian globus-authz-callout-error Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, Globus authz error library (used by globus authz callouts)
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, Globus authz error library (used by globus authz callouts)
 Section: Programming
 
 Format: HTML

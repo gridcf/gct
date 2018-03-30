@@ -1,0 +1,10 @@
+debian/tmp/usr/share/man/man1/grid-cert-info.1
+debian/tmp/usr/share/man/man1/grid-cert-request.1
+debian/tmp/usr/share/man/man1/grid-change-pass-phrase.1
+debian/tmp/usr/share/man/man8/globus-update-certificate-dir.8
+debian/tmp/usr/share/man/man8/grid-default-ca.8
+debian/tmp/usr/bin/grid-cert-info
+debian/tmp/usr/bin/grid-cert-request
+debian/tmp/usr/bin/grid-change-pass-phrase
+debian/tmp/usr/sbin/globus-update-certificate-dir
+debian/tmp/usr/sbin/grid-default-ca

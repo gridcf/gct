@@ -1,86 +1,77 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-net-manager
 %global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	0.17
 Release:	1%{?dist}
-Summary:	Grid Community Toolkit - Net Manager Library
+Summary:	Grid Community Toolkit - Network Manager Library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 15.27
 BuildRequires:	globus-xio-devel >= 5
 BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  python26-devel
-%else
-BuildRequires:  python-devel
-%endif
+BuildRequires:	python-devel
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global driver_package libglobus_xio_net_manager_driver
 %else
 %global driver_package globus-xio-net-manager-driver
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
-Summary:	Grid Community Toolkit - Net Manager Library
+Summary:	Grid Community Toolkit - Network Manager Library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-common%{?_isa} >= 15.27
 
 %package devel
-Summary:	Grid Community Toolkit - Net Manager Library Development Files
+Summary:	Grid Community Toolkit - Network Manager Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 15.27
-Requires:	globus-xio-devel%{?_isa} >= 5
 
 %package -n %{driver_package}
-Summary:	Grid Community Toolkit - Net Manager Library XIO Driver
+Summary:	Grid Community Toolkit - Globus XIO Network Manager Driver
 Group:		System Environment/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 15.27
-Requires:	globus-xio-devel%{?_isa} >= 5
-Provides:       globus-net-manager-xio-driver
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Provides:       globus-xio-net-manager-driver
+Requires:	globus-xio%{?_isa} >= 5
+Provides:	globus-net-manager-xio-driver = %{version}-%{release}
+Obsoletes:	globus-net-manager-xio-driver < %{version}-%{release}
+%if %{?suse_version}%{!?suse_version:0}
+Provides:	globus-xio-net-manager-driver = %{version}-%{release}
+Obsoletes:	globus-xio-net-manager-driver < %{version}-%{release}
 %endif
 
+%package -n globus-xio-net-manager-driver-devel
+Summary:	Grid Community Toolkit - Globus XIO Network Manager Driver Development Files
+Group:		Development/Libraries
+Requires:	globus-xio-net-manager-driver%{?_isa} = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
+
 %package doc
-Summary:	Grid Community Toolkit - Net Manager Library Documentation Files
+Summary:	Grid Community Toolkit - Network Manager Library Documentation Files
 Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -89,7 +80,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{mainpkg} package contains:
-Net Manager Library
+Network Manager Library
 %endif
 
 %description
@@ -100,7 +91,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-Net Manager Library
+Network Manager Library
 
 %description devel
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -110,7 +101,7 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name}-devel package contains:
-Net Manager Library Development Files
+Network Manager Library Development Files
 
 %description -n %{driver_package}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -119,8 +110,18 @@ originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name}-devel package contains:
-Net Manager Library XIO Driver
+The %{driver_package} package contains:
+Globus XIO Network Manager Driver
+
+%description -n globus-xio-net-manager-driver-devel
+The Grid Community Toolkit (GCT) is an open source software toolkit used for
+building grid systems and applications. It is a fork of the Globus Toolkit
+originally created by the Globus Alliance. It is supported by the Grid
+Community Forum (GridCF) that provides community-based support for core
+software packages in grid computing.
+
+The globus-xio-net-manager-driver-devel package contains:
+Globus XIO Network Manager Driver Development Files
 
 %description doc
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -130,67 +131,64 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name}-doc package contains:
-Net Manager Library Documentation Files
+Network Manager Library Documentation Files
 
 %prep
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --enable-python 
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
+	   --enable-python
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%check
-make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
 %postun %{?nmainpkg} -p /sbin/ldconfig
 
+%post -n %{driver_package} -p /sbin/ldconfig
+
+%postun -n %{driver_package} -p /sbin/ldconfig
+
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/lib%{_name}.so.*
+%{_libdir}/libglobus_net_manager.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/globus/*.h
-%{_libdir}/libglobus_net_manager*.so
+%{_includedir}/globus/globus_net_manager.h
+%{_includedir}/globus/globus_net_manager_attr.h
+%{_libdir}/libglobus_net_manager.so
 %{_libdir}/pkgconfig/%{name}.pc
-%{_libdir}/pkgconfig/globus-xio-net-manager-driver.pc
 
 %files -n %{driver_package}
 %defattr(-,root,root,-)
+# This is a loadable module (plugin)
 %{_libdir}/libglobus_xio_net_manager_driver.so
+
+%files -n globus-xio-net-manager-driver-devel
+%defattr(-,root,root,-)
+%{_includedir}/globus/globus_xio_net_manager_driver.h
+%{_libdir}/pkgconfig/globus-xio-net-manager-driver.pc
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_mandir}/man3/*
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Tue Apr 04 2017 Globus Toolkit <support@globus.org> - 0.17-1

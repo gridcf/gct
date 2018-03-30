@@ -1,31 +1,90 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-include /usr/share/quilt/quilt.make
-
 name = globus-simple-ca
 _name = globus_simple_ca
-version = 4.24
+
+INSTALLDIR = $(CURDIR)/debian/tmp
 
 _prefix = /usr
 _bindir = $(_prefix)/bin
 _sbindir = $(_prefix)/sbin
-_libdir = $(_prefix)/lib
+_includedir = $(_prefix)/include
 _datadir = $(_prefix)/share
-_libexecdir = $(_datadir)/globus
 _mandir = $(_datadir)/man
-_docdir = $(_datadir)/doc
-_sysconfdir = /etc
+_docdir = $(_datadir)/doc/$(name)
 
-override_dh_auto_configure:
-	dh_auto_configure --  \
-            --enable-silent-rules \
-	   --docdir='$(_docdir)/$(name)' \
-           --localstatedir=/var \
-           --libexecdir='$(_libexecdir)' \
-           --sysconfdir='$(_sysconfdir)'
+configure: configure-stamp
 
-%:
-	dh $@  --with autotools-dev
+configure-stamp:
+	dh_testdir
 
-.PHONY: override_dh_auto_configure
+	dh_autoreconf
+
+	dh_auto_configure -- \
+	   --disable-static \
+	   --includedir=$(_includedir)/globus \
+	   --libexecdir=$(_datadir)/globus \
+	   --docdir=$(_docdir)
+
+	touch $@
+
+build: build-arch build-indep
+
+build-arch:
+
+build-indep: build-stamp
+
+build-stamp: configure-stamp
+	dh_testdir
+
+	$(MAKE)
+ifeq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+	$(MAKE) check VERBOSE=1
+endif
+
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	if [ -r Makefile ] ; then $(MAKE) distclean ; fi
+
+	dh_autoreconf_clean
+
+	rm -f build-stamp configure-stamp
+
+	dh_clean
+
+install: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_prep
+
+	$(MAKE) install DESTDIR=$(INSTALLDIR)
+
+	# Remove installed license file
+	rm $(INSTALLDIR)$(_docdir)/GLOBUS_LICENSE
+
+binary: binary-arch binary-indep
+
+binary-arch:
+
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_installdocs debian/README
+	dh_installchangelogs
+	dh_install --fail-missing
+	dh_installman
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_perl
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: binary binary-arch binary-indep build build-arch build-indep clean configure install

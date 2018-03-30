@@ -1,7 +1,7 @@
 Document: globus-ftp-client
 Title: Debian globus-ftp-client Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, GridFTP Client Library
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, GridFTP Client Library
 Section: Programming
 
 Format: HTML

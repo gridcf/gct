@@ -1,0 +1,9 @@
+Document: globus-gass-cache
+Title: Debian globus-gass-cache Manual
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, Globus Gass Cache
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/libglobus-gass-cache-dev/html/index.html
+Files: /usr/share/doc/libglobus-gass-cache-dev/html/*.html

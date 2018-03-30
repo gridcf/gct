@@ -7,4 +7,3 @@
 ## X509_USER_KEY=/etc/grid-security/myproxy/hostkey.pem
 
 
-for myproxy_conf in /etc/myproxy.d/*; do if [ -r $myproxy_conf ] ; then . $myproxy_conf; fi done

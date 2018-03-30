@@ -1,9 +1,0 @@
-Document: globus-gram-job-manager
-Title: Debian globus-gram-job-manager Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, GRAM Jobmanager
-Section: Programming
-
-Format: HTML
-Index: /usr/share/doc/globus-gram-job-manager/html/index.html
-Files: /usr/share/doc/globus-gram-job-manager/html/*.html

@@ -1,60 +1,35 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-proxy-utils
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	6.19
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 
 Group:		Applications/Internet
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?rhel}%{!?rhel:0} == 5
-Requires:  openssl101e%{?_isa}
-%else
-Requires:  openssl%{?_isa}
-%endif
-
+BuildRequires:	globus-common-devel >= 14
+BuildRequires:	globus-openssl-module-devel >= 3
+BuildRequires:	globus-gsi-openssl-error-devel >= 2
+BuildRequires:	globus-gsi-cert-utils-devel >= 8
+BuildRequires:	globus-gsi-sysconfig-devel >= 5
 BuildRequires:	globus-gsi-credential-devel >= 5
 BuildRequires:	globus-gsi-callback-devel >= 4
-BuildRequires:	globus-openssl-module-devel >= 3
-BuildRequires:	globus-gss-assist-devel >= 8
-BuildRequires:	globus-gsi-openssl-error-devel >= 2
 BuildRequires:	globus-gsi-proxy-core-devel >= 6
-BuildRequires:	globus-gsi-cert-utils-devel >= 8
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gsi-sysconfig-devel >= 5
+BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gssapi-gsi-devel >= 4
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
 %else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
+BuildRequires:	openssl-devel
 %endif
-%endif
-
+#		Additional requirements for make check
+BuildRequires:	openssl
+BuildRequires:	perl(Test::More)
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -70,42 +45,31 @@ Globus GSI Proxy Utility Programs
 %setup -q -n %{_name}-%{version}
 
 %build
-# Remove files that should be replaced during bootstrap
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %check
-make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make %{?_smp_mflags} check VERBOSE=1
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
-%{_mandir}/man1/*
+%{_bindir}/grid-cert-diagnostics
+%{_bindir}/grid-proxy-destroy
+%{_bindir}/grid-proxy-info
+%{_bindir}/grid-proxy-init
+%doc %{_mandir}/man1/grid-cert-diagnostics.1*
+%doc %{_mandir}/man1/grid-proxy-destroy.1*
+%doc %{_mandir}/man1/grid-proxy-info.1*
+%doc %{_mandir}/man1/grid-proxy-init.1*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 6.19-1
@@ -198,7 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 - openssl-libs for newer fedora
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 5.1-2
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed May 15 2013 Globus Toolkit <support@globus.org> - 5.1-1
 - GT-272: Increase default proxy key size

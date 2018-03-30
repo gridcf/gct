@@ -1,111 +1,80 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-job-manager
-%global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	14.37
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	globus-xio-popen-driver%{?_isa} >= 2
-Requires:	globus-gram-job-manager-scripts
-Requires:	globus-gass-copy-progs >= 8
-Requires:	globus-proxy-utils >= 5
-Requires:	globus-gass-cache-program >= 2
-Requires:	globus-gatekeeper >= 9
-Requires:	psmisc
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  openssl
-BuildRequires:  libopenssl-devel
-%else
-%if %{?rhel}%{!?rhel:0} == 5
-BuildRequires:  openssl101e
-BuildRequires:  openssl101e-devel
-BuildConflicts: openssl-devel
-%else
-BuildRequires:  openssl
-BuildRequires:  openssl-devel
-%endif
-%endif
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:       libglobus_seg_job_manager%{?_isa} = %{version}-%{release}
-BuildRequires:	procps
-%endif
-BuildRequires:	globus-scheduler-event-generator-devel >= 4
-BuildRequires:	globus-xio-popen-driver-devel >= 2
-BuildRequires:	globus-xio-devel >= 3
+BuildRequires:	globus-common-devel >= 15
+BuildRequires:	globus-gsi-credential-devel >= 5
+BuildRequires:	globus-gass-cache-devel >= 8
+BuildRequires:	globus-gass-transfer-devel >= 7
+BuildRequires:	globus-gram-protocol-devel >= 11
+BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gsi-sysconfig-devel >= 5
 BuildRequires:	globus-callout-devel >= 2
-BuildRequires:	globus-gram-job-manager-callout-error-devel >= 2
-BuildRequires:	globus-gram-protocol-devel >= 11
-BuildRequires:	globus-common-devel >= 15
-BuildRequires:	globus-usage-devel >= 3
+BuildRequires:	globus-xio-devel >= 3
+BuildRequires:	globus-xio-popen-driver-devel >= 2
 BuildRequires:	globus-rsl-devel >= 9
-BuildRequires:	globus-gass-cache-devel >= 8
-BuildRequires:	libxml2-devel >= 2.6.11
-BuildRequires:	globus-gass-transfer-devel >= 7
-BuildRequires:	globus-gram-protocol-doc >= 11
-BuildRequires:	globus-common-doc >= 14
-BuildRequires:  globus-gram-client-tools >= 10
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-# For and tests
-BuildRequires:  libtool-ltdl-devel >= 2.2
+BuildRequires:	globus-gram-job-manager-callout-error-devel >= 2
+BuildRequires:	globus-scheduler-event-generator-devel >= 4
+BuildRequires:	globus-usage-devel >= 3
+%if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	libopenssl-devel
+%else
+BuildRequires:	openssl-devel
 %endif
-BuildRequires:  pkgconfig
-BuildRequires:  globus-gsi-cert-utils-progs >= 0
-BuildRequires:  globus-gatekeeper >= 0
-BuildRequires:  globus-gram-job-manager-scripts >= 0
-BuildRequires:  globus-gram-job-manager-fork-setup-poll >= 0
-BuildRequires:  globus-gram-client-devel >= 0
+BuildRequires:	libxml2-devel
+#		Additional requirements for make check
+BuildRequires:	globus-io-devel >= 9
+BuildRequires:	globus-gram-client-devel >= 3
+BuildRequires:	globus-gass-server-ez-devel >= 2
+BuildRequires:	globus-common-progs >= 15
+BuildRequires:	globus-gatekeeper >= 9
+BuildRequires:	globus-gram-client-tools >= 10
 BuildRequires:	globus-gass-copy-progs >= 8
-BuildRequires:	globus-gass-server-ez-devel >= 0
+BuildRequires:	globus-gass-cache-program >= 5
+BuildRequires:	globus-gram-job-manager-scripts >= 6
 BuildRequires:	globus-proxy-utils >= 5
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
-%if %{?fedora}%{!?fedora:0} >= 24
-BuildRequires:  perl-Test
+BuildRequires:	globus-gsi-cert-utils-progs
+BuildRequires:	globus-gram-job-manager-fork-setup-poll
+BuildRequires:	openssl
+BuildRequires:	perl(Test)
+BuildRequires:	perl(Test::More)
+
+%if %{?suse_version}%{!?suse_version:0}
+%global libpkg libglobus_seg_job_manager
+%else
+%global libpkg globus-seg-job-manager
 %endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%package -n libglobus_seg_job_manager
-Summary:	Grid Community Toolkit - GRAM Jobmanager SEG Library
-Group:		System Environment/Libraries
-%endif
+Requires:	globus-xio-popen-driver%{?_isa} >= 2
+Requires:	globus-common-progs >= 15
+Requires:	globus-gatekeeper >= 9
+Requires:	globus-gram-client-tools >= 10
+Requires:	globus-gass-copy-progs >= 8
+Requires:	globus-gass-cache-program >= 5
+Requires:	globus-gram-job-manager-scripts >= 6
+Requires:	globus-proxy-utils >= 5
+Requires:	globus-gsi-cert-utils-progs
+Requires:	%{libpkg}%{?_isa} = %{version}-%{release}
+Obsoletes:	%{name}-doc < 14.38
 
-%package doc
-Summary:	Grid Community Toolkit - GRAM Jobmanager Documentation Files
-Group:		Documentation
-%if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:	noarch
-%endif
+%package -n %{libpkg}
+Summary:	Grid Community Toolkit - Scheduler Event Generator Job Manager
+Group:		Applications/Internet
 Requires:	%{name} = %{version}-%{release}
-
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%description -n libglobus_seg_job_manager
-The Grid Community Toolkit (GCT) is an open source software toolkit used for
-building grid systems and applications. It is a fork of the Globus Toolkit
-originally created by the Globus Alliance. It is supported by the Grid
-Community Forum (GridCF) that provides community-based support for core
-software packages in grid computing.
-
-The libglobus_seg_job_manager package contains:
-GRAM Jobmanager SEG Library
+%if %{?suse_version}%{!?suse_version:0}
+Provides:	globus-seg-job-manager = %{version}-%{release}
+Obsoletes:	globus-seg-job-manager < %{version}-%{release}
 %endif
 
 %description
@@ -117,92 +86,71 @@ software packages in grid computing.
 
 The %{name} package contains:
 GRAM Jobmanager
-GRAM Job Manager Setup
 
-%description doc
+%description -n %{libpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
 originally created by the Globus Alliance. It is supported by the Grid
 Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
-The %{name}-doc package contains:
-GRAM Jobmanager Documentation Files
+The %{libpkg} package contains:
+Scheduler Event Generator Job Manager
 
 %prep
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-%if %{?rhel}%{!?rhel:0} == 5
-export OPENSSL="$(which openssl101e)"
-%endif
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+export GLOBUS_VERSION=6.0
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
-find ${RPM_BUILD_ROOT} -name 'libglobus*.la' -exec rm -vf '{}' \;
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-rm -rf ${RPM_BUILD_ROOT}%{_localstatedir}/lib/globus/gram_job_state
-rm -rf ${RPM_BUILD_ROOT}%{_localstatedir}/log/globus
-%endif
+# Remove libtool archives (.la files)
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-make %{?_smp_mflags} check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%post -n %{libpkg} -p /sbin/ldconfig
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%post
-mkdir -p %{_localstatedir}/lib/globus
-[ -d %{_localstatedir}/lib/globus/gram_job_state ] || \
-    mkdir -m 1777 %{_localstatedir}/lib/globus/gram_job_state
-[ -d %{_localstatedir}/log/globus ] || \
-    mkdir -m 1777 %{_localstatedir}/log/globus
-%endif
+%postun -n %{libpkg} -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
-%dir %{_datadir}/globus/globus_gram_job_manager
-%{_datadir}/globus/globus_gram_job_manager/*.rvf
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%if %{?suse_version}%{!?suse_version:0} < 1315
+%{_bindir}/globus-personal-gatekeeper
+%{_sbindir}/globus-gram-streamer
+%{_sbindir}/globus-job-manager
+%{_sbindir}/globus-job-manager-lock-test
+%{_sbindir}/globus-rvf-check
+%{_sbindir}/globus-rvf-edit
+%dir %{_datadir}/globus
+%dir %{_datadir}/globus/%{_name}
+%{_datadir}/globus/%{_name}/globus-gram-job-manager.rvf
+%config(noreplace) %{_sysconfdir}/logrotate.d/globus-job-manager
+%dir %{_localstatedir}/lib/globus
 %dir %{_localstatedir}/lib/globus/gram_job_state
 %dir %{_localstatedir}/log/globus
-%endif
+%dir %{_sysconfdir}/globus
 %config(noreplace) %{_sysconfdir}/globus/globus-gram-job-manager.conf
-%config(noreplace) %{_sysconfdir}/logrotate.d/globus-job-manager
-%{_sbindir}/*
-%{_bindir}/*
-%{_mandir}/man8/*
-%{_mandir}/man1/*
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%doc %{_mandir}/man1/globus-personal-gatekeeper.1*
+%doc %{_mandir}/man5/rsl.5*
+%doc %{_mandir}/man8/globus-job-manager.8*
+%doc %{_mandir}/man8/globus-rvf-check.8*
+%doc %{_mandir}/man8/globus-rvf-edit.8*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
-%files -n libglobus_seg_job_manager
+%files -n %{libpkg}
 %defattr(-,root,root,-)
-%endif
-%{_libdir}/libglobus*.so*
-
-%files doc
-%defattr(-,root,root,-)
-%{_mandir}/man5/*
+# This is a loadable module (plugin)
+%{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
 * Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.37-1
@@ -471,7 +419,7 @@ mkdir -p %{_localstatedir}/lib/globus
 - GRAM-232: Incorrect directory permissions cause an infinite loop
 - GRAM-302: Incorrect error when state file write fails
 - GRAM-301: GRAM validation file parser doesn't handle empty quoted values
-            correctly
+	    correctly
 - GRAM-300: GRAM job manager doxygen refers to obsolete command-line options
 - GRAM-299: Not all job log messages obey loglevel RSL attribute
 - GRAM-296: Compile Failure on Solaris

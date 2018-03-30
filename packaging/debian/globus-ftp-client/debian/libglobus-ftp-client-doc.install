@@ -1,6 +1,2 @@
-#! /usr/bin/dh-exec
-
-usr/share/doc/libglobus-ftp-client-doc/html/*
-usr/share/doc/libglobus-ftp-client-doc/html/*/*
-usr/share/man/man3/globus*
-usr/share/man/man3/GLOBUS*
+debian/tmp/usr/share/doc/libglobus-ftp-client-dev/html
+debian/tmp/usr/share/man/man3/*

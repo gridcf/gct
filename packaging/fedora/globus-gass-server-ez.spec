@@ -1,42 +1,36 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gass-server-ez
 %global soname 2
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	5.8
 Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gass-transfer-devel >= 7
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
+BuildRequires:	globus-gssapi-gsi-devel >= 10
+BuildRequires:	globus-gss-assist-devel >= 8
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package progs
@@ -48,11 +42,8 @@ Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-gss-assist-devel%{?_isa} >= 8
-Requires:	globus-gass-transfer-devel%{?_isa} >= 7
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -98,31 +89,18 @@ Globus Gass Server_ez Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -130,19 +108,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%{_libdir}/libglobus_gass_server_ez.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files progs
 %defattr(-,root,root,-)
-%{_bindir}/*
+%{_bindir}/globus-gass-server
+%{_bindir}/globus-gass-server-shutdown
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gass_server_ez.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 5.8-3

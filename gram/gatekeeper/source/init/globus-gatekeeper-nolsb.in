@@ -5,8 +5,8 @@
 
 ### BEGIN INIT INFO
 # Provides:          globus-gatekeeper
-# Required-Start:    $network $time
-# Required-Stop:     $network
+# Required-Start:    $remote_fs $network $time
+# Required-Stop:     $remote_fs $network
 @DEFAULT_START_LINE@
 @DEFAULT_STOP_LINE@
 # Short-Description: Globus Gatekeeper

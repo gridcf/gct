@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gass-copy-doc \
+    libglobus-gass-copy-dev 9.29 \
+    libglobus-gass-copy-doc -- "$@"

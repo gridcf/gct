@@ -1,55 +1,40 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-authz-callout-error
 %global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	3.6
 Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Globus authz error library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if "%{?rhel}" == "5"
-BuildRequires:	graphviz-gd
-%endif
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg libglobus_gsi_authz_callout_error%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus authz error library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package devel
 Summary:	Grid Community Toolkit - Globus authz error library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-common-devel%{?_isa} >= 14
 
 %package doc
 Summary:	Grid Community Toolkit - Globus authz error library Documentation Files
@@ -57,9 +42,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -105,32 +89,18 @@ Globus authz error library (used by globus authz callouts) Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
-
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -138,21 +108,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%doc %{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus_*so.*
+%{_libdir}/libglobus_gsi_authz_callout_error.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus_*so
+%{_libdir}/libglobus_gsi_authz_callout_error.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/*/*
+%doc %{_mandir}/man3/*
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 3.6-3

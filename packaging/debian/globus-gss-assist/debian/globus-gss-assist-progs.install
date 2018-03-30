@@ -1,0 +1,6 @@
+debian/tmp/usr/sbin/grid-mapfile-add-entry
+debian/tmp/usr/sbin/grid-mapfile-check-consistency
+debian/tmp/usr/sbin/grid-mapfile-delete-entry
+debian/tmp/usr/share/man/man8/grid-mapfile-add-entry.8
+debian/tmp/usr/share/man/man8/grid-mapfile-check-consistency.8
+debian/tmp/usr/share/man/man8/grid-mapfile-delete-entry.8

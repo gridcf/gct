@@ -1,0 +1,2 @@
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/pkgconfig/globus-xio-popen-driver.pc

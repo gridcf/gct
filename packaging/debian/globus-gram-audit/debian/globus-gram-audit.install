@@ -1,0 +1,6 @@
+debian/tmp/usr/sbin/globus-gram-audit
+debian/tmp/usr/share/man/man8/globus-gram-audit.8
+debian/tmp/etc/globus/gram-audit.conf
+debian/tmp/etc/cron.hourly/globus-gram-audit
+debian/tmp/usr/share/globus/gram-audit/*.sql
+debian/tmp/var/lib/globus/gram-audit

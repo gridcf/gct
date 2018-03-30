@@ -6,8 +6,8 @@
 # description: Controls sshftp access to the globus-gridftp-server.
 ### BEGIN INIT INFO
 # Provides:          globus-gridftp-sshftp
-# Required-Start:    $network $time
-# Required-Stop:
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog
 @DEFAULT_START_LINE@
 @DEFAULT_STOP_LINE@
 # Short-Description: Globus GridFTP SSHFTP

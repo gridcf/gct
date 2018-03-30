@@ -147,9 +147,12 @@ globus_gram_job_manager_config_init(
     /* Default log level if nothing specified on command-line or config file */
     config->log_levels = -1;
 
+    /* Default to disable usage statistics collection */
+    config->usage_disabled = GLOBUS_TRUE;
+
     /* Default to using GLOBUS_USAGE_TARGETS environment variable.
      * If not set, use the Globus usage stats service
-     * Eitehr can be overridden by using -disable-usagestats or setting
+     * Either can be overridden by using -disable-usagestats or setting
      * -usagestats-targets in the configuration file
      */
     if ((tmp = getenv("GLOBUS_USAGE_TARGETS")) != NULL)
@@ -369,7 +372,13 @@ globus_gram_job_manager_config_init(
         }
         else if (strcmp(argv[i], "-disable-usagestats") == 0)
         {
+            /* This is the default
+               The option is kept for backward compatibility */
             config->usage_disabled = GLOBUS_TRUE;
+        }
+        else if (strcmp(argv[i], "-no-disable-usagestats") == 0)
+        {
+            config->usage_disabled = GLOBUS_FALSE;
         }
         else if (strcmp(argv[i], "-usagestats-targets") == 0
                 && (i+1 < argc))

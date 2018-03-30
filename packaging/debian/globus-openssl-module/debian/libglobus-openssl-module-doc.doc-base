@@ -1,7 +1,7 @@
 Document: globus-openssl-module
 Title: Debian globus-openssl-module Manual
-Author: Globus Alliance
-Abstract: The Globus toolkit, Globus OpenSSL Module Wrapper
+Author: Globus Alliance and Grid Community Forum
+Abstract: The Grid Community Toolkit, Globus OpenSSL Module Wrapper
 Section: Programming
 
 Format: HTML

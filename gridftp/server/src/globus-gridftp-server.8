@@ -2,12 +2,12 @@
 .\"     Title: globus-gridftp-server
 .\"    Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/11/2018
+.\"      Date: 03/30/2018
 .\"    Manual: Globus Toolkit Manual
 .\"    Source: Globus Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-GRIDFTP\-SER" "8" "03/11/2018" "Globus Toolkit 6" "Globus Toolkit Manual"
+.TH "GLOBUS\-GRIDFTP\-SER" "8" "03/30/2018" "Globus Toolkit 6" "Globus Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -177,7 +177,21 @@ chroot_path\&.
 .PP
 \fB\-auth\-level number\fR
 .RS 4
-Add levels together to use more than one\&. 0 = Disables all authorization checks\&. 1 = Authorize identity\&. 2 = Authorize all file/resource accesses\&. 4 = Disable changing process uid to authenticated user (no setuid) \(em DO NOT use this when process is started as root\&. If not set uses level 2 for front ends and level 1 for data nodes\&. Note that levels 2 and 4 imply level 1 as well\&.
+Add levels together to use more than one\&. If not set uses level 2 for front ends and level 1 for data nodes\&. Note that levels 2 and 4 imply level 1 as well\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+0 = Disables all authorization checks\&.
+1 = Authorize identity\&.
+2 = Authorize all file/resource accesses\&.
+4 = Disable changing process uid to authenticated user (no
+    setuid) \-\- DO NOT use this when process is started as root\&.
+.fi
+.if n \{\
+.RE
+.\}
 .sp
 This option can also be set in the configuration file as
 auth_level\&.
@@ -564,7 +578,7 @@ Disable transmission of per\-transfer usage statistics\&. See the Usage Statisti
 .sp
 This option can also be set in the configuration file as
 disable_usage_stats\&. The default value of this option is
-FALSE\&.
+TRUE\&.
 .RE
 .PP
 \fB\-usage\-stats\-target string\fR
@@ -591,13 +605,14 @@ Comma separated list of contact strings (host:port) for usage statistics receive
 *(a) APP \- guc, rft, generic library app, etc\&. (client supplied)
 *(V) APPVER \- version string of above\&. (client supplied)
 (f) FILE \- name of file/data transferred
-(i) CLIENTIP \- ip address of host running client (control channel)
-(I) DATAIP \- ip address of source/dest host of data (data channel)
+(i) CLIENTIP \- ip address of host running client (control chan)
+(I) DATAIP \- ip address of source/dest host of data (data chan)
 (u) USER \- local user name the transfer was performed as
 (d) USERDN \- DN that was mapped to user id
 (C) CONFID \- ID defined by \-usage\-stats\-id config option
-(U) SESSID \- unique id that can be used to match transfers in a session and
-    transfers across source/dest of a third party transfer\&. (client supplied)
+(U) SESSID \- unique id that can be used to match transfers in
+             a session and transfers across source/dest of a
+             third party transfer\&. (client supplied)
 .fi
 .if n \{\
 .RE
@@ -663,7 +678,18 @@ stripe_count\&.
 .PP
 \fB\-sl number,\-stripe\-layout number\fR
 .RS 4
-Stripe layout\&. 1 = Partitioned 2 = Blocked\&.
+Stripe layout\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+1 = Partitioned
+2 = Blocked
+.fi
+.if n \{\
+.RE
+.\}
 .sp
 This option can also be set in the configuration file as
 stripe_layout\&. The default value of this option is

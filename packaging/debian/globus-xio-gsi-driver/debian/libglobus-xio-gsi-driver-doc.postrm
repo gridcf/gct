@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-xio-gsi-driver-doc \
+    libglobus-xio-gsi-driver-dev 4.2 \
+    libglobus-xio-gsi-driver-doc -- "$@"

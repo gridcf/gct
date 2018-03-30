@@ -1,0 +1,4 @@
+debian/tmp/usr/include/globus/*
+debian/tmp/usr/lib/*/libglobus_rsl.so
+debian/tmp/usr/lib/*/libglobus_rsl_assist.so
+debian/tmp/usr/lib/*/pkgconfig/globus-rsl.pc

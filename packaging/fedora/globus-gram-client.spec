@@ -1,66 +1,46 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-client
 %global soname 3
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	13.19
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Client Library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-rsl-devel >= 9
+BuildRequires:	globus-gram-protocol-devel >= 11
 BuildRequires:	globus-io-devel >= 9
-BuildRequires:	globus-gram-protocol-doc >= 11
-BuildRequires:	globus-common-doc >= 14
-BuildRequires:	openssl
+BuildRequires:	globus-rsl-devel >= 9
+BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	doxygen
-BuildRequires:	graphviz
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-%if 0%{?suse_version} > 0
-BuildRequires: libtool
-%else
-BuildRequires: libtool-ltdl-devel
-%endif
-BuildRequires:  pkgconfig
-%if %{?fedora}%{!?fedora:0} >= 18 || %{?rhel}%{!?rhel:0} >= 6
-BuildRequires:  perl-Test-Simple
-%endif
+#		Additional requirements for make check
+BuildRequires:	openssl
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - GRAM Client Library
 Group:		System Environment/Libraries
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
 
 %package devel
 Summary:	Grid Community Toolkit - GRAM Client Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-gram-protocol-devel%{?_isa} >= 11
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-rsl-devel%{?_isa} >= 9
-Requires:	globus-io-devel%{?_isa} >= 9
 
 %package doc
 Summary:	Grid Community Toolkit - GRAM Client Library Documentation Files
@@ -68,9 +48,8 @@ Group:		Documentation
 %if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
 BuildArch:	noarch
 %endif
-Requires:	%{mainpkg} = %{version}-%{release}
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -116,34 +95,21 @@ GRAM Client Library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
-GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -151,21 +117,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*.so.*
+%{_libdir}/libglobus_gram_client.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libglobus_gram_client.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files doc
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}/html
-%{_docdir}/%{name}-%{version}/html/*
-%{_mandir}/man3/*
+%doc %{_mandir}/man3/*
+%dir %{_pkgdocdir}
+%dir %{_pkgdocdir}/html
+%doc %{_pkgdocdir}/html/*
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Tue Jul 11 2017 Globus Toolkit <support@globus.org> - 13.19-1
@@ -218,7 +186,7 @@ rm -rf $RPM_BUILD_ROOT
 - Fix Source path
 
 * Wed Jul 23 2014 Globus Toolkit <support@globus.org> - 13.7-2
-- Add %check to build
+- Add %%check to build
 
 * Mon Jun 09 2014 Globus Toolkit <support@globus.org> - 13.7-1
 - Merge changes from Mattias Ellert
@@ -242,7 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 12.4-8
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Wed Feb 20 2013 Globus Toolkit <support@globus.org> - 12.4-7
 - Workaround missing F18 doxygen/latex dependency

@@ -1,39 +1,22 @@
 Source: globus-gass-cache-program
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev, libglobus-gram-client-dev, libglobus-gass-server-ez-dev, libglobus-gass-copy-dev, libglobus-gass-cache-dev
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gass-cache-dev (>= 8), libglobus-gass-copy-dev (>= 8), libglobus-gass-transfer-dev (>= 7), libglobus-gass-server-ez-dev (>= 4), libglobus-gram-client-dev (>= 12)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gass-cache-program
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gass-cache-program
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-gass-cache-program
 Section: net
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
-Description: Globus Toolkit - Tools to manipulate local and remote GASS caches
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Tools to manipulate local and remote GASS caches
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-gass-cache-program package contains:
  Tools to manipulate local and remote GASS caches
-
-Package: globus-gass-cache-program-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-gass-cache-program (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Tools to manipulate local and remote GASS caches Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gass-cache-program-dbg package contains:
- Tools to manipulate local and remote GASS caches Debug Symbols

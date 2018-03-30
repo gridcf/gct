@@ -1,14 +1,15 @@
-#! /bin/sh
+#!/bin/sh
+set -e
 
-if which update-rc.d  > /dev/null 2>&1; then
-	update-rc.d globus-gridftp-server defaults
-	update-rc.d globus-gridftp-sshftp defaults
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/globus-gridftp-server" ]; then
+		update-rc.d globus-gridftp-server defaults >/dev/null
+		invoke-rc.d globus-gridftp-server start || exit 1
+	fi
+	if [ -x "/etc/init.d/globus-gridftp-sshftp" ]; then
+		update-rc.d globus-gridftp-sshftp defaults >/dev/null
+		invoke-rc.d globus-gridftp-sshftp start || exit 1
+	fi
 fi
 
-if which invoke-rc.d >/dev/null 2>&1; then
-	invoke-rc.d globus-gridftp-server start
-	invoke-rc.d globus-gridftp-sshftp start
-else
-	/etc/init.d/globus-gridftp-server start
-	/etc/init.d/globus-gridftp-sshftp start
-fi
+#DEBHELPER#

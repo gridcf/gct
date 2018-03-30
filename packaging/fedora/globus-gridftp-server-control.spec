@@ -1,68 +1,51 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gridftp-server-control
 %global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	7.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
 Group:		System Environment/Libraries
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-Requires:	libglobus_xio_pipe_driver%{?_isa} >= 2
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
-%else
-Requires:	globus-xio-pipe-driver%{?_isa} >= 2
-Requires:	globus-xio-gsi-driver%{?_isa} >= 2
-%endif
-
-BuildRequires:	globus-xio-pipe-driver-devel >= 2
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-xio-devel >= 3
+BuildRequires:	globus-xio-gsi-driver-devel >= 2
+BuildRequires:	globus-xio-pipe-driver-devel >= 2
 BuildRequires:	globus-gss-assist-devel >= 8
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
+BuildRequires:	globus-gssapi-gsi-devel >= 10
+BuildRequires:	globus-gsi-openssl-error-devel >= 2
+BuildRequires:	globus-gssapi-error-devel >= 4
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
 %global nmainpkg -n %{mainpkg}
 %else
 %global mainpkg %{name}
 %endif
 
-%if %{?nmainpkg:1}%{!?nmainpkg:0} != 0
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %package %{?nmainpkg}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 Group:		System Environment/Libraries
-Requires:	libglobus_xio_pipe_driver%{?_isa} >= 2
-Requires:	libglobus_xio_gsi_driver%{?_isa} >= 2
+Provides:	%{name} = %{version}-%{release}
+Obsoletes:	%{name} < %{version}-%{release}
 %endif
+
+Requires:	globus-xio-gsi-driver%{?_isa} >= 2
+Requires:	globus-xio-pipe-driver%{?_isa} >= 2
 
 %package devel
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library Development Files
 Group:		Development/Libraries
 Requires:	%{mainpkg}%{?_isa} = %{version}-%{release}
-Requires:	globus-xio-pipe-driver-devel%{?_isa} >= 2
-Requires:	globus-common-devel%{?_isa} >= 14
-Requires:	globus-xio-gsi-driver-devel%{?_isa} >= 2
-Requires:	globus-xio-devel%{?_isa} >= 3
-Requires:	globus-gssapi-error-devel%{?_isa} >= 4
-Requires:	globus-gss-assist-devel%{?_isa} >= 8
 
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?nmainpkg:1}%{!?nmainpkg:0}
 %description %{?nmainpkg}
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
 building grid systems and applications. It is a fork of the Globus Toolkit
@@ -98,31 +81,18 @@ Globus GridFTP Server Library Development Files
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
-find $RPM_BUILD_ROOT%{_libdir} -name 'lib*.la' -exec rm -v '{}' \;
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -130,14 +100,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?nmainpkg}
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_libdir}/libglobus*so.*
+%{_libdir}/libglobus_gridftp_server_control.so.*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/globus/*
-%{_libdir}/libglobus*.so
+%{_libdir}/libglobus_gridftp_server_control.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
@@ -253,7 +223,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Feb 14 2012 Joseph Bester <bester@mcs.anl.gov> - 2.4-1
 - RIC-226: Some dependencies are missing in GPT metadata
 
-* Mon Dec 06 2011 Joseph Bester <bester@mcs.anl.gov> - 2.3-1
+* Tue Dec 06 2011 Joseph Bester <bester@mcs.anl.gov> - 2.3-1
 - fix mlst double space
 
 * Mon Dec 05 2011 Joseph Bester <bester@mcs.anl.gov> - 2.2-4

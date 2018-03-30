@@ -1,24 +1,23 @@
 Source: globus-gsi-proxy-core
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-gsi-proxy-ssl-dev (>= 4), libglobus-gsi-credential-dev (>= 5), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-common-dev (>= 14), libglobus-gsi-sysconfig-dev (>= 5), doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, pkg-config
-Standards-Version: 3.9.2
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-proxy-ssl-dev (>= 4), libglobus-gsi-credential-dev (>= 5), libssl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gsi-proxy-core
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gsi-proxy-core
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gsi-proxy-core0
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Proxy Core Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus GSI Proxy Core Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-proxy-core0 package contains:
  Globus GSI Proxy Core Library
@@ -26,43 +25,31 @@ Description: Globus Toolkit - Globus GSI Proxy Core Library
 Package: libglobus-gsi-proxy-core-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gsi-proxy-core0 (= ${binary:Version}), ${misc:Depends}, libglobus-gsi-proxy-ssl-dev, libglobus-gsi-credential-dev, libglobus-openssl-module-dev, libglobus-gsi-openssl-error-dev, libglobus-gsi-cert-utils-dev, libglobus-common-dev, libglobus-gsi-sysconfig-dev
-Recommends: libglobus-gsi-proxy-core-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus GSI Proxy Core Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gsi-proxy-core0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-proxy-ssl-dev (>= 4), libglobus-gsi-credential-dev (>= 5), libssl-dev
+Suggests: libglobus-gsi-proxy-core-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus GSI Proxy Core Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-proxy-core-dev package contains:
  Globus GSI Proxy Core Library Development Files
 
 Package: libglobus-gsi-proxy-core-doc
 Section: doc
-Architecture: any
-Depends: libglobus-gsi-proxy-core-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Proxy Core Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus GSI Proxy Core Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gsi-proxy-core-doc package contains:
  Globus GSI Proxy Core Library Documentation Files
-
-Package: libglobus-gsi-proxy-core-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gsi-proxy-core0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus GSI Proxy Core Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gsi-proxy-core-dbg package contains:
- Globus GSI Proxy Core Library Debug Symbols

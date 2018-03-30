@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gsi-callback-doc \
+    libglobus-gsi-callback-dev 5.14 \
+    libglobus-gsi-callback-doc -- "$@"

@@ -1,0 +1,4 @@
+# It doesn't make sense to name the package after a plugin
+package-name-doesnt-match-sonames libglobus-seg-pbs
+# This is a loadable plugin - unversioned soname expected
+shlib-without-versioned-soname */libglobus_seg_pbs.so *

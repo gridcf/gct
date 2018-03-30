@@ -1,3 +1,3 @@
-# These files are created by the postinstallation maintainer script
-file-missing-in-md5sums usr/share/globus/globus-sh-tools-vars.sh
-file-missing-in-md5sums usr/share/globus/setup/globus-sh-tools-vars.sh
+# This binary is not supposed to be called directly by users
+# Use the wrappers globus-hostname and globus-domainname instead
+binary-without-manpage usr/sbin/globus-libc-hostname

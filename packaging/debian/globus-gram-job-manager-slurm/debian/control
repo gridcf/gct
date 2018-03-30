@@ -1,40 +1,24 @@
 Source: globus-gram-job-manager-slurm
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-gram-job-manager-slurm
 Section: net
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gass-cache-program, globus-common-progs, globus-gram-job-manager, globus-gram-job-manager-setup-slurm
-Recommends: slurm-llnl
-Description: Globus Toolkit - SLURM Job Manager Adapter
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager (>= 13), globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
+Replaces: globus-gram-job-manager-slurm-setup-poll (<< 2.9)
+Conflicts: globus-gram-job-manager-slurm-setup-poll (<< 2.9)
+Description: Grid Community Toolkit - SLURM Job Manager Support
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-setup-slurm package contains:
- SLURM Job Manager
-
-Package: globus-gram-job-manager-slurm-setup-poll
-Section: net
-Architecture: all
-Provides: globus-gram-job-manager-setup-slurm
-Conflicts: globus-gram-job-manager-slurm-setup-seg
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gass-cache-program, globus-common-progs, globus-gram-job-manager-slurm
-Description: Globus Toolkit - SLURM Job Manager Polling Setup
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gram-job-manager-setup-slurm package contains:
- SLURM Job Manager
-
+ The globus-gram-job-manager-slurm package contains:
+ SLURM Job Manager Support

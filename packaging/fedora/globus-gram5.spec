@@ -5,21 +5,21 @@ Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM5 Bundle
 
 Group:		System Environment/Libraries
-License:	ASL 2.0
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       globus-gatekeeper
-Requires:       globus-gram-job-manager
-Requires:       globus-gram-job-manager-scripts
-Requires:       globus-gram-job-manager-fork-setup-poll
-Requires:       globus-gram-client-tools
-Requires:       globus-gass-cache-program
-Requires:       globus-gass-server-ez-progs
-Requires:       globus-gss-assist-progs
-Requires:       globus-common-progs
-Requires:       globus-gsi-cert-utils-progs
-Requires:       globus-proxy-utils
+Requires:	globus-gatekeeper
+Requires:	globus-gram-job-manager
+Requires:	globus-gram-job-manager-scripts
+Requires:	globus-gram-job-manager-fork-setup-poll
+Requires:	globus-gram-client-tools
+Requires:	globus-gass-cache-program
+Requires:	globus-gass-server-ez-progs
+Requires:	globus-gss-assist-progs
+Requires:	globus-common-progs
+Requires:	globus-gsi-cert-utils-progs
+Requires:	globus-proxy-utils
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -35,17 +35,13 @@ GRAM5 Client and Server Programs and Libraries
 %build
 
 %install
-rm -rf "$RPM_BUILD_ROOT"
-mkdir "$RPM_BUILD_ROOT"
 
 %files
-
-%clean
 
 %post
 
 %postun
 
 %changelog
-* Mon Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
 - GT 5.2.2 New Metapackage

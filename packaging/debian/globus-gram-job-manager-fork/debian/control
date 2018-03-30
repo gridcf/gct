@@ -1,69 +1,58 @@
 Source: globus-gram-job-manager-fork
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libglobus-common-dev, libglobus-xio-dev, libglobus-scheduler-event-generator-dev, libglobus-gram-protocol-dev, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz, dh-exec
-Standards-Version: 3.9.0
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3), libglobus-scheduler-event-generator-dev (>= 4), libglobus-gram-protocol-dev (>= 11)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: globus-gram-job-manager-fork
 Section: net
-Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager-fork-setup-poll (= ${binary:Version}) | globus-gram-job-manager-fork-setup-seg (= ${binary:Version}) 
+Architecture: any
+Multi-Arch: foreign
 Provides: globus-gram-job-manager-setup-fork
-Replaces: globus-gram-job-manager-setup-fork
-Recommends: globus-gram-job-manager-fork-doc (= ${binary:Version})
-Description: Globus Toolkit - Fork Job Manager
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Replaces: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3), globus-gram-job-manager-fork-setup-seg (<< 1.5-3~)
+Conflicts: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3)
+Breaks: globus-gram-job-manager-fork-setup-seg (<< 1.5-3~)
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${perl:Depends}, globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
+Recommends: globus-gram-job-manager-fork-setup-poll | globus-gram-job-manager-fork-setup-seg
+Description: Grid Community Toolkit - Fork Job Manager Support
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-gram-job-manager-fork package contains:
- Fork Job Manager
+ Fork Job Manager Support
 
 Package: globus-gram-job-manager-fork-setup-poll
 Section: net
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager-fork
-Recommends: globus-gram-job-manager-fork-doc (= ${binary:Version})
-Description: Globus Toolkit - Fork Job Manager
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: foreign
+Depends: globus-gram-job-manager-fork (>= ${source:Version}), globus-gram-job-manager-scripts (>= 4), ${misc:Depends}
+Description: Grid Community Toolkit - Fork Job Manager Support using polling
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-fork package contains:
- Fork Job Manager
+ The globus-gram-job-manager-fork-setup-poll package contains:
+ Fork Job Manager Support using polling to monitor job state
 
 Package: globus-gram-job-manager-fork-setup-seg
 Section: net
 Architecture: any
-Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager-fork, globus-scheduler-event-generator-progs
-Recommends: globus-gram-job-manager-fork-doc (= ${binary:Version})
-Description: Globus Toolkit - Fork Job Manager
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: globus-gram-job-manager-fork (= ${binary:Version}), globus-gram-job-manager-scripts (>= 4), globus-scheduler-event-generator-progs (>= 4), ${misc:Depends}, ${shlibs:Depends}
+Description: Grid Community Toolkit - Fork Job Manager Support using SEG
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
- The globus-gram-job-manager-fork package contains:
- Fork Job Manager
-
-Package: globus-gram-job-manager-fork-doc
-Section: doc
-Architecture: all
-Depends: globus-gram-job-manager-fork (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Fork Job Manager Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gram-job-manager-fork-doc package contains:
- Fork Job Manager Documentation Files
+ The globus-gram-job-manager-fork-setup-seg package contains:
+ Fork Job Manager Support using the scheduler event generator to monitor job
+ state

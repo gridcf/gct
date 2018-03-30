@@ -1,0 +1,4 @@
+debian/tmp/usr/bin/globus-gass-cache
+debian/tmp/usr/bin/globus-gass-cache-destroy
+debian/tmp/usr/bin/globus-gass-cache-util
+debian/tmp/usr/share/globus/globus-gass-cache-util.pl

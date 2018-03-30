@@ -1,3 +1,9 @@
+globus-ftp-control (8.3-1+gt6.@distro@) @distro@; urgency=low
+
+  * Default to host authz when using tls control channel
+
+ -- Globus Toolkit <support@globus.org>  Wed, 28 Mar 2018 21:40:04 +0000
+
 globus-ftp-control (8.2-1+gt6.@distro@) @distro@; urgency=low
 
   * fix leak

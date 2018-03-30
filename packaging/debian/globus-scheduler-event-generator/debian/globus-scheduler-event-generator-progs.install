@@ -1,0 +1,6 @@
+debian/tmp/usr/sbin/globus-scheduler-event-generator
+debian/tmp/usr/sbin/globus-scheduler-event-generator-admin
+debian/tmp/usr/share/man/man8/globus-scheduler-event-generator.8
+debian/tmp/usr/share/man/man8/globus-scheduler-event-generator-admin.8
+debian/tmp/etc/default/globus-scheduler-event-generator
+debian/tmp/etc/init.d/globus-scheduler-event-generator

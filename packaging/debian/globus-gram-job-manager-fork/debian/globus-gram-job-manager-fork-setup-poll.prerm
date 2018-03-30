@@ -1,16 +1,13 @@
-#! /bin/sh
+#!/bin/bash
 
-case "$1" in
-   remove)
-       globus-gatekeeper-admin -d jobmanager-fork-poll > /dev/null 2>&1 || :
-       ;;
-   upgrade)
-       :
-       ;;
-   deconfigure)
-       globus-gatekeeper-admin -d jobmanager-fork-poll > /dev/null 2>&1 || :
-       ;;
-   failed-upgrade)
-       :
-       ;;
-esac
+set -e
+
+#DEBHELPER#
+
+if [ "$1" != "remove" -a "$1" != "purge" ]; then
+	exit 0
+fi
+
+globus-gatekeeper-admin -d jobmanager-fork-poll > /dev/null 2>&1 || :
+
+exit 0

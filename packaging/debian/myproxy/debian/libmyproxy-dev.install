@@ -1,0 +1,14 @@
+debian/tmp/usr/include/globus/myproxy.h
+debian/tmp/usr/include/globus/myproxy_authorization.h
+debian/tmp/usr/include/globus/myproxy_constants.h
+debian/tmp/usr/include/globus/myproxy_creds.h
+debian/tmp/usr/include/globus/myproxy_delegation.h
+debian/tmp/usr/include/globus/myproxy_log.h
+debian/tmp/usr/include/globus/myproxy_protocol.h
+debian/tmp/usr/include/globus/myproxy_read_pass.h
+debian/tmp/usr/include/globus/myproxy_sasl_client.h
+debian/tmp/usr/include/globus/myproxy_sasl_server.h
+debian/tmp/usr/include/globus/myproxy_server.h
+debian/tmp/usr/include/globus/verror.h
+debian/tmp/usr/lib/*/libmyproxy.so
+debian/tmp/usr/lib/*/pkgconfig/myproxy.pc

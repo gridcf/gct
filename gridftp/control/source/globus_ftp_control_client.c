@@ -347,7 +347,7 @@ globus_ftp_control_use_tls(
     {
         rc = globus_io_attr_set_secure_authorization_mode(
             &handle->cc_handle.io_attr,
-            GLOBUS_IO_SECURE_AUTHORIZATION_MODE_NONE,
+            GLOBUS_IO_SECURE_AUTHORIZATION_MODE_HOST,
             NULL);
     }
 

@@ -1,27 +1,22 @@
-#! /bin/sh
+#!/bin/sh
 
-case "$1" in
-    remove)
-        globus-gatekeeper-admin -d jobmanager-pbs-seg > /dev/null 2>&1 || :
-        globus-scheduler-event-generator-admin -d pbs > /dev/null 2>&1 || :
+set -e
 
-        if which invoke-rc.d >/dev/null 2>&1; then
-            invoke-rc.d globus-scheduler-event-generator stop pbs || :
-        elif [ -x /etc/init.d/globus-scheduler-event-generator ]; then
-            /etc/init.d/globus-scheduler-event-generator stop pbs || :
-        fi
-        ;;
-    upgrade)
-        if which invoke-rc.d >/dev/null 2>&1; then
-            invoke-rc.d globus-scheduler-event-generator stop pbs || :
-        elif [ -x /etc/init.d/globus-scheduler-event-generator ]; then
-            /etc/init.d/globus-scheduler-event-generator stop pbs || :
-        fi
-        ;;
-    deconfigure)
-        globus-gatekeeper-admin -d jobmanager-pbs-seg > /dev/null 2>&1 || :
-        ;;
-    failed-upgrade)
-        :
-        ;;
-esac
+if [ -x "/etc/init.d/globus-scheduler-event-generator" ]; then
+	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+		invoke-rc.d globus-scheduler-event-generator stop pbs || :
+	else
+		/etc/init.d/globus-scheduler-event-generator stop pbs || :
+	fi
+fi
+
+#DEBHELPER#
+
+if [ "$1" != "remove" -a "$1" != "purge" ]; then
+	exit 0
+fi
+
+globus-gatekeeper-admin -d jobmanager-pbs-seg > /dev/null 2>&1 || :
+globus-scheduler-event-generator-admin -d pbs > /dev/null 2>&1 || :
+
+exit 0

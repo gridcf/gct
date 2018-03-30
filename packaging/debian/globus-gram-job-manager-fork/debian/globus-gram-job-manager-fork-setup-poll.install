@@ -1,2 +1,1 @@
-#! /usr/bin/dh-exec
-etc/grid-services/available/jobmanager-fork-poll
+debian/tmp/etc/grid-services/available/jobmanager-fork-poll

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gssapi-error-doc \
+    libglobus-gssapi-error-dev 5.6 \
+    libglobus-gssapi-error-doc -- "$@"

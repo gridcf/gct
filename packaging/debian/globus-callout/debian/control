@@ -1,68 +1,56 @@
 Source: globus-callout
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libltdl3-dev, libglobus-common-dev, doxygen (<< 1.6.2-1) | doxygen (>> 1.6.2-1), graphviz
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libltdl-dev, doxygen
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-callout
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-callout
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-callout0
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Callout Library
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus Callout Library
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-callout0 package contains:
- Globus Callout Library
+ Globus Callout Library - provides a platform independent way of
+ dealing with runtime loadable functions.
 
 Package: libglobus-callout-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-callout0 (= ${binary:Version}), ${misc:Depends}, libltdl3-dev, libglobus-common-dev
-Recommends: libglobus-callout-doc (= ${binary:Version})
-Description: Globus Toolkit - Globus Callout Library Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-callout0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15)
+Suggests: libglobus-callout-doc (= ${source:Version})
+Description: Grid Community Toolkit - Globus Callout Library Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-callout-dev package contains:
  Globus Callout Library Development Files
 
 Package: libglobus-callout-doc
 Section: doc
-Architecture: any
-Depends: libglobus-callout-dev (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Callout Library Documentation Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.17.5)
+Depends: ${misc:Depends}
+Description: Grid Community Toolkit - Globus Callout Library Documentation Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-callout-doc package contains:
  Globus Callout Library Documentation Files
-
-Package: libglobus-callout-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-callout0 (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Callout Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-callout-dbg package contains:
- Globus Callout Library Debug Symbols

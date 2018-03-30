@@ -1,0 +1,87 @@
+How to set up a gatekeeper with a GRAM job manager
+==================================================
+
+
+The following commands should be executed as root unless otherwise
+specified.
+
+
+Enabling a service configuration
+--------------------------------
+
+The gatekeeper service needs to have a GRAM job manager configured
+that runs the tasks that the gatekeeper accepts. In order to configure
+a job manager first install configuration package corresponding to
+your local resource management system (LRMS). For a small test setup
+without an LRMS use a "fork" service. The following configuration
+packages exists to choose from:
+
+ - globus-gram-job-manager-condor
+ - globus-gram-job-manager-fork-setup-poll
+ - globus-gram-job-manager-fork-setup-seg
+ - globus-gram-job-manager-lsf-setup-poll
+ - globus-gram-job-manager-lsf-setup-seg
+ - globus-gram-job-manager-pbs-setup-poll
+ - globus-gram-job-manager-pbs-setup-seg
+ - globus-gram-job-manager-sge-setup-poll
+ - globus-gram-job-manager-sge-setup-seg
+ - globus-gram-job-manager-slurm
+
+For many LRMSs you have a choice between a setup the keeps track of
+the state of the submitted jobs by polling the LRMS's queuing system,
+or a setup that uses the Globus Scheduler Event Generator service.
+
+After installing one of the packages above, enable the service you
+want to use by running
+
+  globus-gatekeeper-admin -e <type> [-n <name>]
+
+where <type> is the type of service you want to run, and the optional
+<name> is an name under which the service will be available.
+
+The list of available service types depends on what configuration
+packages you have installed and can be found by listing the
+/etc/grid-services/available directory. If the name option is omitted
+the name will be the same as the type.
+
+You can run more than one service in the same gatekeeper as long they
+have different names. If you want to have a default service configured
+this service should have the name "jobmanager".
+
+If you use one of the setups that uses the Globus Scheduler Event
+Generator services you must also activate this service.
+
+  globus-scheduler-event-generator-admin -e <type>
+
+Where <type> is the LRMS type for which events should be tracked. The
+list of available LRMS types depends on what configuration packages
+you have installed and can be found by listing the
+/etc/globus/scheduler-event-generator/available/ directory.
+
+Starting the service
+--------------------
+
+Before starting the service make sure you have a host certificate and
+key installed in the right locations and with the right permissions.
+
+ - /etc/grid-security/hostcert.pem
+ - /etc/grid-security/hostkey.pem
+
+When the configuration is completed enable the service by changing
+RUN=no to RUN=yes in /etc/default/globus-gatekeeper.
+
+To start the service, run
+
+  /etc/init.d/globus-gatekeeper start
+
+
+Testing the service
+-------------------
+
+Athentication test against the new gatekeeper - as a non-root user
+with a valid user proxy, run
+
+  globusrun -a -r <resource-contact>
+
+where <resource-contact> is the service's contact string. See "man
+globusrun" for details.

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+# Remove old no longer needed diversion
+if dpkg-divert --list /usr/share/globus/config.guess | \
+   grep -q /usr/share/globus/config.guess.gpt ; then
+    dpkg-divert --package globus-common-progs --remove --rename --divert \
+        /usr/share/globus/config.guess.gpt /usr/share/globus/config.guess
+fi

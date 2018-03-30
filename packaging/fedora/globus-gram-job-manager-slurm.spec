@@ -1,56 +1,35 @@
-%{!?perl_vendorlib: %global perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)}
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-gram-job-manager-slurm
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	2.8
 Release:	3%{?dist}
-Summary:	Grid Community Toolkit - SLURM Job Manager
+Summary:	Grid Community Toolkit - SLURM Job Manager Support
 
 Group:		Applications/Internet
-License:	%{apache_license}
+#		The slurm.pm file is BSD, the rest is ASL 2.0
+License:	%{?suse_version:Apache-2.0 and BSD-2-clause}%{!?suse_version:ASL 2.0 and BSD}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	noarch
 
-Requires:       globus-gram-job-manager-scripts >= 5
+%if ! %{?suse_version}%{!?suse_version:0}
+BuildRequires:	perl-generators
+%endif
+
+Requires:	globus-gram-job-manager >= 13
+Requires:	globus-gram-job-manager-scripts >= 4
 Requires:	globus-gass-cache-program >= 5
-Requires:	globus-common-progs >= 14
-%if 0%{?suse_version} > 0
-    %if %{suse_version} < 1140
-Requires:     perl = %{perl_version}
-    %else
+Requires:	globus-gatekeeper >= 9
+%if %{?suse_version}%{!?suse_version:0}
 %{perl_requires}
-    %endif
 %else
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
-BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-xio-devel >= 3
-BuildRequires:	globus-gram-protocol-devel >= 11
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildArch:      noarch
+Obsoletes:	%{name}-setup-poll < 2.9
 
-%package setup-poll
-Summary:        Grid Community Toolkit - SLURM Job Manager Setup Files
-Group:		Applications/Internet
-%if %{?fedora}%{!?fedora:0} >= 10 || %{?rhel}%{!?rhel:0} >= 6
-BuildArch:      noarch
-%endif
-Provides:       %{name}-setup
-Provides:       globus-gram-job-manager-setup
-Requires:	%{name} = %{version}-%{release}
-requires(post): globus-gram-job-manager-scripts >= 5
-requires(preun): globus-gram-job-manager-scripts >= 5
-Conflicts:      %{name}-setup-seg
+Requires(preun):	globus-gram-job-manager-scripts >= 4
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -60,90 +39,49 @@ Community Forum (GridCF) that provides community-based support for core
 software packages in grid computing.
 
 The %{name} package contains:
-SLURM Job Manager 
-
-%description setup-poll
-The Grid Community Toolkit (GCT) is an open source software toolkit used for
-building grid systems and applications. It is a fork of the Globus Toolkit
-originally created by the Globus Alliance. It is supported by the Grid
-Community Forum (GridCF) that provides community-based support for core
-software packages in grid computing.
-
-The %{name} package contains:
-SLURM Job Manager Setup using polling to monitor job state
+SLURM Job Manager Support
 
 %prep
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-export MPIEXEC=no
 export MPIRUN=no
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus \
-           --with-globus-state-dir=%{_localstatedir}/lib/globus \
-           --with-perlmoduledir=%{perl_vendorlib}
+export SRUN=%{_bindir}/srun
+export SBATCH=%{_bindir}/sbatch
+export SALLOC=%{_bindir}/salloc
+export SCANCEL=%{_bindir}/scancel
+export SCONTROL=%{_bindir}/scontrol
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir} \
+	   --with-perlmoduledir=%{perl_vendorlib}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-rm -rf $RPM_BUILD_ROOT/etc/grid-services/jobmanager-slurm
 
-%check
-make %{_smp_mflags} check
+# Remove jobmanager-slurm from install dir - leave it for admin configuration
+rm $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/jobmanager-slurm
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%post setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager-slurm > /dev/null 2>&1 || :
-    if [ ! -f /etc/grid-services/jobmanager ]; then
-        globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager
-    fi
-fi
-
-%preun setup-poll
+%preun
 if [ $1 -eq 0 ]; then
     globus-gatekeeper-admin -d jobmanager-slurm-poll > /dev/null 2>&1 || :
 fi
 
-%postun setup-poll
-if [ $1 -eq 1 ]; then
-    globus-gatekeeper-admin -e jobmanager-slurm-poll -n jobmanager-slurm > /dev/null 2>&1 || :
-elif [ $1 -eq 0 -a ! -f /etc/grid-services/jobmanager ]; then
-    globus-gatekeeper-admin -E > /dev/null 2>&1 || :
-fi
-
 %files
 %defattr(-,root,root,-)
+%{_datadir}/globus/globus_gram_job_manager/slurm.rvf
+%dir %{perl_vendorlib}/Globus
+%dir %{perl_vendorlib}/Globus/GRAM
 %dir %{perl_vendorlib}/Globus/GRAM/JobManager
 %{perl_vendorlib}/Globus/GRAM/JobManager/slurm.pm
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/*LICENSE*
-%dir %{_sysconfdir}/globus
 %config(noreplace) %{_sysconfdir}/globus/globus-slurm.conf
-%dir %{_datadir}/globus/globus_gram_job_manager
-%{_datadir}/globus/globus_gram_job_manager/slurm.rvf
-
-
-%files setup-poll
-%defattr(-,root,root,-)
-%dir %{_sysconfdir}/grid-services
-%dir %{_sysconfdir}/grid-services/available
 %config(noreplace) %{_sysconfdir}/grid-services/available/jobmanager-slurm-poll
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
+%doc %{_pkgdocdir}/LICENSE*
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.8-3

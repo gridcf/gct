@@ -1,24 +1,23 @@
 Source: globus-gass-server-ez
 Priority: optional
-Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Build-Depends: debhelper (>= 5), autotools-dev, libglobus-common-dev (>= 14), libglobus-gss-assist-dev (>= 8), libglobus-gass-transfer-dev (>= 7), pkg-config
-Standards-Version: 3.8.4
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 15), libglobus-gass-transfer-dev (>= 7), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 8)
+Standards-Version: 4.1.3
 Section: net
-DM-Upload-Allowed: yes
-Vcs-Browser: http://svn.nordugrid.org/trac/packaging/browser/debian/globus-gass-server-ez
-Vcs-Svn: http://svn.nordugrid.org/repos/packaging/debian/globus-gass-server-ez
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: libglobus-gass-server-ez2
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Server_ez
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus Gass Server_ez
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-server-ez2 package contains:
  Globus Gass Server_ez
@@ -26,13 +25,14 @@ Description: Globus Toolkit - Globus Gass Server_ez
 Package: globus-gass-server-ez-progs
 Section: net
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Server_ez Programs
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Description: Grid Community Toolkit - Globus Gass Server_ez Programs
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The globus-gass-server-ez-progs package contains:
  Globus Gass Server_ez Programs
@@ -40,43 +40,14 @@ Description: Globus Toolkit - Globus Gass Server_ez Programs
 Package: libglobus-gass-server-ez-dev
 Section: libdevel
 Architecture: any
-Depends: libglobus-gass-server-ez2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev, libglobus-gss-assist-dev, libglobus-gass-transfer-dev
-Description: Globus Toolkit - Globus Gass Server_ez Development Files
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
+Multi-Arch: same
+Depends: libglobus-gass-server-ez2 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-gass-transfer-dev (>= 7), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 8)
+Description: Grid Community Toolkit - Globus Gass Server_ez Development Files
+ The Grid Community Toolkit (GCT) is an open source software toolkit used for
+ building grid systems and applications. It is a fork of the Globus Toolkit
+ originally created by the Globus Alliance. It is supported by the Grid
+ Community Forum (GridCF) that provides community-based support for core
+ software packages in grid computing.
  .
  The libglobus-gass-server-ez-dev package contains:
  Globus Gass Server_ez Development Files
-
-Package: libglobus-gass-server-ez-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: libglobus-gass-server-ez2 (= ${binary:Version})
-Description: Globus Toolkit - Globus Gass Server_ez Library Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The libglobus-gass-server-ez-dbg package contains:
- Globus Gass Server_ez Library Debug Symbols
-
-Package: globus-gass-server-ez-dbg
-Section: debug
-Priority: extra
-Architecture: any
-Depends: globus-gass-server-ez-progs (= ${binary:Version}), ${misc:Depends}
-Description: Globus Toolkit - Globus Gass Server_ez Debug Symbols
- The Globus Toolkit is an open source software toolkit used for
- building Grid systems and applications. It is being developed by the
- Globus Alliance and many others all over the world. A growing number
- of projects and companies are using the Globus Toolkit to unlock the
- potential of grids for their cause.
- .
- The globus-gass-server-ez-dbg package contains:
- Globus Gass Server_ez Debug Symbols

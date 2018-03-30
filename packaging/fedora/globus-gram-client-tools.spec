@@ -1,34 +1,27 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		globus-gram-client-tools
 %global soname 0
-%if %{?suse_version}%{!?suse_version:0} >= 1315
-%global apache_license Apache-2.0
-%else
-%global apache_license ASL 2.0
-%endif
 %global _name %(tr - _ <<< %{name})
 Version:	11.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
 Group:		Applications/Internet
-License:	%{apache_license}
+License:	%{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
 URL:		https://github.com/gridcf/gct/
-Source:	%{_name}-%{version}.tar.gz
+Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	globus-common-progs%{?_isa} >= 14
-
 BuildRequires:	globus-common-devel >= 14
-BuildRequires:	globus-gass-server-ez-devel >= 4
 BuildRequires:	globus-gram-client-devel >= 12
-BuildRequires:	globus-gss-assist-devel >= 8
+BuildRequires:	globus-gram-protocol-devel >= 11
+BuildRequires:	globus-gass-transfer-devel >= 7
+BuildRequires:	globus-gass-server-ez-devel >= 4
 BuildRequires:	globus-rsl-devel >= 9
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-BuildRequires:  automake >= 1.11
-BuildRequires:  autoconf >= 2.60
-BuildRequires:  libtool >= 2.2
-%endif
-BuildRequires:  pkgconfig
+BuildRequires:	globus-gss-assist-devel >= 8
+
+Requires:	globus-common-progs >= 14
 
 %description
 The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -44,35 +37,35 @@ Job Management Tools (globusrun)
 %setup -q -n %{_name}-%{version}
 
 %build
-%if %{?fedora}%{!?fedora:0} >= 19 || %{?rhel}%{!?rhel:0} >= 7 || %{?suse_version}%{!?suse_version:0} >= 1315
-# Remove files that should be replaced during bootstrap
-rm -rf autom4te.cache
-
-autoreconf -if
-%endif
-
-
-%configure \
-           --disable-static \
-           --docdir=%{_docdir}/%{name}-%{version} \
-           --includedir=%{_includedir}/globus \
-           --libexecdir=%{_datadir}/globus
+%configure --disable-static \
+	   --includedir=%{_includedir}/globus \
+	   --libexecdir=%{_datadir}/globus \
+	   --docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/%{name}-%{version}
-%{_docdir}/%{name}-%{version}/GLOBUS_LICENSE
-%{_bindir}/*
-%{_mandir}/man1/*
+%{_bindir}/globus-job-cancel
+%{_bindir}/globus-job-clean
+%{_bindir}/globus-job-get-output
+%{_bindir}/globus-job-get-output-helper
+%{_bindir}/globus-job-run
+%{_bindir}/globus-job-status
+%{_bindir}/globus-job-submit
+%{_bindir}/globusrun
+%doc %{_mandir}/man1/globus-job-cancel.1*
+%doc %{_mandir}/man1/globus-job-clean.1*
+%doc %{_mandir}/man1/globus-job-get-output.1*
+%doc %{_mandir}/man1/globus-job-run.1*
+%doc %{_mandir}/man1/globus-job-status.1*
+%doc %{_mandir}/man1/globus-job-submit.1*
+%doc %{_mandir}/man1/globusrun.1*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 11.10-1
@@ -118,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 - Repackage for GT6 without GPT
 
 * Wed Jun 26 2013 Globus Toolkit <support@globus.org> - 10.4-5
-- GT-424: New Fedora Packaging Guideline - no %_isa in BuildRequires
+- GT-424: New Fedora Packaging Guideline - no %%_isa in BuildRequires
 
 * Mon Nov 26 2012 Globus Toolkit <support@globus.org> - 10.4-4
 - 5.2.3

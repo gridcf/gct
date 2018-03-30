@@ -33,7 +33,7 @@ fi
 
 AC_PATH_PROGS([DOXYGEN], doxygen)
 
-AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != "no"])
+AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != ""])
 
 AC_CONFIG_FILES(
         Makefile

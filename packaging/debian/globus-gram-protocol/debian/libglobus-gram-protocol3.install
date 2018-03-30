@@ -1,0 +1,5 @@
+debian/tmp/usr/lib/*/libglobus_gram_protocol.so.*
+debian/tmp/usr/share/perl5/Globus/GRAM/Error.pm
+debian/tmp/usr/share/perl5/Globus/GRAM/JobSignal.pm
+debian/tmp/usr/share/perl5/Globus/GRAM/JobState.pm
+debian/tmp/usr/share/globus/globus-gram-protocol-constants.sh

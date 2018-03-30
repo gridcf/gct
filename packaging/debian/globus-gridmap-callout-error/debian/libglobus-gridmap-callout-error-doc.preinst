@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+dpkg-maintscript-helper symlink_to_dir \
+    /usr/share/doc/libglobus-gridmap-callout-error-doc \
+    libglobus-gridmap-callout-error-dev 2.6 \
+    libglobus-gridmap-callout-error-doc -- "$@"

@@ -37,11 +37,7 @@ AM_CONDITIONAL([MINGW32], [
 esac])
 
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
-    [OPENSSL_PKGCONFIG="openssl >= 1.0"],
-    [
-        PKG_CHECK_MODULES([OPENSSL], [openssl101e])
-        OPENSSL_PKGCONFIG="openssl101e"
-    ])
+    [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 
 AC_SUBST([OPENSSL_PKGCONFIG])
 
