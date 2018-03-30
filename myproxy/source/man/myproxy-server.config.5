@@ -788,14 +788,15 @@ The following parameters control Usage Metrics reporting by the
 .BR myproxy-server (8).
 .TP
 .BI disable_usage_stats " value"
-By default Usage Metrics reporting is enabled. Specifying
-"true", "enabled", "yes", "on" or "1" for
+By default this parameter is enabled, i.e. Usage Metrics reporting is
+disabled. Specifying "false", "disabled", "no", "off" or "0" for
 .I value
-will disable Usage Metrics reporting. Setting the GLOBUS_USAGE_OPTOUT environment
-variable to "1" will also disable the reporting of usage metrics. Disabling
-reporting of usage metrics will cause the
+will enable Usage Metrics reporting. Setting the GLOBUS_USAGE_OPTOUT
+environment variable to "1" will disable the reporting of usage metrics,
+overriding the setting in the configuration file. When reporting of usage
+metrics is disabled, the
 .B usage_stats_target
-setting to be ignored.
+setting will be ignored.
 .TP
 .BI usage_stats_target " target_list"
 This option can be used to specify the target collector hosts to which
