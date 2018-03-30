@@ -462,20 +462,20 @@ line_parse_callback(void *context_arg,
 	context->max_cred_lifetime = 60*60*atoi(tokens[1]);
     }
     else if (strcmp(directive, "ignore_globus_limited_proxy_flag") == 0) {
-        if ((strcasecmp(tokens[1], "true")) ||
-            (strcasecmp(tokens[1], "enabled")) ||
-            (strcasecmp(tokens[1], "yes")) ||
-            (strcasecmp(tokens[1], "on")) ||
-            (strcmp(tokens[1], "1"))) {
+        if ((!strcasecmp(tokens[1], "true")) ||
+            (!strcasecmp(tokens[1], "enabled")) ||
+            (!strcasecmp(tokens[1], "yes")) ||
+            (!strcasecmp(tokens[1], "on")) ||
+            (!strcmp(tokens[1], "1"))) {
             context->limited_proxy = -1;
         }
     }
     else if (strcmp(directive, "allow_self_authorization") == 0) {
-        if ((strcasecmp(tokens[1], "true")) ||
-            (strcasecmp(tokens[1], "enabled")) ||
-            (strcasecmp(tokens[1], "yes")) ||
-            (strcasecmp(tokens[1], "on")) ||
-            (strcmp(tokens[1], "1"))) {
+        if ((!strcasecmp(tokens[1], "true")) ||
+            (!strcasecmp(tokens[1], "enabled")) ||
+            (!strcasecmp(tokens[1], "yes")) ||
+            (!strcasecmp(tokens[1], "on")) ||
+            (!strcmp(tokens[1], "1"))) {
             context->allow_self_authz = 1;
         }
     }
@@ -612,11 +612,11 @@ line_parse_callback(void *context_arg,
 	context->ca_ldap_dn_attribute = strdup(tokens[1]);
     }
     else if (strcmp(directive, "ca_ldap_start_tls") == 0) {
-        if ((strcasecmp(tokens[1], "true")) ||
-            (strcasecmp(tokens[1], "enabled")) ||
-            (strcasecmp(tokens[1], "yes")) ||
-            (strcasecmp(tokens[1], "on")) ||
-            (strcmp(tokens[1], "1"))) {
+        if ((!strcasecmp(tokens[1], "true")) ||
+            (!strcasecmp(tokens[1], "enabled")) ||
+            (!strcasecmp(tokens[1], "yes")) ||
+            (!strcasecmp(tokens[1], "on")) ||
+            (!strcmp(tokens[1], "1"))) {
             context->ca_ldap_start_tls = 1;
         }
     }
@@ -630,11 +630,11 @@ line_parse_callback(void *context_arg,
     }
     else if (strcmp(directive, "check_multiple_credentials") == 0) {
         context->check_multiple_credentials = 0;
-        if ((strcasecmp(tokens[1], "true")) ||
-            (strcasecmp(tokens[1], "enabled")) ||
-            (strcasecmp(tokens[1], "yes")) ||
-            (strcasecmp(tokens[1], "on")) ||
-            (strcmp(tokens[1], "1"))) {
+        if ((!strcasecmp(tokens[1], "true")) ||
+            (!strcasecmp(tokens[1], "enabled")) ||
+            (!strcasecmp(tokens[1], "yes")) ||
+            (!strcasecmp(tokens[1], "on")) ||
+            (!strcmp(tokens[1], "1"))) {
             context->check_multiple_credentials = 1;
         }
     }
