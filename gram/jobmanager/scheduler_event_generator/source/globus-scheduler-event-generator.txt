@@ -1,8 +1,10 @@
 GLOBUS-SCHEDULER-EVENT-GENERATOR(8)
 ===================================
-:doctype:       manpage
-:man source:    globus-scheduler-event-generator.txt
-:man manual:    Globus Toolkit
+:doctype:      manpage
+:man source:   Grid Community Toolkit
+:man version:  6
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -38,7 +40,7 @@ scheduled resource instance (one for all homogeneous PBS queues, one for
 all fork jobs, etc).
 
 The SEG is implemented in an executable called the
-*globus-scheduler-event-generator*, located in the Globus Toolkit's
+*globus-scheduler-event-generator*, located in the Grid Community Toolkit's
 +sbin+ directory. 
 
 When begun, it loads the LRM-specific module based on the 'LRM_NAME' parameter,

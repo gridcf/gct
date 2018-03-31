@@ -111,10 +111,10 @@ sub print_asciidoc
 RSL(5)
 ======
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----

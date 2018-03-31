@@ -1,8 +1,10 @@
 GLOBUS-SCHEDULER-EVENT-GENERATOR-ADMIN(8)
 =========================================
-:doctype:       manpage
-:man source:    globus-scheduler-event-generator-admin.txt
-:man manual:    Globus Toolkit
+:doctype:      manpage
+:man source:   Grid Community Toolkit
+:man version:  6
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----

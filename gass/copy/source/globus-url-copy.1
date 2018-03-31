@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: globus-url-copy
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 09/08/2016
-.\"    Manual: Globus Toolkit Manual
-.\"    Source: Globus Toolkit 6
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 03/31/2018
+.\"    Manual: Grid Community Toolkit Manual
+.\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-URL\-COPY" "1" "09/08/2016" "Globus Toolkit 6" "Globus Toolkit Manual"
+.TH "GLOBUS\-URL\-COPY" "1" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -434,8 +434,22 @@ Level 2 will transfer if the time stamp of the destination is older than the tim
 .sp -1
 .IP \(bu 2.3
 .\}
-Level 3 will perform a checksum of the source and destination and transfer if the checksums do not match\&.
+Level 3 will perform a checksum of the source and destination and transfer if the checksums do not match\&. The default algorithm used for this checksum is MD5, but other algorithms can be specified with the
+\fB\-algo\fR
+parameter\&.
 .RE
+.RE
+.PP
+\fB\-checksum\-alg CHECKSUM\-ALGORITHM\fR
+.RS 4
+Set the algorithm type to use for all checksum operations during the transfer\&.
+.RE
+.PP
+\fB\-verify\-checksum\fR
+.RS 4
+Perform a checksum on the source and destination after each file transfer and compare the two\&. If they do not match, fail the transfer\&. The default algorithm used for this checksum is MD5, but other algorithms can be specified with the
+\fB\-checksum\-alg\fR
+parameter\&.
 .RE
 .SH "AUTHOR"
 .sp

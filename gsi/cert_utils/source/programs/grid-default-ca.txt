@@ -1,10 +1,10 @@
 GRID-DEFAULT-CA(8)
 ====================
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -94,7 +94,7 @@ The following environment variables affect the execution of *grid-default-ca*:
 *X509_CERT_DIR*::
     Path to the default trusted certificate directory.
 *GLOBUS_LOCATION*::
-    Path to the Globus Toolkit installation directory.
+    Path to the Grid Community Toolkit installation directory.
 
 [[grid-default-ca-BUGS]]
 BUGS

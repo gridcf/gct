@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: globus-scheduler-event-generator
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 09/23/2014
-.\"    Manual: Globus Toolkit
-.\"    Source: globus-scheduler-event-generator.txt
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 03/31/2018
+.\"    Manual: Grid Community Toolkit Manual
+.\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-SCHEDULER\-E" "8" "09/23/2014" "globus\-scheduler\-event\-gene" "Globus Toolkit"
+.TH "GLOBUS\-SCHEDULER\-E" "8" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -42,7 +42,7 @@ Depending on scheduler\-specific requirements, the SEG may need to run with priv
 .sp
 When executed, the SEG is able to start issuing events from some time in the past\&. The SEG will, in general, not require any persistent state between invocations\&. One SEG instance exists for any particular scheduled resource instance (one for all homogeneous PBS queues, one for all fork jobs, etc)\&.
 .sp
-The SEG is implemented in an executable called the \fBglobus\-scheduler\-event\-generator\fR, located in the Globus Toolkit\(cqs sbin directory\&.
+The SEG is implemented in an executable called the \fBglobus\-scheduler\-event\-generator\fR, located in the Grid Community Toolkit\(cqs sbin directory\&.
 .sp
 When begun, it loads the LRM\-specific module based on the \fILRM_NAME\fR parameter, and then defers to it for most functionality\&. When it detects an error writing to stdout or reading stdin, it terminates\&. The LRM\-specific code uses the SEG API to emit events to the GRAM5 service\&.
 .SH "OPTIONS"

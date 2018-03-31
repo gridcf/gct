@@ -489,8 +489,7 @@ becomes:
 .IP
 Please note that any shared library engines loaded through the
 "dynamic" engine MUST be compiled againt the correct version of
-OpenSSL.  The Globus toolkit has its own installation and can
-be found by running $GLOBUS_LOCATION/bin/openssl version.
+OpenSSL.
 .TP
 .BI certificate_openssl_engine_lockfile " full-path-to-file"
 If your hardware token or HSM is unable to handle simultaneous
@@ -591,9 +590,9 @@ can be specified but not both.
 When specifying certificate_issuer_cert above, you can map account names
 to certificate subject distinguished names for the issued
 certificates using this mapfile, which has the same format as used
-by other Globus Toolkit services.
+by other Grid Community Toolkit services.
 By default, /etc/grid-security/grid-mapfile is used.
-The Globus Toolkit
+The Grid Community Toolkit
 .B grid-mapfile-add-entry
 and
 .B grid-mapfile-delete-entry
@@ -709,7 +708,7 @@ SubjectDN/Username entry in the mapfile is the credential utilized to secure
 the connection between client and server, NOT the actual credential being
 stored.  As the credential which secures the TLS connection is typically the
 same as the credential being stored, this should not be a major issue.
-The Globus Toolkit
+The Grid Community Toolkit
 .B grid-mapfile-add-entry
 and
 .B grid-mapfile-delete-entry

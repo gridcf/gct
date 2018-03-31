@@ -1,10 +1,10 @@
 GLOBUS-FORK-STARTER(8)
 ======================
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -88,7 +88,7 @@ ENVIRONMENT
 The following variables affect the execution of *globus-fork-starter*
 
 *GLOBUS_LOCATION*::
-    Path to Globus Toolkit installation. This is used to locate the
+    Path to the Grid Community Toolkit installation. This is used to locate the
     +globus-fork.conf+ configuration file.
 
 FILES
