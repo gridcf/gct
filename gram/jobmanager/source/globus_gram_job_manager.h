@@ -284,7 +284,7 @@ typedef struct
      * Path to job auditing directory.
      */
     char *                              auditing_dir;
-    /** Globus Toolkit version */
+    /** Grid Community Toolkit version */
     char *                              globus_version;
     /** Usage stats enabled by default */
     globus_bool_t                       usage_disabled;

@@ -1,5 +1,5 @@
-First, install MyProxy from the current Globus Toolkit release. That
-will include all the Globus Toolkit packages needed by MyProxy.
+First, install MyProxy from the current Grid Community Toolkit release. That
+will include all the Grid Community Toolkit packages needed by MyProxy.
 
 You'll need GSI user credentials to run the MyProxy clients and host
 credentials to run the myproxy-server.

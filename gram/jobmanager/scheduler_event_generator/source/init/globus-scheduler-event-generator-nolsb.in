@@ -14,7 +14,7 @@
 #                    process state from local resource managers (such as
 #                    torque or SGE) into a form that the globus-job-manager
 #                    process can easily parse.
-#                    It is part of the Globus Toolkit(tm)
+#                    It is part of the Grid Community Toolkit
 ### END INIT INFO
 
 # Copyright 1999-2011 University of Chicago

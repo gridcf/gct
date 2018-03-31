@@ -13,14 +13,14 @@ Optional software:
 
 Overview:
 ========
-    1.  Installing Globus Toolkit @version@
+    1.  Installing Grid Community Toolkit @version@
     2.  Installing optional bundles
     3.  Installing only a subset of GT@version@
     4.  Platform-specific notes
 
 
-1. Installing Globus Toolkit @version@
-==================================
+1. Installing Grid Community Toolkit @version@
+========================================
 First, download the required software.  Be aware that apache ant
 will use the java referred to by JAVA_HOME, not necessarily the first
 java executable on your PATH.  Be sure to set JAVA_HOME to the

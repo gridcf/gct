@@ -41,9 +41,9 @@ extern "C" {
  * @defgroup globus_callout Globus Callout API
  *
  * This API is intended to ease integration of configurable callouts into the
- * Globus Toolkit and to provide a platform independent way of dealing with
- * runtime loadable functions. It (hopefully) achieves this goal by providing
- * the following functionality:
+ * Grid Community Toolkit and to provide a platform independent way of dealing
+ * with runtime loadable functions. It (hopefully) achieves this goal by
+ * providing the following functionality:
  *
  * - It provides a function for reading callout configuration files. Files are
  *   assumed to have the following format:

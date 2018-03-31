@@ -289,13 +289,13 @@ else
 fi
 
 cat > conf/distributions <<EOF
-Label: Globus Toolkit
+Label: Grid Community Toolkit
 Suite: unstable
 Codename: $releasename
 Version: $osver
 Architectures: amd64 i386 source
 Components: contrib$sign_with_line
-Description: Globus Toolkit Packages
+Description: Grid Community Toolkit Packages
 
 EOF
 

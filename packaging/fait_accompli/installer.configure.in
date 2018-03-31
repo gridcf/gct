@@ -1,5 +1,5 @@
 dnl Intended to be used with a Makefile.in generated from installer.sh
-AC_INIT(Globus Toolkit, @version@)
+AC_INIT(Grid Community Toolkit, @version@)
 AC_CONFIG_FILES(Makefile config.site)
 AC_PREFIX_DEFAULT(/usr/local/globus-@version@)
 INSTALLER_ROOT="`pwd`/\$(srcdir)"
@@ -135,7 +135,7 @@ openssl="globus_system_openssl"
 AC_SUBST(globus_openssl, $openssl)
 
 AC_ARG_WITH(versionname, AC_HELP_STRING([--with-versionname="packager"],\
-   [The name to be displayed by globus-version.  Default is "Globus Toolkit".]),
+   [The name to be displayed by globus-version.  Default is "Grid Community Toolkit".]),
 \
    [versionname=$withval], [])
 AC_SUBST(versionname, $versionname)

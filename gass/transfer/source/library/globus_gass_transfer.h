@@ -40,7 +40,7 @@ extern "C" {
  * @brief GASS Transfer API
  *
  * The GASS Transfer API is the core part of the GASS
- * (Global Access to Secondary Storage) component of the Globus Toolkit.
+ * (Global Access to Secondary Storage) component of the Grid Community Toolkit.
  * The purpose of GASS is to provide a simple way to enable grid applications
  * to securely stage and access data to and from remote file servers using a
  * simple protocol-independent API.

@@ -624,7 +624,7 @@ extern globus_module_descriptor_t       globus_i_net_manager_module;
  * @ingroup globus_net_manager
  * @hideinitializer
  * @details
- * The Globus Net Manager uses Globus Toolkit module activation and
+ * The Globus Net Manager uses Grid Community Toolkit module activation and
  * deactivation. Before any Net Manager functions can be called,
  * the module must be activated, like this:
  * @code

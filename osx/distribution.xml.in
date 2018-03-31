@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <installer-gui-script minSpecVersion="1">
-    <title>Globus Toolkit</title>
+    <title>Grid Community Toolkit</title>
     <organization>org.globus</organization>
     <domains enable_localSystem="true" enable_currentUserHome="true"/>
     <options customize="allow" require-scripts="true" />
