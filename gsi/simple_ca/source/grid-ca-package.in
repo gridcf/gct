@@ -198,8 +198,8 @@ create_source_package_tarball()
 	
 	%description
 	This package contains the CA certificate and related policy files
-	needed to allow the Globus Toolkit to trust the CA with the subject
-	name:
+	needed to allow the Grid Community Toolkit to trust the CA with the
+	subject name:
 	"${_casubject}"
 	as well as request certificates from that CA.
 	
@@ -268,8 +268,8 @@ create_source_package_tarball()
 	Depends: \${shlibs:Depends}, \${misc:Depends}
 	Description: CA Package for ${_casubject}
 	  This package contains the CA certificate and related policy files
-	  needed to allow the Globus Toolkit to trust the CA with the subject
-	  name:
+	  needed to allow the Grid Community Toolkit to trust the CA with the
+	  subject name:
 	  "${_casubject}"
 	  as well as request certificates from that CA.
 	EOF

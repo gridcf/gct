@@ -784,9 +784,9 @@ else
 	1
 EOF
     cat <<-EOF > "content"
-	PRODUCT Globus Toolkit
+	PRODUCT Grid Community Toolkit
 	VERSION ${globusversion}
-	LABEL Globus Toolkit (SUSE LINUX 11)
+	LABEL Grid Community Toolkit (SUSE LINUX 11)
 	VENDOR Globus Support
 	ARCH.x86_64 x86_64 noarch
 	DEFAULTBASE x86_64

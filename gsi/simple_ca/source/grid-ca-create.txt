@@ -1,10 +1,10 @@
 GRID-CA-CREATE(1)
 =================
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -140,7 +140,7 @@ ENVIRONMENT
 The following environment variables affect the execution of *grid-ca-create*:
 
 `GLOBUS_LOCATION`::
-    Non-standard installation path of the Globus toolkit.
+    Non-standard installation path of the Grid Community Toolkit.
 
 [[grid-ca-create-SEEALSO]]
 SEE ALSO

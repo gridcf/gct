@@ -1,5 +1,5 @@
 dnl Intended to be used with a Makefile.in generated from installer.sh
-AC_INIT(Globus Toolkit, @version@)
+AC_INIT(Grid Community Toolkit, @version@)
 AC_CONFIG_FILES(Makefile)
 AC_PREFIX_DEFAULT(/usr/local/globus-@version@)
 

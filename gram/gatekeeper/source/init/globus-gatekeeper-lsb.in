@@ -13,7 +13,7 @@
 # Description:       The Globus Gatekeeper service authenticates network
 #                    connections using an SSL-based protocol and then
 #                    starts service instances on the remote user's behalf.
-#                    It is part of the Globus Toolkit(tm)
+#                    It is part of the Grid Community Toolkit
 ### END INIT INFO
 
 #

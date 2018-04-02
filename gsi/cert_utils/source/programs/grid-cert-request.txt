@@ -1,10 +1,10 @@
 GRID-CERT-REQUEST(1)
 ====================
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -177,9 +177,9 @@ The following environment variables affect the execution of
     certificate requests. This value is used if +X509_CERT_DIR+ is
     not set.
 *GLOBUS_LOCATION*::
-    Path to the directory containing the Globus Toolkit. This is searched if
-    neither the +X509_CERT_DIR+ nor the +GRID_SECURITY_DIR+ environment
-    variables are set.
+    Path to the directory containing the Grid Community Toolkit. This is
+    searched if neither the +X509_CERT_DIR+ nor the +GRID_SECURITY_DIR+
+    environment variables are set.
 
 [[grid-cert-request-FILES]]
 FILES

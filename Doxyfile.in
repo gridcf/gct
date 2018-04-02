@@ -1,4 +1,4 @@
-PROJECT_NAME           = "Globus Toolkit"
+PROJECT_NAME           = "Grid Community Toolkit"
 PROJECT_NUMBER         = @VERSION@
 OPTIMIZE_OUTPUT_FOR_C  = YES
 GENERATE_MAN           = YES

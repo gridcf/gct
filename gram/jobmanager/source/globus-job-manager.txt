@@ -2,10 +2,10 @@
 GLOBUS-JOB-MANAGER(8)
 =====================
 :doctype:      manpage
-:man source:   Globus Toolkit
+:man source:   Grid Community Toolkit
 :man version:  6
-:man manual:   Globus Toolkit Manual
-:man software: Globus Toolkit
+:man manual:   Grid Community Toolkit Manual
+:man software: Grid Community Toolkit
 
 NAME
 ----
@@ -62,10 +62,10 @@ consists of:
      Indicate the X.509 identity of the gatekeeper to which jobs are submitted to. This parameter sets the value of the $(GLOBUS_GATEKEEPER_SUBJECT) RSL substitution to 'SUBJECT'
 
 **-home 'GLOBUS_LOCATION'**::
-     Indicate the path where the Globus Toolkit(r) is installed on the service node. This is used by the job manager to locate its support and configuration files.
+     Indicate the path where the Grid Community Toolkit(r) is installed on the service node. This is used by the job manager to locate its support and configuration files.
 
 **-target-globus-location 'TARGET_GLOBUS_LOCATION'**::
-     Indicate the path where the Globus Toolkit(r) is installed on the execution host. If this is omitted, the value specified as a parameter to '-home' is used. This parameter sets the value of the $(GLOBUS_LOCATION) RSL substitution to 'TARGET_GLOBUS_LOCATION'
+     Indicate the path where the Grid Community Toolkit(r) is installed on the execution host. If this is omitted, the value specified as a parameter to '-home' is used. This parameter sets the value of the $(GLOBUS_LOCATION) RSL substitution to 'TARGET_GLOBUS_LOCATION'
 
 **-history 'HISTORY_DIRECTORY'**::
      Configure the job manager to write job history files to 'HISTORY_DIRECTORY'. These files are described in the FILES section below.
