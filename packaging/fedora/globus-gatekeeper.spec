@@ -2,7 +2,7 @@
 
 Name:		globus-gatekeeper
 %global _name %(tr - _ <<< %{name})
-Version:	10.12
+Version:	11.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gatekeeper
 
@@ -122,6 +122,11 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+- Fix make clean rule
+
 * Fri Sep 09 2016 Globus Toolkit <support@globus.org> - 10.12-1
 - Updates for el.5 openssl101e
 
@@ -135,8 +140,8 @@ fi
 - Add vendor
 
 * Mon Apr 06 2015 Globus Toolkit <support@globus.org> - 10.10-1
-- - Remove Dead Code
-- - Require minimal lsb-core for RHEL 6+ and fedora 20+
+- Remove Dead Code
+- Require minimal lsb-core for RHEL 6+ and fedora 20+
 
 * Mon Nov 03 2014 Globus Toolkit <support@globus.org> - 10.9-1
 - doxygen fixes

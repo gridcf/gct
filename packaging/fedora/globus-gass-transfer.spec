@@ -3,8 +3,8 @@
 Name:		globus-gass-transfer
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	8.10
-Release:	3%{?dist}
+Version:	9.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Transfer
 
 Group:		System Environment/Libraries
@@ -130,6 +130,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 8.10-3
 - Rebuild after changes for el.5 with openssl101e
 

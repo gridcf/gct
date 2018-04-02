@@ -3,7 +3,7 @@
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	12.15
+Version:	13.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
@@ -156,6 +156,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 12.15-1
 - Update for el.5 openssl101e
 

@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-verify-myproxy-callout
 %global _name %(tr - _ <<< %{name})
-Version:	2.9
+Version:	3.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus gridmap myproxy callout
 
@@ -92,6 +92,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.9-1
 - Update for el.5 openssl101e
 

@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.1
+Version:	13.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -217,6 +217,12 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.2-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+- Disable usage statistics reporting by default
+- Add man page for globus-gridftp-password - contribution from IGE
+
 * Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 13.1-1
 - win32 fix
 
@@ -553,7 +559,7 @@ fi
 
 * Thu Nov 08 2012 Globus Toolkit <support@globus.org> - 6.16-1
 - GT-299: fix race condition occuring when transfer finishes while COMMIT event is outstanding
-- GT-304: fix bashim in sh script
+- GT-304: fix bashism in sh script
 - GT-310: clarify -rp-follow-symlinks help
 - GT-314: fix crash when attempting striping in hybrid mode and backends are not available
 - GT-316: log ip address of incoming connection after failure discovering hostname

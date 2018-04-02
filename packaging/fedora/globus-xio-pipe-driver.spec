@@ -2,7 +2,7 @@
 
 Name:		globus-xio-pipe-driver
 %global _name %(tr - _ <<< %{name})
-Version:	3.10
+Version:	4.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Pipe Driver
 
@@ -101,6 +101,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.0-1
+- First Grid Community Toolkit release
+
 * Tue Apr 04 2017 Globus Toolkit <support@globus.org> - 3.10-1
 - Fix .pc typo
 

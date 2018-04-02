@@ -97,7 +97,7 @@ binary-arch: install
 	dh_lintian -a
 	dh_link -a
 	if dpkg --compare-versions $$(dpkg-query -W -f '$${Version}' debhelper) ge 9.20160114 ; then \
-		dh_strip -a --dbgsym-migration='lib$(name)-dbg (<< 17.5), $(name)-dbg (<< 17.5)' ; \
+		dh_strip -a --dbgsym-migration='lib$(name)-dbg (<< 18), $(name)-dbg (<< 18)' ; \
 	else \
 		dh_strip -a ; \
 	fi

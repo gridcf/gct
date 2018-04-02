@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gsi-driver
 %global _name %(tr - _ <<< %{name})
-Version:	4.1
+Version:	5.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GSI Driver
 
@@ -133,6 +133,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
+- First Grid Community Toolkit release
+
 * Wed Sep 06 2017 Globus Toolkit <support@globus.org> - 4.1-1
 - Add SNI and ALPN support via cntls
 - Ignore error setting ALPN option

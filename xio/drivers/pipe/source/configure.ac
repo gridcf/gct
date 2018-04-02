@@ -1,9 +1,9 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_xio_pipe_driver], [3.10],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_xio_pipe_driver], [4.0],[https://github.com/gridcf/gct/issues])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [3])
+AC_SUBST([AGE_VERSION], [4])
 AC_SUBST([PACKAGE_DEPS], ["globus-xio >= 3, globus-common >= 14"])
 
 AC_CONFIG_AUX_DIR([build-aux])

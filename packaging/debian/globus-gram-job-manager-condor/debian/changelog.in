@@ -1,3 +1,10 @@
+globus-gram-job-manager-condor (3.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Drop empty doc package
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:18 +0200
+
 globus-gram-job-manager-condor (2.6-1+gt6.@distro@) @distro@; urgency=low
 
   * Update bug report URL

@@ -3,7 +3,7 @@
 Name:		globus-ftp-control
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	8.3
+Version:	9.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library
 
@@ -143,6 +143,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
+- First Grid Community Toolkit release
+
 * Wed Mar 28 2018 Globus Toolkit <support@globus.org> - 8.3-1
 - Default to host authz when using tls control channel
 

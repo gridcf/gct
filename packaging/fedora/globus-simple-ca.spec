@@ -2,8 +2,8 @@
 
 Name:		globus-simple-ca
 %global _name %(tr - _ <<< %{name})
-Version:	4.24
-Release:	4%{?dist}
+Version:	5.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
 Group:		Applications/Internet
@@ -108,6 +108,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
+- First Grid Community Toolkit release
+
 * Fri May 12 2017 Globus Toolkit <support@globus.org> - 4.24-4
 - Stop leaving files in /
 

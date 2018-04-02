@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_xio_gsi_driver],[4.1],[https://github.com/gridcf/gct/issues/])
+AC_INIT([globus_xio_gsi_driver],[5.0],[https://github.com/gridcf/gct/issues/])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [4])
+AC_SUBST([AGE_VERSION], [5])
 AC_SUBST([PACKAGE_DEPS], ["globus-xio >= 3, globus-gss-assist >= 11, globus-gssapi-error >= 4, globus-gssapi-gsi >= 13, globus-common >= 14"])
 
 AC_CONFIG_AUX_DIR([build-aux])

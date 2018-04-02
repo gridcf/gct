@@ -1,3 +1,9 @@
+globus-authz (4.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:19 +0200
+
 globus-authz (3.15-1+gt6.@distro@) @distro@; urgency=low
 
   * Update for el.5 openssl101e

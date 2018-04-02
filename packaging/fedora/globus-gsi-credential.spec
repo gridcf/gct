@@ -3,7 +3,7 @@
 Name:		globus-gsi-credential
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	7.14
+Version:	8.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Credential Library
 
@@ -136,6 +136,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.0-1
+- First Grid Community Toolkit release
+
 * Wed Nov 08 2017 Globus Toolkit <support@globus.org> - 7.14-1
 - Fix issue with voms proxy and openssl 1.1 (#115)
 

@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libmyproxy-doc \
-    libmyproxy-dev 6.1.29 \
+    libmyproxy-dev 6.2 \
     libmyproxy-doc -- "$@"

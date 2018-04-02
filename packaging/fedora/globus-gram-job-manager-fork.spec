@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-fork
 %global _name %(tr - _ <<< %{name})
-Version:	2.6
+Version:	3.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Fork Job Manager Support
 
@@ -171,6 +171,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/fork
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-1
 - Update for el.5 openssl101e, replace docbook with asciidoc
 

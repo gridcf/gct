@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gfork], [4.9], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gfork], [5.0], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [4])
+AC_SUBST([AGE_VERSION], [5])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-xio >= 3"])
 
 AC_CONFIG_AUX_DIR([build-aux])

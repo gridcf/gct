@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gsi-proxy-ssl-doc \
-    libglobus-gsi-proxy-ssl-dev 5.11 \
+    libglobus-gsi-proxy-ssl-dev 6 \
     libglobus-gsi-proxy-ssl-doc -- "$@"

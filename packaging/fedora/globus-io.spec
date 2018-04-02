@@ -3,7 +3,7 @@
 Name:		globus-io
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	11.9
+Version:	12.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
@@ -115,6 +115,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.0-1
+- First Grid Community Toolkit release
+
 * Fri Apr 21 2017 Globus Toolkit <support@globus.org> - 11.9-1
 - Remove legacy SSLv3 support
 

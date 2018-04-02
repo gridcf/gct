@@ -1,3 +1,10 @@
+globus-common (18.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Move globus-makefile-header to devel package
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:18 +0200
+
 globus-common (17.4-1+gt6.@distro@) @distro@; urgency=low
 
   * win32 fix

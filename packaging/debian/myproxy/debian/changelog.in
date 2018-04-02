@@ -1,3 +1,13 @@
+myproxy (6.2.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+  * Disable usage statistics reporting by default
+  * Fix option parsing bug
+  * Add libmyproxy-voms package with VOMS support plugin
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:15 +0200
+
 myproxy (6.1.28-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix OpenSSL 1.1.0-related typo

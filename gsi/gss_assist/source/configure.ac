@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gss_assist], [11.1],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gss_assist], [12.0],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [8])
+AC_SUBST([AGE_VERSION], [9])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-gsi-sysconfig >= 7, globus-gsi-cert-utils >= 8, globus-gssapi-gsi >= 13, globus-callout >= 2, globus-gsi-credential >= 6"])
 
 AC_CONFIG_AUX_DIR([build-aux])

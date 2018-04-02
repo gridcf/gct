@@ -3,8 +3,8 @@
 Name:		globus-scheduler-event-generator
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	5.12
-Release:	5%{?dist}
+Version:	6.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries
@@ -228,6 +228,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 5.12-5
 - Rebuild after changes for el.5 with openssl101e
 

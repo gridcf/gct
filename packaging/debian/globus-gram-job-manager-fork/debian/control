@@ -11,8 +11,8 @@ Section: net
 Architecture: any
 Multi-Arch: foreign
 Provides: globus-gram-job-manager-setup-fork
-Replaces: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3), globus-gram-job-manager-fork-setup-seg (<< 1.5-3~)
-Conflicts: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3)
+Replaces: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3), globus-gram-job-manager-fork-doc (<< 3), globus-gram-job-manager-fork-setup-seg (<< 1.5-3~)
+Conflicts: globus-gram-job-manager-setup-fork (<< 4.3), globus-gram-job-manager-setup-fork-doc (<< 4.3), globus-gram-job-manager-fork-doc (<< 3)
 Breaks: globus-gram-job-manager-fork-setup-seg (<< 1.5-3~)
 Depends: ${misc:Depends}, ${shlibs:Depends}, ${perl:Depends}, globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
 Recommends: globus-gram-job-manager-fork-setup-poll | globus-gram-job-manager-fork-setup-seg

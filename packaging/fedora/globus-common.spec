@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	17.4
+Version:	18.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -234,6 +234,10 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.0-1
+- First Grid Community Toolkit release
+- Move globus-makefile-header to devel package
+
 * Wed Feb 07 2018 Globus Toolkit <support@globus.org> - 17.4-1
 - win32 fix
 

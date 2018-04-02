@@ -85,7 +85,7 @@ binary-arch: install
 	dh_lintian
 	dh_link
 	if dpkg --compare-versions $$(dpkg-query -W -f '$${Version}' debhelper) ge 9.20160114 ; then \
-		dh_strip --dbgsym-migration='globus-seg-job-manager-dbg (<< 14.38), $(name)-dbg (<< 14.38)' ; \
+		dh_strip --dbgsym-migration='globus-seg-job-manager-dbg (<< 15), $(name)-dbg (<< 15)' ; \
 	else \
 		dh_strip ; \
 	fi

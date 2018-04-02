@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gsi-openssl-error-doc \
-    libglobus-gsi-openssl-error-dev 3.9 \
+    libglobus-gsi-openssl-error-dev 4 \
     libglobus-gsi-openssl-error-doc -- "$@"

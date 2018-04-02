@@ -2,8 +2,8 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(tr - _ <<< %{name})
-Version:	2.17
-Release:	2%{?dist}
+Version:	3.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
 Group:		System Environment/Libraries
@@ -139,6 +139,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.17-2
 - Update for el.5 openssl101e, replace docbook with asciidoc
 

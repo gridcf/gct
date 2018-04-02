@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_client_tools],[11.10],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_client_tools],[12.0],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [1])
+AC_SUBST([AGE_VERSION], [2])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-gram-client >= 12, globus-gram-protocol >= 11, globus-gass-transfer >= 7, globus-gass-server-ez >= 4, globus-rsl >= 9, globus-gss-assist >= 8"])
 
 AC_CONFIG_AUX_DIR([build-aux])

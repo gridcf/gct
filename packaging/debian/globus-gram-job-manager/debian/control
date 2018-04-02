@@ -10,8 +10,8 @@ Package: globus-gram-job-manager
 Section: net
 Architecture: any
 Multi-Arch: foreign
-Replaces: globus-gram-job-manager-doc (<< 14.38)
-Conflicts: globus-gram-job-manager-doc (<< 14.38)
+Replaces: globus-gram-job-manager-doc (<< 15)
+Conflicts: globus-gram-job-manager-doc (<< 15)
 Depends: ${shlibs:Depends}, ${misc:Depends}, libglobus-xio-popen-driver (>= 2), globus-common-progs (>= 15), globus-gatekeeper (>= 9), globus-gram-client-tools (>= 10), globus-gass-copy-progs (>= 8), globus-gass-cache-program (>= 5), globus-gram-job-manager-scripts (>= 6), globus-proxy-utils (>= 5), globus-gsi-cert-utils-progs, globus-seg-job-manager (= ${binary:Version})
 Description: Grid Community Toolkit - GRAM Jobmanager
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
@@ -27,8 +27,8 @@ Package: globus-seg-job-manager
 Section: libs
 Architecture: any
 Multi-Arch: same
-Replaces: globus-gram-job-manager (<< 14.38)
-Breaks: globus-gram-job-manager (<< 14.38)
+Replaces: globus-gram-job-manager (<< 15)
+Breaks: globus-gram-job-manager (<< 15)
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Grid Community Toolkit - Scheduler Event Generator Job Manager

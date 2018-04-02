@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gss-assist-doc \
-    libglobus-gss-assist-dev 11.2 \
+    libglobus-gss-assist-dev 12 \
     libglobus-gss-assist-doc -- "$@"

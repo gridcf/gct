@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-openssl-module-doc \
-    libglobus-openssl-module-dev 4.9 \
+    libglobus-openssl-module-dev 5 \
     libglobus-openssl-module-doc -- "$@"

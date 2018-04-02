@@ -2,8 +2,8 @@
 
 Name:		globus-gridmap-callout
 %global _name %(tr - _ <<< %{name})
-Version:	1.1
-Release:	3%{?dist}
+Version:	2.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gridmap Callout
 
 Group:		System Environment/Libraries
@@ -111,6 +111,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 1.1-3
 - Rebuild after changes for el.5 with openssl101e
 

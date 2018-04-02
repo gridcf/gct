@@ -3,8 +3,8 @@
 Name:		globus-gfork
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	4.9
-Release:	4%{?dist}
+Version:	5.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GFork
 
 Group:		System Environment/Libraries
@@ -131,6 +131,9 @@ echo "# This is the default gfork configuration file" > \
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 4.9-4
 - Rebuild after changes for el.5 with openssl101e
 

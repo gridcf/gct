@@ -1,3 +1,10 @@
+globus-net-manager (1.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Split out devel package for xio driver
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:23 +0200
+
 globus-net-manager (0.17-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix .pc typo

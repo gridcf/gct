@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-sge
 %global _name %(tr - _ <<< %{name})
-Version:	2.6
-Release:	8%{?dist}
+Version:	3.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Grid Engine Job Manager Support
 
 Group:		Applications/Internet
@@ -175,6 +175,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/sge
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-8
 - Rebuild after changes for el.5 with openssl101e
 

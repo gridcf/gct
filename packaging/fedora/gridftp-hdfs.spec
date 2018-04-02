@@ -1,6 +1,6 @@
 Name:           gridftp-hdfs
 %global _name %(tr - _ <<< %{name})
-Version:        1.5
+Version:        2.0
 Release:        1
 Summary:        HDFS DSI plugin for GridFTP
 
@@ -96,6 +96,10 @@ fi
 %{_sysconfdir}/init.d/%{name}
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Mon Sep 12 2016 Globus Toolkit <support@globus.org> - 1.5-1
 - Updates for el.5 with openssl101e
 

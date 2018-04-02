@@ -2,7 +2,7 @@
 
 Name:		globus-proxy-utils
 %global _name %(tr - _ <<< %{name})
-Version:	6.19
+Version:	7.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 
@@ -72,6 +72,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Fri Jan 06 2017 Globus Toolkit <support@globus.org> - 6.19-1
 - Fix RSA key checking
 

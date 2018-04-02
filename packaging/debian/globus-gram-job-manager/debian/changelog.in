@@ -1,3 +1,13 @@
+globus-gram-job-manager (15.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+  * Disable usage statistics reporting by default
+  * Drop documentation package (move rsl.5 man page to main package)
+  * Move globus-seg-job-manager plugin to a separate package
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:16 +0200
+
 globus-gram-job-manager (14.37-1+gct.@distro@) @distro@; urgency=medium
 
   * Workaround non-implemented features on GNU/Hurd (socket buffer size)

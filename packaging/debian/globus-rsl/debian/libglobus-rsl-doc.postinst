@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-rsl-doc \
-    libglobus-rsl-dev 10.12 \
+    libglobus-rsl-dev 11 \
     libglobus-rsl-doc -- "$@"

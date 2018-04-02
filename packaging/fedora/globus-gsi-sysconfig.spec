@@ -3,7 +3,7 @@
 Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	8.1
+Version:	9.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
@@ -143,6 +143,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Wed Jan 24 2018 Globus Toolkit <support@globus.org> - 8.1-1
 - fix typo in windows function name
 

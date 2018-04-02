@@ -11,8 +11,8 @@ Section: net
 Architecture: all
 Multi-Arch: foreign
 Provides: globus-gram-job-manager-setup-sge
-Replaces: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6)
-Conflicts: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6)
+Replaces: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6), globus-gram-job-manager-sge-doc (<< 3)
+Conflicts: globus-gram-job-manager-setup-sge (<< 2.6), globus-gram-job-manager-setup-sge-doc (<< 2.6), globus-gram-job-manager-sge-doc (<< 3)
 Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager (>= 13), globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
 Recommends: globus-gram-job-manager-sge-setup-poll | globus-gram-job-manager-sge-setup-seg
 Description: Grid Community Toolkit - Grid Engine Job Manager Support

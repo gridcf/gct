@@ -3,7 +3,7 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	8.36
+Version:	9.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
@@ -152,6 +152,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Mon Jun 26 2017 Globus Toolkit <support@globus.org> - 8.36-1
 - Replace deprecated perl POSIX::tmpnam with File::Temp::tmpnam
 
