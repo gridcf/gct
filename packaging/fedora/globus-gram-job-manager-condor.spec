@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-condor
 %global _name %(tr - _ <<< %{name})
-Version:	2.6
-Release:	6%{?dist}
+Version:	3.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Condor Job Manager Support
 
 Group:		Applications/Internet
@@ -82,6 +82,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.6-6
 - Rebuild after changes for el.5 with openssl101e
 

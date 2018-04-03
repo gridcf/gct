@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-xio-gridftp-driver-doc \
-    libglobus-xio-gridftp-driver-dev 2.18 \
+    libglobus-xio-gridftp-driver-dev 3 \
     libglobus-xio-gridftp-driver-doc -- "$@"

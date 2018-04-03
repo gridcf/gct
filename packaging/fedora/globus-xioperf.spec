@@ -2,8 +2,8 @@
 
 Name:		globus-xioperf
 %global _name %(tr - _ <<< %{name})
-Version:	4.5
-Release:	3%{?dist}
+Version:	5.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - XIO Performance Tool
 
 Group:		Applications/Internet
@@ -46,6 +46,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 4.5-3
 - Rebuild after changes for el.5 with openssl101e
 

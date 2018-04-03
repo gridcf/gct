@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	7.0
+Version:	7.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -111,6 +111,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.1-1
+- First Grid Community Toolkit release
+
 * Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.0-1
 - Add option to send IPv6 address in EPSV response
 - Add function to get the command string

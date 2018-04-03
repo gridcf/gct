@@ -11,8 +11,9 @@ Section: net
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager (>= 13), globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
-Replaces: globus-gram-job-manager-slurm-setup-poll (<< 2.9)
-Conflicts: globus-gram-job-manager-slurm-setup-poll (<< 2.9)
+Provides: globus-gram-job-manager-slurm-setup-poll
+Replaces: globus-gram-job-manager-slurm-setup-poll (<< 3)
+Conflicts: globus-gram-job-manager-slurm-setup-poll (<< 3)
 Description: Grid Community Toolkit - SLURM Job Manager Support
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
  building grid systems and applications. It is a fork of the Globus Toolkit

@@ -1,7 +1,7 @@
 Name:		globus-gsi
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Security Tools
 
 Group:		System Environment/Libraries
@@ -38,5 +38,11 @@ Security Tools
 %postun
 
 %changelog
+* Mon Apr 02 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-3
+- First Grid Community Toolkit release
+
 * Tue Apr 25 2017 Joseph Bester <bester@mcs.anl.gov> - 6.0-2
 - Fix changelog
+
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 6.0-1
+- GT 5.2.2 New Metapackage

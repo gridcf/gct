@@ -3,8 +3,8 @@
 Name:		globus-rsl
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	10.11
-Release:	4%{?dist}
+Version:	11.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Resource Specification Language Library
 
 Group:		System Environment/Libraries
@@ -141,6 +141,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 10.11-4
 - Rebuild after changes for el.5 with openssl101e
 

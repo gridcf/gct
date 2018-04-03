@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-authz-callout-error-doc \
-    libglobus-authz-callout-error-dev 3.7 \
+    libglobus-authz-callout-error-dev 4 \
     libglobus-authz-callout-error-doc -- "$@"

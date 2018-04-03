@@ -1,6 +1,8 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:           myproxy-oauth
 %global _name %(tr - _ <<< %{name})
-Version:        0.27
+Version:        1.0
 Release:        1%{?dist}
 Summary:        MyProxy OAuth Delegation Serice
 
@@ -18,26 +20,18 @@ Requires:       pyOpenSSL
 %if 0%{?suse_version} == 0
 Requires:       mod_ssl
 Requires:       mod_wsgi
-Requires(pre): shadow-utils
+Requires(pre):  shadow-utils
 %else
 # Available from http://download.opensuse.org/repositories/Apache/SLE_11_SP3/Apache.repo
 Requires:       apache2 >= 2.4
 # Available from http://download.opensuse.org/repositories/Apache:/Modules/Apache_SLE_12_SP1/Apache:Modules.repo
 Requires:       apache2-mod_wsgi
-BuildRequires:   shadow
-Requires(pre):   shadow
+Requires(pre):  shadow
 %endif
 
 %if 0%{?rhel} != 0
 Requires:       python-crypto
 Requires:       m2crypto
-%if %{rhel} < 6
-Requires:       python-wsgiref
-Requires:       python-json
-Requires:       python-hashlib
-Requires:       python-ssl
-Requires:       python-sqlite2
-%endif
 %else
 %if 0%{?suse_version} > 0
 Requires:       python-crypto
@@ -45,9 +39,6 @@ Requires:       python-m2crypto
 %else
 Requires:       python-crypto >= 2.2
 %endif
-%endif
-%if 0%{?rhel} == 05
-Conflicts:      mod_python
 %endif
 
 %description
@@ -70,10 +61,10 @@ MyProxy OAuth Delegation Service
 python setup.py install \
     --install-lib /usr/share/%{name} \
     --install-scripts /usr/share/%{name} \
-    --install-data %{_docdir}/%{name} \
+    --install-data %{_pkgdocdir} \
     --root $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}
-cp README.md $RPM_BUILD_ROOT%{_docdir}/%{name}/README.txt
+mkdir -p $RPM_BUILD_ROOT/%{_pkgdocdir}
+cp README.md $RPM_BUILD_ROOT%{_pkgdocdir}/README.txt
 mkdir -p $RPM_BUILD_ROOT/%{_sbindir}
 pythonpath="/usr/share/%{name}"
 cat > $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup <<EOF
@@ -86,24 +77,17 @@ EOF
 chmod a+x $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
-cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
-   $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
-%else
-%if 0%{?rhel} == 05
-mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
-cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-epel5 \
+cp $RPM_BUILD_ROOT%{_pkgdocdir}/apache/myproxy-oauth-2.4 \
    $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
 %else
 %if 0%{?suse_version} > 0
 mkdir -p $RPM_BUILD_ROOT/etc/apache2/conf.d
-cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth-2.4 \
+cp $RPM_BUILD_ROOT%{_pkgdocdir}/apache/myproxy-oauth-2.4 \
    $RPM_BUILD_ROOT/etc/apache2/conf.d/wsgi-myproxy-oauth.conf
-
 %else
 mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
-cp $RPM_BUILD_ROOT%{_docdir}/%{name}/apache/myproxy-oauth \
+cp $RPM_BUILD_ROOT%{_pkgdocdir}/apache/myproxy-oauth \
    $RPM_BUILD_ROOT/etc/httpd/conf.d/wsgi-myproxy-oauth.conf
-%endif
 %endif
 %endif
 
@@ -120,16 +104,17 @@ mkdir -p /srv/www/run
 %endif
 
 exit 0
+
 %files
 %defattr(-,root,root,-)
-%if %{?suse_version}%{!?suse_version:0} >= 1315
+%if %{?suse_version}%{!?suse_version:0}
 %dir %{_sysconfdir}/apache2
 %dir %{_sysconfdir}/apache2/conf.d
-%dir %{_docdir}/%{name}
-%dir %{_docdir}/%{name}/apache
 %endif
-%doc %{_docdir}/%{name}/README.txt
-%doc %{_docdir}/%{name}/apache/*
+%dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/README.txt
+%dir %{_pkgdocdir}/apache
+%doc %{_pkgdocdir}/apache/*
 %config(noreplace) /etc/*/conf.d/wsgi-myproxy-oauth.conf
 %dir %attr(0700,myproxyoauth,myproxyoauth) /var/lib/myproxy-oauth
 /usr/share/%{name}
@@ -137,6 +122,9 @@ exit 0
 %{_sbindir}/myproxy-oauth-setup
 
 %changelog
+* Tue Apr 03 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.0-1
+- First Grid Community Toolkit release
+
 * Mon Dec 18 2017 Globus Toolkit <support@globus.org> - 0.27-1
 - Revert
 

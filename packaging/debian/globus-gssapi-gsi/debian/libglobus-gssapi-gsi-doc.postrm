@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gssapi-gsi-doc \
-    libglobus-gssapi-gsi-dev 13.7 \
+    libglobus-gssapi-gsi-dev 14 \
     libglobus-gssapi-gsi-doc -- "$@"

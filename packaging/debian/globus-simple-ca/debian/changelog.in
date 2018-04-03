@@ -1,3 +1,9 @@
+globus-simple-ca (5.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:21 +0200
+
 globus-simple-ca (4.24-2+gt6.@distro@) @distro@; urgency=low
 
   * Simplify debian packaging using debhelper 9

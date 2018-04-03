@@ -1,3 +1,10 @@
+globus-gsi-callback (6.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:19 +0200
+
 globus-gsi-callback (5.13-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix crash with OpenSSL 1.1.0 with a CRL (issue #87), replace some deprecated API calls

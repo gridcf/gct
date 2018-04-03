@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
-Version:	14.37
+Version:	15.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
@@ -66,7 +66,7 @@ Requires:	globus-gram-job-manager-scripts >= 6
 Requires:	globus-proxy-utils >= 5
 Requires:	globus-gsi-cert-utils-progs
 Requires:	%{libpkg}%{?_isa} = %{version}-%{release}
-Obsoletes:	%{name}-doc < 14.38
+Obsoletes:	%{name}-doc < 15
 
 %package -n %{libpkg}
 Summary:	Grid Community Toolkit - Scheduler Event Generator Job Manager
@@ -153,6 +153,13 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+- Disable usage statistics reporting by default
+- Drop documentation package (move rsl.5 man page to main package)
+- Move globus-seg-job-manager plugin to a separate package
+
 * Sat Jan 20 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.37-1
 - Workaround non-implemented features on GNU/Hurd (socket buffer size)
 - Move grid-proxy-destroy call to before starting personal gatekeeper in

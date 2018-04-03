@@ -3,7 +3,7 @@
 Name:		globus-xio
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	5.17
+Version:	6.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
@@ -132,6 +132,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-1
+- First Grid Community Toolkit release
+
 * Fri Mar 09 2018 Globus Toolkit <support@globus.org> - 5.17-1
 - fix udp dual stack sockets when ipv6only is the default
 

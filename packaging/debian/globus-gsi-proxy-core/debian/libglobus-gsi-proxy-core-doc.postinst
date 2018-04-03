@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gsi-proxy-core-doc \
-    libglobus-gsi-proxy-core-dev 8.7 \
+    libglobus-gsi-proxy-core-dev 9 \
     libglobus-gsi-proxy-core-doc -- "$@"

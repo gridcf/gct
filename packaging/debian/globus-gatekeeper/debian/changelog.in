@@ -1,3 +1,11 @@
+globus-gatekeeper (11.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+  * Fix make clean rule
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:16 +0200
+
 globus-gatekeeper (10.12-1+gt6.@distro@) @distro@; urgency=low
 
   * Updates for el.5 openssl101e
@@ -12,8 +20,8 @@ globus-gatekeeper (10.11-1+gt6.@distro@) @distro@; urgency=low
 
 globus-gatekeeper (10.10-1+gt6.@distro@) @distro@; urgency=low
 
-  * - Remove Dead Code
-  * - Require minimal lsb-core for RHEL 6+ and fedora 20+
+  * Remove Dead Code
+  * Require minimal lsb-core for RHEL 6+ and fedora 20+
 
  -- Globus Toolkit <support@globus.org>  Mon, 06 Apr 2015 14:25:43 -0400
 

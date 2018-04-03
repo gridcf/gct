@@ -67,8 +67,8 @@ Section: libdevel
 Architecture: any
 Multi-Arch: same
 Depends: libglobus-xio-net-manager-driver (= ${binary:Version}), libglobus-net-manager-dev (= ${binary:Version}), ${misc:Depends}
-Replaces: libglobus-net-manager-dev (<< 0.18)
-Breaks: libglobus-net-manager-dev (<< 0.18)
+Replaces: libglobus-net-manager-dev (<< 1.0)
+Breaks: libglobus-net-manager-dev (<< 1.0)
 Description: Grid Community Toolkit - Globus XIO Network Manager Driver Development Files
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
  building grid systems and applications. It is a fork of the Globus Toolkit

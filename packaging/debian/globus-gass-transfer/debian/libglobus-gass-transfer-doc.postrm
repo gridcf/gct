@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gass-transfer-doc \
-    libglobus-gass-transfer-dev 8.11 \
+    libglobus-gass-transfer-dev 9 \
     libglobus-gass-transfer-doc -- "$@"

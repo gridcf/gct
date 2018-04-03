@@ -46,9 +46,9 @@ Package: libglobus-common-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Replaces: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-common-progs (<< 17.5)
+Replaces: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-common-progs (<< 18)
 Conflicts: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7)
-Breaks: globus-common-progs (<< 17.5)
+Breaks: globus-common-progs (<< 18)
 Depends: libglobus-common0 (= ${binary:Version}), ${misc:Depends}, ${perl:Depends}, libltdl-dev
 Suggests: libglobus-common-doc (= ${source:Version})
 Description: Grid Community Toolkit - Common Library Development Files

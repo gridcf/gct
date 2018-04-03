@@ -1,3 +1,9 @@
+globus-gss-assist (12.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:19 +0200
+
 globus-gss-assist (11.1-1+gt6.@distro@) @distro@; urgency=low
 
   * race condition and dependency packaging fixes

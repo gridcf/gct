@@ -1,9 +1,11 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: myproxy-oauth
-Source: <https://github.com/globusonline/myproxy-oauth>
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: myproxy_oauth
+Upstream-Contact: https://github.com/gridcf/gct/
 
 Files: *
-Copyright: 2012-2013 University of Chicago
+Copyright:
+ 2012-2017 University of Chicago
+ 2018 Grid Community Forum
 License: Apache-2.0
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.

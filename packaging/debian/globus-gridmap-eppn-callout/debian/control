@@ -10,6 +10,9 @@ Package: libglobus-gridmap-eppn-callout
 Section: libs
 Architecture: any
 Multi-Arch: same
+Provides: libglobus-gridmap-eppn-callout0
+Replaces: libglobus-gridmap-eppn-callout0 (<< 2)
+Conflicts: libglobus-gridmap-eppn-callout0 (<< 2)
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Grid Community Toolkit - Globus gridmap ePPN callout

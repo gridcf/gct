@@ -3,7 +3,7 @@
 Name:		globus-gram-client-tools
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	11.10
+Version:	12.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
@@ -68,6 +68,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 11.10-1
 - Update for el.5 openssl101e, replace docbook with asciidoc
 

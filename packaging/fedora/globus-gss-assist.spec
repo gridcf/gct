@@ -3,7 +3,7 @@
 Name:		globus-gss-assist
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	11.1
+Version:	12.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
@@ -172,6 +172,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.0-1
+- First Grid Community Toolkit release
+
 * Tue Sep 12 2017 Globus Toolkit <support@globus.org> - 11.1-1
 - race condition and dependency packaging fixes
 

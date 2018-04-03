@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-ssl
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	5.10
+Version:	6.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy SSL Library
 
@@ -137,6 +137,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 5.10-1
 - Update for el.5 openssl101e
 

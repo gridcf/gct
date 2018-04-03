@@ -2,7 +2,7 @@
 
 Name:		globus-gass-cache-program
 %global _name %(tr - _ <<< %{name})
-Version:	6.7
+Version:	7.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Tools to manipulate local and remote GASS caches
 
@@ -57,6 +57,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.0-1
+- First Grid Community Toolkit release
+
 * Fri Apr 21 2017 Globus Toolkit <support@globus.org> - 6.7-1
 - Rebuild after bad gass_copy package
 

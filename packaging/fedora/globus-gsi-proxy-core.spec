@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	8.6
+Version:	9.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -142,6 +142,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+
 * Fri Sep 09 2016 Globus Toolkit <support@globus.org> - 8.6-1
 - Fix missing openssl compile/link flags
 

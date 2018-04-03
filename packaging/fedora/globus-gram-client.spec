@@ -3,7 +3,7 @@
 Name:		globus-gram-client
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	13.19
+Version:	14.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Client Library
 
@@ -136,6 +136,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.0-1
+- First Grid Community Toolkit release
+
 * Tue Jul 11 2017 Globus Toolkit <support@globus.org> - 13.19-1
 - Add option to disable tests which require network
 

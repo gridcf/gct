@@ -1,3 +1,10 @@
+globus-gssapi-gsi (14.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:19 +0200
+
 globus-gssapi-gsi (13.6-2+gct.@distro@) @distro@; urgency=low
 
   * Fix dbg package

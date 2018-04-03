@@ -1,3 +1,10 @@
+globus-proxy-utils (7.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+  * Remove support for openssl101e (RHEL5 is EOL)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:21 +0200
+
 globus-proxy-utils (6.19-1+gt6.@distro@) @distro@; urgency=low
 
   * Fix RSA key checking

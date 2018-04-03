@@ -1,3 +1,9 @@
+globus-gram-job-manager-slurm (3.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:17 +0200
+
 globus-gram-job-manager-slurm (2.8-2+gt6.@distro@) @distro@; urgency=low
 
   * Update bug report URL

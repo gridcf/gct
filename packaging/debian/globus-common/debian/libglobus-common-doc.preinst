@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-common-doc \
-    libglobus-common-dev 17.5 \
+    libglobus-common-dev 18 \
     libglobus-common-doc -- "$@"

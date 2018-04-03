@@ -1,9 +1,9 @@
 AC_PREREQ([2.60])
-AC_INIT([globus_gridmap_callout],[1.1],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gridmap_callout],[2.0],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [2])
+AC_SUBST([AGE_VERSION], [3])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-gssapi-gsi >= 4, globus-gss-assist >= 3, globus-gridmap-callout-error >= 2, globus-gsi-credential >= 6"])
 
 AC_CONFIG_AUX_DIR([build-aux])

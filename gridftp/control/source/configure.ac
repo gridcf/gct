@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_ftp_control], [8.3], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_ftp_control], [9.0], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [7])
+AC_SUBST([AGE_VERSION], [8])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-gss-assist >= 11, globus-gssapi-gsi >= 13, globus-io >= 11, globus-xio >= 3, globus-gssapi-error >= 4"])
 
 AC_CONFIG_AUX_DIR([build-aux])

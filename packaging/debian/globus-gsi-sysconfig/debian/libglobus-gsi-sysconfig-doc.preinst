@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-gsi-sysconfig-doc \
-    libglobus-gsi-sysconfig-dev 8.2 \
+    libglobus-gsi-sysconfig-dev 9 \
     libglobus-gsi-sysconfig-doc -- "$@"

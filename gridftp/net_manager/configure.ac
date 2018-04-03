@@ -1,10 +1,10 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_net_manager],[0.17],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_net_manager],[1.0],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [0])
+AC_SUBST([AGE_VERSION], [1])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 15.27, globus-xio >= 5"])
 
 AC_CONFIG_AUX_DIR([build-aux])

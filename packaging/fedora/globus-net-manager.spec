@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	0.17
+Version:	1.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -191,6 +191,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.0-1
+- First Grid Community Toolkit release
+- Split out devel package for xio driver
+
 * Tue Apr 04 2017 Globus Toolkit <support@globus.org> - 0.17-1
 - Fix .pc typo
 

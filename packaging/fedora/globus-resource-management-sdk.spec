@@ -1,7 +1,7 @@
 Name:		globus-resource-management-sdk
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Resource Management SDK
 
 Group:		System Environment/Libraries
@@ -104,8 +104,11 @@ Resource Management SDK
 %postun
 
 %changelog
+* Mon Apr 02 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-3
+- First Grid Community Toolkit release
+
 * Wed Aug 26 2015 Joseph Bester <bester@mcs.anl.gov> - 6.0-2
 - Remove obsolete globus-core dependency
 
-* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 6.0-1
 - GT 5.2.2 New Metapackage

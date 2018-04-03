@@ -3,8 +3,8 @@
 Name:		globus-gass-server-ez
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	5.8
-Release:	3%{?dist}
+Version:	6.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez
 
 Group:		System Environment/Libraries
@@ -124,6 +124,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 5.8-3
 - Rebuild after changes for el.5 with openssl101e
 

@@ -11,8 +11,8 @@ Section: net
 Architecture: all
 Multi-Arch: foreign
 Provides: globus-gram-job-manager-setup-condor
-Replaces: globus-gram-job-manager-setup-condor (<< 4.5), globus-gram-job-manager-setup-condor-doc (<< 4.5)
-Conflicts: globus-gram-job-manager-setup-condor (<< 4.5), globus-gram-job-manager-setup-condor-doc (<< 4.5)
+Replaces: globus-gram-job-manager-setup-condor (<< 4.5), globus-gram-job-manager-setup-condor-doc (<< 4.5), globus-gram-job-manager-condor-doc (<< 3)
+Conflicts: globus-gram-job-manager-setup-condor (<< 4.5), globus-gram-job-manager-setup-condor-doc (<< 4.5), globus-gram-job-manager-condor-doc (<< 3)
 Depends: ${misc:Depends}, ${perl:Depends}, globus-gram-job-manager (>= 13), globus-gram-job-manager-scripts (>= 4), globus-gass-cache-program (>= 5), globus-gatekeeper (>= 9)
 Description: Grid Community Toolkit - Condor Job Manager Support
  The Grid Community Toolkit (GCT) is an open source software toolkit used for

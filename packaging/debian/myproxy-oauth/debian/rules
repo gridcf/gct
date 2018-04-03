@@ -44,7 +44,7 @@ clean:
 	dh clean
 	python setup.py clean -a
 	cd transferapiclient; python setup.py clean -a; 
-	rm -rf debian/globus-connect-multiuser.install
+	rm -f debian/myproxy-oauth.install
 	rm -f build-stamp
 
 build: build-stamp

@@ -1,9 +1,9 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager_sge],[2.6],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager_sge],[3.0],[https://github.com/gridcf/gct/issues])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [1])
+AC_SUBST([AGE_VERSION], [2])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 14, globus-scheduler-event-generator >= 4"])
 
 AC_CONFIG_AUX_DIR([build-aux])

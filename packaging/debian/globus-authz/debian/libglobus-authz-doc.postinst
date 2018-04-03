@@ -6,5 +6,5 @@ set -e
 
 dpkg-maintscript-helper symlink_to_dir \
     /usr/share/doc/libglobus-authz-doc \
-    libglobus-authz-dev 3.16 \
+    libglobus-authz-dev 4 \
     libglobus-authz-doc -- "$@"

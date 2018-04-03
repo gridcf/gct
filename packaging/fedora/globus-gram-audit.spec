@@ -2,7 +2,7 @@
 
 Name:		globus-gram-audit
 %global _name %(tr - _ <<< %{name})
-Version:	4.6
+Version:	5.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager Auditing
 
@@ -77,6 +77,10 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
+- First Grid Community Toolkit release
+- Add Requires on perl(DBD::SQLite)
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 4.6-1
 - Update for el.5 openssl101e, replace docbook with asciidoc
 

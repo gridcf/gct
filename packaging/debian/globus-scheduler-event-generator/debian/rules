@@ -93,7 +93,7 @@ binary-arch: install
 	dh_installman -a
 	dh_link -a
 	if dpkg --compare-versions $$(dpkg-query -W -f '$${Version}' debhelper) ge 9.20160114 ; then \
-		dh_strip -a --dbgsym-migration='lib$(name)-dbg (<< 5.13), $(name)-dbg (<< 5.13)' ; \
+		dh_strip -a --dbgsym-migration='lib$(name)-dbg (<< 6), $(name)-dbg (<< 6)' ; \
 	else \
 		dh_strip -a ; \
 	fi

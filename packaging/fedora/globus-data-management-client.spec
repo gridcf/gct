@@ -1,7 +1,7 @@
 Name:		globus-data-management-client
 %global _name %(tr - _ <<< %{name})
 Version:	6.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Data Management Client
 
 Group:		System Environment/Libraries
@@ -38,5 +38,8 @@ Data Management Client Programs
 %postun
 
 %changelog
-* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 14.7-3
+* Mon Apr 02 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-2
+- First Grid Community Toolkit release
+
+* Tue Jul 17 2012 Joseph Bester <bester@mcs.anl.gov> - 6.0-1
 - GT 5.2.2 New Metapackage

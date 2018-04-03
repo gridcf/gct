@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-slurm
 %global _name %(tr - _ <<< %{name})
-Version:	2.8
-Release:	3%{?dist}
+Version:	3.0
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - SLURM Job Manager Support
 
 Group:		Applications/Internet
@@ -27,7 +27,8 @@ Requires:	globus-gatekeeper >= 9
 %else
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %endif
-Obsoletes:	%{name}-setup-poll < 2.9
+Provides:	%{name}-setup-poll = %{version}-%{release}
+Obsoletes:	%{name}-setup-poll < 3
 
 Requires(preun):	globus-gram-job-manager-scripts >= 4
 
@@ -84,6 +85,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
+- First Grid Community Toolkit release
+
 * Thu Sep 08 2016 Globus Toolkit <support@globus.org> - 2.8-3
 - Rebuild after changes for el.5 with openssl101e
 

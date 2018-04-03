@@ -1,9 +1,9 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager],[14.37],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager],[15.0],[https://github.com/gridcf/gct/issues])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
-AC_SUBST([AGE_VERSION], [1])
+AC_SUBST([AGE_VERSION], [2])
 AC_SUBST([PACKAGE_DEPS], ["globus-common >= 15, globus-gsi-credential >= 5, globus-gass-cache >= 8, globus-gass-transfer >= 7, globus-gram-protocol >= 11, globus-gssapi-gsi >= 10, globus-gss-assist >= 8, globus-gsi-sysconfig >= 5, globus-callout >= 2, globus-xio >= 3, globus-xio-popen-driver >= 2, globus-rsl >= 9, globus-gram-job-manager-callout-error >= 2, globus-scheduler-event-generator >= 4, globus-usage >= 3"])
 
 AC_SUBST([CLIENT_TEST_PACKAGE_DEPS], ["globus-common >= 14, globus-gram-protocol >= 11, globus-io >= 9, globus-rsl >= 9, globus-gss-assist >= 8, globus-gram-client >= 3, globus-gass-server-ez >= 2, globus-gass-transfer >= 7, globus-gssapi-gsi >= 10"])
