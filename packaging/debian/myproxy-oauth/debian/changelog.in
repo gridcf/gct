@@ -1,3 +1,9 @@
+myproxy-oauth (1.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * First Grid Community Toolkit release
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 03 Apr 2018 10:33:10 +0200
+
 myproxy-oauth (0.27-1+gt6.@distro@) @distro@; urgency=low
 
   * Revert previous
