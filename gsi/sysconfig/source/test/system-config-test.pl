@@ -43,16 +43,21 @@ sub set_key_permissions {
 
 sub get_home_dir {
     my $homedir = (getpwuid($<))[7];
-    my ($rc, $output);
 
-    $output = qx($system_config_test get_home_dir);
-    $rc = $? << 8;
+    SKIP: {
+        skip "User home dir doesn't exist", 1 unless -d $homedir;
 
-    $output =~ s/\n$//;
+        my ($rc, $output);
 
-    diag($output) if $output ne "";
+        $output = qx($system_config_test get_home_dir);
+        $rc = $? << 8;
 
-    ok($homedir eq $output, "get_home_dir");
+        $output =~ s/\n$//;
+
+        diag($output) if $output ne "";
+
+        ok($homedir eq $output, "get_home_dir");
+    }
 }
 
 sub file_exists_true {
@@ -293,7 +298,7 @@ sub get_cert_dir_home {
     my ($rc, $output);
     
     SKIP: {
-        skip 1, "User cert dir doesn't exist" unless -d $certdir;
+        skip "User cert dir doesn't exist", 1 unless -d $certdir;
 
         delete $ENV{X509_CERT_DIR} if $old_dir;
 
