@@ -61,21 +61,6 @@ AC_HELP_STRING([--with-perlmoduledir=DIR],
 ])
 AC_SUBST(perlmoduledir)
 
-AC_ARG_ENABLE([net-tests],
-    AC_HELP_STRING(
-        [--disable-net-tests],
-        [Disable tests that require a working network]),
-    [
-        if test x$enableval != xno; then
-            enable_net_tests=yes
-        else
-            enable_net_tests=no
-        fi
-    ],
-    [enable_net_tests=yes])
-
-AM_CONDITIONAL([ENABLE_NET_TESTS], [test x$enable_net_tests = xyes])
-
 AC_CONFIG_FILES(
         globus-gram-client-uninstalled.pc
         globus-gram-client.pc
