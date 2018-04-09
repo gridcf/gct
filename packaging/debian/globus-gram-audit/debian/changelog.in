@@ -2,7 +2,7 @@ globus-gram-audit (5.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
   * Add Depends on libdbd-sqlite3-perl
-  * Create database in postinstall maintatiner script
+  * Create database in postinstall maintainer script
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:17 +0200
 

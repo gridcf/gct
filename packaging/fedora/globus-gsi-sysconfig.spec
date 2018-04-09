@@ -146,6 +146,7 @@ make %{?_smp_mflags} check VERBOSE=1
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)
+- Skip homedir test if directory does not exist
 
 * Wed Jan 24 2018 Globus Toolkit <support@globus.org> - 8.1-1
 - fix typo in windows function name

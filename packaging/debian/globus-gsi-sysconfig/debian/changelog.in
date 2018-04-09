@@ -2,6 +2,7 @@ globus-gsi-sysconfig (9.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
   * Remove support for openssl101e (RHEL5 is EOL)
+  * Skip homedir test if directory does not exist
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:21 +0200
 

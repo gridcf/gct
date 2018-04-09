@@ -170,23 +170,17 @@ deactivate_before_callback_disallow(void)
 
 int main(int argc, char *argv[])
 {
-    int rc = 0;
+    int rc;
     int test_num = 0;
     int not_ok = 0;
-    const char * skip = getenv("SKIP_NO_NET") ? " # SKIP no-net" : "";
 
     LTDL_SET_PRELOADED_SYMBOLS();
 
-
-
     printf("1..4\n");
 
-    if (*skip == 0)
-    {
-        rc = add_remove_callback_contact_test();
-    }
-    printf("%s %d - add_remove_callback_contact_test%s\n",
-            rc ? "not ok" : "ok", ++test_num, skip);
+    rc = add_remove_callback_contact_test();
+    printf("%s %d - add_remove_callback_contact_test\n",
+            rc ? "not ok" : "ok", ++test_num);
     not_ok |= rc;
 
     rc = remove_bogus_callback_contact();
@@ -194,20 +188,14 @@ int main(int argc, char *argv[])
             rc ? "not ok" : "ok", ++test_num);
     not_ok |= rc;
 
-    if (*skip == 0)
-    {
-        rc = remove_callback_contacts_out_of_order();
-    }
-    printf("%s %d - remove_callback_contacts_out_of_order%s\n",
-            rc ? "not ok" : "ok", ++test_num, skip);
+    rc = remove_callback_contacts_out_of_order();
+    printf("%s %d - remove_callback_contacts_out_of_order\n",
+            rc ? "not ok" : "ok", ++test_num);
     not_ok |= rc;
 
-    if (*skip == 0)
-    {
-        rc = deactivate_before_callback_disallow();
-    }
-    printf("%s %d - deactivate_before_callback_disallow%s\n",
-            rc ? "not ok" : "ok", ++test_num, skip);
+    rc = deactivate_before_callback_disallow();
+    printf("%s %d - deactivate_before_callback_disallow\n",
+            rc ? "not ok" : "ok", ++test_num);
     not_ok |= rc;
 
     return not_ok;
