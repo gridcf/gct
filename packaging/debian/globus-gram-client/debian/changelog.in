@@ -1,6 +1,7 @@
 globus-gram-client (14.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
+  * Remove unneeded configure option (setting GLOBUS_HOSTNAME is sufficient)
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 01 Apr 2018 16:00:18 +0200
 

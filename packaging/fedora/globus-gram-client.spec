@@ -138,6 +138,7 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %changelog
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.0-1
 - First Grid Community Toolkit release
+- Remove unneeded configure option (setting GLOBUS_HOSTNAME is sufficient)
 
 * Tue Jul 11 2017 Globus Toolkit <support@globus.org> - 13.19-1
 - Add option to disable tests which require network
