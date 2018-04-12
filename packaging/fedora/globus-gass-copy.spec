@@ -13,6 +13,7 @@ URL:		https://github.com/gridcf/gct/
 Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:	gcc
 BuildRequires:	globus-common-devel >= 15
 BuildRequires:	globus-ftp-client-devel >= 7
 BuildRequires:	globus-ftp-control-devel >= 4

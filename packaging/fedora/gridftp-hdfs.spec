@@ -10,6 +10,7 @@ URL:            http://twiki.grid.iu.edu/bin/view/Storage/HadoopInstallation
 Source:         %{_name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires: gcc
 %if 0%{?suse_version} > 0
 BuildRequires: java-sdk >= 1.7.0
 %else

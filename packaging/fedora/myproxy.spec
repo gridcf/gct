@@ -12,6 +12,7 @@ URL:            http://grid.ncsa.illinois.edu/myproxy/
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:  gcc
 BuildRequires:  globus-common-devel >= 14
 BuildRequires:  globus-usage-devel >= 3
 BuildRequires:  globus-gssapi-gsi-devel >= 9
