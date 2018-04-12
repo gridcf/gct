@@ -14,6 +14,7 @@ Source:		%{_name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{?suse_version}%{!?suse_version:0}
+BuildRequires:	gcc
 BuildRequires:	libopenssl-devel
 %else
 BuildRequires:	openssl-devel
