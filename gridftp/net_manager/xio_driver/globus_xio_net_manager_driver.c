@@ -1279,7 +1279,10 @@ globus_l_xio_net_manager_connect(
 
 no_attr:
     result = globus_xio_driver_pass_open(
-        op, contact_info, globus_l_xio_net_manager_connect_callback, handle);
+        op,
+        new_contact_info.unparsed ? &new_contact_info : contact_info,
+        globus_l_xio_net_manager_connect_callback,
+        handle);
 
 attr_apply_fail:
     if (result && handle)

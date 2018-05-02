@@ -1,3 +1,9 @@
+globus-net-manager (1.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * fix pre-connect not using changed remote contact
+
+ -- Globus Toolkit <support@globus.org>  Tue, 01 May 2018 11:08:20 -0500
+
 globus-net-manager (1.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
