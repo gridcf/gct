@@ -1,3 +1,9 @@
+myproxy (6.2.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix -Werror=format-security errors
+
+ -- Globus Toolkit <support@globus.org>  Wed, 02 May 2018 11:11:55 -0400
+
 myproxy (6.2.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

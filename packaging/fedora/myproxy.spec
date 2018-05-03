@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.0
+Version:        6.2.1
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -380,6 +380,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Wed May 02 2018 Globus Toolkit <support@globus.org> - 6.2.1-1
+- Fix -Werror=format-security errors
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

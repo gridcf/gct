@@ -109,7 +109,7 @@ PLUG_API int sasl_canonuser_init(const sasl_utils_t *utils, \
 
 /* note: msg cannot include additional variables, so if you want to
  * do a printf-format string, then you need to call seterror yourself */
-#define SETERROR( utils, msg ) (utils)->seterror( (utils)->conn, 0, (msg) )
+#define SETERROR( utils, msg ) (utils)->seterror( (utils)->conn, 0, "%s", (msg) )
 
 #ifndef MEMERROR
 #define MEMERROR( utils ) \
