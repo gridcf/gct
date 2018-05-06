@@ -78,7 +78,7 @@ TESTS_ENVIRONMENT = export \
 
 # Test Cert/Key
 testcred.key testcred1.key testcred2.key:
-	umask 077; $(OPENSSL) genrsa -out $@ 1024
+	umask 077; $(OPENSSL) genrsa -out $@ 2048
 
 .key.req:
 	$(OPENSSL) req -subj "/CN=$*" -new -key $< -out $@ -config testcred.cnf

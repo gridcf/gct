@@ -1,3 +1,10 @@
+globus-proxy-utils (7.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Increase default proxy key size to 2048 bits
+  * Use 2048 bit RSA key for tests
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:46:28 +0200
+
 globus-proxy-utils (7.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

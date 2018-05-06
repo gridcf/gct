@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(tr - _ <<< %{name})
-Version:	3.0
+Version:	3.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
@@ -140,6 +140,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
+- Use 2048 bit RSA key for tests
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
 - First Grid Community Toolkit release
 

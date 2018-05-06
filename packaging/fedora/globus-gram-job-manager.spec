@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
-Version:	15.0
+Version:	15.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
@@ -154,6 +154,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.1-1
+- Use 2048 bit RSA key for tests
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

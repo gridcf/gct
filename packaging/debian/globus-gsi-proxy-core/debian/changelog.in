@@ -1,3 +1,9 @@
+globus-gsi-proxy-core (9.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Increase default proxy key size to 2048 bits
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:43:01 +0200
+
 globus-gsi-proxy-core (9.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

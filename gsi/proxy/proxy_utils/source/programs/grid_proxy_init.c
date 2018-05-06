@@ -145,8 +145,8 @@ main(
     char **                             argv)
 {
     globus_result_t                     result  = GLOBUS_SUCCESS;
-    /* default proxy to 1024 bits */
-    int                                 key_bits    = 1024;
+    /* default proxy to 2048 bits */
+    int                                 key_bits    = 2048;
     /* default to a 12 hour cert */
     int                                 valid       = 12*60;
     int                                 verify      = 0;

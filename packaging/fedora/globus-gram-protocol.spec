@@ -3,7 +3,7 @@
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	13.0
+Version:	13.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
@@ -157,6 +157,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.1-1
+- Use 2048 bit RSA key for tests
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.0-1
 - First Grid Community Toolkit release
 

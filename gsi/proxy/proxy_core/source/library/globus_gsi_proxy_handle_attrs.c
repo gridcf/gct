@@ -24,7 +24,7 @@
 #include "globus_i_gsi_proxy.h"
 #include <errno.h>
 
-#define DEFAULT_KEY_BITS                1024
+#define DEFAULT_KEY_BITS                2048
 #define DEFAULT_PUB_EXPONENT            RSA_F4  /* 65537 */
 #define DEFAULT_SIGNING_ALGORITHM       NULL
 #define DEFAULT_CLOCK_SKEW              (5*60)    /* actually in seconds */
