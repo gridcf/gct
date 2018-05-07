@@ -23,7 +23,7 @@ DESCRIPTION
 The *grid-proxy-init* program generates X.509 proxy certificates derived from
 the currently available certificate files.  By default, this command generates
 a <ulink url="http://www.ietf.org/rfc/rfc3820.txt">RFC 3820</ulink> Proxy
-Certificate with a 1024 bit key, valid for 12 hours, in a file named
+Certificate with a 2048 bit key, valid for 12 hours, in a file named
 +/tmp/x509up_u'UID'+.  Command-line options and environment variables can
 modify the format, strength, lifetime, and location of the generated proxy
 certificate.
@@ -81,7 +81,7 @@ The full set of command-line options to *grid-proxy-init* are:
     default path of +/tmp/x509up_u'UID'+.
 *-bits 'BITS'*::
     When creating the proxy certificate, use a 'BITS' bit key instead of the
-    default 1024-bit keys.
+    default 2048-bit keys.
 *-policy 'POLICYFILE'*::
     Add the certificate policy data described in 'POLICYFILE' as the
     ProxyCertInfo X.509 extension to the generated proxy

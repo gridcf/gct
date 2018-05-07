@@ -36,7 +36,7 @@ grid-proxy-init \- Generate a new proxy certificate
 \fBgrid\-proxy\-init\fR [OPTIONS]
 .SH "DESCRIPTION"
 .sp
-The \fBgrid\-proxy\-init\fR program generates X\&.509 proxy certificates derived from the currently available certificate files\&. By default, this command generates a <ulink url="http://www\&.ietf\&.org/rfc/rfc3820\&.txt">RFC 3820</ulink> Proxy Certificate with a 1024 bit key, valid for 12 hours, in a file named /tmp/x509up_u\(cqUID\*(Aq\&. Command\-line options and environment variables can modify the format, strength, lifetime, and location of the generated proxy certificate\&.
+The \fBgrid\-proxy\-init\fR program generates X\&.509 proxy certificates derived from the currently available certificate files\&. By default, this command generates a <ulink url="http://www\&.ietf\&.org/rfc/rfc3820\&.txt">RFC 3820</ulink> Proxy Certificate with a 2048 bit key, valid for 12 hours, in a file named /tmp/x509up_u\(cqUID\*(Aq\&. Command\-line options and environment variables can modify the format, strength, lifetime, and location of the generated proxy certificate\&.
 .sp
 X\&.509 proxy certificates are short\-lived certificates, signed usually by a user\(cqs identity certificate or another proxy certificate\&. The key associated with a proxy certificate is unencrypted, so applications can authenticate using a proxy identity without providing a pass phrase\&.
 .sp
@@ -115,7 +115,7 @@ instead of the default path of
 .RS 4
 When creating the proxy certificate, use a
 \fIBITS\fR
-bit key instead of the default 1024\-bit keys\&.
+bit key instead of the default 2048\-bit keys\&.
 .RE
 .PP
 \fB\-policy \fR\fB\fIPOLICYFILE\fR\fR

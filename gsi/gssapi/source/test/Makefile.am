@@ -197,22 +197,22 @@ testcred.cacert: testcred.cnf
 	echo 01 > $@
 
 testcred.key testcred-nocn.key testcred-dns1.key testcred-dns2.key:
-	umask 077; $(OPENSSL) genrsa 1024 > $@
+	umask 077; $(OPENSSL) genrsa -out $@ 2048
 
 testcred.req: testcred.key
-	$(OPENSSL) req -subj "/CN=test" -new -config testcred.cnf -key $< > $@
+	$(OPENSSL) req -subj "/CN=test" -new -key $< -out $@ -config testcred.cnf
 
 testcred-nocn.req: testcred-nocn.key
-	$(OPENSSL) req -subj "/userId=test" -new -config testcred.cnf -key $< > $@
+	$(OPENSSL) req -subj "/userId=test" -new -key $< -out $@ -config testcred.cnf
 
 testcred-dns1.req: testcred-dns1.key
-	$(OPENSSL) req -subj "/CN=dns1" -reqexts testcred-dns1 -new -config testcred.cnf -key $< > $@
+	$(OPENSSL) req -subj "/CN=dns1" -reqexts testcred-dns1 -new -key $< -out $@ -config testcred.cnf
 
 testcred-dns2.req: testcred-dns2.key
-	$(OPENSSL) req -subj "/CN=dns2" -reqexts testcred-dns2 -new -config testcred.cnf -key $< > $@
+	$(OPENSSL) req -subj "/CN=dns2" -reqexts testcred-dns2 -new -key $< -out $@ -config testcred.cnf
 
 .req.cert:
-	umask 022; $(OPENSSL) x509 -extensions $* -extfile testcred.cnf -req -passin pass:globus -days 365 -CAkey testcred.cakey -CA testcred.cacert -in $< > $@
+	umask 022; $(OPENSSL) x509 -extensions $* -extfile testcred.cnf -req -passin pass:globus -days 365 -CAkey testcred.cakey -CA testcred.cacert -in $< -out $@
 
 testcred.cert: testcred.srl
 testcred-nocn.cert: testcred.cert

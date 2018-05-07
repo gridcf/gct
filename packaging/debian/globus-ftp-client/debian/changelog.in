@@ -1,3 +1,9 @@
+globus-ftp-client (9.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use 2048 bit RSA key for tests
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:14:28 +0200
+
 globus-ftp-client (9.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

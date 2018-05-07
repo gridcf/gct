@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	9.0
+Version:	9.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -143,6 +143,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.1-1
+- Increase default proxy key size to 2048 bits
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

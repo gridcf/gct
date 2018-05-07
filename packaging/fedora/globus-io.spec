@@ -3,7 +3,7 @@
 Name:		globus-io
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	12.0
+Version:	12.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
@@ -116,6 +116,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.1-1
+- Use 2048 bit RSA key for tests
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.0-1
 - First Grid Community Toolkit release
 

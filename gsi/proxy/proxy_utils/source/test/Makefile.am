@@ -50,7 +50,7 @@ TESTS_ENVIRONMENT = \
 
 # Test Cert/Key
 .srl.key:
-	umask 077; $(OPENSSL) genrsa -out $@ 1024
+	umask 077; $(OPENSSL) genrsa -out $@ 2048
 .key.req:
 	$(OPENSSL) req -subj "/CN=test" -new -key $< -out $@ -config $*.cnf
 
