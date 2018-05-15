@@ -2,7 +2,7 @@
 
 Name:           myproxy-oauth
 %global _name %(tr - _ <<< %{name})
-Version:        1.0
+Version:        1.1
 Release:        1%{?dist}
 Summary:        MyProxy OAuth Delegation Serice
 
@@ -122,6 +122,9 @@ exit 0
 %{_sbindir}/myproxy-oauth-setup
 
 %changelog
+* Mon May 14 2018 Globus Toolkit <support@globus.org> - 1.1-1
+- Allow newer TLS versions
+
 * Tue Apr 03 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.0-1
 - First Grid Community Toolkit release
 

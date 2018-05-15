@@ -72,7 +72,9 @@ def myproxy_logon(certreq_pem, lifetime, username, passphrase, myproxy_server):
     except:
         pass
 
-    context = SSL.Context(SSL.TLSv1_METHOD)
+    context = SSL.Context(SSL.SSLv23_METHOD)
+    context.set_options(SSL.OP_NO_SSLv2)
+    context.set_options(SSL.OP_NO_SSLv3)
 
     # disable for compatibility with myproxy server (er, globus)
     # globus doesn't handle this case, apparently, and instead
