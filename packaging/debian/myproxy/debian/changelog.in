@@ -1,3 +1,9 @@
+myproxy (6.2.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use 2048 bit CA key for myproxy tests
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 17 May 2018 11:31:31 +0200
+
 myproxy (6.2.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix -Werror=format-security errors

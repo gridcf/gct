@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([myproxy],[6.2.1])
+AC_INIT([myproxy],[6.2.2])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT([dlopen win32-dll])

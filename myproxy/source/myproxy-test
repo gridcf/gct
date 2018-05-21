@@ -84,14 +84,17 @@ default_ca      = CA_default            # The default ca section
 [ CA_default ]
 dir            = $privcerts              # top dir
 database       = $privcerts/index.txt        # index file.
-new_certs_dir	= $privcerts/         # new certs dir
+new_certs_dir  = $privcerts/         # new certs dir
  
 certificate    = $privcerts/cacert.pem       # The CA cert
 serial         = $privcerts/serial           # serial no file
 private_key    = $privcerts/cakey.pem # CA private key
 RANDFILE       = $privcerts/.rand    # random number file
-default_md     = sha1                   # md to use
+default_md     = default
+
 [ req ]
+default_bits   = 2048
+default_md     = sha1
 distinguished_name = req_distinguished_name
 
 [ req_distinguished_name ]
