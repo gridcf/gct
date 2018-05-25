@@ -1,3 +1,12 @@
+globus-gssapi-gsi (14.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Avoid TLS 1.3 for now
+    The GSI GSSAPI currently does not work with TLS 1.3
+    Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
+    protocol version until it has been ported
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 25 May 2018 14:01:08 +0200
+
 globus-gssapi-gsi (14.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests

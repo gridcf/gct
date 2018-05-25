@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.1
+Version:	14.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,12 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri May 25 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.2-1
+- Avoid TLS 1.3 for now
+  The GSI GSSAPI currently does not work with TLS 1.3
+  Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
+  protocol version until it has been ported
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.1-1
 - Use 2048 bit RSA key for tests
 
