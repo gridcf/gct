@@ -601,6 +601,29 @@ globus_i_gsi_gss_create_and_fill_context(
         goto free_cert_dir;
     }
 
+    /* enable ECDH */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    /* 1.1.0 does ecdh and auto curve selection by default */
+
+  #if defined(SSL_CTRL_SET_ECDH_AUTO) 
+    /* auto curve selection can be enabled in 1.0.2 (backported to 1.0.1-el7) */
+    SSL_set_ecdh_auto(context->gss_ssl, 1);
+
+  #elif defined(NID_secp384r1)
+    /* otherwise choose a specific curve. P-384 is best available in el6 */
+    { 
+        EC_KEY *ecdh = EC_KEY_new_by_curve_name(NID_secp384r1);
+        if (ecdh)
+        {
+            SSL_set_tmp_ecdh(context->gss_ssl, ecdh);
+            EC_KEY_free(ecdh);
+        }
+    }
+  #endif
+    /* set single use.  should be the default with auto */ 
+    SSL_set_options(context->gss_ssl, SSL_OP_SINGLE_ECDH_USE);
+#endif
+
     /*
      * If initiate and caller did not set the GSS_C_CONF_FLAG
      * then add the NULL ciphers to beginning.
@@ -693,6 +716,8 @@ globus_i_gsi_gss_create_and_fill_context(
                 context->gss_ssl, 
                 BIO_NOCLOSE);
     
+    /* DEBUG BLOCK */
+    if (globus_i_gsi_gssapi_debug_level >= 2)
     {
         char buff[256];
         int i;

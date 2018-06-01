@@ -701,7 +701,7 @@ globus_l_xio_gssapi_ftp_decode_adat(
 {
     char *                              reply;
     globus_result_t                     res;
-    OM_uint32                           ret_flags = 0;
+    OM_uint32                           ret_flags = GSS_C_CONF_FLAG;
     OM_uint32                           min_stat;
     OM_uint32                           maj_stat;
     globus_size_t                       length;

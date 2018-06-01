@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.2
+Version:	14.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu May 31 2018 Globus Toolkit <support@globus.org> - 14.3-1
+- enable ECDH ciphers for openssl < 1.1.0
+
 * Fri May 25 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.2-1
 - Avoid TLS 1.3 for now
   The GSI GSSAPI currently does not work with TLS 1.3

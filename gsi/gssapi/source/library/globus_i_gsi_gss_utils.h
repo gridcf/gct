@@ -174,18 +174,18 @@ extern globus_bool_t                    globus_i_gssapi_active;
 
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER \
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF( \
-                1, (globus_i_gsi_gssapi_debug_fstream, \
+                3, (globus_i_gsi_gssapi_debug_fstream, \
                     "%s entering\n", __func__))
 
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT \
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF( \
-                1, (globus_i_gsi_gssapi_debug_fstream, \
+                3, (globus_i_gsi_gssapi_debug_fstream, \
                     "%s exiting: major_status=%d\n", \
                     __func__, (int)major_status))
 
 #define GLOBUS_I_GSI_GSSAPI_INTERNAL_DEBUG_EXIT \
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF( \
-                1, (globus_i_gsi_gssapi_debug_fstream, \
+                3, (globus_i_gsi_gssapi_debug_fstream, \
                     "%s exiting\n", \
                     __func__))
 
