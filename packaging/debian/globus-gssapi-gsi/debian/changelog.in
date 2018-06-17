@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add context inquire OID support to get TLS version and cipher
+
+ -- Globus Toolkit <support@globus.org>  Fri, 15 Jun 2018 10:14:09 -0400
+
 globus-gssapi-gsi (14.3-1+gct.@distro@) @distro@; urgency=medium
 
   * enable ECDH ciphers for openssl < 1.1.0

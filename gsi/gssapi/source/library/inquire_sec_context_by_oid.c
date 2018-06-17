@@ -55,6 +55,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     gss_buffer_desc                     data_set_buffer = GSS_C_EMPTY_BUFFER;
     globus_result_t                     local_result = GLOBUS_SUCCESS;
     unsigned char *                     tmp_ptr;
+    char *                              copy = NULL;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
@@ -152,12 +153,19 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     {
         if (context->sni_servername != NULL)
         {
+            copy = strdup(context->sni_servername);
+            if (copy == NULL)
+            {
+                GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
+                major_status = GSS_S_FAILURE;
+                goto unlock_exit;
+            }
             major_status = gss_add_buffer_set_member(
                 &local_minor_status,
                 &(gss_buffer_desc)
                 {
-                    .value = context->sni_servername,
-                    .length = strlen(context->sni_servername),
+                    .value = copy,
+                    .length = strlen(copy) + 1,
                 },
                 data_set);
             if(GSS_ERROR(major_status))
@@ -180,11 +188,19 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
             SSL_get0_alpn_selected(context->gss_ssl, &data, &len);
             if (len != 0)
             {
+                copy = malloc(len);
+                if (copy == NULL)
+                {
+                    GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
+                    major_status = GSS_S_FAILURE;
+                    goto unlock_exit;
+                }
+                memcpy(copy, data, len);
                 major_status = gss_add_buffer_set_member(
                     &local_minor_status,
                     &(gss_buffer_desc)
                     {
-                        .value = data,
+                        .value = copy,
                         .length = len
                     },
                     data_set);
@@ -200,6 +216,85 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
         }
     }
 #endif
+    else if (g_OID_equal(desired_object, gss_ext_tls_version_oid))
+    {
+        const char *tls_version = NULL;
+        unsigned int len = 0;
+
+        tls_version = SSL_get_version(context_handle->gss_ssl);
+        if (tls_version != NULL)
+        {
+            copy = strdup(tls_version);
+
+            if (copy == NULL)
+            {
+                GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
+                major_status = GSS_S_FAILURE;
+                goto unlock_exit;
+            }
+            else
+            {
+                major_status = gss_add_buffer_set_member(
+                    &local_minor_status,
+                    &(gss_buffer_desc)
+                    {
+                        .value = copy,
+                        .length = strlen(copy) + 1,
+                    },
+                    data_set);
+
+                if(GSS_ERROR(major_status))
+                {
+                    GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                        minor_status, local_minor_status,
+                        GLOBUS_GSI_GSSAPI_ERROR_WITH_BUFFER);
+                    free(copy);
+                    goto unlock_exit;
+                }
+            }
+        }
+    }
+    else if (g_OID_equal(desired_object, gss_ext_tls_cipher_oid))
+    {
+        unsigned int len = 0;
+        const SSL_CIPHER *      current_cipher = NULL;
+        const char *cipher_name = NULL;
+
+        current_cipher = SSL_get_current_cipher(context_handle->gss_ssl);
+        cipher_name = SSL_CIPHER_get_name(current_cipher);
+
+        if (cipher_name != NULL)
+        {
+            char *copy = strdup(cipher_name);
+
+            if (copy == NULL)
+            {
+                GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
+                major_status = GSS_S_FAILURE;
+                goto unlock_exit;
+            }
+            else
+            {
+                major_status = gss_add_buffer_set_member(
+                    &local_minor_status,
+                    &(gss_buffer_desc)
+                    {
+                        .value = copy,
+                        .length = strlen(copy) + 1,
+                    },
+                    data_set);
+
+                if(GSS_ERROR(major_status))
+                {
+                    GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                        minor_status, local_minor_status,
+                        GLOBUS_GSI_GSSAPI_ERROR_WITH_BUFFER);
+                    free(copy);
+                    goto unlock_exit;
+                }
+            }
+        }
+    }
     else if(((gss_OID_desc *)desired_object)->length !=
        gss_ext_x509_cert_chain_oid->length ||
        memcmp(((gss_OID_desc *)desired_object)->elements,

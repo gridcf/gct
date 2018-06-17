@@ -227,6 +227,11 @@ const gss_OID_desc * const gss_ext_server_name_oid;
 extern
 const gss_OID_desc * const gss_ext_alpn_oid;
 
+extern
+const gss_OID_desc * const gss_ext_tls_version_oid;
+
+extern
+const gss_OID_desc * const gss_ext_tls_cipher_oid;
 
 extern
 globus_bool_t                           globus_i_backward_compatible_mic;

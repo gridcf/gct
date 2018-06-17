@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.3
+Version:	14.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Jun 15 2018 Globus Toolkit <support@globus.org> - 14.4-1
+- Add context inquire OID support to get TLS version and cipher
+
 * Thu May 31 2018 Globus Toolkit <support@globus.org> - 14.3-1
 - enable ECDH ciphers for openssl < 1.1.0
 

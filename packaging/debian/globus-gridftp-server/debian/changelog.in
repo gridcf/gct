@@ -1,3 +1,9 @@
+globus-gridftp-server (13.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * win: fix path restrictions on /
+
+ -- Globus Toolkit <support@globus.org>  Fri, 15 Jun 2018 15:27:56 -0500
+
 globus-gridftp-server (13.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests

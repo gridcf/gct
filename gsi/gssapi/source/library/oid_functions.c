@@ -127,6 +127,16 @@ static const gss_OID_desc gss_ext_alpn_oid_desc =
 const gss_OID_desc * const gss_ext_alpn_oid =
                 &gss_ext_alpn_oid_desc;
 
+static const gss_OID_desc gss_ext_tls_version_oid_desc =
+     {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x0b"};
+const gss_OID_desc * const gss_ext_tls_version_oid =
+                &gss_ext_tls_version_oid_desc;
+
+static const gss_OID_desc gss_ext_tls_cipher_oid_desc =
+     {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x0c"};
+const gss_OID_desc * const gss_ext_tls_cipher_oid =
+                &gss_ext_tls_cipher_oid_desc;
+
 static gss_OID_desc gss_nt_host_ip_oid =
     { 10, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x02" };
 gss_OID_desc * gss_nt_host_ip = &gss_nt_host_ip_oid;

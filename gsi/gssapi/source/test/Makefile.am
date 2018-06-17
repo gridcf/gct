@@ -73,6 +73,8 @@ check_PROGRAMS= \
         release-name-test \
         gssapi-thread-test \
 	sni-test \
+        tls-cipher-test \
+        tls-version-test \
 	wrap-test \
         unwrap-null-test
 
@@ -97,6 +99,8 @@ TESTS = $(check_SCRIPTS) \
         nonterminated-export-cred-test \
         release-name-test \
 	sni-test \
+        tls-cipher-test \
+        tls-version-test \
 	wrap-test \
         unwrap-null-test
 

@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.3
+Version:	13.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Jun 15 2018 Globus Toolkit <support@globus.org> - 13.4-1
+- win: fix path restrictions on /
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.3-1
 - Use 2048 bit RSA key for tests
 
