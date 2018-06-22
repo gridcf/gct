@@ -50,18 +50,29 @@ jobs:
       script:
       - travis-ci/setup_tasks.sh
       deploy:
-        on:
-          tags: true
-          all_branches: false
-          repo: gridcf/gct
-        skip_cleanup: true
-        file_glob: true
-        provider: releases
-        overwrite: true
-        # ^ this doesn't actually work but I'm leaving it in there in
-        #   case it gets fixed later
-        api_key:
-          secure: gNgkiuvPm/7eEKa203yXe1jPwBmALWLXPpXhfNZO7wBISPgB1XZHgRNMr6DKlE5gucElKSjWWhQbn5VCfJm3OB+KCb1Tx1Xsw6xmsLrEL0d+YF/cqQl98a4ZRQjrRW4CBHz6V/FGWYiI53YDvwb/wfSC3uhIXlBjN+CeLv2aJQuOYZ9ZJHVDZYKWp2yrL5qvCvwXVZfNZNCf1jNztKFyDyQ5xCT7ePjQAbASkkvO1ZMRVgwloiKqZVWINhjcYlKaTI5ov0U0yPLneE2ybZz5mxFCNSa4okQf3gb36eMge7i7yulk8R7uVxsFte0bhLEslGnYn+dtLT+4RmYflt5OqFs3z0fVAG+q9kwsLii50iE1pmY9QHt+P+8vkajX7T+QiK+qers41kmDvArFZboIDMkvHWaNceAtDZ9e/Pd54hL8ztJUjSa3FPqz6mwa6og3RNd4GFiER4aO6ISfdshCxTRkUnYMetzI+p77cP4HI2I87grJGOJUIGpp9qzukvPAGVS79kmBgV7Ykd7GQccKiiNx25hbACV81pZ9WZ9MhYVoc/SkzrST7b9Tba8QHCrtdZWafpN1awTkbjOxw4vN8XIaexE7WS6d7TduhTORb6awcABFzL9TNtQKQJWjlLsRv4VKVNz59mKrux/VnfF8vkMEqdn/P8d6UCn7oVe6i+g=
-        file: travis_deploy/*
+        - provider: releases
+          on:
+            tags: true
+            all_branches: false
+            repo: gridcf/gct
+          skip_cleanup: true
+          file_glob: true
+          overwrite: true
+          # ^ this doesn't actually work but I'm leaving it in there in
+          #   case it gets fixed later
+          api_key:
+            secure: gNgkiuvPm/7eEKa203yXe1jPwBmALWLXPpXhfNZO7wBISPgB1XZHgRNMr6DKlE5gucElKSjWWhQbn5VCfJm3OB+KCb1Tx1Xsw6xmsLrEL0d+YF/cqQl98a4ZRQjrRW4CBHz6V/FGWYiI53YDvwb/wfSC3uhIXlBjN+CeLv2aJQuOYZ9ZJHVDZYKWp2yrL5qvCvwXVZfNZNCf1jNztKFyDyQ5xCT7ePjQAbASkkvO1ZMRVgwloiKqZVWINhjcYlKaTI5ov0U0yPLneE2ybZz5mxFCNSa4okQf3gb36eMge7i7yulk8R7uVxsFte0bhLEslGnYn+dtLT+4RmYflt5OqFs3z0fVAG+q9kwsLii50iE1pmY9QHt+P+8vkajX7T+QiK+qers41kmDvArFZboIDMkvHWaNceAtDZ9e/Pd54hL8ztJUjSa3FPqz6mwa6og3RNd4GFiER4aO6ISfdshCxTRkUnYMetzI+p77cP4HI2I87grJGOJUIGpp9qzukvPAGVS79kmBgV7Ykd7GQccKiiNx25hbACV81pZ9WZ9MhYVoc/SkzrST7b9Tba8QHCrtdZWafpN1awTkbjOxw4vN8XIaexE7WS6d7TduhTORb6awcABFzL9TNtQKQJWjlLsRv4VKVNz59mKrux/VnfF8vkMEqdn/P8d6UCn7oVe6i+g=
+          file: travis_deploy/*
+        - provider: script
+          on:
+            #tags: true
+            tags: false
+            #all_branches: false
+            all_branches: true
+            #repo: gridcf/gct
+            repo: matyasselmeci/gct
+          skip_cleanup: true
+          script: bash travis-ci/upload_source_tarballs.sh
+
 
 # vim:ft=yaml:sw=2:sts=2:et
