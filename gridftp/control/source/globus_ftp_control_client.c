@@ -393,6 +393,15 @@ globus_ftp_control_use_tls(
                 NULL,
             });
     }
+    if (rc == GLOBUS_SUCCESS &&
+        auth_info->req_flags & GSS_C_GLOBUS_ALLOW_MISSING_SIGNING_POLICY)
+    {
+        rc = globus_xio_attr_cntl(
+            attr,
+            globus_io_compat_get_gsi_driver(),
+            GLOBUS_XIO_GSI_SET_ALLOW_MISSING_SIGNING_POLICY,
+            GLOBUS_TRUE);
+    }
     return rc;
 }
 /* globus_ftp_control_use_tls() */

@@ -9,7 +9,7 @@ Start-Transcript -path C:\Windows\Temp\instance-setup.txt
 $password = [Guid]::NewGuid().Guid
 Net user /add jenkins "$password" /yes
 
-$cygwin_core_packages = "autoconf,autoconf2.5,automake,automake1.14,automake1.15,bison,bsdtar,cpio,curl,diffutils,dos2unix,doxygen,findutils,flex,gawk,gccmakedep,gdb,git,graphviz,grep,groff,libtool,make,makedepend,openssh,openssl,patch,patchutils,pax,perl-Test-Simple,perl-XML-Simple,pylint,python,rebase,rpm,vim,vim-common,vim-minimal,w3m,zip,zsh"
+$cygwin_core_packages = "autoconf,autoconf2.5,automake,automake1.14,automake1.15,bison,bsdtar,cpio,curl,diffutils,dos2unix,doxygen,findutils,flex,gawk,gccmakedep,gdb,git,graphviz,grep,groff,libtool,make,makedepend,openssh,openssl,patch,patchutils,pax,perl-Test-Simple,perl-XML-Simple,pkg-config,pylint,python,rebase,rpm,vim,vim-common,vim-minimal,w3m,zip,zsh"
 
 $cygwin_dev_packages = "binutils,bzip2,gcc-core,gcc-g++,gcc-tools-autoconf,gcc-tools-automake,gcc4,gcc4-core,gcc4-g++,gettext,gettext-devel,glib2.0-networking,graphviz,grep,groff,libisl10,libcloog-isl4,libffi-devel,libffi6,libgcc1,libglib2.0-devel,libglib2.0_0,libnice-devel,openssl-devel,pkg-config,zlib,zlib-devel"
 
@@ -48,7 +48,7 @@ mkdir "C:\Windows\Temp\Cygwin"
 Echo "Installing cygwin"
 $cygwinInstallProc = Start-Process -NoNewWindow `
         "C:\Windows\Temp\${cygwin_setup}" `
-        -ArgumentList "-R C:\cygwin -s http://mirrors.kernel.org/sourceware/cygwin -A -q -l C:\Windows\Temp\cygwin -P `"$packages`"" `
+        -ArgumentList "-R C:\cygwin -s https://mirrors.kernel.org/sourceware/cygwin -A -q -l C:\Windows\Temp\cygwin -P `"$packages`"" `
         -Wait -RedirectStandardOutput "C:\Windows\Temp\setup-log.txt"
 
 if ($InstanceType -eq "mingw32" -or $InstanceType -eq "mingw64")
@@ -86,7 +86,7 @@ if ($InstanceType -eq "mingw32" -or $InstanceType -eq "mingw64")
 
 Echo "Downloading JRE"
 Invoke-WebRequest `
-        -Uri "http://builds.globus.org/jre-install.exe" `
+        -Uri "https://builds.globus.org/jre-install.exe" `
         -OutFile "C:\Windows\Temp\jvm-installer.exe"
 
 New-Item -Type file -Path "C:\Windows\Temp\jvm.properties" -Force `
@@ -116,7 +116,7 @@ C:\Cygwin\bin\bash --login -c "chown -R Administrator ~; chmod -R og-rw ~"
 Echo "Downloading tap-to-junit-xml"
 mkdir C:\cygwin\home\jenkins\bin
 Invoke-WebRequest `
-        -Uri "http://builds.globus.org/gt6/etc/tap-to-junit-xml" `
+        -Uri "https://builds.globus.org/gt6/etc/tap-to-junit-xml" `
         -OutFile "C:\cygwin\home\jenkins\bin\tap-to-junit-xml"
 
 C:\Cygwin\bin\bash --login -c "chown -R jenkins ~jenkins;  chmod a+x ~jenkins/bin/*; chmod -R og-rw ~jenkins;"

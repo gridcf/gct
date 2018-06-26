@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.2
+Version:        6.2.3
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -380,6 +380,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Wed Jun 20 2018 Globus Toolkit <support@globus.org> - 6.2.3-1
+- remove macro overquoting
+
 * Thu May 17 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.2-1
 - Use 2048 bit CA key for myproxy tests
 

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([myproxy],[6.2.2])
+AC_INIT([myproxy],[6.2.3])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT([dlopen win32-dll])
@@ -175,7 +175,7 @@ if test "x$PKG_CONFIG_PATH" = "x" -a "x$GLOBUS_LOCATION" != "x" ; then
    PKG_CONFIG_PATH=$GLOBUS_LOCATION/lib/pkgconfig
    export PKG_CONFIG_PATH
 fi
-PKG_CHECK_MODULES([GLOBUS], [$PACKAGE_DEPS], [], [AC_MSG_ERROR([GLOBUS_PKG_ERRORS])])
+PKG_CHECK_MODULES([GLOBUS], [$PACKAGE_DEPS], [], AC_MSG_ERROR([GLOBUS_PKG_ERRORS]))
 fi
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
     [OPENSSL_PKGCONFIG="openssl >= 1.0"])

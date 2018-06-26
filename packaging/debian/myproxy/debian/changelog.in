@@ -1,3 +1,9 @@
+myproxy (6.2.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * remove macro overquoting
+
+ -- Globus Toolkit <support@globus.org>  Wed, 20 Jun 2018 16:19:11 -0400
+
 myproxy (6.2.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit CA key for myproxy tests
