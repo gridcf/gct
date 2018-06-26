@@ -26,7 +26,7 @@ Package: libglobus-gssapi-gsi-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libglobus-gssapi-gsi4 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 8), libssl-dev
+Depends: libglobus-gssapi-gsi4 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-openssl-module-dev (>= 3), libglobus-gsi-openssl-error-dev (>= 2), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libglobus-gsi-proxy-core-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 8), libssl-dev
 Suggests: libglobus-gssapi-gsi-doc (= ${source:Version})
 Description: Grid Community Toolkit - GSSAPI library Development Files
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
