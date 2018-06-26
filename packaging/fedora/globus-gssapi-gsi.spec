@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.4
+Version:	14.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Jun 26 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.5-1
+- Fix dep version
+
 * Fri Jun 15 2018 Globus Toolkit <support@globus.org> - 14.4-1
 - Add context inquire OID support to get TLS version and cipher
 

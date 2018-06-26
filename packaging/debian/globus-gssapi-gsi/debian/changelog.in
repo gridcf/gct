@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix dep version
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Tue, 26 Jun 2018 08:20:14 +0200
+
 globus-gssapi-gsi (14.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Add context inquire OID support to get TLS version and cipher
