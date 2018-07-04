@@ -9,7 +9,7 @@ if test -e .git ; then
 fi])dnl
 m4_[]include(globus-version.inc)])dnl
 m4_define([gtreleasebuild], [6.0.]globus_buildno)
-AC_INIT([globus_toolkit], gtreleasebuild, [https://github.com/gridcf/gct/issues])
+AC_INIT([gct], gtreleasebuild, [https://github.com/gridcf/gct/issues])
 
 m4_define([short_version], [m4_substr(AC_PACKAGE_VERSION, [0],
     m4_index(AC_PACKAGE_VERSION, [.]))])
