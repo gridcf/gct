@@ -39,6 +39,12 @@ sed -i 's/gridftp_hdfs-dist//' Makefile
 time make -j1 tarballs
 
 echo '================================================================================'
+# Also create source installer tarball
+package_name=$(grep '^PACKAGE_NAME =' Makefile | cut -d ' ' -f 3)
+package_version=$(grep '^PACKAGE_VERSION =' Makefile | cut -d ' ' -f 3)
+time make dist && mv "${package_name}-${package_version}.tar.gz" package-output/
+
+echo '================================================================================'
 pushd "$root/myproxy/oauth/source"
 time python setup.py sdist
 mv dist/*.tar.gz "$root/package-output/"
