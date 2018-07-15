@@ -3,7 +3,7 @@
 Name:		globus-ftp-control
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	9.2
+Version:	9.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library
 
@@ -144,6 +144,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Jul 13 2018 Globus Toolkit <support@globus.org> - 9.3-1
+- force encryption on tls control channel
+
 * Fri Jun 22 2018 Globus Toolkit <support@globus.org> - 9.2-1
 - check for missing signing policy req flag
 

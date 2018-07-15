@@ -367,11 +367,18 @@ globus_ftp_control_use_tls(
             &handle->cc_handle.io_attr,
             GLOBUS_IO_SECURE_DELEGATION_MODE_NONE);
     }
+    
     if (rc == GLOBUS_SUCCESS)
     {
         rc = globus_io_attr_set_secure_channel_mode(
             &handle->cc_handle.io_attr,
             GLOBUS_IO_SECURE_CHANNEL_MODE_SSL_WRAP);
+    }
+    if (rc == GLOBUS_SUCCESS)
+    {
+        rc = globus_io_attr_set_secure_protection_mode(
+            &handle->cc_handle.io_attr,
+            GLOBUS_IO_SECURE_PROTECTION_MODE_PRIVATE);
     }
 
     if (rc == GLOBUS_SUCCESS)

@@ -2138,6 +2138,14 @@ globus_gfs_ipc_handle_create(
         {
             goto attr_error;
         }
+        result = globus_xio_attr_cntl(
+            xio_attr, globus_l_gfs_gsi_driver,
+            GLOBUS_XIO_GSI_SET_PROTECTION_LEVEL,
+            GLOBUS_XIO_GSI_PROTECTION_LEVEL_PRIVACY);
+        if (result != GLOBUS_SUCCESS)
+        {
+            goto attr_error;
+        }
     }
     
     time = ipc->conf_ipc_idle_timeout;
@@ -2311,7 +2319,6 @@ globus_l_gfs_ipc_client_open_cb(
     void *                              user_arg)
 {
     globus_i_gfs_ipc_handle_t *         ipc;
-    globus_result_t                     res;
     globus_byte_t *                     ptr;
     globus_byte_t *                     buffer;
     globus_size_t                       msg_size;
@@ -2354,7 +2361,7 @@ globus_l_gfs_ipc_client_open_cb(
         ptr = buffer + GFS_IPC_HEADER_SIZE_OFFSET;
         GFSEncodeUInt32(buffer, ipc->buffer_size, ptr, msg_size);
 
-        res = globus_xio_register_write(
+        result = globus_xio_register_write(
             ipc->xio_handle,
             buffer,
             msg_size,
@@ -2362,7 +2369,7 @@ globus_l_gfs_ipc_client_open_cb(
             NULL,
             globus_l_gfs_ipc_handshake_write_cb,
             ipc);
-        if(res != GLOBUS_SUCCESS)
+        if(result != GLOBUS_SUCCESS)
         {
             goto xio_error;
         }

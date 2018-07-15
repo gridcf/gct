@@ -1,3 +1,10 @@
+globus-gridftp-server (13.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * force ipc encryption if server configuration requires
+  * fix old ipc bug making it hard to diagnose racy connection failures
+
+ -- Globus Toolkit <support@globus.org>  Fri, 13 Jul 2018 16:16:09 -0500
+
 globus-gridftp-server (13.4-1+gct.@distro@) @distro@; urgency=medium
 
   * win: fix path restrictions on /

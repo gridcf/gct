@@ -1,3 +1,9 @@
+globus-gridftp-server-control (7.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * force encryption on tls control channel
+
+ -- Globus Toolkit <support@globus.org>  Fri, 13 Jul 2018 16:06:38 -0500
+
 globus-gridftp-server-control (7.2-1+gct.@distro@) @distro@; urgency=medium
 
   * prevent client from requesting clear control channel

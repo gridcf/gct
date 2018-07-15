@@ -2896,6 +2896,14 @@ globus_gridftp_server_control_start(
         {
             goto err;
         }
+        res = globus_xio_attr_cntl(
+            xio_attr, globus_l_gsc_gsi_driver,
+            GLOBUS_XIO_GSI_SET_PROTECTION_LEVEL, 
+            GLOBUS_XIO_GSI_PROTECTION_LEVEL_PRIVACY);
+        if(res != GLOBUS_SUCCESS)
+        {
+            goto err;
+        }
         res = globus_xio_stack_push_driver(
             xio_stack, globus_l_gsc_gsi_driver);
         if(res != GLOBUS_SUCCESS)

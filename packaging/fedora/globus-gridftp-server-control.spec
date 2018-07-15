@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	7.2
+Version:	7.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Jul 13 2018 Globus Toolkit <support@globus.org> - 7.3-1
+- force encryption on tls control channel
+
 * Thu May 31 2018 Globus Toolkit <support@globus.org> - 7.2-1
 - prevent client from requesting clear control channel
 - CIPHERS config will now apply to control channel
