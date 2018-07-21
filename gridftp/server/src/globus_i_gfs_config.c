@@ -895,6 +895,94 @@ error_mem:
 
 }
 
+/* handle options needed before module inits.  
+    no return - errors get caught on next pass */
+static 
+void
+globus_l_gfs_config_parse_preinit_opt(
+    char *                              line,
+    char *                              optionbuf,
+    char *                              valuebuf)
+{
+    int                                 rc;
+    char *                              p = line;
+    
+    if((rc = sscanf(p, "%s", optionbuf)) == 1)
+    {
+        if(!globus_l_gfs_is_worker && 
+            (!strcmp(optionbuf, "inetd") || !strcmp(optionbuf, "debug") ||
+            !strcmp(optionbuf, "ssh") || !strcmp(optionbuf, "fork")))
+        {
+            p = p + strlen(optionbuf);
+                   
+            while(*p && isspace(*p))
+            {
+                p++;
+            }
+            if(*p == '"')
+            {
+                rc = sscanf(p, "\"%[^\"]\"", valuebuf);
+            }
+            else
+            {
+                rc = sscanf(p, "%s", valuebuf);
+            }  
+            if(rc == 1)
+            {
+                globus_l_gfs_is_worker = atoi(valuebuf);
+                if(!strcmp(optionbuf, "fork"))
+                {
+                    globus_l_gfs_is_worker = !globus_l_gfs_is_worker;
+                }
+            }
+        }
+        if(globus_l_gfs_num_threads == -1 && !strcmp(optionbuf, "threads"))
+        {
+            p = p + strlen(optionbuf);
+                   
+            while(*p && isspace(*p))
+            {
+                p++;
+            }
+            if(*p == '"')
+            {
+                rc = sscanf(p, "\"%[^\"]\"", valuebuf);
+            }
+            else
+            {
+                rc = sscanf(p, "%s", valuebuf);
+            }  
+            if(rc == 1)
+            {
+                globus_l_gfs_num_threads = atoi(valuebuf);
+            }
+        }
+        if(!globus_l_gfs_port_range && !strcmp(optionbuf, "port_range"))
+        {
+            p = p + strlen(optionbuf);
+                   
+            while(*p && isspace(*p))
+            {
+                p++;
+            }
+            if(*p == '"')
+            {
+                rc = sscanf(p, "\"%[^\"]\"", valuebuf);
+            }
+            else
+            {
+                rc = sscanf(p, "%s", valuebuf);
+            }  
+            if(rc == 1)
+            {
+                setenv("GLOBUS_TCP_PORT_RANGE", valuebuf, 1);
+                setenv("GLOBUS_UDP_PORT_RANGE", valuebuf, 1);
+            }
+        }
+    }
+    return;
+}
+
 static
 int
 globus_l_gfs_config_load_envs_from_file(
@@ -971,97 +1059,11 @@ globus_l_gfs_config_load_envs_from_file(
         {
             p++;
         }
-
-        /* parse !daemon options */
-        if((rc = sscanf(p, "%s", optionbuf)) == 1 && !globus_l_gfs_is_worker)
-        {
-            if(!strcmp(optionbuf, "inetd") || !strcmp(optionbuf, "debug") ||
-                !strcmp(optionbuf, "ssh") || !strcmp(optionbuf, "fork") )
-            {
-                p = p + strlen(optionbuf);
-                       
-                while(*p && isspace(*p))
-                {
-                    p++;
-                }
-                if(*p == '"')
-                {
-                    rc = sscanf(p, "\"%[^\"]\"", valuebuf);
-                }
-                else
-                {
-                    rc = sscanf(p, "%s", valuebuf);
-                }  
-                if(rc == 1)
-                {
-                    globus_l_gfs_is_worker = atoi(valuebuf);
-                    if(!strcmp(optionbuf, "fork"))
-                    {
-                        globus_l_gfs_is_worker = !globus_l_gfs_is_worker;
-                    }
-                }
-            }
-            continue;
-        }
-        
-        /* parse threads option to apply it before common activates */
-        if(*p == 't' && (rc = sscanf(p, "%s", optionbuf)) == 1 && 
-            globus_l_gfs_num_threads == -1)
-        {
-            if(!strcmp(optionbuf, "threads"))
-            {
-                p = p + strlen(optionbuf);
-                       
-                while(*p && isspace(*p))
-                {
-                    p++;
-                }
-                if(*p == '"')
-                {
-                    rc = sscanf(p, "\"%[^\"]\"", valuebuf);
-                }
-                else
-                {
-                    rc = sscanf(p, "%s", valuebuf);
-                }  
-                if(rc == 1)
-                {
-                    globus_l_gfs_num_threads = atoi(valuebuf);
-                }
-            }
-            continue;
-        }
-        /* parse port_range option to apply it before xio activates */
-        if(!globus_l_gfs_port_range && *p == 'p' && 
-            (rc = sscanf(p, "%s", optionbuf)) == 1)
-        {
-            if(!strcmp(optionbuf, "port_range"))
-            {
-                p = p + strlen(optionbuf);
-                       
-                while(*p && isspace(*p))
-                {
-                    p++;
-                }
-                if(*p == '"')
-                {
-                    rc = sscanf(p, "\"%[^\"]\"", valuebuf);
-                }
-                else
-                {
-                    rc = sscanf(p, "%s", valuebuf);
-                }  
-                if(rc == 1)
-                {
-                    setenv("GLOBUS_TCP_PORT_RANGE", valuebuf, 1);
-                    setenv("GLOBUS_UDP_PORT_RANGE", valuebuf, 1);
-                }
-            }
-            continue;
-        }
                 
+        /* parse some non-env options */
         if(*p != '$')
         {
+            globus_l_gfs_config_parse_preinit_opt(p, optionbuf, valuebuf);
             continue;
         }
         p++;

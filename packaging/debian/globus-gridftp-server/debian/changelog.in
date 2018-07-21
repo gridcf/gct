@@ -1,3 +1,9 @@
+globus-gridftp-server (13.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * fix daemon config parsing not catching env vars
+
+ -- Globus Toolkit <support@globus.org>  Mon, 16 Jul 2018 16:22:05 -0500
+
 globus-gridftp-server (13.5-1+gct.@distro@) @distro@; urgency=medium
 
   * force ipc encryption if server configuration requires

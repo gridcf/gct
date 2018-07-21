@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.5
+Version:	13.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Jul 16 2018 Globus Toolkit <support@globus.org> - 13.6-1
+- fix daemon config parsing not catching env vars
+
 * Fri Jul 13 2018 Globus Toolkit <support@globus.org> - 13.5-1
 - force ipc encryption if server configuration requires
 - fix old ipc bug making it hard to diagnose racy connection failures
