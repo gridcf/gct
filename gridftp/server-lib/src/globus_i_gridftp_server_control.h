@@ -120,7 +120,8 @@ typedef enum globus_i_gsc_mlsx_fact_e
     GLOBUS_GSC_MLSX_FACT_UNIXSLINK = 'L',
     GLOBUS_GSX_MLSX_FACT_UNIXUID = 'I',
     GLOBUS_GSX_MLSX_FACT_UNIXGID = 'D',
-    GLOBUS_GSC_MLSX_FACT_XCOUNT = 'N'
+    GLOBUS_GSC_MLSX_FACT_XCOUNT = 'N',
+    GLOBUS_GSC_MLSX_FACT_XABSPATH = 'A'
 } globus_i_gsc_mlsx_fact_t;
 
 typedef enum
@@ -144,6 +145,7 @@ typedef void
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,
@@ -296,6 +298,7 @@ typedef struct globus_i_gsc_op_s
     int                                     gid_count;
     int *                                   gid_array;
     char *                                  path;
+    char *                                  absolute_path;
     char *                                  glob_match_str;
     globus_gridftp_server_control_resource_mask_t mask;
 
@@ -603,6 +606,7 @@ globus_i_gsc_mlsx_line_single(
     int                                 uid,
     globus_gridftp_server_control_stat_t *  stat_info,
     const char *                        base_path,
+    const char *                        absolute_path,
     globus_bool_t                       mlst);
 
 char *
@@ -612,6 +616,7 @@ globus_i_gsc_mlsx_line(
     const char *                        mlsx_fact_string,
     uid_t                               uid,
     const char *                        base_path,
+    const char *                        absolute_path,
     globus_bool_t                       indent);
 
 void

@@ -77,7 +77,7 @@ install: build-stamp
 	rm $(INSTALLDIR)$(_docdir)/GLOBUS_LICENSE
 
 	# Create config directory
-	mkdir -p $(INSTALLDIR)/etc/grid-security
+	mkdir -p $(INSTALLDIR)/etc/grid-security/certificates
 
 binary: binary-arch binary-indep
 

@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (9.0-2+gct.@distro@) @distro@; urgency=medium
+
+  * Package /etc/grid-security/certificates
+
+ -- Globus Toolkit <support@globus.org>  Thu, 26 Jul 2018 14:26:03 -0400
+
 globus-gsi-sysconfig (9.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

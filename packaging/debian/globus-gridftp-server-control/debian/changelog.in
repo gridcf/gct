@@ -1,3 +1,9 @@
+globus-gridftp-server-control (8.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * add support for x.abspath
+
+ -- Globus Toolkit <support@globus.org>  Tue, 07 Aug 2018 10:08:30 -0500
+
 globus-gridftp-server-control (7.3-1+gct.@distro@) @distro@; urgency=medium
 
   * force encryption on tls control channel

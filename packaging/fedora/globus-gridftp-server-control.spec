@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	7.3
+Version:	8.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Aug 07 2018 Globus Toolkit <support@globus.org> - 8.0-1
+- add support for x.abspath
+
 * Fri Jul 13 2018 Globus Toolkit <support@globus.org> - 7.3-1
 - force encryption on tls control channel
 

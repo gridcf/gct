@@ -183,19 +183,20 @@ status()
         if [ "$pid" != "" -a "$pid" -gt 0 ]; then
             if kill -0 "$pid" 2> /dev/null; then
                 echo "GridFTP server is running (pid=$pid)"
-                return 0
+                rc=0
             else
                 echo "Stale PID file $pidfile"
-                return 1
+                rc=1
             fi
         else
             echo "Invalid PID file $pidfile"
-            return 4
+            rc=4
         fi
     else
         echo "GridFTP server is not running"
-        return 3
+        rc=3
     fi
+    return $rc
 }
 
 status_lsb()

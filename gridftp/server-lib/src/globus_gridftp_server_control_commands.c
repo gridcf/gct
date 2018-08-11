@@ -327,6 +327,7 @@ globus_l_gsc_cmd_mdtm_cb(
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,
@@ -591,6 +592,7 @@ globus_l_gsc_cmd_cwd_cb(
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,
@@ -746,6 +748,7 @@ globus_l_gsc_cmd_stat_cb(
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,
@@ -820,6 +823,7 @@ globus_l_gsc_cmd_stat_cb(
                op->server_handle->opts.mlsx_fact_str, 
                uid,
                NULL,
+               abs_path,
                GLOBUS_TRUE);
             msg =  globus_common_create_string(
                _FSMSL("%d-Contents of %s\r\n%s%d End.\r\n"), 
@@ -839,7 +843,7 @@ globus_l_gsc_cmd_stat_cb(
             }
             stat_info->name = globus_libc_strdup(path);
             tmp_ptr = globus_i_gsc_mlsx_line_single(
-                op->server_handle->opts.mlsx_fact_str, uid, stat_info, NULL, GLOBUS_TRUE);
+                op->server_handle->opts.mlsx_fact_str, uid, stat_info, NULL, abs_path, GLOBUS_TRUE);
             msg =  globus_common_create_string(
                 _FSMSL("%d-status of %s\r\n %s\r\n%d End.\r\n"),
                 code, op->path, tmp_ptr, code);
@@ -956,6 +960,7 @@ globus_l_gsc_cmd_size_cb(
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,
@@ -2818,6 +2823,7 @@ globus_l_gsc_cmd_stor_retr_cb(
     globus_gridftp_server_control_response_t response_type,
     char *                                  response_msg,
     char *                                  path,
+    char *                                  abs_path,
     globus_gridftp_server_control_stat_t *  stat_info,
     int                                     stat_count,
     uid_t                                   uid,

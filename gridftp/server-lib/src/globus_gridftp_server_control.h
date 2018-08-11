@@ -803,6 +803,12 @@ globus_gridftp_server_control_finished_transfer(
     const char *                            msg);
 
 globus_result_t
+globus_gridftp_server_control_set_paths(
+    globus_gridftp_server_control_op_t      op,
+    const char *                            absolute_path,
+    const char *                            resolved_path);
+
+globus_result_t
 globus_gridftp_server_control_add_feature(
     globus_gridftp_server_control_t         server,
     const char *                            feature);

@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.6
+Version:	13.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Aug 07 2018 Globus Toolkit <support@globus.org> - 13.7-1
+- fix initscript non-lsb status return codes
+
 * Mon Jul 16 2018 Globus Toolkit <support@globus.org> - 13.6-1
 - fix daemon config parsing not catching env vars
 

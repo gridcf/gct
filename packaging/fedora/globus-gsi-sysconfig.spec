@@ -4,7 +4,7 @@ Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(tr - _ <<< %{name})
 Version:	9.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
 Group:		System Environment/Libraries
@@ -113,7 +113,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Create config directory
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security/certificates
 
 %check
 make %{?_smp_mflags} check VERBOSE=1
@@ -126,6 +126,7 @@ make %{?_smp_mflags} check VERBOSE=1
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gsi_sysconfig.so.*
 %dir %{_sysconfdir}/grid-security
+%dir %{_sysconfdir}/grid-security/certificates
 %dir %{_pkgdocdir}
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
@@ -144,6 +145,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jul 26 2018 Globus Toolkit <support@globus.org> - 9.0-2
+- Package /etc/grid-security/certificates
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)
