@@ -65,14 +65,15 @@ jobs:
           file: travis_deploy/*
         - provider: script
           on:
-            #tags: true
+            # tags: true
             tags: false
-            #all_branches: false
+            # all_branches: false
             all_branches: true
-            #repo: gridcf/gct
+            # repo: gridcf/gct
             repo: matyasselmeci/gct
           skip_cleanup: true
-          script: bash travis-ci/upload_source_tarballs.sh
+          # script: bash travis-ci/upload_source_tarballs.sh gridcf
+          script: bash travis-ci/upload_source_tarballs.sh matyasselmeci
 
 
 # vim:ft=yaml:sw=2:sts=2:et

@@ -5,6 +5,8 @@
 
 set -eux
 
+repo_owner=$1
+
 keyfile=$(pwd -P)/travis-ci/id_gctuploader
 
 # obtained by running "ssh-keyscan hcc-osg-software2.unl.edu"
@@ -19,7 +21,7 @@ echo "$hostsig" > ~/.ssh/known_hosts
     openssl aes-256-cbc \
         -K $encrypted_677f6546cb93_key \
         -iv $encrypted_677f6546cb93_iv \
-        -in "$keyfile.enc" -out "$keyfile" \
+        -in "$keyfile.enc.$repo_owner" -out "$keyfile" \
         -d
 )
 
