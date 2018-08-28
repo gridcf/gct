@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.5
+Version:	14.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,11 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Aug 27 2018 Globus Toolkit <support@globus.org> - 14.6-1
+- Set the default minimum TLS version to 1.2.  1.0 and 1.1 are deprecated.
+- Set the maximum TLS version default to 1.2.  1.3 is not yet supported.
+- use 2048 bit keys to support openssl 1.1.1
+
 * Tue Jun 26 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.5-1
 - Fix dep version
 

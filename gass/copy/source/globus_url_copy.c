@@ -122,7 +122,7 @@ int guc_gencert(gss_buffer_desc * buf)
     BIO *bio;
     char *ptr;
     
-    guc_mkcert(&x509, &pkey, 1024, 0, 100);
+    guc_mkcert(&x509, &pkey, 2048, 0, 100);
 
     bio = BIO_new(BIO_s_mem());
     PEM_write_bio_X509(bio, x509);

@@ -425,11 +425,11 @@ globus_l_gsi_gssapi_activate(void)
     tmp_string = globus_module_getenv("GLOBUS_GSSAPI_MIN_TLS_PROTOCOL");
     if(tmp_string != NULL)
     {
-        if (strcmp(tmp_string, "TLS1_VERSION") == 0)
+        if (strcmp(tmp_string, "TLS1_VERSION_DEPRECATED") == 0)
         {
             globus_i_gsi_gssapi_min_tls_protocol = TLS1_VERSION;
         }
-        else if (strcmp(tmp_string, "TLS1_1_VERSION") == 0)
+        else if (strcmp(tmp_string, "TLS1_1_VERSION_DEPRECATED") == 0)
         {
             globus_i_gsi_gssapi_min_tls_protocol = TLS1_1_VERSION;
         }
@@ -446,24 +446,24 @@ globus_l_gsi_gssapi_activate(void)
             GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(
                 1,
                 (_GGSL("Unknown GLOBUS_GSSAPI_MIN_TLS_PROTOCOL value: %s;"
-                       "defaulting to TLS1_VERSION\n"),
+                       "defaulting to TLS1_2_VERSION\n"),
                         tmp_string));
-            globus_i_gsi_gssapi_min_tls_protocol = TLS1_VERSION;
+            globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
         }
     }
     else
     {
-        globus_i_gsi_gssapi_min_tls_protocol = TLS1_VERSION;
+        globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
     }
 
     tmp_string = globus_module_getenv("GLOBUS_GSSAPI_MAX_TLS_PROTOCOL");
     if(tmp_string != NULL)
     {
-        if (strcmp(tmp_string, "TLS1_VERSION") == 0)
+        if (strcmp(tmp_string, "TLS1_VERSION_DEPRECATED") == 0)
         {
             globus_i_gsi_gssapi_max_tls_protocol = TLS1_VERSION;
         }
-        else if (strcmp(tmp_string, "TLS1_1_VERSION") == 0)
+        else if (strcmp(tmp_string, "TLS1_1_VERSION_DEPRECATED") == 0)
         {
             globus_i_gsi_gssapi_max_tls_protocol = TLS1_1_VERSION;
         }

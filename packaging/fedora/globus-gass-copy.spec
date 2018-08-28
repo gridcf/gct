@@ -3,7 +3,7 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	10.1
+Version:	10.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
@@ -170,6 +170,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 24 2018 Globus Toolkit <support@globus.org> - 10.2-1
+- use 2048 bit keys to support openssl 1.1.1
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-1
 - Use 2048 bit RSA key for tests
 

@@ -2322,13 +2322,13 @@ globus_i_gsi_gssapi_init_ssl_context(
      * and require TLS for all secure communication." */
     GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(
         2, "Disabling SSLv2 and SSLv3.\n");
-    /* Minimum version allowed is TLS 1.0 */
+    /* Default minimum version is TLS 1.2 as of August 2018 */
     if (globus_i_gsi_gssapi_min_tls_protocol == 0)
-        globus_i_gsi_gssapi_min_tls_protocol = TLS1_VERSION;
+        globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
     if (globus_i_gsi_gssapi_max_tls_protocol == 0)
-        // The GSI GSSAPI currently does not work with TLS 1.3
-        // Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
-        // protocol version until it has been ported
+        /* The GSI GSSAPI currently does not work with TLS 1.3
+           Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
+           protocol version until it has been ported */
         globus_i_gsi_gssapi_max_tls_protocol = TLS1_2_VERSION;
     GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
         3, (globus_i_gsi_gssapi_debug_fstream,

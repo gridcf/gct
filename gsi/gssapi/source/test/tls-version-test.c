@@ -192,9 +192,12 @@ main(int argc, char *argv[])
     int                                 failed = 0;
     struct test_case                    test_cases[] =
     {
-        TEST_CASE_INITIALIZER("TLS1_VERSION", "TLSv1"),
-        TEST_CASE_INITIALIZER("TLS1_1_VERSION", "TLSv1.1"),
+        TEST_CASE_INITIALIZER("TLS1_VERSION_DEPRECATED", "TLSv1"),
+        TEST_CASE_INITIALIZER("TLS1_1_VERSION_DEPRECATED", "TLSv1.1"),
         TEST_CASE_INITIALIZER("TLS1_2_VERSION", "TLSv1.2"),
+        TEST_CASE_INITIALIZER("TLS1_VERSION", "TLSv1.2"),
+        TEST_CASE_INITIALIZER("TLS1_1_VERSION", "TLSv1.2"),
+        TEST_CASE_INITIALIZER("FOOBAR", "TLSv1.2"),
     };
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
     printf("1..%zu\n", num_test_cases);
