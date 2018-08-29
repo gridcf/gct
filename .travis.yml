@@ -39,6 +39,7 @@ jobs:
       env:
         - IMAGE=centos:centos7 TASK=srpms
       sudo: required
+      skip_cleanup: true
       services:
         - docker
 

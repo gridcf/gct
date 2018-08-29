@@ -17,6 +17,13 @@ hostsig="hcc-osg-software2.unl.edu ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2AIWAV
 
 
 echo "$hostsig" > ~/.ssh/known_hosts
+cat > ~/.ssh/config <<__END__
+Host $upload_server
+User gctuploader
+IdentityFile $keyfile
+PubkeyAuthentication yes
+IdentitiesOnly yes
+__END__
 
 (
     umask 077
@@ -36,17 +43,26 @@ rm -f gct-*.tar.gz
 # ^ has a timestamp in the name so always gets updated whether anything changed
 # or not. Between the git repo and the tarballs for the individual packages,
 # this is unnecessary anyway.
-sha512sum *.tar.gz > sha512sums
 
-sftp \
-    -o "PubkeyAuthentication=yes" \
-    -o "IdentitiesOnly=yes" \
-    -i "$keyfile" -b - gctuploader@$upload_server <<__END__
+sftp -b - $upload_server &>/dev/null <<__END__
 -mkdir gct6
 cd gct6
 -mkdir sources
-cd sources
-put *.tar.gz
-put sha512sums
 __END__
+
+# Create individual checksum files instead of one big one because we want to
+# keep checksums for old tarballs that are already in the repo.
+for tarball in *.tar.gz; do
+    # Don't upload the tarball if it already exists
+    tbpath=gct6/sources/$tarball
+    escaped_tbpath=$(sed -e 's#\.#\\.#g' <<<"$tbpath")
+    if ! sftp -b - $upload_server <<<"ls $tbpath" | grep -qx "$escaped_tbpath\s*"; then
+        sha512sum "$tarball" > "$tarball.sha512"
+        sftp -b - $upload_server <<__END__
+put "$tarball" "$tbpath"
+put "$tarball.sha512" "$tbpath.sha512"
+__END__
+    fi
+done
+
 # vim:et:sts=4:sw=4
