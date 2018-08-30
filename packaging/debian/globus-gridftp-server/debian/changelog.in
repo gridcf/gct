@@ -1,3 +1,9 @@
+globus-gridftp-server (13.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * log remote http connection address for legacy s3 transfers
+
+ -- Globus Toolkit <support@globus.org>  Tue, 28 Aug 2018 11:32:25 -0500
+
 globus-gridftp-server (13.7-1+gct.@distro@) @distro@; urgency=medium
 
   * fix initscript non-lsb status return codes
