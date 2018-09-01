@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.6
+Version:	14.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 31 2018 Globus Toolkit <support@globus.org> - 14.7-1
+- Fix resource leak when loading cert directories
+
 * Mon Aug 27 2018 Globus Toolkit <support@globus.org> - 14.6-1
 - Set the default minimum TLS version to 1.2.  1.0 and 1.1 are deprecated.
 - Set the maximum TLS version default to 1.2.  1.3 is not yet supported.

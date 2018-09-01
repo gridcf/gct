@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.7-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix resource leak when loading cert directories
+
+ -- Globus Toolkit <support@globus.org>  Fri, 31 Aug 2018 08:34:01 -0400
+
 globus-gssapi-gsi (14.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Set the default minimum TLS version to 1.2.  1.0 and 1.1 are deprecated.
