@@ -3,7 +3,7 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	10.2
+Version:	10.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
@@ -170,6 +170,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Sep 03 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-1
+- Split guc-cc.pl test into smaller tests
+
 * Fri Aug 24 2018 Globus Toolkit <support@globus.org> - 10.2-1
 - use 2048 bit keys to support openssl 1.1.1
 
