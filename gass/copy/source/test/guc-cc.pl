@@ -35,8 +35,7 @@ my $subject = $ENV{FTP_TEST_SUBJECT};
 my $server_cs = $ENV{FTP_TEST_CONTACT};
 my $path_transform_with_cygpath_w = $ENV{CYGPATH_W_DEFINED};
 
-my @mode = ([], ["-fast"], ["-p", "2"], ["-p", "4"], ["-stripe"],
-    ["-stripe", "-p", "4"]);
+my @mode = @ARGV;
 
 my $dc_opt = [];
 $dc_opt = ["-subject", $subject] if $subject;
@@ -102,12 +101,11 @@ sub transform_path
     return $out;
 }
 
-my $test_count = 2*scalar(@mode)*scalar(@concur);
+my $test_count = 2*scalar(@concur);
 plan tests => $test_count;
 
 SKIP: {
     skip "Missing URL or subject", $test_count unless($server_cs && $subject);
-    foreach my $mode (@mode)
     {
         my $p=$_;
         my $server_port = $server_cs;
@@ -121,7 +119,7 @@ SKIP: {
             my ($out, $err);
             my ($pid, $rc);
             my @args = ("globus-url-copy-noinst",
-                @{$mode}, @{$cc}, @{$dc_opt},
+                @mode, @{$cc}, @{$dc_opt},
                 "-cd", "-r", $src_url, $dst_url);
             $errfd = gensym;
 
@@ -144,7 +142,7 @@ SKIP: {
                 print STDERR "# stderr:\n$err" if $err;
             }
 
-            ok($rc == 0, join(" ", "guc cc", @{$mode}, @{$cc},
+            ok($rc == 0, join(" ", "guc cc", @mode, @{$cc},
                 ,"exits with 0"));
 
             $errfd = gensym;
@@ -165,7 +163,7 @@ SKIP: {
                 print STDERR "# stderr:\n$err" if $err;
             }
 
-            ok($rc == 0, join(" ", "guc cc diff ", @{$mode}, @{$cc}));
+            ok($rc == 0, join(" ", "guc cc diff ", @mode, @{$cc}));
             rmtree("$work_dir/GL2");
         }
     }
