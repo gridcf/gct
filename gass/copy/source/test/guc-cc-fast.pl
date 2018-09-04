@@ -1,3 +1,4 @@
 #!/usr/bin/perl
-system('./guc-cc.pl -fast');
+use File::Basename;
+system(dirname($0) . '/guc-cc.pl -fast');
 exit($? >> 8);

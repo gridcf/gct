@@ -1,3 +1,4 @@
 #!/usr/bin/perl
-system('./guc-cc.pl -stripe');
+use File::Basename;
+system(dirname($0) . '/guc-cc.pl -stripe');
 exit($? >> 8);
