@@ -29,7 +29,7 @@ sub set_key_permissions {
     my ($output, $rc, $mode);
 
     $output = qx($system_config_test set_key_permissions $filename);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     diag($output) if $output ne "";
 
@@ -50,7 +50,7 @@ sub get_home_dir {
         my ($rc, $output);
 
         $output = qx($system_config_test get_home_dir);
-        $rc = $? << 8;
+        $rc = $? >> 8;
 
         $output =~ s/\n$//;
 
@@ -68,7 +68,7 @@ sub file_exists_true {
     $fh->flush();
 
     $output = qx($system_config_test file_exists $filename);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     ok($rc == 0, "file_exists_true");
 }
@@ -81,7 +81,7 @@ sub file_exists_false {
     unlink($filename);
 
     $output = qx($system_config_test file_exists $filename 2>&1);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag("Expect error message: $output");
@@ -95,7 +95,7 @@ sub dir_exists_true {
 
 
     $output = qx($system_config_test dir_exists $dir);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     ok($rc == 0, "dir_exists_true");
 }
@@ -107,7 +107,7 @@ sub dir_exists_false {
     rmdir $dir;
 
     $output = qx($system_config_test dir_exists $dir 2>&1);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag("Expect error message: $output");
@@ -121,7 +121,7 @@ sub check_keyfile_true {
     my ($output, $rc, $mode, $fh);
 
     $output = qx($system_config_test set_key_permissions $filename);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     diag($output) if $output ne "";
     $mode = (stat($filename))[2] & (S_IRWXU|S_IRWXG|S_IRWXO);
@@ -132,8 +132,7 @@ sub check_keyfile_true {
     close($fh);
 
     $output = qx($system_config_test check_keyfile $filename);
-
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     ok($rc == 0, "check_keyfile_true");
     unlink($filename);
@@ -150,7 +149,7 @@ sub check_keyfile_false {
     $fh->flush();
 
     $output = qx($system_config_test check_keyfile $filename 2>&1);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag("Expect error: $output");
@@ -168,7 +167,7 @@ sub check_certfile_true {
     my ($output, $rc, $mode, $fh);
 
     $output = qx($system_config_test set_key_permissions $filename);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     diag($output) if $output ne "";
     $mode = (stat($filename))[2] & (S_IRWXU|S_IRWXG|S_IRWXO);
@@ -179,8 +178,7 @@ sub check_certfile_true {
     close($fh);
 
     $output = qx($system_config_test check_certfile $filename);
-
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     ok($rc == 0, "check_certfile_true");
     unlink($filename);
@@ -197,7 +195,7 @@ sub check_certfile_false {
     $fh->flush();
 
     $output = qx($system_config_test check_certfile $filename 2>&1);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag("Expect error: $output");
@@ -219,7 +217,7 @@ sub get_cert_dir_env {
     diag("X509_CERT_DIR=$dirname");
 
     $output = qx($system_config_test get_cert_dir);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag($output) if $output ne "";
@@ -247,7 +245,7 @@ sub get_cert_dir_env_format {
     diag("X509_CERT_DIR=$format_dirname");
 
     $output = qx($system_config_test get_cert_dir);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag($output) if $output ne "";
@@ -274,7 +272,7 @@ sub get_cert_dir_env_bad {
     diag("X509_CERT_DIR=$dirname");
 
     $output = qx($system_config_test get_cert_dir 1>&2);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag($output) if $output ne "";
@@ -303,10 +301,11 @@ sub get_cert_dir_home {
         delete $ENV{X509_CERT_DIR} if $old_dir;
 
         $output = qx($system_config_test get_cert_dir);
-        chomp($output);
-        $rc = $? << 8;
+        $rc = $? >> 8;
 
+        chomp($output);
         diag($output) if $output ne "";
+
         if ($old_dir) {
             $ENV{X509_CERT_DIR} = $old_dir;
         }
@@ -332,8 +331,9 @@ sub get_user_cert_filename_pem {
         delete $ENV{X509_USER_KEY} if $old_key_env;
     
         $output = qx($system_config_test get_user_cert_filename);
+        $rc = $? >> 8;
+
         chomp($output);
-        $rc = $? << 8;
         diag($output) if $output ne "";
 
         ($testcertfile, $testkeyfile) = split(/\n/, $output, 2);
@@ -366,8 +366,9 @@ sub get_user_cert_filename_p12 {
         delete $ENV{X509_USER_KEY} if $old_key_env;
     
         $output = qx($system_config_test get_user_cert_filename);
+        $rc = $? >> 8;
+
         chomp($output);
-        $rc = $? << 8;
         diag($output) if $output ne "";
 
         ($testcertfile, $testkeyfile) = split(/\n/, $output, 2);
@@ -407,8 +408,9 @@ sub get_user_cert_filename_env {
 
 
     $output = qx($system_config_test get_user_cert_filename);
+    $rc = $? >> 8;
+
     chomp($output);
-    $rc = $? << 8;
     diag($output) if $output ne "";
 
     ($testcertfile, $testkeyfile) = split(/\n/, $output, 2);
@@ -463,8 +465,9 @@ sub get_user_cert_filename_env_format {
     chmod 0600, $keyfile;
 
     $output = qx($system_config_test get_user_cert_filename);
+    $rc = $? >> 8;
+
     chomp($output);
-    $rc = $? << 8;
     diag($output) if $output ne "";
 
     ($testcertfile, $testkeyfile) = split(/\n/, $output, 2);
@@ -507,8 +510,9 @@ sub get_user_cert_filename_env_bad {
     $ENV{X509_USER_KEY} = $keyfile;
 
     $output = qx($system_config_test get_user_cert_filename 2>&1);
+    $rc = $? >> 8;
+
     chomp($output);
-    $rc = $? << 8;
     diag($output) if $output ne "";
 
     ok($rc != 0, "get_user_cert_filename_env_bad");
@@ -546,7 +550,7 @@ sub get_vhost_cred_dir_globus_location
     diag("GLOBUS_LOCATION=$dirname");
 
     $output = qx($system_config_test get_vhost_cred_dir);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag($output) if $output ne "";
@@ -582,7 +586,7 @@ sub get_vhost_cred_dir_env
     diag("X509_VHOST_CRED_DIR=$dirname");
 
     $output = qx($system_config_test get_vhost_cred_dir);
-    $rc = $? << 8;
+    $rc = $? >> 8;
 
     chomp($output);
     diag($output) if $output ne "";
