@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (9.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Correct bitshift direction in perl test file
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 05 Sep 2018 07:48:39 +0200
+
 globus-gsi-sysconfig (9.0-2+gct.@distro@) @distro@; urgency=medium
 
   * Package /etc/grid-security/certificates
