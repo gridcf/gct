@@ -48,5 +48,27 @@ echo '==========================================================================
 pushd "$root/myproxy/oauth/source"
 time python setup.py sdist
 mv dist/*.tar.gz "$root/package-output/"
+
+err=0
+pushd "$root/package-output/"
+for tb in *.tar.gz; do
+    if [[ ! -s $tb ]]; then
+        echo "$tb is empty!"
+        err=1
+    else
+        filetype=$(file -bzi "$tb")
+        if [[ $filetype != *application/x-tar* ]]; then
+            echo "$tb: unexpected file type '$filetype'"
+            err=1
+        fi
+    fi
+done
+popd
+
+if [[ $err -ne 0 ]]; then
+    echo "Sanity check failed -- bailing"
+    exit $err
+fi
+
 popd
 
