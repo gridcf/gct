@@ -1,3 +1,9 @@
+globus-gridftp-server (13.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix data_node restrict path
+
+ -- Globus Toolkit <support@globus.org>  Mon, 10 Sep 2018 10:53:58 -0400
+
 globus-gridftp-server (13.8-1+gct.@distro@) @distro@; urgency=medium
 
   * log remote http connection address for legacy s3 transfers

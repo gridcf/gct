@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.8
+Version:	13.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Sep 10 2018 Globus Toolkit <support@globus.org> - 13.9-1
+- Fix data_node restrict path
+
 * Tue Aug 28 2018 Globus Toolkit <support@globus.org> - 13.8-1
 - log remote http connection address for legacy s3 transfers
 
