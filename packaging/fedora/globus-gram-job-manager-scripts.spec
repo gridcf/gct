@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-scripts
 %global _name %(tr - _ <<< %{name})
-Version:	7.0
+Version:	7.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Job ManagerScripts
 
@@ -87,6 +87,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Sep 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.1-1
+- Architecture independent package should not depend on libtool
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.0-1
 - First Grid Community Toolkit release
 
