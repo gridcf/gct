@@ -39,10 +39,6 @@ root=$(git rev-parse --show-toplevel)
 cd "$root"
 
 cd package-output
-rm -f gct-*.tar.gz
-# ^ has a timestamp in the name so always gets updated whether anything changed
-# or not. Between the git repo and the tarballs for the individual packages,
-# this is unnecessary anyway.
 
 sftp -b - $upload_server &>/dev/null <<__END__
 -mkdir gct6
