@@ -1,3 +1,9 @@
+globus-gram-job-manager-scripts (7.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Architecture independent package should not depend on libtool
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 21 Sep 2018 10:09:51 +0200
+
 globus-gram-job-manager-scripts (7.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
