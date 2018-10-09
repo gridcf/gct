@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * Allow TLS 1.0/1.1
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 21 Sep 2018 22:45:02 +0200
+
 globus-gssapi-gsi (14.7-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix resource leak when loading cert directories
