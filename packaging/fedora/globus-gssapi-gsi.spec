@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.8
+Version:	14.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Sep 28 2018 Globus Toolkit <support@globus.org> - 14.9-1
+- Fix leaks
+
 * Fri Sep 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.8-1
 - Allow TLS 1.0/1.1
 

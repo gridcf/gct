@@ -798,6 +798,8 @@ init_sni_inquire_servername(void)
     bool                                result = true;
     OM_uint32                           ignore_minor_status = 0;
     char                                wildcard_name[] = "wildcard.example.globus.org";
+    gss_buffer_set_t                    data_set = NULL;
+
 
     major_status = gss_set_sec_context_option(
             &minor_status,
@@ -885,8 +887,6 @@ init_sni_inquire_servername(void)
 
     if (major_status == GSS_S_COMPLETE)
     {
-        gss_buffer_set_t                data_set = NULL;
-
         major_status = gss_inquire_sec_context_by_oid(
                 &minor_status,
                 accept_context,
@@ -913,9 +913,6 @@ init_sni_inquire_servername(void)
             goto fail;
         }
 
-        gss_release_buffer_set(
-                &minor_status,
-                &data_set);
     }
 
 fail:
@@ -970,6 +967,13 @@ fail:
         gss_release_name(
                 &minor_status,
                 &target_name);
+    }
+
+    if (data_set != NULL)
+    {
+        gss_release_buffer_set(
+                &minor_status,
+                &data_set);
     }
 
     return result;

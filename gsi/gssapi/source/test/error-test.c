@@ -39,6 +39,7 @@ malloc_error_test(void)
     TEST_ASSERT(globus_error_get_type(error) ==
                 GLOBUS_GSI_GSSAPI_ERROR_OUT_OF_MEMORY);
 
+    globus_object_free(error);
     return 0;
 }
 
@@ -63,6 +64,7 @@ gssapi_error_test(void)
     TEST_ASSERT(globus_error_get_type(error) ==
                         GLOBUS_GSI_GSSAPI_ERROR_NO_GLOBUSID);
 
+    globus_object_free(error);
     return 0;
 }
 

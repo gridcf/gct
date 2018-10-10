@@ -85,6 +85,7 @@ GSS_CALLCONV gss_import_cred(
     int                                 rc = 0;
     struct stat                         st = { .st_mode = 0 };
     DIR                                *dir = NULL;
+    struct dirent                      *entry = NULL;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
@@ -174,7 +175,6 @@ GSS_CALLCONV gss_import_cred(
             rc = stat(filename, &st);
             if (rc == 0 && st.st_mode & S_IFDIR)
             {
-                struct dirent          *entry = NULL;
                 char                    buffer[256];
 
                 dir = opendir(filename);
@@ -268,6 +268,8 @@ GSS_CALLCONV gss_import_cred(
                             key_fp = fopen(key_path, "r");
                         }
                     }
+                    free(entry);
+                    entry = NULL;
                 }
                 if (cert_fp == NULL || key_fp == NULL)
                 {
@@ -420,6 +422,7 @@ GSS_CALLCONV gss_import_cred(
     {
         closedir(dir);
     }
+    free(entry);
     free(filename);
     return major_status;
 }

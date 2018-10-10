@@ -176,6 +176,25 @@ GSS_CALLCONV gss_delete_sec_context(
         goto exit;
     }
     free((*context_handle)->sni_servername);
+    if ((*context_handle)->sni_credentials_count > 0
+        && (*context_handle)->sni_credentials_obtained)
+    {
+        for (size_t i = 0; i < (*context_handle)->sni_credentials_count; i++)
+        {
+            local_major_status = gss_release_cred(
+                &local_minor_status,
+                &(*context_handle)->sni_credentials[i]);
+            if(GSS_ERROR(local_major_status))
+            {
+                GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
+                    minor_status, local_minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
+                major_status = GSS_S_FAILURE;
+                goto exit;
+            }
+            (*context_handle)->sni_credentials[i] = GSS_C_NO_CREDENTIAL;
+        }
+    }
     free((*context_handle)->sni_credentials);
     free((*context_handle)->alpn);
 #if OPENSSL_VERSION_NUMBER >= 0x10000100L

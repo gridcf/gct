@@ -427,6 +427,8 @@ globus_i_gsi_gss_create_and_fill_context(
         context->cred_obtained = 0;
         context->cred_handle = cred_handle;
     }
+
+    context->sni_credentials_obtained = false;
     /* Set up the SNI callback if this is the accept side, and the app
      * has provided an array of credentials to use
      */
@@ -446,6 +448,7 @@ globus_i_gsi_gss_create_and_fill_context(
             {
                 goto free_callback_data;
             }
+            context->sni_credentials_obtained = true;
         }
         if (context->sni_credentials_count > 0)
         {

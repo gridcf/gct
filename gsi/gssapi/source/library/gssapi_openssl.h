@@ -23,6 +23,8 @@
  * @author Sam Lang, Sam Meder
  */
 
+#include <stdbool.h>
+
 #include "globus_config.h"
 #include "globus_common.h"
 
@@ -200,6 +202,7 @@ typedef struct gss_ctx_id_desc_struct{
     gss_delegation_state_t              delegation_state;
     gss_OID_set                         extension_oids;
     gss_cred_id_t                      *sni_credentials;
+    bool                                sni_credentials_obtained;
     size_t                              sni_credentials_count;
     char                               *sni_servername;
     unsigned char                      *alpn;
