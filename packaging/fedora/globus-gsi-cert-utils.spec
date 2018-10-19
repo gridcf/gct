@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	10.0
+Version:	10.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Oct 19 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-1
+- Fix broken subject in grid-cert-request
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)
