@@ -790,7 +790,7 @@ create_certs () {
     # Insert instructions into the request file
 
 
-    SUBJECT="("$openssl" req -text -noout < ${REQ_OUTPUT} 2>&1 |\
+    SUBJECT="$("$openssl" req -text -noout < ${REQ_OUTPUT} 2>&1 |\
               grep 'Subject:' | awk -F: '{print $2}' |\
               cut -c2- )"
 
