@@ -27,8 +27,6 @@ configure-stamp:
 
 	dh_autoreconf
 
-	GLOBUS_VERSION=6.0 \
-	GRIDMAP=/etc/grid-security/grid-mapfile \
 	dh_auto_configure -- \
 	   --disable-static \
 	   --includedir=$(_includedir)/globus \

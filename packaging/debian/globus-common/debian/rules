@@ -29,7 +29,7 @@ configure-stamp:
 
 	dh_autoreconf
 
-	GLOBUS_VERSION=6.0 \
+	GLOBUS_VERSION=6.2 \
 	dh_auto_configure -- \
 	   --disable-static \
 	   --includedir=$(_includedir)/globus \

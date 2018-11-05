@@ -1,3 +1,9 @@
+globus-gass-copy (10.3-2+gct.@distro@) @distro@; urgency=medium
+
+  * Bump GCT release version to 6.2
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:06:03 +0100
+
 globus-gass-copy (10.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Split guc-cc.pl test into smaller tests

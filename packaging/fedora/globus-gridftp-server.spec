@@ -4,7 +4,7 @@ Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
 Version:	13.9
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
 Group:		System Environment/Libraries
@@ -132,7 +132,7 @@ Globus GridFTP Server Development Files
 
 %build
 export GRIDMAP=%{_sysconfdir}/grid-security/grid-mapfile
-export GLOBUS_VERSION=6.0
+export GLOBUS_VERSION=6.2
 %configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 %if %{?suse_version}%{!?suse_version:0}
@@ -162,7 +162,7 @@ sed '/ env /d' -i $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.gfork
 sed '/^env /d' -i $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/gridftp
 
 %check
-make %{_smp_mflags} check VERBOSE=1
+make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.9-2
+- Bump GCT release version to 6.2
+
 * Mon Sep 10 2018 Globus Toolkit <support@globus.org> - 13.9-1
 - Fix data_node restrict path
 
