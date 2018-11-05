@@ -4,7 +4,7 @@ Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(tr - _ <<< %{name})
 Version:	10.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
 Group:		System Environment/Libraries
@@ -123,7 +123,7 @@ Globus GSI Cert Utils Library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-export GLOBUS_VERSION=6.0
+export GLOBUS_VERSION=6.2
 %configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-2
+- Bump GCT release version to 6.2
+
 * Fri Oct 19 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-1
 - Fix broken subject in grid-cert-request
 

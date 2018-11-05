@@ -4,7 +4,7 @@ Name:		globus-gass-copy
 %global soname 2
 %global _name %(tr - _ <<< %{name})
 Version:	10.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
 Group:		System Environment/Libraries
@@ -123,7 +123,7 @@ Globus Gass Copy Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
-export GLOBUS_VERSION=6.0
+export GLOBUS_VERSION=6.2
 %configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
@@ -170,6 +170,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-2
+- Bump GCT release version to 6.2
+
 * Mon Sep 03 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-1
 - Split guc-cc.pl test into smaller tests
 

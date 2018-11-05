@@ -1,3 +1,9 @@
+globus-gsi-cert-utils (10.1-2+gct.@distro@) @distro@; urgency=medium
+
+  * Bump GCT release version to 6.2
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:21:53 +0100
+
 globus-gsi-cert-utils (10.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix broken subject in grid-cert-request
