@@ -9,11 +9,12 @@ repo_owner=$1
 
 keyfile=$(pwd -P)/travis-ci/id_gctuploader
 
-# repo.gridcf.org is an alias for this:
-upload_server=hcc-osg-software2.unl.edu
+# also hosts repo.gridcf.org; can't use repo.gridcf.org directly because
+# CloudFlare apparently doesn't properly handle SSH
+upload_server=repo.opensciencegrid.org
 
-# obtained by running "ssh-keyscan hcc-osg-software2.unl.edu"
-hostsig="hcc-osg-software2.unl.edu ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2AIWAVx2KY+GhDab9SdxLTvjjzTiNa4pfHe7TvRZ5O+qZNc4c8sBlsG7OZGZvDLMRjGTKFyjJx3jDVUwaf14DwzQi9rgZxEZgBsRFffLATZqz+DyVN1H9uw215pah9Wh6yzaqMn51y6kqg0kk/ip62cYcXFgLKUNkzV0yz5WFugm5ziROZn01v5o74VdCABTAdlZhviUoObCn+bycXoUGGETY5GZ3muAW6y5LydDTD+2S97qJWGdSW7JBIfcmU7n5dl8MrtYKYwGswOgdUDrLtCp6CdZt/Evr+3NyLp35IhLnwxdkBBlKHPY0jXrGHyemsXa0Hq0PG/Ih5d0M8RMp"
+# obtained by running "ssh-keyscan repo.opensciencegrid.org"
+hostsig="repo.opensciencegrid.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2AIWAVx2KY+GhDab9SdxLTvjjzTiNa4pfHe7TvRZ5O+qZNc4c8sBlsG7OZGZvDLMRjGTKFyjJx3jDVUwaf14DwzQi9rgZxEZgBsRFffLATZqz+DyVN1H9uw215pah9Wh6yzaqMn51y6kqg0kk/ip62cYcXFgLKUNkzV0yz5WFugm5ziROZn01v5o74VdCABTAdlZhviUoObCn+bycXoUGGETY5GZ3muAW6y5LydDTD+2S97qJWGdSW7JBIfcmU7n5dl8MrtYKYwGswOgdUDrLtCp6CdZt/Evr+3NyLp35IhLnwxdkBBlKHPY0jXrGHyemsXa0Hq0PG/Ih5d0M8RMp"
 
 
 echo "$hostsig" > ~/.ssh/known_hosts
