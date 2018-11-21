@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/post_listen.c
+ * @file post_listen.c
  * @brief globus_net_manager_context_post_listen()
  */
 

@@ -19,7 +19,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file globus_i_gsi_gss_utils.c
+ * @file globus_i_gsi_gss_utils.h
  * @author Sam Lang, Sam Meder
  */
 #endif

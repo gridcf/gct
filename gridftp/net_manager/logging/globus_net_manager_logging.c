@@ -62,7 +62,7 @@
 
 
 /**
- * @file logging/globus_net_manager_logging.c
+ * @file globus_net_manager_logging.c
  * @brief Logging Network Manager Implementation
  */
 

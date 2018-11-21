@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/post_close.c
+ * @file post_close.c
  * @brief globus_net_manager_context_post_close()
  */
 

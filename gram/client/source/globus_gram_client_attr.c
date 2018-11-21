@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file globus_gram_client_attr.h
+ * @file globus_gram_client_attr.c
  * @brief Attribute Functions
  */
 #endif

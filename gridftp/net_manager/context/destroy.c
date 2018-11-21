@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/destroy.c
+ * @file destroy.c
  * @brief globus_net_manager_context_destroy()
  */
 

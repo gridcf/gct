@@ -15,7 +15,7 @@
  */
 
 /**
- * @file null/globus_net_manager_null.c
+ * @file globus_net_manager_null.c
  * @brief Null Network Manager Implementation
  */
 

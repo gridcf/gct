@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/pre_close.c
+ * @file pre_close.c
  * @brief globus_net_manager_context_pre_close()
  */
 

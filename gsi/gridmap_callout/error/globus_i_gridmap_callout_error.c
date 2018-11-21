@@ -17,7 +17,7 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 
 /**
- * @file globus_gridmap_callout_error.c
+ * @file globus_i_gridmap_callout_error.c
  * @brief Globus Gridmap Callout Error
  * @author Sam Meder
  */

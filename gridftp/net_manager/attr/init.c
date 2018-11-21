@@ -15,7 +15,7 @@
  */
 
 /**
- * @file attr/init.c
+ * @file init.c
  * @brief globus_net_manager_attr_init()
  */
 

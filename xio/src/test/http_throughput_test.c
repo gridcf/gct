@@ -15,8 +15,8 @@
  */
 
 /**
- * @file http_post_test.c
- * @brief HTTP Echo Test
+ * @file http_throughput_test.c
+ * @brief HTTP Throughput Test
  *
  * Test that clients can send and receive HTTP message bodies.
  *

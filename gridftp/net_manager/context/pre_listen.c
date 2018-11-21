@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/pre_listen.c
+ * @file pre_listen.c
  * @brief globus_net_manager_context_pre_listen()
  */
 
