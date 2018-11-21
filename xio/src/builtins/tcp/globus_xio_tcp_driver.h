@@ -29,12 +29,15 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver Globus XIO TCP Driver
  * @ingroup globus_xio
+ * @brief Globus XIO TCP Driver
+ *
  * The IPV4/6 TCP socket driver.
  */
  
 /**
  * @defgroup globus_xio_tcp_driver_instance Opening/Closing
  * @ingroup globus_xio_tcp_driver
+ * @brief Opening/Closing
  * 
  * An XIO handle with the tcp driver can be created with either
  * @ref globus_xio_handle_create() or @ref globus_xio_server_register_accept().
@@ -63,6 +66,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver_io Reading/Writing
  * @ingroup globus_xio_tcp_driver
+ * @brief Reading/Writing
  * 
  * Both the @ref globus_xio_register_read() and
  * @ref globus_xio_register_write() calls follow similar semantics as described
@@ -91,6 +95,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver_server Server
  * @ingroup globus_xio_tcp_driver
+ * @brief Server
  * 
  * @ref globus_xio_server_create() causes a tcp listener socket to be created
  * and listened upon.  @ref globus_xio_server_register_accept() performs an
@@ -106,6 +111,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver_envs Env Variables
  * @ingroup globus_xio_tcp_driver
+ * @brief Env Variables
  * 
  * The tcp driver uses the following environment variables
  * - GLOBUS_HOSTNAME Used when setting the hostname in the contact string
@@ -137,6 +143,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver_cntls Attributes and Cntls
  * @ingroup globus_xio_tcp_driver
+ * @brief Attributes and Cntls
  * 
  * Tcp driver specific attrs and cntls.
  * 
@@ -148,10 +155,12 @@ extern "C" {
 /**
  * @defgroup globus_xio_tcp_driver_types Types
  * @ingroup globus_xio_tcp_driver
+ * @brief Types
  */
 /**
  * @defgroup globus_xio_tcp_driver_errors Error Types
  * @ingroup globus_xio_tcp_driver
+ * @brief Error Types
  * 
  * The TCP driver is very close to the system code, so most errors
  * reported by it are converted from the system errno. A few of the exceptions

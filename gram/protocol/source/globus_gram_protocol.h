@@ -32,6 +32,7 @@
 /**
  * @defgroup globus_gram_protocol GRAM Protocol
  * @brief GRAM Protocol
+ *
  * @details
  * The Globus GRAM Protocol Library implements the GRAM protocol. It is used
  * by the GRAM Client and GRAM Job Manager. It provides the constants used

@@ -20,6 +20,7 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
  * @defgroup globus_i_xio_http_transform Internal Transform Implementation
+ * @brief Internal Transform Implementation
  */
 #endif
 

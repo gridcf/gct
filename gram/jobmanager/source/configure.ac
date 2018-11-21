@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager],[15.1],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager],[15.2],[https://github.com/gridcf/gct/issues])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
 AC_SUBST([AGE_VERSION], [2])

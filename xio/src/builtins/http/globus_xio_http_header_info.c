@@ -19,6 +19,7 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
  * @defgroup globus_i_xio_http_header_info Internal Header Information Implementation
+ * @brief Internal Header Information Implementation
  */
 #endif
 

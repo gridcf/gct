@@ -39,6 +39,7 @@ extern "C" {
 #endif
 /**
  * @defgroup globus_callout Globus Callout API
+ * @brief Globus Callout API
  *
  * This API is intended to ease integration of configurable callouts into the
  * Grid Community Toolkit and to provide a platform independent way of dealing
@@ -51,9 +52,9 @@ extern "C" {
  *    - Blanks lines are ignored
  *    - Lines specifying callouts have the format
  @verbatim
-       abstract type           library         symbol
+        abstract type           library         symbol
  @endverbatim
- *      where <i>abstract type</i> denotes the type of callout,
+ *    - where <i>abstract type</i> denotes the type of callout,
  *      e.g. globus_gram_jobmanager_authz, <i>library</i> denotes the library
  *      the callout can be found in and <i>symbol</i> denotes the function name
  *      of the callout.
@@ -77,7 +78,7 @@ extern "C" {
  * - @ref globus_callout_constants
  */
 
-/** 
+/**
  * @defgroup globus_callout_activation Activation
  * @ingroup globus_callout
  * @brief Callback API Activation
@@ -138,7 +139,6 @@ typedef globus_result_t (*globus_callout_function_t)(
 /**
  * @defgroup globus_callout_handle Callout Handle Operations
  * @ingroup globus_callout
- *
  * @brief Manage a Globus Callout Handle structure
  *
  * @details
@@ -156,7 +156,6 @@ globus_callout_handle_destroy(
 /**
  * @defgroup globus_callout_config Callout Configuration
  * @ingroup globus_callout
- *
  * @brief Register callouts
  *
  * @details
@@ -179,7 +178,6 @@ globus_callout_register(
 /**
  * @defgroup globus_callout_call Callout Invocation
  * @ingroup globus_callout
- *
  * @brief Invoke callouts
  *
  * @details

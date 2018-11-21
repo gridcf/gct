@@ -25,6 +25,8 @@
 /**
  * @defgroup globus_hashtable Hash Table
  * @ingroup globus_common
+ * @brief Hash Table
+ *
  * The globus_hashtable data type provides an abstract hashtable mapping
  * representation and operations on such mappings. These queues can contain
  * arbitrary data in the form of a void pointer for each key and a void pointer
@@ -142,6 +144,8 @@ globus_hashtable_size(
 /**
  * @defgroup globus_hashtable_iterators Iterators
  * @ingroup globus_hashtable
+ * @brief Iterators
+ *
  * @details
  * The iterator is initially NULL until one of 
  * globus_hashtable_first() or globus_hashtable_last() has been called.  All

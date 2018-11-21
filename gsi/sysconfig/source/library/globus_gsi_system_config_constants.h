@@ -30,6 +30,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_sysconfig_datatypes Data Types
  * @ingroup globus_gsi_sysconfig
+ * @brief Data Types
  */
 
 /**

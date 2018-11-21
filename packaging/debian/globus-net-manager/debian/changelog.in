@@ -1,3 +1,9 @@
+globus-net-manager (1.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:22:32 +0100
+
 globus-net-manager (1.1-1+gct.@distro@) @distro@; urgency=medium
 
   * fix pre-connect not using changed remote contact

@@ -42,8 +42,10 @@ extern "C" {
  */
 #endif
 
-/** 
+/**
  * @defgroup globus_gram_client GRAM Client API
+ * @brief GRAM Client API
+ *
  * The resource management API provides function for requesting
  * that a job be started or terminated, as well as for requesting
  * information about the status of a job.
@@ -57,6 +59,7 @@ extern "C" {
 /**
  * @defgroup globus_gram_client_callback Job state callbacks
  * @ingroup globus_gram_client
+ * @brief Job state callbacks
  */
 
 /**
@@ -226,6 +229,7 @@ typedef void (* globus_gram_client_nonblocking_func_t)(
 /**
  * @defgroup globus_gram_client_job_functions GRAM Job Functions
  * @ingroup globus_gram_client
+ * @brief GRAM Job Functions
  */
 
 /******************************************************************************
@@ -440,6 +444,7 @@ globus_gram_client_debug(void);
 /**
  * @defgroup globus_gram_client_attr GRAM Client Attribute Functions
  * @ingroup globus_gram_client
+ * @brief GRAM Client Attribute Functions
  */
 int
 globus_gram_client_attr_init(

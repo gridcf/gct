@@ -1,3 +1,9 @@
+globus-rsl (11.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:15:15 +0100
+
 globus-rsl (11.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

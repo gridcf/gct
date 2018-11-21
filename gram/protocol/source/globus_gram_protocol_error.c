@@ -29,6 +29,7 @@
  * @defgroup globus_gram_protocol_error_messages Error Messages
  * @ingroup globus_gram_protocol_functions
  * @brief GRAM Error Messages
+ *
  * Functions in this section handle converting GRAM error codes to
  * strings which can help the user diagnose GRAM problems.
  */

@@ -41,6 +41,7 @@ extern "C" {
 /**
  * @defgroup globus_gss_assist Globus GSS Assist
  * @brief Convenience Functions for GSSAPI
+ *
  * @details
  * The GSS Assist code provides convenience functions
  * for using the Globus GSS-API.
@@ -57,8 +58,9 @@ extern "C" {
 
 /**
  * @defgroup globus_gss_assist_activation Activation
- * @brief Module Activation
  * @ingroup globus_gss_assist
+ * @brief Module Activation
+ *
  * @details
  * Globus GSI GSS Assist uses standard Globus module activation and
  * deactivation.  Before any Globus GSS Assist functions are called,
@@ -125,6 +127,7 @@ typedef struct globus_gss_assist_ex_st
  * @defgroup globus_gss_assist_tokens Token Transport
  * @ingroup globus_gss_assist
  * @brief Send and Receive Security Tokens
+ *
  * @details
  * The functions in this section are used to send and receive
  * GSSAPI tokens using various methods.
@@ -156,8 +159,9 @@ globus_gss_assist_token_send_fd_without_length(
 
 /**
  * @defgroup globus_gss_assist_credential Credential Management
- * @brief Acquire Credential
  * @ingroup globus_gss_assist
+ * @brief Acquire Credential
+ *
  * @details
  * The functions in this section are used to acquire security
  * credentials.
@@ -198,8 +202,9 @@ globus_gss_assist_acquire_cred_ext(
 
 /**
  * @defgroup globus_gss_assist_context Security Context Management
- * @brief Security Context Creation and Use
  * @ingroup globus_gss_assist
+ * @brief Security Context Creation and Use
+ *
  * @details
  * The functions in this section are used to create security contexts
  * and send and receive messages sent over them. They use the functions
@@ -278,8 +283,9 @@ globus_gss_assist_init_sec_context_async(
 
 /**
  * @defgroup globus_gss_assist_display GSSAPI Result Status Strings
- * @brief Display Error Status from a GSSAPI Result
  * @ingroup globus_gss_assist
+ * @brief Display Error Status from a GSSAPI Result
+ *
  * @details
  * The functions in this section convert a GSSAPI result code into
  * a message.
@@ -369,8 +375,9 @@ globus_gss_assist_authorization_host_name(
 
 /**
  * @defgroup globus_gss_assist_gridmap Gridmap Authorization
- * @brief Gridmap Authorization and Local User Mapping
  * @ingroup globus_gss_assist
+ * @brief Gridmap Authorization and Local User Mapping
+ *
  * @details
  * Functions in this group are used to authorize a GSSAPI credential to
  * perform some action on the local machine. In addition to checking whether

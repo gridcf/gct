@@ -17,7 +17,7 @@
 #ifndef GLOBUS_FIFO_H
 #define GLOBUS_FIFO_H
 
-/** 
+/**
  * @file globus_fifo.h
  * @brief Globus FIFO
  *

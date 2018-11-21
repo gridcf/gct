@@ -1,5 +1,6 @@
 /**
-@page globus_gram_job_manager_interface_tutorial GRAM Job Manager Scheduler Tutorial
+@page globus_gram_job_manager_interface_tutorial
+@brief GRAM Job Manager Scheduler Tutorial
 
 This tutorial describes the steps needed to build a GRAM Job Manager
 Scheduler interface package. The audience for this tutorial is a person

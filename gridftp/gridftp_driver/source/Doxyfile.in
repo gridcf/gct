@@ -15,3 +15,4 @@ INPUT                  = @srcdir@
 INPUT_FILTER           = @srcdir@/globus-vararg-enums-doxygen-filter.pl
 EXCLUDE_PATTERNS       = version.h
 PREDEFINED             = GLOBUS_DONT_DOCUMENT_INTERNAL DOXYGEN
+HAVE_DOT               = NO

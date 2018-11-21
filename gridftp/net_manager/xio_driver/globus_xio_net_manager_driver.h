@@ -30,9 +30,10 @@ extern "C" {
  */
 
 /**
- * @brief Net Manager XIO Driver
  * @defgroup globus_xio_net_manager_driver Globus XIO Net Manager Driver
  * @ingroup globus_net_manager
+ * @brief Net Manager XIO Driver
+ *
  * @details
  * The Globus XIO Network Manager Driver interfaces with the globus_net_manager
  * library to integrate network manager functionality within the globus_xio

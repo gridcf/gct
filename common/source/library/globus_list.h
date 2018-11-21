@@ -22,6 +22,7 @@
 /**
  * @defgroup globus_list Linked List
  * @ingroup globus_common
+ * @brief Linked List
  */
 #ifndef GLOBUS_LIST_H
 #define GLOBUS_LIST_H

@@ -29,8 +29,8 @@ extern "C" {
 
 /**
  * @defgroup globus_gss_assist_constants GSI GSS Assist Constants
- * @brief Constant Definitions
  * @ingroup globus_gss_assist
+ * @brief Constant Definitions
  */
 
 /** GSI GSS Assist Error codes

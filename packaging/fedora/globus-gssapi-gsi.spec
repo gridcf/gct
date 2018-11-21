@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(tr - _ <<< %{name})
-Version:	14.9
+Version:	14.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.10-1
+- Doxygen fixes
+
 * Fri Sep 28 2018 Globus Toolkit <support@globus.org> - 14.9-1
 - Fix leaks
 

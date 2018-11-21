@@ -22,6 +22,8 @@
 /**
  * @defgroup globus_handle_table Handle Table for Reference Counting Data
  * @ingroup globus_common
+ * @brief Handle Table for Reference Counting Data
+ *
  * @details
  * The globus_handle_table_t abstraction provides a reference-counting
  * handle table to automatically free data when there are no more

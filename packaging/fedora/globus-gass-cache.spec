@@ -3,7 +3,7 @@
 Name:		globus-gass-cache
 %global soname 5
 %global _name %(tr - _ <<< %{name})
-Version:	10.0
+Version:	10.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Cache
 
@@ -133,6 +133,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-1
+- Doxygen fixes
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

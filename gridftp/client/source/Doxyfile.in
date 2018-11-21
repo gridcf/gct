@@ -16,3 +16,4 @@ EXAMPLE_PATH           = @srcdir@
 EXAMPLE_PATTERNS       = *.example
 EXCLUDE_PATTERNS       = version.h
 PREDEFINED             = GLOBUS_DONT_DOCUMENT_INTERNAL DOXYGEN
+HAVE_DOT               = NO

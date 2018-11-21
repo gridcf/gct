@@ -1165,7 +1165,7 @@ globus_gass_transfer_listenerattr_init(
 }
 /* globus_gass_transfer_listenerattr_init() */
 
-/** 
+/**
  * @name Listener Backlog
  */
 /* @{ */

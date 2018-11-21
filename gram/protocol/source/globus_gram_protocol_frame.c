@@ -33,8 +33,9 @@ globus_l_gram_protocol_lookup_reason(
 
 /**
  * @defgroup globus_gram_protocol_framing Message Framing
- * @brief Message Framing
  * @ingroup globus_gram_protocol_functions
+ * @brief Message Framing
+ *
  * @details
  * The functions in this section frame a GRAM request, query, or reply 
  * message with HTTP headers compatible with the GRAM2 protocol parsers in 

@@ -67,6 +67,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_gssapi Globus GSSAPI
  * @brief GSI Implementation Details
+ *
  * @details
  * The Globus GSI GSSAPI is an implementation of <a href="http://www.ietf.org/rfc/rfc2744.txt">GSS API C Bindings</a> using OpenSSL. This API documentation
  * is intended to explain implementation-specific behavior of this GSSAPI
@@ -84,8 +85,9 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_gssapi_activation Activation
- * @brief Module Activation
  * @ingroup globus_gsi_gssapi
+ * @brief Module Activation
+ *
  * @details
  * Globus GSI GSSAPI uses standard Globus module activation and
  * deactivation. Before any Globus GSI GSSAPI functions are called,
@@ -243,8 +245,9 @@ typedef struct gss_channel_bindings_struct
 
 /**
  * @defgroup globus_gsi_gss_requested_context_flags Request Flags
- * @brief Request Flags
  * @ingroup globus_gsi_gssapi
+ * @brief Request Flags
+ *
  * @details
  * These macros set the REQUESTED type of context - these should
  * be set (or not) in the context's req_flags (or
@@ -304,8 +307,9 @@ typedef struct gss_channel_bindings_struct
 
 /**
  * @defgroup globus_gsi_gss_returned_context_flags Return Flags
- * @brief Return Flags
  * @ingroup globus_gsi_gssapi
+ * @brief Return Flags
+ *
  * @details
  * These macros set the RETURNED context type - these will be
  * be set (or not) in the context's ret_flags
@@ -956,8 +960,9 @@ GSS_CALLCONV GSS_FUNC(gss_unseal)
 
 /**
  * @defgroup globus_gsi_gssapi_extensions GSSAPI Extensions
- * @brief extensions
  * @ingroup globus_gsi_gssapi
+ * @brief Extensions
+ *
  * @details
  * Experimental GSSAPI routines are defined here.
  * These may change, and we will be looking at adding
@@ -970,6 +975,7 @@ GSS_CALLCONV GSS_FUNC(gss_unseal)
  * @defgroup globus_gsi_gssapi_extensions_delegation Delegation
  * @ingroup globus_gsi_gssapi_extensions
  * @brief Delegation Functions
+ *
  * @details
  * Functions in this section allow delegation to occur outside of
  * the context initiation handshake.

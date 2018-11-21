@@ -32,6 +32,7 @@
 
 /**
  * @defgroup globus_gsi_proxy_ssl_api Globus GSI Proxy SSL API
+ * @brief Globus GSI Proxy SSL API
  *
  * The globus_gsi_proxy_ssl library provides the ability
  * to create a PROXYCERTINFO extension for inclusion in
@@ -67,6 +68,7 @@ extern "C" {
 /**
  * @defgroup proxycertinfo ProxyCertInfo
  * @ingroup globus_gsi_proxy_ssl_api
+ * @brief ProxyCertInfo
  * 
  * The proxycertinfo.h file defines a method of
  * maintaining information about proxy certificates.

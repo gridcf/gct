@@ -1,3 +1,9 @@
+globus-gridmap-callout (2.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:32:40 +0100
+
 globus-gridmap-callout (2.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

@@ -32,6 +32,8 @@
 #endif
 /**
  * @defgroup globus_openssl_module Globus OpenSSL Module
+ * @brief Globus OpenSSL Module
+ *
  * The globus_openssl library is motivated by the desire to
  * make OpenSSL thread safe. This is done by allocating a mutex pool
  * and setting relevant callback functions in the module activation
@@ -52,6 +54,7 @@ extern "C" {
 /**
  * @defgroup globus_openssl_activation Activation
  * @ingroup globus_openssl_module
+ * @brief Activation
  *
  * Globus OpenSSL uses standard Globus module activation and
  * deactivation. Before any OpenSSL functions are called, the

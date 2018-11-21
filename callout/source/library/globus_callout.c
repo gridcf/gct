@@ -267,7 +267,7 @@ globus_callout_handle_destroy(
  @verbatim
         abstract type           library         symbol
  @endverbatim
- *      where <i>abstract type</i> denotes the type of callout,
+ *    - where <i>abstract type</i> denotes the type of callout,
  *      e.g. globus_gram_jobmanager_authz, <i>library</i> denotes the library
  *      the callout can be found in and <i>symbol</i> denotes the function name
  *      of the callout. The library argument can be specified in two forms,

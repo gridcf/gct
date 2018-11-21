@@ -26,6 +26,7 @@
  *
  * @defgroup globus_gass_transfer_protocol Protocol Modules
  * @ingroup globus_gass_transfer
+ * @brief Protocol Modules
  *
  * The GASS Protocol Module API is designed to make it possible to
  * extend the GASS client and server APIs to support additional protocols

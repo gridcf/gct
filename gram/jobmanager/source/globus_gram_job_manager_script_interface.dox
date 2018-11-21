@@ -1,5 +1,6 @@
 /**
-@page globus_gram_job_manager_script_interface Job Manager Scheduler Interface
+@page globus_gram_job_manager_script_interface
+@brief Job Manager Scheduler Interface
 
 The GRAM Job Manager interfaces with the job filesystems and scheduler
 through scheduler-specific Perl modules. GRAM provides several Perl modules

@@ -31,11 +31,13 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver Globus XIO MODE_E Driver
  * @ingroup globus_xio
+ * @brief Globus XIO MODE_E Driver
  */
 
 /**
  * @defgroup globus_xio_mode_e_driver_instance Opening/Closing
  * @ingroup globus_xio_mode_e_driver
+ * @brief Opening/Closing
  *
  * An XIO handle with the mode_e driver can be created with either
  * @ref globus_xio_handle_create() or @ref globus_xio_server_register_accept().
@@ -55,6 +57,8 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver_io Reading/Writing
  * @ingroup globus_xio_mode_e_driver
+ * @brief Reading/Writing
+ *
  * Mode E is unidirectional. Clients can only write and the server can only 
  * read.
  * The @ref globus_xio_register_read() enforce that the waitforbytes parameter
@@ -74,6 +78,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver_server Server
  * @ingroup globus_xio_mode_e_driver
+ * @brief Server
  *
  * @ref globus_xio_server_create() causes a mode_e listener to be created
  * and listened upon.  @ref globus_xio_server_register_accept() performs an
@@ -87,6 +92,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver_envs Env Variables
  * @ingroup globus_xio_mode_e_driver
+ * @brief Env Variables
  *
  * The mode_e driver uses the following environment variable
  * - GLOBUS_XIO_MODE_E_DEBUG Available if using a debug build.  See 
@@ -96,6 +102,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver_cntls Attributes and Cntls
  * @ingroup globus_xio_mode_e_driver
+ * @brief Attributes and Cntls
  *
  * Mode_e driver specific attrs and cntls.
  *
@@ -107,10 +114,12 @@ extern "C" {
 /**
  * @defgroup globus_xio_mode_e_driver_types Types
  * @ingroup globus_xio_mode_e_driver
+ * @brief Types
  */
 /**
  * @defgroup globus_xio_mode_e_driver_errors Error Types
  * @ingroup globus_xio_mode_e_driver
+ * @brief Error Types
  *
  * The errors reported by MODE_E driver include
  * GLOBUS_XIO_ERROR_COMMAND, GLOBUS_XIO_ERROR_MEMORY, GLOBUS_XIO_ERROR_STATE, 

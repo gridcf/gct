@@ -16,7 +16,8 @@
 
 
 /**
- * @file globus_gridftp_server.h DSI interface
+ * @file globus_gridftp_server.h
+ * @brief DSI interface
  * 
  * If you are interested in writing a module for this server and want to
  * discuss it's design, or are already writing one and would like support,

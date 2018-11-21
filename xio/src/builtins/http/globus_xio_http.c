@@ -28,6 +28,7 @@
 
 /**
  * @defgroup globus_i_xio_http_util Internal HTTP Utility Functions
+ * @brief Internal HTTP Utility Functions
  */
 #endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 

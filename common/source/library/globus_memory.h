@@ -36,6 +36,8 @@ extern "C" {
 /**
  * @defgroup globus_memory Memory Pool
  * @ingroup globus_common
+ * @brief Memory Pool
+ *
  * @details
  * The globus_memory abstraction implements a memory management pool for
  * groups of same-sized data items.

@@ -26,6 +26,8 @@
 
 /**
  * @defgroup globus_gssapi_error_api Globus GSSAPI Error API
+ * @brief Globus GSSAPI Error API
+ *
  * These globus_error functions are motivated by the desire to provide
  * a easier way of generating new error types, while at the same time
  * preserving all features (e.g. memory management, chaining) of the
@@ -48,6 +50,7 @@ extern "C" {
 /**
  * @defgroup globus_gssapi_error_object Error Construction
  * @ingroup globus_gssapi_error_api
+ * @brief Error Construction
  *
  * Create and initialize a Globus GSSAPI Error object.
  *
@@ -82,6 +85,7 @@ globus_error_initialize_gssapi_error(
 /**
  * @defgroup globus_gssapi_error_accessor Error Data Accessors and Modifiers
  * @ingroup globus_gssapi_error_api
+ * @brief Error Data Accessors and Modifiers
  *
  * Get and set data in a Globus GSSAPI Error object.
  *
@@ -105,6 +109,7 @@ globus_error_gssapi_get_minor_status(
 /**
  * @defgroup globus_gssapi_error_utility Error Handling Helpers
  * @ingroup globus_gssapi_error_api
+ * @brief Error Handling Helpers
  *
  * Helper functions for dealing with Globus GSSAPI Error objects.
  *

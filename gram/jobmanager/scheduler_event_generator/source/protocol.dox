@@ -1,5 +1,7 @@
 /**
-@page seg_protocol Scheduler Event Generator Protocol
+@page seg_protocol
+@brief Scheduler Event Generator Protocol
+
 The general form for the SEG protocol messages is
 
 @verbatim

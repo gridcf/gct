@@ -15,7 +15,9 @@
  */
 
 /**
- * @page globus_net_manager_tutorial Net Manager Implementation Tutorial
+ * @page globus_net_manager_tutorial
+ * @brief Net Manager Implementation Tutorial
+ *
  * This example uses functionality from globus_common and globus_net_manager
  * modules, so the headers for those must be included:
  @verbatim

@@ -30,6 +30,7 @@
 /**
  * @defgroup globus_error_api Globus Error API
  * @ingroup globus_common
+ * @brief Globus Error API
  *
  * Intended use:
  *
@@ -59,6 +60,7 @@
  * @anchor globus_generic_error_api
  * @defgroup globus_generic_error_api Globus Generic Error API
  * @ingroup globus_error_api
+ * @brief Globus Generic Error API
  *
  * These globus_error functions are motivated by the desire to provide
  * a easier way of generating new error types, while at the same time
@@ -80,6 +82,7 @@ extern "C" {
 /**
  * @defgroup globus_generic_error_object Error Construction
  * @ingroup globus_generic_error_api
+ * @brief Error Construction
  *
  * Create and initialize a Globus Generic Error object.
  *
@@ -136,6 +139,7 @@ globus_error_initialize_error(
 /**
  * @defgroup globus_generic_error_accessor Error Data Accessors and Modifiers
  * @ingroup globus_generic_error_api
+ * @brief Error Data Accessors and Modifiers
  *
  * Get and set data in a Globus Generic Error object.
  *
@@ -193,6 +197,7 @@ globus_error_set_long_desc(
 /**
  * @defgroup globus_generic_error_utility Error Handling Helpers
  * @ingroup globus_generic_error_api
+ * @brief Error Handling Helpers
  *
  * Helper functions for dealing with Globus Generic Error objects.
  *

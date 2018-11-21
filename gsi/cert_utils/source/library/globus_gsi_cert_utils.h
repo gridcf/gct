@@ -40,6 +40,7 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_cert_utils Globus GSI Certificate Handling Utilities
+ * @brief Globus GSI Certificate Handling Utilities
  *
  * The Globus GSI Certificate Handling Utilities library. This library contains
  * helper functions for dealing with certificates.
@@ -52,6 +53,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_cert_utils_activation Activation
  * @ingroup globus_gsi_cert_utils
+ * @brief Activation
  *
  * Globus GSI Cert Utils uses standard Globus module activation and
  * deactivation.  Before any Globus GSI Cert Utils functions are called, the

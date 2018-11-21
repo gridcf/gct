@@ -671,7 +671,7 @@ typedef struct globus_i_ftp_client_handle_t
 }
 globus_i_ftp_client_handle_t;
 
-/** 
+/**
  * @brief FTP Connection State.
  *
  * This type is used to store information about an active FTP control

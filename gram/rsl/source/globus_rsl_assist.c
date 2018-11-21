@@ -18,6 +18,7 @@
 /**
  * @defgroup globus_rsl_assist RSL Helper Functions
  * @ingroup globus_rsl
+ * @brief RSL Helper Functions
  *
  * @details
  *   The rsl_assist library provide a set of functions to canonicalize

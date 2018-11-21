@@ -26,12 +26,15 @@
 /**
  * @defgroup globus_xio_udp_driver Globus XIO UDP Driver
  * @ingroup globus_xio
+ * @brief Globus XIO UDP Driver
+ *
  * The IPV4/6 UDP socket driver.
  */
  
 /**
  * @defgroup globus_xio_udp_driver_instance Opening/Closing
  * @ingroup globus_xio_udp_driver
+ * @brief Opening/Closing
  * 
  * An XIO handle with the udp driver can be created with
  * @ref globus_xio_handle_create().
@@ -53,6 +56,7 @@
 /**
  * @defgroup globus_xio_udp_driver_io Reading/Writing
  * @ingroup globus_xio_udp_driver
+ * @brief Reading/Writing
  * 
  * @ref globus_xio_register_read() semantics:
  * 
@@ -103,6 +107,7 @@
 /**
  * @defgroup globus_xio_udp_driver_envs Env Variables
  * @ingroup globus_xio_udp_driver
+ * @brief Env Variables
  * 
  * The udp driver uses the following environment variables
  * - GLOBUS_HOSTNAME Used when setting the hostname in the contact string
@@ -119,6 +124,7 @@
 /**
  * @defgroup globus_xio_udp_driver_cntls Attributes and Cntls
  * @ingroup globus_xio_udp_driver
+ * @brief Attributes and Cntls
  * 
  * UDP driver specific attrs and cntls.
  * 
@@ -129,10 +135,12 @@
 /**
  * @defgroup globus_xio_udp_driver_types Types
  * @ingroup globus_xio_udp_driver
+ * @brief Types
  */
 /**
  * @defgroup globus_xio_udp_driver_errors Error Types
  * @ingroup globus_xio_udp_driver
+ * @brief Error Types
  * 
  * The UDP driver is very close to the system code, so most errors
  * reported by it are converted from the system errno. A few of the exceptions

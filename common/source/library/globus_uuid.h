@@ -22,7 +22,7 @@
 /**
  * @defgroup globus_uuid Globus UUID Generator
  * @ingroup globus_common
- * @brief UUIDs
+ * @brief UUID Generator
  */
 #ifndef GLOBUS_UUID_H
 #define GLOBUS_UUID_H

@@ -32,8 +32,9 @@
 #endif
 
 /**
- * @brief Protocol-Independent File Transfer
  * @defgroup globus_gass_copy GASS Copy
+ * @brief Protocol-Independent File Transfer
+ *
  * @details
  * The Globus GASS Copy library is motivated by the desire to provide a
  * uniform interface to transfer files specified by different protocols.

@@ -24,9 +24,10 @@ extern "C" {
 #endif
 
 /**
- * @brief Net Manager Python Module
  * @defgroup globus_net_manager_python Python Module
  * @ingroup globus_net_manager
+ * @brief Net Manager Python Module
+ *
  * @details
  * The Net Manager Python module is an example module that provides basic
  * Python language bindings to the Network Manager callout functionality. 

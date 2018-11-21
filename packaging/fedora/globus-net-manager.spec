@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	1.1
+Version:	1.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -192,6 +192,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.2-1
+- Doxygen fixes
+
 * Tue May 01 2018 Globus Toolkit <support@globus.org> - 1.1-1
 - fix pre-connect not using changed remote contact
 

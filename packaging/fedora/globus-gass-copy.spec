@@ -3,8 +3,8 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	10.3
-Release:	2%{?dist}
+Version:	10.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
 Group:		System Environment/Libraries
@@ -170,6 +170,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.4-1
+- Doxygen fixes
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-2
 - Bump GCT release version to 6.2
 

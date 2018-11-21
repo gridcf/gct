@@ -68,6 +68,7 @@ do                                                                          \
 /**
  * @defgroup globus_xio_driver Globus XIO Driver
  * @ingroup globus_xio
+ * @brief Globus XIO Driver
  *
  * Globus XIO introduces a notion of a driver stack to its API.
  * Within globus_xio every I/O operation must occur on a globus_xio 
@@ -1136,6 +1137,7 @@ globus_xio_driver_merge_operation(
 /**
  *  @defgroup globus_xio_data_descriptors Data descriptors
  *  @ingroup globus_xio
+ *  @brief Data descriptors
  *
  *  globus_xio uses data descriptors to associate meta data with the 
  *  data being written or the data read.
@@ -1380,6 +1382,7 @@ typedef struct globus_xio_string_cntl_table_s
 /**
  *  @defgroup string_globus_xio_driver_programming Driver Programming: String options
  *  @ingroup globus_xio_driver
+ *  @brief Driver Programming: String options
  *
  *  A driver can choose to expose parameters as in a string form.  Providing
  *  this feature makes dynamically setting driver specific options much easier.

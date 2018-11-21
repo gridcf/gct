@@ -73,6 +73,7 @@ extern "C" {
 /**
  * @defgroup globus_gass_transfer_activation Activation
  * @ingroup globus_gass_transfer
+ * @brief Activation
  *
  * The Globus GASS Transfer library uses the standard module activation
  * and deactivation API to initialize its state. Before any GASS
@@ -331,6 +332,7 @@ typedef void
  *
  * @defgroup globus_gass_transfer_client Client-Initiated Operations
  * @ingroup globus_gass_transfer
+ * @brief Client-Initiated Operations
  *
  * One mode of using the GASS Transfer API is to initiate
  * file transfers. The operations supported by the GASS Transfer API
@@ -397,6 +399,7 @@ globus_gass_transfer_append(
  *
  * @defgroup globus_gass_transfer_server Implementing Servers
  * @ingroup globus_gass_transfer
+ * @brief Implementing Servers
  *
  * Another mode of using the GASS Transfer API is to implement
  * data servers. The primary difference between the client and
@@ -502,6 +505,7 @@ globus_gass_transfer_listener_set_user_pointer(
 /**
  * @defgroup globus_gass_transfer_data Sending and Receiving Data
  * @ingroup globus_gass_tansfer
+ * @brief Sending and Receiving Data
  */
 
 /**
@@ -559,6 +563,7 @@ globus_gass_transfer_fail(
  *
  * @defgroup globus_gass_transfer_referral Referrals
  * @ingroup globus_gass_transfer
+ * @brief Referrals
  *
  * The GASS Transfer API supports referring URL requests to alternate
  * URLs via referrals. Referrals are essentially pointers to another
@@ -601,6 +606,7 @@ globus_gass_transfer_referral_destroy(
  *
  * @defgroup globus_gass_transfer_request Request Handles
  * @ingroup globus_gass_transfer
+ * @brief Request Handles
  *
  * Request handles are used by the GASS Transfer API to associate
  * operations with a single file transfer request. Specifically,
@@ -689,6 +695,7 @@ globus_gass_transfer_request_set_type(
 /**
  * @defgroup globus_gass_transfer_requestattr Request Attributes
  * @ingroup globus_gass_transfer
+ * @brief Request Attributes
  *
  * The GASS Transfer library uses Globus objects to provide an
  * extensible way of creating protocol-specific attributes.
@@ -801,6 +808,7 @@ globus_gass_transfer_secure_requestattr_get_authorization(
 /**
  * @defgroup globus_gass_transfer_listenerattr Listener attributes
  * @ingroup globus_gass_transfer
+ * @brief Listener attributes
  */
 #ifndef DOXYGEN
 int
@@ -827,6 +835,7 @@ globus_gass_transfer_listenerattr_get_port(
 /**
  * @defgroup globus_gass_transfer_requestattr_implementation Implementing Request Attributes
  * @ingroup globus_gass_transfer
+ * @brief Implementing Request Attributes
  */
 extern const globus_object_type_t
 GLOBUS_GASS_OBJECT_TYPE_REQUESTATTR_DEFINITION;

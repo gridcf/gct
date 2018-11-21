@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_url URL String Parser
  * @ingroup globus_common
+ * @brief URL String Parser
  *
  * The Globus URL functions provide a simple mechanism for parsing
  * a URL string into a data structure, and for determining the scheme

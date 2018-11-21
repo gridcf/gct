@@ -87,8 +87,9 @@ extern "C" {
 struct globus_net_manager_s;
 
 /**
- * @brief Net Manager API
  * @defgroup globus_net_manager Net Manager
+ * @brief Net Manager API
+ *
  * @details
  * This API defines the plug-in points for network manager functionality,
  * as well as functions for registering a particular network manager
@@ -101,17 +102,20 @@ struct globus_net_manager_s;
  */
 
 /**
- * @brief Net Manager Data Types
  * @defgroup globus_net_manager_types Net Manager Data Types
+ * @ingroup globus_net_manager
+ * @brief Net Manager Data Types
+ *
  * @details
  * Data types for the Net Manager interface.
  * @ref globus_net_manager_tutorial
  */
 
 /**
- * @brief Net Manager Function Signatures
  * @defgroup globus_net_manager_signatures Function Signatures
  * @ingroup globus_net_manager
+ * @brief Net Manager Function Signatures
+ *
  * Function signatures for the Net Manager interface.
  * @ref globus_net_manager_tutorial
  */

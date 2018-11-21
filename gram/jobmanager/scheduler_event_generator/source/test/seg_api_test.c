@@ -19,7 +19,9 @@
 #include "globus_scheduler_event_generator_stdout.h"
 #include "globus_gram_protocol_constants.h"
 
-/** @page seg_api_test API Test
+/**
+ * @page seg_api_test
+ * @brief API Test
  * 
  * Test event portions of the SEG API. Passed as an argument,
  * the name of a file containing SEG messages. These are parsed and passed

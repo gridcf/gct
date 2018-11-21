@@ -15,7 +15,8 @@
  */
 
 /**
- * @file read_vhost_cred_dir.c Read all credentials in a directory
+ * @file read_vhost_cred_dir.c
+ * @brief Read all credentials in a directory
  */
 
 #include "gssapi.h"

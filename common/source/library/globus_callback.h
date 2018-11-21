@@ -123,7 +123,7 @@ typedef struct globus_l_callback_space_attr_s * globus_callback_space_attr_t;
 /**
  * @defgroup globus_callback_api Globus Callback API
  * @ingroup globus_callback
- *
+ * @brief Globus Callback API
  */
 
 /**
@@ -677,6 +677,7 @@ globus_callback_was_restarted();
 /**
  * @defgroup globus_callback_spaces Globus Callback Spaces
  * @ingroup globus_callback
+ * @brief Globus Callback Spaces
  */
 
 /**
@@ -948,7 +949,7 @@ globus_callback_space_is_single(
 /**
  * @defgroup globus_callback_signal Globus Callback Signal Handling
  * @ingroup globus_callback
- *
+ * @brief Globus Callback Signal Handling
  */
 
 /**

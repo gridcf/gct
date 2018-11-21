@@ -32,6 +32,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_cert_utils_constants Cert Utils Constants
  * @ingroup globus_gsi_cert_utils
+ * @brief Cert Utils Constants
  */
 /**
  * Cert Utils Error Codes

@@ -41,6 +41,7 @@
 
 /**
  * @defgroup globus_gridmap_callout Globus Gridmap Callout
+ * @brief Globus Gridmap Callout
  */
 
 /**

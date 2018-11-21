@@ -42,6 +42,7 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_sysconfig Globus GSI System Config API
+ * @brief Globus GSI System Config API
  *
  * This API provides helper functions for detecting installation and
  * environment specific settings applicable to GSI. It also servers as a
@@ -58,6 +59,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_system_config_defines Defines
  * @ingroup globus_gsi_sysconfig
+ * @brief Defines
  *
  * These preprocessor defines allow for a platform (ie Win32 vs UNIX)
  * independent API.
@@ -66,6 +68,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_sysconfig_unix Functions for UNIX platforms
  * @ingroup globus_gsi_sysconfig
+ * @brief Functions for UNIX platforms
  *
  * These functions implement the UNIX version of the Globus GSI System
  * Configuration API. <b>They should never be called directly, please use the
@@ -75,6 +78,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_sysconfig_win32 Functions for Win32 platforms 
  * @ingroup globus_gsi_sysconfig
+ * @brief Functions for Win32 platforms
  *
  * These functions implement the Win32 version of the Globus GSI System
  * Configuration API. <b>They should never be called directly, please use the
@@ -84,6 +88,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_sysconfig_shared Functions for all platforms
  * @ingroup globus_gsi_sysconfig
+ * @brief Functions for all platforms
  *
  * These functions are platform independent members of the Globus GSI System
  * Configuration API. 
@@ -94,24 +99,27 @@ extern "C" {
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
  * @defgroup globus_i_gsi_system_config Internal Globus Credential
+ * @brief Internal Globus Credential
  * System Config API
- *
  */
 
 /**
  * @defgroup globus_i_gsi_system_config_win32 Internal Globus Credential
+ * @brief Internal Globus Credential
  * System Config API for Win32 platforms
  */
 
 /**
  * @defgroup globus_i_gsi_system_config_unix Internal Globus Credential
+ * @brief Internal Globus Credential
  * System Config API for Unix platforms
  */
 #endif
 
-/** 
+/**
  * @defgroup globus_gsi_sysconfig_activation Activation
  * @ingroup globus_gsi_sysconfig
+ * @brief Activation
  *
  * Globus GSI System Configuration API uses standard Globus module activation
  * and deactivation.  Before any Globus GSI System Configuration API functions

@@ -3,7 +3,7 @@
 Name:		globus-gss-assist
 %global soname 3
 %global _name %(tr - _ <<< %{name})
-Version:	12.1
+Version:	12.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
@@ -173,6 +173,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.2-1
+- Doxygen fixes
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.1-1
 - Use 2048 bit RSA key for tests
 

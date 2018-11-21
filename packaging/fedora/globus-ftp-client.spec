@@ -3,8 +3,8 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	9.1
-Release:	2%{?dist}
+Version:	9.2
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
 Group:		System Environment/Libraries
@@ -153,6 +153,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.2-1
+- Doxygen fixes
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.1-2
 - Bump GCT release version to 6.2
 

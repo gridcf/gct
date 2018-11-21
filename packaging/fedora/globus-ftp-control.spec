@@ -3,7 +3,7 @@
 Name:		globus-ftp-control
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	9.3
+Version:	9.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library
 
@@ -144,6 +144,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-1
+- Doxygen fixes
+
 * Fri Jul 13 2018 Globus Toolkit <support@globus.org> - 9.3-1
 - force encryption on tls control channel
 

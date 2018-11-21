@@ -1,5 +1,6 @@
 /**
-@page globus_gram_job_manager_rsl_validation_file RSL Validation File Format
+@page globus_gram_job_manager_rsl_validation_file
+@brief RSL Validation File Format
 
 The idea behind the RSL Validation file is to provide a mechanism for
 job manager scheduler interfaces to implement RSL extensions, while having

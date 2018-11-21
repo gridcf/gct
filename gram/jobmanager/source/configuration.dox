@@ -1,5 +1,6 @@
 /**
-@page globus_gram_job_manager_configuration Job Manager Configuration
+@page globus_gram_job_manager_configuration
+@brief Job Manager Configuration
 
 The Job Manager is generally configured using the setup-globus-gram-job-manager
 setup script. This section of the Job Manager manual describes all options
