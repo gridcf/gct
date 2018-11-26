@@ -27,6 +27,7 @@
 /**
  * @defgroup proxypolicy ProxyPolicy
  * @ingroup globus_gsi_proxy_ssl_api
+ * @brief ProxyPolicy
  *
  * The proxypolicy set of data structures
  * and functions provides an interface to generating

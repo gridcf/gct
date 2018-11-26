@@ -3,7 +3,7 @@
 Name:		globus-gsi-openssl-error
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	4.0
+Version:	4.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling
 
@@ -138,6 +138,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.1-1
+- Doxygen fixes
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

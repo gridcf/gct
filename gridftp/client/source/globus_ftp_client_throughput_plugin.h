@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_ftp_client_throughput_plugin Throughput Performance Plugin
  * @ingroup globus_ftp_client_plugins
+ * @brief Throughput Performance Plugin
  *
  * The FTP Throughput Performance plugin allows the user to obtain
  * calculated performance information for all types of transfers except a

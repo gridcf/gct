@@ -15,7 +15,8 @@
  */
 
 /**
- * @page seg_timestamp_test SEG Timestamp Test
+ * @page seg_timestamp_test
+ * @brief SEG Timestamp Test
  *
  * Test that the SEG passes a timestamp to the module when requested to do so.
  */

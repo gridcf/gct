@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/post_accept.c
+ * @file post_accept.c
  * @brief globus_net_manager_context_post_accept()
  */
 

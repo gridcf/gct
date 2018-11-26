@@ -29,12 +29,15 @@ extern "C" {
 /**
  * @defgroup globus_xio_file_driver Globus XIO File Driver
  * @ingroup globus_xio
+ * @brief Globus XIO File Driver
+ *
  * File I/O driver
  */
 
 /**
  * @defgroup globus_xio_file_driver_instance Opening/Closing
  * @ingroup globus_xio_file_driver
+ * @brief Opening/Closing
  * 
  * An XIO handle with the file driver can be created with
  * @ref globus_xio_handle_create()
@@ -58,6 +61,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_file_driver_io Reading/Writing
  * @ingroup globus_xio_file_driver
+ * @brief Reading/Writing
  * 
  * Both the @ref globus_xio_register_read() and
  * @ref globus_xio_register_write() calls follow similar semantics as described
@@ -92,6 +96,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_file_driver_envs Environment Variables
  * @ingroup globus_xio_file_driver
+ * @brief Environment Variables
  * 
  * The file driver uses the following environment variables
  * - GLOBUS_XIO_FILE_DEBUG Available if using a debug build. See globus_debug.h
@@ -109,6 +114,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_file_driver_cntls Attributes and Cntls
  * @ingroup globus_xio_file_driver
+ * @brief Attributes and Cntls
  * 
  * File driver specific attrs and cntls.
  * 
@@ -118,10 +124,12 @@ extern "C" {
 /**
  * @defgroup globus_xio_file_driver_types Types
  * @ingroup globus_xio_file_driver
+ * @brief Types
  */
 /**
  * @defgroup globus_xio_file_driver_errors Error Types
  * @ingroup globus_xio_file_driver
+ * @brief Error Types
  * 
  * The File driver is very close to the system code, so most errors
  * reported by it are converted from the system errno. A few of the exceptions

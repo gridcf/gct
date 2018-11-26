@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file globus_gsi_proxy.c GSI Proxy Implementation
+ * @file globus_gsi_proxy.c
  * @brief GSI Proxy Implementation
  * @author Sam Lang, Sam Meder
  */

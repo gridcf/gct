@@ -26,6 +26,7 @@ extern "C" {
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
  * @defgroup globus_gram_job_manager_rsl_validation RSL Validation
+ * @brief RSL Validation
  * RSL Validation
  *
  * Validates that a request's RSL contains only valid parameters, and that

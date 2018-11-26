@@ -1,6 +1,7 @@
 /**
 
-@page globus_gram_resource_manager_contact Resource Manager Contact
+@page globus_gram_resource_manager_contact
+@brief Resource Manager Contact
 
 The resource manager contact string is used by the GRAM Client to
 connect to, authenticate to, and request service from a GRAM resource

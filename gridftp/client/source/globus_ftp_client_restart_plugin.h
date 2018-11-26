@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_ftp_client_restart_plugin Restart Plugin
  * @ingroup globus_ftp_client_plugins
+ * @brief Restart Plugin
  *
  * The restart plugin implements one scheme for providing reliability
  * functionality for the FTP Client library. Other plugins may be developed

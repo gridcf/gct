@@ -15,7 +15,7 @@
  */
 
 /**
- * @file attr/array_delete.c
+ * @file array_delete.c
  * @brief globus_net_manager_attr_array_delete()
  */
 

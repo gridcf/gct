@@ -15,7 +15,8 @@
  */
 
 /**
- * @page seg_load_test SEG Load Test
+ * @page seg_load_test
+ * @brief SEG Load Test
  *
  * Test that the SEG 
  * - loads the appropriate module when the

@@ -238,6 +238,8 @@ globus_i_thread_pre_activate(void)
 /**
  * @defgroup globus_mutex Mutual Exclusion
  * @ingroup globus_thread
+ * @brief Mutual Exclusion
+ *
  * @details
  * The Globus runtime includes three portable, related mutual exclusion
  * primitives that can be used in applications and libraries. These are
@@ -457,6 +459,8 @@ globus_mutex_trylock(
 /**
  * @defgroup globus_cond Condition Variables
  * @ingroup globus_thread
+ * @brief Condition Variables
+ *
  * @details
  * The globus_cond_t provides condition variables for signalling events
  * between threads interested in particular state. One or many threads
@@ -1053,6 +1057,8 @@ globus_thread_key_create_compat(
 /**
  * @defgroup globus_thread_key Thread-Specific Storage
  * @ingroup globus_thread
+ * @brief Thread-Specific Storage
+ *
  * @details
  * The globus_thread_key_t data type acts as a key to thread-specific
  * storage. For each key created by globus_thread_key_create(), each 
@@ -1149,6 +1155,8 @@ globus_thread_key_delete(
 /**
  * @defgroup globus_thread_once One-time execution
  * @ingroup globus_thread
+ * @brief One-time execution
+ *
  * @details
  * The globus_thread_once_t provides a way for applications and libraries
  * to execute some code exactly one time, independent of the number of 

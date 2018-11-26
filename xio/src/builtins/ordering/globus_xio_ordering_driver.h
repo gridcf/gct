@@ -30,11 +30,14 @@ extern "C" {
 /**
  * @defgroup globus_xio_ordering_driver Globus XIO ORDERING Driver
  * @ingroup globus_xio
+ * @brief Globus XIO ORDERING Driver
  */
 
 /**
  * @defgroup globus_xio_ordering_driver_instance Opening/Closing
  * @ingroup globus_xio_ordering_driver
+ * @brief Opening/Closing
+ *
  * Ordering driver is a transform driver and thus has to be used on top of a 
  * transport driver. An XIO handle with the ordering driver can be created with 
  * either @ref globus_xio_handle_create() or 
@@ -47,6 +50,8 @@ extern "C" {
 /**
  * @defgroup globus_xio_ordering_driver_io Reading/Writing
  * @ingroup globus_xio_ordering_driver
+ * @brief Reading/Writing
+ *
  * Ordering driver does not allow multiple @ref globus_xio_register_read() 
  * to be outstanding. This limitation is there to enforce that the users get 
  * the read callback in order. There is a known issue in enforcing the order
@@ -65,6 +70,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_ordering_driver_envs Env Variables
  * @ingroup globus_xio_ordering_driver
+ * @brief Env Variables
  *
  * The ordering driver uses the following environment variable
  * - GLOBUS_XIO_ORDERING_DEBUG Available if using a debug build.  See
@@ -74,6 +80,7 @@ extern "C" {
 /**
  * @defgroup globus_xio_ordering_driver_cntls Attributes and Cntls
  * @ingroup globus_xio_ordering_driver
+ * @brief Attributes and Cntls
  *
  * Ordering driver specific attrs and cntls.
  *
@@ -83,10 +90,12 @@ extern "C" {
 /**
  * @defgroup globus_xio_ordering_driver_types Types
  * @ingroup globus_xio_ordering_driver
+ * @brief Types
  */
 /**
  * @defgroup globus_xio_ordering_driver_errors Error Types
  * @ingroup globus_xio_ordering_driver
+ * @brief Error Types
  *
  * The errors reported by ORDERING driver include
  * GLOBUS_XIO_ERROR_COMMAND, GLOBUS_XIO_ERROR_MEMORY, GLOBUS_XIO_ERROR_STATE,

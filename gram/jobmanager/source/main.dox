@@ -7,6 +7,7 @@
 
 /**
 @defgroup globus_gram_job_manager GRAM Job Manager
+@brief GRAM Job Manager
 @details
 The GRAM Job Manager program starts and monitors jobs on behalf of a 
 GRAM client application. The job manager is typically started by the

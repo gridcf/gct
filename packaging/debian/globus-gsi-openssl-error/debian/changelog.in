@@ -1,3 +1,9 @@
+globus-gsi-openssl-error (4.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:37:52 +0100
+
 globus-gsi-openssl-error (4.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-callout
 %global _name %(tr - _ <<< %{name})
-Version:	2.0
+Version:	2.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gridmap Callout
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.1-1
+- Doxygen fixes
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.0-1
 - First Grid Community Toolkit release
 

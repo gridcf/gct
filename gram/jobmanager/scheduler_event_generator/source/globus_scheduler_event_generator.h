@@ -33,6 +33,7 @@ extern "C" {
 /**
  * @defgroup globus_scheduler_event_generator Scheduler Event Generator
  * @brief Scheduler Event Generator
+ *
  * @details
  * The Globus Scheduler Event Generator is a service for processing job state
  * change information from a variety of local resource managers so that
@@ -159,6 +160,7 @@ extern globus_module_descriptor_t globus_i_scheduler_event_generator_module;
 /**
  * @defgroup globus_scheduler_event_generator_api Scheduler Implementation API
  * @ingroup globus_scheduler_event_generator
+ * @brief Scheduler Implementation API
  * 
  * Scheduler-specific SEG module implementations use this API to issue events
  * to the Job State Monitor. Events occur whenever a job is placed in the 

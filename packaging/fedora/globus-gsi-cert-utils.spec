@@ -3,8 +3,8 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	10.1
-Release:	2%{?dist}
+Version:	10.2
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
 Group:		System Environment/Libraries
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.2-1
+- Doxygen fixes
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.1-2
 - Bump GCT release version to 6.2
 

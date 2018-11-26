@@ -29,6 +29,7 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_credential_constants Credential Constants
+ * @brief Credential Constants
  */
 /**
  * Credential Error codes

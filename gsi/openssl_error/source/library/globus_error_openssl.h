@@ -29,6 +29,7 @@
 #endif
 /**
  * @defgroup globus_openssl_error_api Globus OpenSSL Error API
+ * @brief Globus OpenSSL Error API
  *
  * The globus_gsi_openssl_error functions provide a wrapper to error
  * types defined by OpenSSL. The types and prototypes for the
@@ -58,6 +59,7 @@ extern "C" {
 /**
  @defgroup globus_gsi_openssl_error_activation Activation
  @ingroup globus_openssl_error_api
+ @brief Activation
  
  Globus GSI OpenSSL Error uses standard Globus module activation and
  deactivation. Before any Globus GSI OpenSSL Error functions are called, the
@@ -110,6 +112,7 @@ extern const globus_object_type_t GLOBUS_ERROR_TYPE_OPENSSL_DEFINITION;
 /**
  * @defgroup globus_openssl_error_object Globus OpenSSL Error Object
  * @ingroup globus_openssl_error_api
+ * @brief Globus OpenSSL Error Object
  *
  * The globus_openssl_error_handle_t is an opaque structure pointer which
  * contains information about the OpenSSL call which generated an error. The
@@ -169,6 +172,7 @@ globus_error_initialize_openssl_error(
 /**
  * @defgroup globus_openssl_error_utility Error Object Helper Functions
  * @ingroup globus_openssl_error_api
+ * @brief Error Object Helper Functions
  *
  * The functions in the @link globus_openssl_error_utility Error Object Helper Functions @endlink section
  * deal with Globus error objects constructed with OpenSSL error data.

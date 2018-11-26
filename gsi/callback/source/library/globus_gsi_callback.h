@@ -36,6 +36,7 @@
 #endif
 /**
  * @defgroup globus_gsi_callback Globus GSI Callback
+ * @brief Globus GSI Callback
  *
  * The Globus GSI Callback library. This library contains functions that extend
  * OpenSSL path validation.
@@ -46,9 +47,10 @@
  */
 
 
-/** 
+/**
  * @defgroup globus_gsi_callback_activation Activation
  * @ingroup globus_gsi_callback
+ * @brief Activation
  *
  * Globus GSI Callback uses standard Globus module activation and
  * deactivation.  Before any Globus GSI Callback functions are called, the
@@ -95,6 +97,7 @@ globus_module_descriptor_t              globus_i_gsi_callback_module;
 /**
  * @defgroup globus_gsi_callback_functions Callback Functions
  * @ingroup globus_gsi_callback
+ * @brief Callback Functions
  * 
  * Functions that plug into various plug points in the OpenSSL path validation
  * mechanism. These functions add CRL checking, X509 Extension handling and
@@ -104,6 +107,7 @@ globus_module_descriptor_t              globus_i_gsi_callback_module;
 /**
  * @defgroup globus_gsi_callback_data Callback Data Functions
  * @ingroup globus_gsi_callback
+ * @brief Callback Data Functions
  *
  * Functions that deal with the data structure that contains state associated
  * with the path validation callback. 

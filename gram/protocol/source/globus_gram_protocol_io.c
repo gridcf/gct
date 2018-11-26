@@ -200,8 +200,9 @@ globus_l_gram_protocol_free_old_credentials();
 
 /**
  * @defgroup globus_gram_protocol_io Message I/O
- * @brief Mesage I/O
  * @ingroup globus_gram_protocol_functions
+ * @brief Message I/O
+ *
  * @details
  * The functions in this section are related to sending and receiving
  * GRAM protocol messages. 

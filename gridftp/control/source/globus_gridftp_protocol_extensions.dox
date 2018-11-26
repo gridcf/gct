@@ -1,6 +1,7 @@
 /**
 @anchor page_extensions
-@page globus_ftp_extensions GridFTP: Protocol Extensions to FTP for the Grid
+@page globus_ftp_extensions
+@brief GridFTP: Protocol Extensions to FTP for the Grid
 
 @section extensions_intro Introduction
 

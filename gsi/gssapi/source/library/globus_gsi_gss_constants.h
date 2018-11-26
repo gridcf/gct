@@ -27,8 +27,8 @@ extern char *                globus_l_gsi_gssapi_error_strings[];
 
 /**
  * @defgroup globus_gsi_gssapi_constants Constants
- * @brief Implementation-specific Constants
  * @ingroup globus_gsi_gssapi
+ * @brief Implementation-specific Constants
  */
 
 /**

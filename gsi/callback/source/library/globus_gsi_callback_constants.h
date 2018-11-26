@@ -29,6 +29,7 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_callback_constants GSI Callback Constants
+ * @brief GSI Callback Constants
  */
 /**
  * GSI Callback Error codes

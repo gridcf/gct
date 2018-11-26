@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file init_delegation.c
+ * @file accept_delegation.c
  * @author Sam Lang, Sam Meder
  */
 #endif

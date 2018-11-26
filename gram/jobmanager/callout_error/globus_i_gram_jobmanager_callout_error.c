@@ -17,7 +17,7 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 
 /**
- * @file globus_gram_jobmanager_callout_error.c
+ * @file globus_i_gram_jobmanager_callout_error.c
  * @brief Globus GRAM Job Manager Callout Error
  * @author Sam Meder
  */

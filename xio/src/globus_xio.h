@@ -45,14 +45,15 @@ extern "C" {
 /**
  *  @defgroup GLOBUS_XIO_API Globus XIO API
  *  @ingroup globus_xio
+ *  @brief Globus XIO API
  */
 
 /**
  *  @defgroup GLOBUS_XIO_API_ASSIST XIO Examples
  *  @ingroup globus_xio
+ *  @brief XIO Examples
  *
  *  Help understanding the globus_xio api.
- *
  */
 /**
  * \addtogroup GLOBUS_XIO_API_ASSIST 
@@ -711,8 +712,8 @@ globus_xio_register_open(
     globus_xio_callback_t               cb,
     void *                              user_arg);
 
-/** 
- *  blocking open
+/**
+ *  Blocking open
  *  @ingroup GLOBUS_XIO_API
  */
 globus_result_t

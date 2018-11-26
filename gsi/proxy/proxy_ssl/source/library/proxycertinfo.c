@@ -53,7 +53,7 @@ IMPLEMENT_ASN1_FUNCTIONS(PROXYCERTINFO_OLD)
 IMPLEMENT_ASN1_DUP_FUNCTION(PROXYCERTINFO_OLD)
 
 #if OPENSSL_VERSION_NUMBER < 0x10000000L
-/** 
+/**
  * Define the functions required for 
  * manipulating a PROXYCERTINFO and its ASN.1 form. 
  * @ingroup proxycertinfo
@@ -79,7 +79,7 @@ ASN1_METHOD * PROXYCERTINFO_asn1_meth()
 /* PROXYCERTINFO_asn1_meth() */
 #endif
 
-/** 
+/**
  * @ingroup proxycertinfo
  * 
  * Compares two PROXYCERTINFO structures

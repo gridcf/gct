@@ -216,7 +216,7 @@ globus_gsi_cred_handle_attrs_copy(
 }
 /* globus_gsi_cred_handle_attrs_copy() */
     
-/** 
+/**
  * @brief Set the CA certificate directory
  * @ingroup globus_gsi_cred_handle_attrs
  * @details
@@ -261,7 +261,7 @@ globus_gsi_cred_handle_attrs_set_ca_cert_dir(
 }
 /* globus_gsi_cred_handle_attrs_set_ca_cert_dir() */
 
-/** 
+/**
  * @brief Get the CA certificate directory
  * @ingroup globus_gsi_cred_handle_attrs
  * @details

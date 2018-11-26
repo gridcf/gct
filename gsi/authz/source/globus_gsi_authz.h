@@ -43,6 +43,7 @@ globus_module_descriptor_t    globus_i_gsi_authz_module;
 /**
  * @defgroup globus_gsi_authz GSI Authorization API
  * @brief Authorization Callouts
+ *
  * @details
  * The GSI Authorization API provides an interface for making
  * generic authorization decisions using dynamically-loaded authorization

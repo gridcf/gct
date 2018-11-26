@@ -15,7 +15,7 @@
  */
 
 /**
- * @file attr/destroy.c
+ * @file destroy.c
  * @brief globus_net_manager_attr_destroy()
  */
 

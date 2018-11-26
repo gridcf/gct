@@ -1,3 +1,9 @@
+globus-gass-copy (10.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:01:09 +0100
+
 globus-gass-copy (10.3-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2

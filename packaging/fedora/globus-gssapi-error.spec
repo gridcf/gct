@@ -3,7 +3,7 @@
 Name:		globus-gssapi-error
 %global soname 2
 %global _name %(tr - _ <<< %{name})
-Version:	6.0
+Version:	6.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Error Library
 
@@ -130,6 +130,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.1-1
+- Doxygen fixes
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.0-1
 - First Grid Community Toolkit release
 

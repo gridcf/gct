@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/pre_connect.c
+ * @file pre_connect.c
  * @brief globus_net_manager_context_pre_connect()
  */
 

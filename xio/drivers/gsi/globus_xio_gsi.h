@@ -41,6 +41,7 @@ extern "C" {
 
 /**
  * @defgroup globus_xio_gsi_driver Globus XIO GSI Driver
+ * @brief Globus XIO GSI Driver
  */
 
 /**

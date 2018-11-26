@@ -43,6 +43,7 @@
 /**
  * @defgroup globus_common Globus Common API
  * @brief Common Data Structures and Functions
+ *
  * @section globus_common_containers_sect Container Data Types
  * - @ref globus_list
  * - @ref globus_fifo

@@ -32,6 +32,7 @@ extern "C" {
 /**
  * @defgroup globus_priority_q Priority Queue
  * @ingroup globus_common
+ * @brief Priority Queue
  *
  * @details
  * This module defines a priority queue for globus.

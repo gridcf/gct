@@ -3,8 +3,8 @@
 Name:		globus-common
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	18.0
-Release:	2%{?dist}
+Version:	18.1
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
 Group:		System Environment/Libraries
@@ -235,6 +235,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.1-1
+- Doxygen fixes
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.0-2
 - Bump GCT release version to 6.2
 

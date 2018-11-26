@@ -49,6 +49,7 @@ extern "C" {
 
 /**
  * @defgroup globus_gsi_credential Globus GSI Credential
+ * @brief Globus GSI Credential
  *
  * The Globus GSI Credential library. This library contains functions that
  * provide support for handling X.509 based PKI credentials
@@ -60,9 +61,10 @@ extern "C" {
  * - @ref globus_gsi_credential_constants
  */
 
-/** 
+/**
  * @defgroup globus_gsi_credential_activation Activation
  * @ingroup globus_gsi_credential
+ * @brief Activation
  *
  * Globus GSI Credential uses standard Globus module activation and
  * deactivation.  Before any Globus GSI Credential functions are called, the
@@ -90,7 +92,8 @@ extern "C" {
  *
  */
 
-/** Module descriptor
+/**
+ * Module descriptor
  * @ingroup globus_gsi_credential_activation
  * @hideinitializer
  */
@@ -105,6 +108,7 @@ globus_module_descriptor_t              globus_i_gsi_credential_module;
 /**
  * @defgroup globus_gsi_cred_handle Credential Handle Management
  * @ingroup globus_gsi_credential
+ * @brief Credential Handle Management
  *
  * Create/Destroy/Modify a GSI Credential Handle.
  *
@@ -119,6 +123,7 @@ globus_module_descriptor_t              globus_i_gsi_credential_module;
 /**
  * @defgroup globus_gsi_cred_handle_attrs Credential Handle Attributes
  * @ingroup globus_gsi_credential
+ * @brief Credential Handle Attributes
  *
  * Create/Destroy/Modify GSI Credential Handle Attributes.
  *
@@ -134,6 +139,7 @@ globus_module_descriptor_t              globus_i_gsi_credential_module;
 /**
  * @defgroup globus_gsi_cred_operations Credential Operations
  * @ingroup globus_gsi_credential
+ * @brief Credential Operations
  *
  * Read/Write a GSI Credential Handle.
  *

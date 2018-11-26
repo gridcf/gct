@@ -38,6 +38,7 @@ extern "C" {
 #endif
 /**
  * @defgroup globus_gass_cache Globus GASS Cache
+ * @brief Globus GASS Cache
  */
 /*
  * Codes returned by globus_gass_cache module

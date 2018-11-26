@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/end_listen.c
+ * @file end_listen.c
  * @brief globus_net_manager_context_end_listen()
  */
 

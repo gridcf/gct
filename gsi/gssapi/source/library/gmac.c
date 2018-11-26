@@ -17,7 +17,8 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 
 /**
- * @file gssapi/source/library/gmac.c GCM Message Authentication Code
+ * @file gmac.c
+ * @brief GCM Message Authentication Code
  */
 
 #include "gssapi.h"

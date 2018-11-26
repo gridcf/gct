@@ -411,7 +411,7 @@ typedef void
     int                                 cls,
     void *                              user_arg);
 
-/** 
+/**
  *  create a passive data object
  *
  *  this function is called to tell the user to create a passively 
@@ -431,7 +431,7 @@ typedef void
     const char *                            pathname,
     void *                                  user_arg);
 
-/** 
+/**
  *  create an active data object
  *
  *  this function is called to tell the user to create an actively

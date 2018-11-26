@@ -76,6 +76,7 @@ globus_l_gsi_gssapi_error_strings[GLOBUS_GSI_GSSAPI_ERROR_LAST] =
 
 /**
  * @defgroup globus_i_gsi_gssapi_error Internal GSS-API Error Functions
+ * @brief Internal GSS-API Error Functions
  */
 globus_result_t
 globus_i_gsi_gssapi_openssl_error_result(

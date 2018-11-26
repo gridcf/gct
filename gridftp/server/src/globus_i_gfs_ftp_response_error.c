@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file globus_i_gfs_response_error.c FTP Response Error Type
+ * @file globus_i_gfs_ftp_response_error.c
  * @brief FTP Response Error Type Implementation
  */
 #endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

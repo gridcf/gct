@@ -24,6 +24,7 @@
 /**
  * @defgroup globus_ftp_client_debug_plugin Debugging Plugin
  * @ingroup globus_ftp_client_plugins
+ * @brief Debugging Plugin
  *
  * The FTP Debugging plugin provides a way for the user to trace FTP
  * protocol messages which occur while the GridFTP client library

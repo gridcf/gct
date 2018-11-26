@@ -3,7 +3,7 @@
 Name:		globus-authz
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	4.1
+Version:	4.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus authz library
 
@@ -137,6 +137,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.2-1
+- Doxygen fixes
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.1-1
 - Use 2048 bit RSA key for tests
 

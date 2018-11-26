@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_ftp_client_restart_marker_plugin Restart Marker Plugin
  * @ingroup globus_ftp_client_plugins
+ * @brief Restart Marker Plugin
  *
  * This plugin is intended to allow users to make restart markers persistent.
  * During a transfer, every marker received will result in the user's 'marker'

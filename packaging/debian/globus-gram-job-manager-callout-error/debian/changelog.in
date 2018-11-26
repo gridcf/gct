@@ -1,3 +1,9 @@
+globus-gram-job-manager-callout-error (4.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:10:03 +0100
+
 globus-gram-job-manager-callout-error (4.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

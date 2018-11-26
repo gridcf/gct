@@ -31,9 +31,10 @@ extern "C" {
 #endif
 
 /**
- * @brief Net Manager Context Management Functions
  * @defgroup globus_net_manager_context Context
  * @ingroup globus_net_manager
+ * @brief Net Manager Context Management Functions
+ *
  * @details
  * The Net Manager Context manages a collection of network
  * manager plug-ins which will be called when network events occur. 

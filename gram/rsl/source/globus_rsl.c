@@ -106,8 +106,9 @@ globus_l_rsl_deactivate(void)
 #endif
 
 /**
- * @brief Resource Specification Language
  * @defgroup globus_rsl Globus RSL
+ * @brief Resource Specification Language
+ *
  * @details
  * The Globus RSL library is provides the following functionality:
  * - @ref globus_rsl_predicates
@@ -123,6 +124,7 @@ globus_l_rsl_deactivate(void)
 /**
  * @defgroup globus_rsl_predicates RSL Predicates
  * @ingroup globus_rsl
+ * @brief RSL Predicates
  *
  * The functions in this group return boolean values indicating whether
  * an RSL syntax tree is of a particular type.
@@ -536,6 +538,7 @@ globus_rsl_value_is_concatenation (globus_rsl_value_t *ast)
 /**
  * @defgroup globus_rsl_constructors RSL Constructors
  * @ingroup globus_rsl
+ * @brief RSL Constructors
  */
 
 /**
@@ -778,6 +781,7 @@ globus_rsl_value_make_concatenation (globus_rsl_value_t *left_value,
 /**
  * @defgroup globus_rsl_memory RSL Memory Management
  * @ingroup globus_rsl
+ * @brief RSL Memory Management
  */
 
 /**
@@ -995,6 +999,7 @@ globus_rsl_value_copy_recursive(globus_rsl_value_t * globus_rsl_value_ptr)
 /**
  * @defgroup globus_rsl_accessor RSL Accessor Functions
  * @ingroup globus_rsl
+ * @brief RSL Accessor Functions
  */
 
 
@@ -1558,6 +1563,7 @@ globus_rsl_value_concatenation_set_right (globus_rsl_value_t *concatenation_node
 /**
  * @defgroup globus_rsl_list List Functions
  * @ingroup globus_rsl
+ * @brief List Functions
  */
 
 /**
@@ -2190,6 +2196,7 @@ globus_rsl_eval (globus_rsl_t *ast_node,
 /**
  * @defgroup globus_rsl_param RSL Value Accessors
  * @ingroup globus_rsl
+ * @brief RSL Value Accessors
  */
 
 /**
@@ -2495,6 +2502,7 @@ int lvl = 0;
 /**
  * @defgroup globus_rsl_print RSL Display
  * @ingroup globus_rsl
+ * @brief RSL Display
  */
 
 /**

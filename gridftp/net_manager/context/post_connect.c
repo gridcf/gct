@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/post_connect.c
+ * @file post_connect.c
  * @brief globus_net_manager_context_post_connect()
  */
 

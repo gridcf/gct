@@ -19,6 +19,7 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
  * @defgroup globus_i_xio_http_target Internal Target Implementation
+ * @brief Internal Target Implementation
  */
 #endif
 

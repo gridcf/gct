@@ -32,6 +32,7 @@
  * @defgroup globus_gsi_gssapi_buffer_set Buffer Set Utilities
  * @ingroup globus_gsi_gssapi_extensions
  * @brief Buffer Set Utilities
+ *
  * @details
  * Functions in this group provide utilities for creating, modifying,
  * and freeing a buffer set.

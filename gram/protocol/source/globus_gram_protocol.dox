@@ -1,5 +1,6 @@
 /**
-@page globus_gram_protocol_definition GRAM Protocol Definition
+@page globus_gram_protocol_definition
+@brief GRAM Protocol Definition
 
 The GRAM Protocol is used to handle communication between the Gatekeeper,
 Job Manager, and GRAM Clients. The protocol is based on a subset of the

@@ -22,8 +22,10 @@
 #if !defined(GLOBUS_MODULE_H)
 #define GLOBUS_MODULE_H 1
 
-/** @defgroup globus_module Module Activation Management
+/**
+ * @defgroup globus_module Module Activation Management
  * @ingroup globus_common
+ * @brief Module Activation Management
  */
 
 /**

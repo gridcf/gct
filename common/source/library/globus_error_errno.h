@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_errno_error_api Globus Errno Error API
  * @ingroup globus_error_api
+ * @brief Globus Errno Error API
  *
  * These globus_error functions are motivated by the desire to provide
  * a easier way of generating new error types, while at the same time
@@ -49,6 +50,7 @@ extern "C" {
 /**
  * @defgroup globus_errno_error_object Error Construction
  * @ingroup globus_errno_error_api
+ * @brief Error Construction
  *
  * Create and initialize a Globus Errno Error object.
  *
@@ -85,6 +87,7 @@ globus_error_initialize_errno_error(
 /**
  * @defgroup globus_errno_error_accessor Error Data Accessors and Modifiers
  * @ingroup globus_errno_error_api
+ * @brief Error Data Accessors and Modifiers
  *
  * Get and set data in a Globus Errno Error object.
  *
@@ -108,6 +111,7 @@ globus_error_errno_set_errno(
 /**
  * @defgroup globus_errno_error_utility Error Handling Helpers
  * @ingroup globus_errno_error_api
+ * @brief Error Handling Helpers
  *
  * Helper functions for dealing with Globus Errno Error objects.
  *

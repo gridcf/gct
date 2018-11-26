@@ -1,7 +1,8 @@
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 
 /**
-@page globus_ftp_client_caching_implementation Connection Caching in the Globus FTP Client Library
+@page globus_ftp_client_caching_implementation
+@brief Connection Caching in the Globus FTP Client Library
 
 The Globus FTP Client Library (henceforth, the client library) implements
 connection caching as a way to improve performance when many files are being

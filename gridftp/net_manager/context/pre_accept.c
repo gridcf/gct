@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/pre_accept.c
+ * @file pre_accept.c
  * @brief globus_net_manager_context_pre_accept()
  */
 

@@ -22,6 +22,8 @@
 /**
  * @defgroup globus_thread_pool Thread Pooling
  * @ingroup globus_common
+ * @brief Thread Pooling
+ *
  * @details
  * The globus_thread_pool interface is an internal module which allows
  * Globus to reuse system threads for different callbacks.

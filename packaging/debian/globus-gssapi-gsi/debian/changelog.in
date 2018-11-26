@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * Doxygen fixes
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:35:04 +0100
+
 globus-gssapi-gsi (14.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix leaks

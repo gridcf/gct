@@ -29,10 +29,11 @@ extern "C" {
  */
 
 /**
- * @brief Net Manager Attribute Management Functions
  * @defgroup globus_net_manager_attr Attributes
  * @ingroup globus_net_manager
+ * @brief Net Manager Attribute Management Functions
  */
+
 /**
  * @brief Net Manager Attributes
  * @ingroup globus_net_manager_attr
@@ -53,7 +54,7 @@ typedef struct globus_net_manager_attr_s
 }
 globus_net_manager_attr_t;
 
-/** 
+/**
  * @brief End of attribute array static initializer
  * @ingroup globus_net_manager_attr
  * @hideinitializer

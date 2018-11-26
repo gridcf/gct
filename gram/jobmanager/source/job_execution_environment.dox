@@ -1,5 +1,6 @@
 /**
-@page globus_gram_job_manager_job_execution_environment Job Execution Environment
+@page globus_gram_job_manager_job_execution_environment
+@brief Job Execution Environment
 
 @section globus_gram_job_manager_env_vars Environment Variables
 

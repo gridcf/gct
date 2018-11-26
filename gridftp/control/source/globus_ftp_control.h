@@ -42,6 +42,7 @@ extern "C" {
 /**
  * @defgroup globus_ftp_control GridFTP Control API
  * @brief GridFTP Control API
+ *
  * @details
  * The globus_ftp_control library provides low-level services
  * needed to implement FTP client and servers. The API provided is
@@ -229,7 +230,7 @@ typedef enum globus_ftp_control_structure_e
     GLOBUS_FTP_CONTROL_STRUCTURE_RECORD
 } globus_ftp_control_structure_t;
 
-/** 
+/**
  *  control parallelism Types 
  */
 typedef enum globus_ftp_control_parallelism_mode_e
@@ -254,7 +255,7 @@ typedef struct globus_ftp_parallelism_fixed_s
     globus_size_t                               size;
 } globus_ftp_parallelism_fixed_t;
 
-/** 
+/**
  * @brief Control parallelism attribute structure  
  */
 typedef union globus_ftp_control_parallelism_u
@@ -997,8 +998,8 @@ globus_X_ftp_control_data_write_stripe(
 
 /**
  * @defgroup globus_ftp_control_server GridFTP Server Control
- * @brief Manage GridFTP Server Control Connections
  * @ingroup globus_ftp_control
+ * @brief Manage GridFTP Server Control Connections
  */
 struct globus_ftp_control_server_s;
 
@@ -1316,8 +1317,8 @@ typedef struct globus_ftp_data_server_s
 
 /**
  * @defgroup globus_ftp_control_client GridFTP Control Client
- * @brief Control Client
  * @ingroup globus_ftp_control
+ * @brief Control Client
  */
 globus_result_t 
 globus_ftp_control_auth_info_init(
@@ -1512,8 +1513,8 @@ globus_ftp_control_command_destroy(
 
 /**
  * @defgroup globus_ftp_control_data GridFTP Data Connections
- * @brief Data Connections
  * @ingroup globus_ftp_control
+ * @brief Data Connections
  */
 globus_result_t
 globus_i_ftp_control_data_cc_init(

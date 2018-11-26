@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
-Version:	15.1
-Release:	2%{?dist}
+Version:	15.2
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet
@@ -154,6 +154,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.2-1
+- Doxygen fixes
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.1-2
 - Bump GCT release version to 6.2
 

@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_ftp_client_perf_plugin Performance Marker Plugin
  * @ingroup globus_ftp_client_plugins
+ * @brief Performance Marker Plugin
  *
  * The FTP Performance Marker plugin allows the user to obtain
  * performance markers for all types of transfers except a

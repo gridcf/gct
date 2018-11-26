@@ -3,7 +3,7 @@
 Name:		globus-gsi-credential
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	8.0
+Version:	8.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Credential Library
 
@@ -137,6 +137,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.1-1
+- Doxygen fixes
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.0-1
 - First Grid Community Toolkit release
 

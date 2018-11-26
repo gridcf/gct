@@ -58,13 +58,14 @@ globus_l_gram_protocol_get_string_attribute(
 
 /**
  * @defgroup globus_gram_protocol_pack Message Packing
- * @brief Message Packing
  * @ingroup globus_gram_protocol_functions
+ * @brief Message Packing
  */
 
 /**
  * @defgroup globus_gram_protocol_unpack Message Unpacking
  * @ingroup globus_gram_protocol_functions
+ * @brief Message Unpacking
  */
 
 /**

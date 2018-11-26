@@ -34,6 +34,7 @@
 
 /**
  * @defgroup globus_xio_gridftp_driver Globus XIO GRIDFTP Client Driver
+ * @brief Globus XIO GRIDFTP Client Driver
  */
 
 /**

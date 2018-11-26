@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_callout], [4.0], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_callout], [4.1], [https://github.com/gridcf/gct/issues])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
 AC_SUBST([AGE_VERSION], [4])

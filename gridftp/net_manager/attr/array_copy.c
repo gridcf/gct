@@ -15,7 +15,7 @@
  */
 
 /**
- * @file attr/array_copy.c
+ * @file array_copy.c
  * @brief globus_net_manager_attr_array_copy()
  */
 

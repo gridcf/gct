@@ -31,6 +31,8 @@
 
 /**
  * @defgroup globus_ftp_client_api Globus FTP Client API
+ * @brief Globus FTP Client API
+ *
  * @details
  * The Globus FTP Client library provides a convenient way of accessing
  * files on remote FTP servers. In addition to supporting the basic FTP
@@ -83,6 +85,8 @@ extern "C" {
 /**
  * @defgroup globus_ftp_client_activation Activation
  * @ingroup globus_ftp_client_api
+ * @brief Activation
+ *
  * @details
  * The Globus FTP Client library uses the standard module activation
  * and deactivation API to initialize its state. Before any FTP
@@ -348,6 +352,8 @@ typedef struct
 /**
  * @defgroup globus_ftp_client_restart_marker Restart Markers
  * @ingroup globus_ftp_client_api
+ * @brief Restart Markers
+ *
  * FTP Restart Markers
  *
  * The Globus FTP Client library provides the ability to start a
@@ -413,6 +419,8 @@ globus_ftp_client_restart_marker_from_string(
 /**
  * @defgroup globus_ftp_client_handle Handle Management
  * @ingroup globus_ftp_client_api
+ * @brief Handle Management
+ *
  * Create/Destroy/Modify an FTP Client Handle.
  *
  * Within the Globus FTP Client Library, all FTP operations require a
@@ -480,6 +488,8 @@ globus_ftp_client_handle_remove_plugin(
 /**
  * @defgroup globus_ftp_client_handleattr Handle Attributes
  * @ingroup globus_ftp_client_api
+ * @brief Handle Attributes
+ *
  * Handle attributes are used to control additional features of the
  * FTP Client handle. These features are operation independent.
  *
@@ -603,6 +613,8 @@ globus_ftp_client_handleattr_add_plugin(
 /**
  * @defgroup globus_ftp_client_operations FTP Operations
  * @ingroup globus_ftp_client_api
+ * @brief FTP Operations
+ *
  * Initiate an FTP operation.
  *
  * This module contains the API functions for a user to request a
@@ -884,6 +896,8 @@ globus_ftp_client_exists(
 /**
  * @defgroup globus_ftp_client_operationattr FTP Operation Attributes
  * @ingroup globus_ftp_client_api
+ * @brief FTP Operation Attributes
+ *
  * Operation attributes are used to control the security and
  * performance of an FTP operation. These features are often dependent
  * on the capabilities of the FTP server which you are going to access.
@@ -1154,6 +1168,8 @@ globus_ftp_client_operationattr_get_rfc1738_url(
 /**
  * @defgroup globus_ftp_client_data Reading and Writing Data
  * @ingroup globus_ftp_client_api
+ * @brief Reading and Writing Data
+ *
  * Certain FTP client operations require the user to supply buffers
  * for reading or writing data to an FTP server. These operations are
  * globus_ftp_client_get(), globus_ftp_client_partial_get(),

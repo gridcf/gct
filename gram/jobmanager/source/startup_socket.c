@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file start_socket.c
+ * @file startup_socket.c
  * @brief Job Manager Socket Transfer Code
  */
 #include "globus_common.h"

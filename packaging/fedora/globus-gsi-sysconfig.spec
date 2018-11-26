@@ -3,7 +3,7 @@
 Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(tr - _ <<< %{name})
-Version:	9.1
+Version:	9.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
@@ -145,6 +145,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.2-1
+- Doxygen fixes
+
 * Wed Sep 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.1-1
 - Correct bitshift direction in perl test file
 

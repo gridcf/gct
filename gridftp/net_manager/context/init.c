@@ -15,7 +15,7 @@
  */
 
 /**
- * @file context/init.c
+ * @file init.c
  * @brief globus_net_manager_context_init()
  */
 

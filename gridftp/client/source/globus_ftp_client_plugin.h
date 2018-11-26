@@ -23,9 +23,10 @@
  */
 
 /**
- * @brief Plugin API
  * @defgroup globus_ftp_client_plugins Plugins
  * @ingroup globus_ftp_client_api
+ * @brief Plugin API
+ *
  * @details
  * A plugin is a way to implement application-independent reliability
  * and performance tuning behavior. Plugins are written using the API

@@ -64,6 +64,7 @@ globus_l_gsi_gss_alpn_select_callback(
     void                               *arg);
 /**
  * @defgroup globus_i_gsi_gss_utils Globus GSSAPI Internals
+ * @brief Globus GSSAPI Internals
  *
  * The globus_i_gsi_gss_utils code is used by the other 
  * gss api code to perform internal functions such as

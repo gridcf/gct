@@ -29,6 +29,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_proxy_constants Proxy Constants
  * @ingroup globus_gsi_proxy
+ * @brief Proxy Constants
  */
 
 /**

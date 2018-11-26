@@ -25,6 +25,7 @@
 /**
  * @defgroup globus_gsi_authz_constants GSI Credential Constants
  * @ingroup globus_gsi_authz
+ * @brief GSI Credential Constants
  */
 /**
  * GSI Authz Error codes

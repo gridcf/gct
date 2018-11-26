@@ -16,7 +16,7 @@
 
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /**
- * @file globus_gass_transfer_server.c
+ * @file globus_gass_transfer_attribute.c
  * @brief Request and Listener Attributes
  *
  * This module implements the globus gass request and transfer attribute
@@ -1165,7 +1165,7 @@ globus_gass_transfer_listenerattr_init(
 }
 /* globus_gass_transfer_listenerattr_init() */
 
-/** 
+/**
  * @name Listener Backlog
  */
 /* @{ */

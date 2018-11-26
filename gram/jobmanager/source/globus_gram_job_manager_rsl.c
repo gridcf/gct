@@ -26,6 +26,7 @@
 /**
  * @defgroup globus_gram_job_manager_rsl Job Manager RSL Utilities
  * @ingroup globus_gram_job_manager
+ * @brief Job Manager RSL Utilities
  */
 #ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
 /* Module Specific Prototypes */

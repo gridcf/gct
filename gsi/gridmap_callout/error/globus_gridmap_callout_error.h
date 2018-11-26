@@ -31,8 +31,9 @@ extern "C" {
 #include "globus_common.h"
 #include "globus_error_gssapi.h"
 
-/** 
+/**
  * @defgroup globus_gridmap_callout_error_activation Activation
+ * @brief Activation
  *
  * The Globus Gridmap Callout Error API uses standard Globus module
  * activation and deactivation.  Before any Globus Gridmap Callout
@@ -62,7 +63,8 @@ extern "C" {
  *
  */
 
-/** Module descriptor
+/**
+ * Module descriptor
  * @ingroup globus_gridmap_callout_error_activation
  * @hideinitializer
  */
@@ -73,6 +75,7 @@ globus_module_descriptor_t              globus_i_gridmap_callout_error_module;
 
 /**
  * @defgroup globus_gridmap_callout_error_datatypes Datatypes
+ * @brief Datatypes
  */
 
 /**

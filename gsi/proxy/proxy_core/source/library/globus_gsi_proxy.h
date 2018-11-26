@@ -15,7 +15,7 @@
  */
 
 /**
- * @file globus_gsi_proxy.h Globus GSI Proxy API
+ * @file globus_gsi_proxy.h
  * @brief Globus GSI Proxy API
  */
 
@@ -30,6 +30,7 @@
 #endif
 /**
  * @defgroup globus_gsi_proxy Globus GSI Proxy API
+ * @brief Globus GSI Proxy API
  *
  * The globus_gsi_proxy library is motivated by the desire to provide
  * a abstraction layer for the proxy creation and delegation
@@ -76,6 +77,7 @@ extern "C" {
 /**
  * @defgroup globus_gsi_proxy_activation Activation
  * @ingroup globus_gsi_proxy
+ * @brief Activation
  *
  * Globus GSI Proxy uses standard Globus module activation and
  * deactivation. Before any Globus GSI Proxy functions are called, the
@@ -153,9 +155,10 @@ globus_l_gsi_proxy_handle_attrs_s *     globus_gsi_proxy_handle_attrs_t;
 
 
 /**
- * @brief Create/Destroy/Modify a GSI Proxy Handle
  * @defgroup globus_gsi_proxy_handle Handle Management
  * @ingroup globus_gsi_proxy
+ * @brief Create/Destroy/Modify a GSI Proxy Handle
+ *
  * @details
  * Within the Globus GSI Proxy Library, all proxy operations require a
  * handle parameter. Currently, only one proxy operation may be in
@@ -335,6 +338,7 @@ globus_gsi_proxy_handle_get_key_gen_callback(
 /**
  * @defgroup globus_gsi_proxy_handle_attrs Handle Attributes
  * @ingroup globus_gsi_proxy
+ * @brief Handle Attributes
  *
  * Handle attributes are used to control additional features of the
  * GSI Proxy handle. These features are operation independent.
@@ -358,9 +362,10 @@ globus_gsi_proxy_handle_attrs_copy(
     globus_gsi_proxy_handle_attrs_t *   b);
 
 /**
- * @brief Initiate a proxy operation
  * @defgroup globus_gsi_proxy_operations Proxy Operations
  * @ingroup globus_gsi_proxy
+ * @brief Initiate a proxy operation
+ *
  * @details
  * This module contains the API functions for a user to request proxy
  * request generation, proxy request inspection and proxy request

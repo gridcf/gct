@@ -15,7 +15,7 @@
  */
 
 /**
- * @file attr/array_from_string.c
+ * @file array_from_string.c
  * @brief globus_net_manager_attr_array_from_string()
  */
 
