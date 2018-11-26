@@ -46,6 +46,9 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	$(MAKE)
+ifeq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+	GLOBUS_HOSTNAME=localhost $(MAKE) check VERBOSE=1
+endif
 
 	touch $@
 

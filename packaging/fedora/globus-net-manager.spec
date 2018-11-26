@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	1.2
+Version:	1.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -17,7 +17,11 @@ BuildRequires:	gcc
 BuildRequires:	globus-common-devel >= 15.27
 BuildRequires:	globus-xio-devel >= 5
 BuildRequires:	doxygen
-BuildRequires:	python-devel
+%if %{?fedora}%{!?fedora:0} >= 30 || %{?rhel}%{!?rhel:0} >= 8
+BuildRequires:	python3-devel
+%else
+BuildRequires:	python2-devel
+%endif
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -138,6 +142,12 @@ Network Manager Library Documentation Files
 %setup -q -n %{_name}-%{version}
 
 %build
+%if %{?fedora}%{!?fedora:0} >= 30 || %{?rhel}%{!?rhel:0} >= 8
+export PYTHON_CONFIG=%{__python3}-config
+%else
+export PYTHON_CONFIG=%{__python2}-config
+%endif
+
 %configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
@@ -151,6 +161,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool archives (.la files)
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
+
+%check
+GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
 %post %{?nmainpkg} -p /sbin/ldconfig
 
@@ -192,6 +205,11 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Nov 24 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.3-1
+- Python 3 support
+- Build using Python 3 for Fedora 30+
+- Enable checks
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.2-1
 - Doxygen fixes
 

@@ -22,6 +22,11 @@
 
 #include <Python.h>
 
+#if PY_VERSION_HEX >= 0x03000000
+#define PyString_AsString   PyUnicode_AsUTF8
+#define PyString_Check      PyUnicode_Check
+#define PyString_FromString PyUnicode_FromString
+#endif
 
 typedef struct
 {
@@ -353,40 +358,51 @@ globus_l_net_manager_python_handle_exception(
     const char                         *func_name)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    PyObject                           *exception = NULL,
-                                       *exception_string = NULL;
-    const char                         *exception_cstr = NULL;
+    PyObject                           *exc_type = NULL,
+                                       *exc_value = NULL,
+                                       *exc_trace = NULL,
+                                       *exc_type_string = NULL,
+                                       *exc_value_string = NULL;
+    const char                         *exc_type_cstr = NULL,
+                                       *exc_value_cstr = NULL;
 
-    exception = PyErr_Occurred();
-    if (exception != NULL)
+    if (PyErr_Occurred())
     {
-        exception_string = PyObject_Str(exception);
-        if (exception_string)
+        PyErr_Fetch(&exc_type, &exc_value, &exc_trace);
+        PyErr_NormalizeException(&exc_type, &exc_value, &exc_trace);
+        exc_type_string = PyObject_Str(exc_type);
+        exc_value_string = PyObject_Str(exc_value);
+        PyErr_Restore(exc_type, exc_value, exc_trace);
+
+        if (exc_type_string && exc_value_string)
         {
-            exception_cstr = PyString_AsString(exception_string);
-            if (exception_cstr)
+            exc_type_cstr = PyString_AsString(exc_type_string);
+            exc_value_cstr = PyString_AsString(exc_value_string);
+            if (exc_type_cstr && exc_value_cstr)
             {
                 char *error_explanation = globus_common_create_string(
-                        "Python exception in %s: %s",
+                        "%s exception in %s: %s",
+                        exc_type_cstr,
                         func_name,
-                        exception_cstr);
+                        exc_value_cstr);
 
                 if (error_explanation != NULL)
                 {
                     result = GlobusNetManagerErrorManager(
-                            GLOBUS_FAILURE,
+                            result,
                             "python",
                             error_explanation);
                     free(error_explanation);
                 }
             }
-            Py_DECREF(exception_string);
         }
+        Py_DECREF(exc_type_string);
+        Py_DECREF(exc_value_string);
 
         if (result == GLOBUS_SUCCESS)
         {
             result = GlobusNetManagerErrorManager(
-                    GLOBUS_FAILURE,
+                    result,
                     "python",
                     "Python exception occurred");
         }
