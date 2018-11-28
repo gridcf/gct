@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([globus_common], [18.1], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_common], [18.2], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -106,9 +106,7 @@ m4_include(globus_version)
 AC_SUBST(GLOBUS_VERSION)
 AC_SUBST(GLOBUS_VERSIONNAME)
 
-AC_PATH_PROGS(GLOBUS_SH_PERL, perl perl5)
 AC_PATH_PROGS(PERL, perl perl5)
-AC_PATH_PROGS(GLOBUS_SH, sh bash ksh)
 AC_PATH_PROGS(SH, sh bash ksh)
 
 AC_ARG_WITH([backward-compatibility-hack],
