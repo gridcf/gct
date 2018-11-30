@@ -14,5 +14,5 @@
 # limitations under the License.
 
 # Interpreters:
-GLOBUS_SH_PERL="@GLOBUS_SH_PERL@"
-GLOBUS_SH="@GLOBUS_SH@"
+GLOBUS_SH_PERL="@PERL@"
+GLOBUS_SH="@SH@"

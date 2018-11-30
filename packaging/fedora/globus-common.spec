@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(tr - _ <<< %{name})
-Version:	18.1
+Version:	18.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -157,6 +157,7 @@ Common Library Documentation Files
 
 %build
 export GLOBUS_VERSION=6.2
+export SH=/bin/sh
 %configure --disable-static \
 	   --includedir=%{_includedir}/globus \
 	   --libexecdir=%{_datadir}/globus \
@@ -235,6 +236,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Nov 28 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.2-1
+- Fix FTBR (failed to build reproducibly)
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.1-1
 - Doxygen fixes
 
