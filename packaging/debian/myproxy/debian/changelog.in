@@ -1,3 +1,9 @@
+myproxy (6.2.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove usage statistics collection support
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 07 Dec 2018 08:29:23 +0100
+
 myproxy (6.2.3-1+gct.@distro@) @distro@; urgency=medium
 
   * remove macro overquoting

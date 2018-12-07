@@ -1,3 +1,9 @@
+globus-gridftp-server (13.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove usage statistics collection support
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 07 Feb 2019 16:26:41 +0100
+
 globus-gridftp-server (13.10-1+gct.@distro@) @distro@; urgency=medium
 
   * improvements for filesystems that encounter listing timeouts

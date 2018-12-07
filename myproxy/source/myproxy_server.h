@@ -88,8 +88,8 @@ typedef struct myproxy_server_context_s
   int allow_self_authz;             /* Allow client subject to match cert? */
   char *proxy_extfile;              /* Extensions for issued proxies */
   char *proxy_extapp;               /* proxy extension call-out */
-  int disable_usage_stats;          /* 0 if default usage metrics reporting OK */
-  char *usage_stats_target;         /* Usage Statistics target string */
+  int obsolete1;                    /* Obsolete: was disable_usage_stats */
+  char *obsolete2;                  /* Obsolete: was usage_stats_target */
   myproxy_usage_t usage;
   int allow_voms_attribute_requests;/* Support VONAME/VOMSES in requests? */
   char *voms_userconf;              /* VOMS confuration file */

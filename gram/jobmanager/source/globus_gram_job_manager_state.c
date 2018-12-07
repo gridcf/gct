@@ -890,7 +890,6 @@ globus_l_gram_job_manager_state_machine(
              */
             globus_gram_job_manager_seg_handle_event(request);
         }
-        globus_i_gram_send_job_stats(request);
         globus_gram_job_manager_request_log(
                 request,
                 GLOBUS_GRAM_JOB_MANAGER_LOG_ERROR,
@@ -935,7 +934,6 @@ globus_l_gram_job_manager_state_machine(
                     (int) request->exit_code & 0xffff);
         }
 
-        globus_i_gram_send_job_stats(request);
         globus_gram_job_manager_request_log(
                 request,
                 GLOBUS_GRAM_JOB_MANAGER_LOG_INFO,

@@ -147,22 +147,6 @@ globus_gram_job_manager_config_init(
     /* Default log level if nothing specified on command-line or config file */
     config->log_levels = -1;
 
-    /* Default to disable usage statistics collection */
-    config->usage_disabled = GLOBUS_TRUE;
-
-    /* Default to using GLOBUS_USAGE_TARGETS environment variable.
-     * If not set, use the Globus usage stats service
-     * Either can be overridden by using -disable-usagestats or setting
-     * -usagestats-targets in the configuration file
-     */
-    if ((tmp = getenv("GLOBUS_USAGE_TARGETS")) != NULL)
-    {
-        config->usage_targets = strdup(tmp);
-    }
-    else
-    {
-        config->usage_targets = strdup("usage-stats.globus.org:4810");
-    }
     /*
      * Parse the command line arguments
      */
@@ -370,25 +354,27 @@ globus_gram_job_manager_config_init(
                     &config->log_levels,
                     NULL);
         }
-        else if (strcmp(argv[i], "-disable-usagestats") == 0)
+        else if ((strcmp(argv[i], "-disable-usagestats") == 0) ||
+                 (strcmp(argv[i], "-no-disable-usagestats") == 0))
         {
-            /* This is the default
-               The option is kept for backward compatibility */
-            config->usage_disabled = GLOBUS_TRUE;
-        }
-        else if (strcmp(argv[i], "-no-disable-usagestats") == 0)
-        {
-            config->usage_disabled = GLOBUS_FALSE;
+            globus_gram_job_manager_log(
+                NULL,
+                GLOBUS_GRAM_JOB_MANAGER_LOG_WARN,
+                "event=gram.config level=WARN path=\"%s\" "
+                "argument=%s reason=\"Usage statistics collection is no longer supported. Argument will be ignored.\"\n",
+                conf_path ? conf_path : "ARGV",
+                argv[i]);
         }
         else if (strcmp(argv[i], "-usagestats-targets") == 0
                 && (i+1 < argc))
         {
-            if (config->usage_targets)
-            {
-                free(config->usage_targets);
-                config->usage_targets = NULL;
-            }
-            config->usage_targets = strdup(argv[++i]);
+            globus_gram_job_manager_log(
+                NULL,
+                GLOBUS_GRAM_JOB_MANAGER_LOG_WARN,
+                "event=gram.config level=WARN path=\"%s\" "
+                "argument=%s reason=\"Usage statistics collection is no longer supported. Argument will be ignored.\"\n",
+                conf_path ? conf_path : "ARGV",
+                argv[i++]);
         }
         else if (strcmp(argv[i], "-enable-callout") == 0)
         {
@@ -430,7 +416,6 @@ globus_gram_job_manager_config_init(
                     "\t-seg-module SEG-MODULE\n"
                     "\t-audit-directory DIRECTORY\n"
                     "\t-globus-toolkit-version VERSION\n"
-                    "\t-usagestats-targets <host:port>[!<default | all>],...\n"
                     "\t-enable-callout\n"
 		    "\t-globus-job-dir DIRECTORY\n"
                     "\n"
@@ -804,10 +789,6 @@ globus_gram_job_manager_config_destroy(
     if (config->globus_version)
     {
         free(config->globus_version);
-    }
-    if (config->usage_targets)
-    {
-        free(config->usage_targets);
     }
     /*
     if (config->log_pattern)

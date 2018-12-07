@@ -782,93 +782,6 @@ Specifies the path to the certificate of a trusted OCSP responder.
 This is needed if the OCSP responder must be explicity trusted in
 cases where standard path validation fails for the OCSP responder's
 certificate.
-.PP
-The following parameters control Usage Metrics reporting by the
-.BR myproxy-server (8).
-.TP
-.BI disable_usage_stats " value"
-By default this parameter is enabled, i.e. Usage Metrics reporting is
-disabled. Specifying "false", "disabled", "no", "off" or "0" for
-.I value
-will enable Usage Metrics reporting. Setting the GLOBUS_USAGE_OPTOUT
-environment variable to "1" will disable the reporting of usage metrics,
-overriding the setting in the configuration file. When reporting of usage
-metrics is disabled, the
-.B usage_stats_target
-setting will be ignored.
-.TP
-.BI usage_stats_target " target_list"
-This option can be used to specify the target collector hosts to which
-usage metrics should be reported. This setting will be ignored if
-.B disable_usage_stats
-is enabled.
-Multiple targets can be specified in
-.I target_list
-separated by comma(s). Each target specification is of the format
-.IR host:port[!tags] .
-The 
-.I tags
-control what data elements are reported. The following list
-specifies the tags for the corresponding data elements.
-.RS
-.PD 0
-V - Major Version number of MyProxy server
-.PP
-v - Minor Version number of MyProxy server
-.PP
-t - Task Code (0=Get, 1=Put, 2=Info, 3=Destroy, 4=ChangeCredPassphrase, 5=StoreEndEntCred, 6=RetrEndEntCred, 7=GetTrustRoots)
-.PP
-r - Task Return Code.
-.PP
-l - Requested Lifetime for Credential.
-.PP
-L - Actual Lifetime for Credential.
-.PP
-B - Informational Bit mask to be interpreted left to right as follows:
-       PAM used
-       SASL used
-       Credential passphrase check used
-       Trusted Retriever (Certificate-based authentication)
-       Certificate Authorization method used (Trusted Renewer)
-       Pubcookie was used
-       Trustroots requested
-       Trustroots delivered
-.PP
-I - Client IP address
-.PP
-u - Username
-.PP
-U - User DN
-.PD
-
-In addition to the above selected information, the following data are reported to
-ALL the specified/default target collectors. There's no way to exclude these from
-being reported other than by disabling the reporting of usage metrics:
-
-.PD 0
-.PP
-Component code - 11 for MyProxy
-.PP
-Component Data Format version - 0 currently
-.PP
-IP Address of Reporting Server
-.PP
-Timestamp
-.PP
-Hostname
-
-If no tags are specified in a host spec, or the special string "default" is specified,
-the tags VvtrlLB are assumed. A site could choose to allow a different set of data to
-be reported by specifying a different tag set. The last 3 tags I, u and U above are
-more meant for a local collector that a site might like to deploy since they could be
-construed as private information. The special string "all" denotes all tags.
-
-By default, Usage Metrics reporting is disabled.
-This can be made explicit by specifying "default" (all by itself) for the target
-specification as in:
-
-usage_stats_target "default"
-
 .SH REGULAR EXPRESSIONS
 For matching distinguished names (DNs) in access control policies,
 MyProxy uses POSIX Extended Regular Expressions (see
@@ -908,8 +821,6 @@ converted to POSIX EREs:
 
   "*/CN=Jim Basney|*/CN=James Basney" =>
       "^(.*/CN=Jim Basney|.*/CN=James Basney)$"
-
-.PD
 .SH EXAMPLES
 The following policy enables all credential repository features.
 .PP
@@ -957,11 +868,6 @@ certificate_mapfile /etc/grid-security/grid-mapfile
 .PP
 cert_dir /etc/grid-security/certificates
 .PD
-.PP
-The following will cause usage metrics to be reported to the default target (only the
-default tags) as well as a local collector (including the tags IuU):
-.PP
-usage_stats_target "usage-stats.cilogon.org:4810,localcollector.somedomain:4810!VvtrlLBIuU"
 .SH FILES
 .TP
 .I /etc/myproxy-server.config

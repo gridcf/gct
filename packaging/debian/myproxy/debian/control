@@ -1,7 +1,7 @@
 Source: myproxy
 Priority: optional
 Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
-Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 14), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libpam0g-dev, libldap2-dev, libkrb5-dev, voms-dev, libsasl2-dev, libbsd-dev, globus-proxy-utils, globus-gsi-cert-utils-progs, voms-clients, procps
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 14), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), libpam0g-dev, libldap2-dev, libkrb5-dev, voms-dev, libsasl2-dev, libbsd-dev, globus-proxy-utils, globus-gsi-cert-utils-progs, voms-clients, procps
 Standards-Version: 4.1.3
 Section: net
 Homepage: http://grid.ncsa.illinois.edu/myproxy/
@@ -55,7 +55,7 @@ Package: libmyproxy-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libmyproxy6 (= ${binary:Version}), libglobus-common-dev (>= 14), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), ${misc:Depends}
+Depends: libmyproxy6 (= ${binary:Version}), libglobus-common-dev (>= 14), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), ${misc:Depends}
 Suggests: libmyproxy-doc (= ${source:Version})
 Description: Credential Management Service Development
  MyProxy is open source software for managing X.509 Public Key Infrastructure

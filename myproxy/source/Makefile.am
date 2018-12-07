@@ -44,7 +44,6 @@ LibSources= \
 	myproxy_sasl_server.c \
 	myproxy_server.h \
 	myproxy_server_config.c \
-	myproxy_usage.h \
 	pidfile.c \
 	plugin_common.c \
 	plugin_common.h \
@@ -163,7 +162,7 @@ myproxy_destroy_LDFLAGS = $(GPT_LDFLAGS)
 
 myproxy_destroy_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
-myproxy_server_SOURCES = myproxy_server.c myproxy_usage.c
+myproxy_server_SOURCES = myproxy_server.c
 myproxy_server_LDFLAGS = $(GPT_LDFLAGS)
 
 myproxy_server_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)

@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
-Version:	15.2
+Version:	15.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
@@ -27,7 +27,6 @@ BuildRequires:	globus-xio-popen-driver-devel >= 2
 BuildRequires:	globus-rsl-devel >= 9
 BuildRequires:	globus-gram-job-manager-callout-error-devel >= 2
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
-BuildRequires:	globus-usage-devel >= 3
 %if %{?suse_version}%{!?suse_version:0}
 BuildRequires:	libopenssl-devel
 %else
@@ -154,6 +153,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.3-1
+- Remove usage statistics collection support
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.2-1
 - Doxygen fixes
 

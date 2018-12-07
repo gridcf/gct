@@ -286,14 +286,6 @@ typedef struct
     char *                              auditing_dir;
     /** Grid Community Toolkit version */
     char *                              globus_version;
-    /** Usage stats enabled by default */
-    globus_bool_t                       usage_disabled;
-    /** Usage stats target servers 
-     * List of servers to report usage statistics to.  A null value
-     * will result in the standard Globus listener getting the default set
-     * of packets. 
-     */
-    char *                              usage_targets;
     /**
      * Streaming
      *
@@ -1561,36 +1553,6 @@ globus_gram_split_subjobs(
 int
 globus_i_gram_mkdir(
     char *                              path);
-/* globus_gram_job_manager_usagestats.c */
-
-globus_result_t
-globus_i_gram_usage_start_session_stats(
-    globus_gram_job_manager_t *         manager);
-
-globus_result_t
-globus_i_gram_usage_end_session_stats(
-    globus_gram_job_manager_t *         manager);
-    
-void
-globus_i_gram_send_session_stats(
-    globus_gram_job_manager_t *         manager);
-    
-void
-globus_i_gram_send_job_stats(
-    globus_gram_jobmanager_request_t *  request);
-    
-void
-globus_i_gram_send_job_failure_stats(
-    globus_gram_job_manager_t *         manager,
-    int                                 rc);
-
-globus_result_t
-globus_i_gram_usage_stats_init(
-    globus_gram_job_manager_t *         manager);
-
-globus_result_t
-globus_i_gram_usage_stats_destroy(
-    globus_gram_job_manager_t *         manager);
 
 /* startup_socket.c */
 int

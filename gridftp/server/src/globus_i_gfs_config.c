@@ -322,42 +322,15 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"log_filemode", "log_filemode", NULL, "log-filemode", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "File access permissions of log files. Should be an octal number such as "
     "0644.", NULL, NULL,GLOBUS_FALSE, NULL},
- {"disable_usage_stats", "disable_usage_stats", "GLOBUS_USAGE_OPTOUT", "disable-usage-stats", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_TRUE, NULL,
-    "Disable transmission of per-transfer usage statistics.  See the Usage Statistics "
-    "section in the online documentation for more information.", NULL, NULL,GLOBUS_FALSE, NULL},
+ {"disable_usage_stats", "disable_usage_stats", NULL, "disable-usage-stats", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_TRUE, NULL,
+    "Usage statistics collection is no longer supported. "
+    "This option is ignored.", NULL, NULL, GLOBUS_FALSE, NULL},
  {"usage_stats_target", "usage_stats_target", NULL, "usage-stats-target", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
-    "Comma separated list of contact strings (host:port) for usage statistics receivers.  The usage stats sent to "
-    "a particular receiver may be customized by configuring it with a taglist (host:port!taglist)  The taglist is a list "
-    "of characters that each correspond to a usage stats tag.  When this option is unset, stats are reported to "
-    "usage-stats.globus.org:4810.  If you set your own receiver, and wish to continue reporting to the Globus receiver, "
-    "you will need to add it manually.  The list of available tags follow. Tags marked * are reported by default.\n\t\n"
-    "  *(e) START - start time of transfer\n"
-    "  *(E) END - end time of transfer\n"
-    "  *(v) VER - version string of GridFTP server\n"
-    "  *(b) BUFFER - tcp buffer size used for transfer\n"
-    "  *(B) BLOCK - disk blocksize used for transfer\n"
-    "  *(N) NBYTES - number of bytes transferred\n"
-    "  *(s) STREAMS - number of parallel streams used\n"
-    "  *(S) STRIPES - number of stripes used\n"
-    "  *(t) TYPE - transfer command: RETR, STOR, LIST, etc\n"
-    "  *(c) CODE - ftp result code (226 = success, 5xx = fail)\n"
-    "  *(D) DSI - DSI module in use\n"
-    "  *(A) EM - event modules in use\n"
-    "  *(T) SCHEME - ftp, gsiftp, sshftp, etc. (client supplied)\n"
-    "  *(a) APP - guc, rft, generic library app, etc. (client supplied)\n"
-    "  *(V) APPVER - version string of above. (client supplied)\n"
-    "  (f) FILE - name of file/data transferred\n"
-    "  (i) CLIENTIP - ip address of host running client (control chan)\n"
-    "  (I) DATAIP - ip address of source/dest host of data (data chan)\n"
-    "  (u) USER - local user name the transfer was performed as\n"
-    "  (d) USERDN - DN that was mapped to user id\n"
-    "  (C) CONFID - ID defined by -usage-stats-id config option\n"
-    "  (U) SESSID - unique id that can be used to match transfers in\n"
-    "               a session and transfers across source/dest of a\n"
-    "               third party transfer. (client supplied)", NULL, NULL, GLOBUS_FALSE, NULL},
+    "Usage statistics collection is no longer supported. "
+    "This option is ignored.", NULL, NULL, GLOBUS_FALSE, NULL},
  {"usage_stats_id", "usage_stats_id", NULL, "usage-stats-id", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
-    "Identifying tag to include in usage statistics data.  If this is set and usage-stats-target is unset, "
-    "CONFID will be added to the default usage stats data.", NULL, NULL, GLOBUS_FALSE, NULL},
+    "Usage statistics collection is no longer supported. "
+    "This option is ignored.", NULL, NULL, GLOBUS_FALSE, NULL},
 {NULL, "Single and Striped Remote Data Node Options", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL},
  {"remote_nodes", "remote_nodes", NULL, "remote-nodes", "r", GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Comma separated list of remote node contact strings.", NULL, NULL,GLOBUS_FALSE, NULL},
@@ -2846,12 +2819,6 @@ globus_l_gfs_config_misc()
     {
         globus_l_gfs_config_set("connections_max", 1, NULL);
         globus_l_gfs_config_set("single", 1, NULL);
-    }
-
-    if(globus_i_gfs_config_bool("data_node") &&
-        !globus_i_gfs_config_bool("disable_usage_stats"))
-    {
-        globus_l_gfs_config_set("disable_usage_stats", GLOBUS_TRUE, NULL);        
     }
 
     if(globus_i_gfs_config_string("remote_nodes") != NULL &&

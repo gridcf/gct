@@ -168,11 +168,6 @@ globus_l_gfs_activate()
     {
         return rc;
     }
-    rc = globus_module_activate(GLOBUS_USAGE_MODULE);
-    if(rc != 0)
-    {
-        return rc;
-    }
     
     GlobusDebugInit(GLOBUS_GRIDFTP_SERVER,
         ERROR WARNING TRACE INTERNAL_TRACE INFO STATE INFO_VERBOSE);

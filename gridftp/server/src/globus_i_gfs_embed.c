@@ -702,8 +702,7 @@ globus_gridftp_server_embed_init(
     if((rc = globus_module_activate(GLOBUS_COMMON_MODULE)) != GLOBUS_SUCCESS ||
         (rc = globus_module_activate(GLOBUS_XIO_MODULE)) != GLOBUS_SUCCESS ||
         (rc = globus_module_activate(
-            GLOBUS_GRIDFTP_SERVER_MODULE)) != GLOBUS_SUCCESS ||
-        (rc = globus_module_activate(GLOBUS_USAGE_MODULE)) != GLOBUS_SUCCESS)
+            GLOBUS_GRIDFTP_SERVER_MODULE)) != GLOBUS_SUCCESS)
     {
         fprintf(stderr,
             "Error: Failed to initialize:\n%s",

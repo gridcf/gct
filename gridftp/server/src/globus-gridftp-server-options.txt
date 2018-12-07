@@ -437,7 +437,7 @@ This option can also be set in the configuration file as +log_filemode+.
 
 *-disable-usage-stats*::
     
-Disable transmission of per-transfer usage statistics.  See the Usage Statistics section in the online documentation for more information.
+Usage statistics collection is no longer supported. This option is ignored.
 +
 This option can also be set in the configuration file as +disable_usage_stats+.
     The default value of this option is +TRUE+.
@@ -445,39 +445,14 @@ This option can also be set in the configuration file as +disable_usage_stats+.
 
 *-usage-stats-target string*::
     
-Comma separated list of contact strings (host:port) for usage statistics receivers.  The usage stats sent to a particular receiver may be customized by configuring it with a taglist (host:port!taglist)  The taglist is a list of characters that each correspond to a usage stats tag.  When this option is unset, stats are reported to usage-stats.globus.org:4810.  If you set your own receiver, and wish to continue reporting to the Globus receiver, you will need to add it manually.  The list of available tags follow. Tags marked * are reported by default.
-	
-  *(e) START - start time of transfer
-  *(E) END - end time of transfer
-  *(v) VER - version string of GridFTP server
-  *(b) BUFFER - tcp buffer size used for transfer
-  *(B) BLOCK - disk blocksize used for transfer
-  *(N) NBYTES - number of bytes transferred
-  *(s) STREAMS - number of parallel streams used
-  *(S) STRIPES - number of stripes used
-  *(t) TYPE - transfer command: RETR, STOR, LIST, etc
-  *(c) CODE - ftp result code (226 = success, 5xx = fail)
-  *(D) DSI - DSI module in use
-  *(A) EM - event modules in use
-  *(T) SCHEME - ftp, gsiftp, sshftp, etc. (client supplied)
-  *(a) APP - guc, rft, generic library app, etc. (client supplied)
-  *(V) APPVER - version string of above. (client supplied)
-  (f) FILE - name of file/data transferred
-  (i) CLIENTIP - ip address of host running client (control chan)
-  (I) DATAIP - ip address of source/dest host of data (data chan)
-  (u) USER - local user name the transfer was performed as
-  (d) USERDN - DN that was mapped to user id
-  (C) CONFID - ID defined by -usage-stats-id config option
-  (U) SESSID - unique id that can be used to match transfers in
-               a session and transfers across source/dest of a
-               third party transfer. (client supplied)
+Usage statistics collection is no longer supported. This option is ignored.
 +
 This option can also be set in the configuration file as +usage_stats_target+.
 
 
 *-usage-stats-id string*::
     
-Identifying tag to include in usage statistics data.  If this is set and usage-stats-target is unset, CONFID will be added to the default usage stats data.
+Usage statistics collection is no longer supported. This option is ignored.
 +
 This option can also be set in the configuration file as +usage_stats_id+.
 

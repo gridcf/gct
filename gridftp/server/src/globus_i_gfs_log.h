@@ -89,25 +89,4 @@ globus_i_gfs_log_create_transfer_event_msg(
     char *                              retrans,
     char *                              taskid);
 
-void
-globus_i_gfs_log_usage_stats(
-    struct timeval *                    start_gtd_time,
-    struct timeval *                    end_gtd_time,
-    int                                 stripe_count,
-    int                                 stream_count,
-    globus_size_t                       blksize,
-    globus_size_t                       tcp_bs,
-    globus_off_t                        nbytes,
-    int                                 code,
-    char *                              type,
-    char *                              filename,
-    char *                              dataip,
-    char *                              clientip,
-    char *                              username,
-    char *                              userdn,
-    char *                              app,
-    char *                              appver,
-    char *                              scheme,
-    char *                              dsi);
-      
 #endif

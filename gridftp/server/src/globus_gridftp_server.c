@@ -1754,13 +1754,6 @@ main(
             globus_error_print_friendly(globus_error_peek(rc)));
         goto error_activate;
     }
-    if ((rc = globus_module_activate(GLOBUS_USAGE_MODULE)) != GLOBUS_SUCCESS)
-    {
-        fprintf(stderr,
-            "Error: Failed to initialize GLOBUS_USAGE_MODULE:\n%s",
-            globus_error_print_friendly(globus_error_peek(rc)));
-        goto error_activate;
-    }
         
     /* init all the server modules */
     rc = globus_i_gfs_config_init(argc, argv, GLOBUS_FALSE);

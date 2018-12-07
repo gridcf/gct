@@ -36,7 +36,6 @@ libglobus_gram_job_manager_la_SOURCES = \
 	globus_gram_job_manager_state.c \
 	globus_gram_job_manager_state_file.c \
 	globus_gram_job_manager_validate.c \
-        globus_gram_job_manager_usagestats.c \
         logging.c \
         startup_socket.c \
         tg_gateway.c
