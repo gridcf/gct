@@ -2188,7 +2188,7 @@ globus_i_gfs_config_display_long_usage()
         }
         printf("\nAny FLAG can be negated by prepending '-no-' or '-n' to the "
             "command line \noption or setting a value of 0 in the config file.\n\n");
-        printf("Check the GridFTP section at http://www.globus.org/toolkit/docs/\n"
+        printf("Check the GridFTP section at https://gridcf.org/gct-docs/\n"
             "for more in-depth documentation.\n\n");
     }
 
@@ -2394,7 +2394,7 @@ globus_i_gfs_config_display_usage()
         }
         printf("\nAny FLAG can be negated by prepending '-no-' or '-n' to the "
             "command line option.\n\n");
-        printf("Check the GridFTP section at http://www.globus.org/toolkit/docs/\n"
+        printf("Check the GridFTP section at https://gridcf.org/gct-docs/\n"
             "for more in-depth documentation.\n\n");
     }
 
