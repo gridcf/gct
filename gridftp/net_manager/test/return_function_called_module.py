@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 MODULE_NAME = "return_function_called_module"
 FUNCTION = "function"
 
