@@ -87,8 +87,6 @@ ${short_usage}
         -list (-l)   Lists the defined GLOBUS_ variables and exits
         -exec (-e)   Commands are read from the argument line 
 
-    For user script examples, see the documentation at www.globus.org
-
 EOF
 }
 
