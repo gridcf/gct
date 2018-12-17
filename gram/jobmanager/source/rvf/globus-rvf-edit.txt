@@ -13,7 +13,7 @@ globus-rvf-edit - Edit a GRAM5 RSL validation file
 
 SYNOPSIS
 --------
-**++globus-rvf-edit++** '-h' 
+**++globus-rvf-edit++** -h | -s | -l 'LRM' | -f 'PATH'
 
 == Description ==
 The **++globus-rvf-edit++** command is a utility which opens the default
@@ -30,14 +30,14 @@ modifications.
 The full set of command-line options to **++globus-rvf-edit++** consists
 of:  consists of: 
 
-*'-h'*::
+*-h*::
      Print command-line option summary and exit
-*'-s'*::
+*-s*::
      Edit of the site-specific RVF file, which provides override values applicable to all LRMs installed on the system.
-*'-l '*::
-     Edit the site-specific LRM overrides for the LRM named by the ''LRM'' parameter to the option.
-*'-f '*::
-     Edit the RVF file located at ''PATH''
+*-l 'LRM'*::
+     Edit the site-specific LRM overrides for the LRM named by the 'LRM' parameter to the option.
+*-f 'PATH'*::
+     Edit the RVF file located at 'PATH'
 
 SEE ALSO
 --------
