@@ -13,7 +13,7 @@ grid-cert-request - Generate a X.509 certificate request and corresponding priva
 [[grid-cert-request-SYNOPSIS]]
 SYNOPSIS
 --------
-*grid-cert-request* -help | -h | -? | -usage | -version-versions
+*grid-cert-request* -help | -h | -? | -usage | -version | -versions
 
 *grid-cert-request* [OPTIONS]
 

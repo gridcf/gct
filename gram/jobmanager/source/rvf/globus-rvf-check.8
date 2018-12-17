@@ -2,12 +2,12 @@
 .\"     Title: globus-rvf-check
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\"      Date: 12/17/2018
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-RVF\-CHECK" "8" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-RVF\-CHECK" "8" "12/17/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,19 +31,19 @@
 globus-rvf-check \- Edit a GRAM5 RSL validation file
 .SH "SYNOPSIS"
 .sp
-\fBglobus\-rvf\-check\fR \fI\-h\fR \fI\-help\fR
+\fBglobus\-rvf\-check\fR \-h | \-help | \-\-help | \-d
 .SH "DESCRIPTION"
 .sp
 The \fBglobus\-rvf\-check\fR command is a utility which checks the syntax of a RSL validation file, and prints out parse errors when encountered\&. It can also parse the RVF file contents and then dump file\(cqs contents to stdout, after canonicalizing values and quoting\&. The exit code of command is a utility which checks the syntax of a RSL validation file, and prints out parse errors when encountered\&. It can also parse the RVF file contents and then dump file\(cqs contents to stdout, after canonicalizing values and quoting\&. The exit code of \fBglobus\-rvf\-check\fR is 0 if all files specified on the command line exist and have no parse errors\&. is 0 if all files specified on the command line exist and have no parse errors\&.
 .sp
 The full set of command\-line options to \fBglobus\-rvf\-check\fR consists of: consists of:
 .PP
-\fB\fI\-h\fR\fR\fB,\fR\fB\fI\-help\fR\fR\fB,\fR\fB\fI\-\-help\fR\fR
+\fB\-h, \-help, \-\-help\fR
 .RS 4
 Print command\-line option summary and exit
 .RE
 .PP
-\fB\fI\-d\fR\fR
+\fB\-d\fR
 .RS 4
 Dump the RVF contents to stdout\&. In the output, Each file which is parsed will be prefixed by an RVF comment which contains the input filename\&. If not specified,
 \fBglobus\-rvf\-check\fR

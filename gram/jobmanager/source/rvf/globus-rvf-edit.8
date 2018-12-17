@@ -2,12 +2,12 @@
 .\"     Title: globus-rvf-edit
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\"      Date: 12/17/2018
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-RVF\-EDIT" "8" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-RVF\-EDIT" "8" "12/17/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,33 +31,34 @@
 globus-rvf-edit \- Edit a GRAM5 RSL validation file
 .SH "SYNOPSIS"
 .sp
-\fBglobus\-rvf\-edit\fR \fI\-h\fR
+\fBglobus\-rvf\-edit\fR \-h | \-s | \-l \fILRM\fR | \-f \fIPATH\fR
 .SH "DESCRIPTION"
 .sp
 The \fBglobus\-rvf\-edit\fR command is a utility which opens the default editor on a specified RSL validation file, and then, when editing completes, runs the command is a utility which opens the default editor on a specified RSL validation file, and then, when editing completes, runs the \fBglobus\-rvf\-check\fR command to verify that the RVF file syntax is correct\&. If a parse error occurs, the user will be given an option to rerun the editor or discard the modifications\&. command to verify that the RVF file syntax is correct\&. If a parse error occurs, the user will be given an option to rerun the editor or discard the modifications\&.
 .sp
 The full set of command\-line options to \fBglobus\-rvf\-edit\fR consists of: consists of:
 .PP
-\fB\fI\-h\fR\fR
+\fB\-h\fR
 .RS 4
 Print command\-line option summary and exit
 .RE
 .PP
-\fB\fI\-s\fR\fR
+\fB\-s\fR
 .RS 4
 Edit of the site\-specific RVF file, which provides override values applicable to all LRMs installed on the system\&.
 .RE
 .PP
-\fB\*(Aq\-l \*(Aq\fR
+\fB\-l \fR\fB\fILRM\fR\fR
 .RS 4
 Edit the site\-specific LRM overrides for the LRM named by the
-\fI\*(AqLRM\fR\*(Aq parameter to the option\&.
+\fILRM\fR
+parameter to the option\&.
 .RE
 .PP
-\fB\*(Aq\-f \*(Aq\fR
+\fB\-f \fR\fB\fIPATH\fR\fR
 .RS 4
 Edit the RVF file located at
-\fI\*(AqPATH\fR\*(Aq
+\fIPATH\fR
 .RE
 .SH "SEE ALSO"
 .sp

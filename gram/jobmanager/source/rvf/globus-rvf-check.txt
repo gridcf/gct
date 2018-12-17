@@ -13,7 +13,7 @@ globus-rvf-check - Edit a GRAM5 RSL validation file
 
 SYNOPSIS
 --------
-*globus-rvf-check* '-h' '-help' 
+*globus-rvf-check* -h | -help | --help | -d
 
 DESCRIPTION
 -----------
@@ -31,9 +31,9 @@ and have no parse errors.
 The full set of command-line options to *globus-rvf-check*
 consists of:  consists of: 
 
-*'-h','-help','--help'*::
+*-h, -help, --help*::
      Print command-line option summary and exit
-*'-d'*::
+*-d*::
      Dump the RVF contents to stdout. In the output, Each file which is parsed
      will be prefixed by an RVF comment which contains the input filename. If
      not specified, *globus-rvf-check* just prints a diagnostic message to
