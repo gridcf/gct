@@ -1,3 +1,9 @@
+gsi-openssh (7.5p1b-3+gct.@distro@) @distro@; urgency=medium
+
+  * Remove usage statistics collection support
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 20 Dec 2018 16:59:54 +0100
+
 gsi-openssh (7.5p1b-2+gt6.@distro@) @distro@; urgency=low
 
   * Debian packaging for gsi-openssh-server no longer creates sshd user (#119)

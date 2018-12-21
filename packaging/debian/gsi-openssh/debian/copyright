@@ -1,29 +1,6 @@
 Name: gsi-openssh
 Maintainer: Mattias Ellert <mattias.ellert@fysast.uu.se>
-Source: http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.3p1.tar.gz
-
-Files: ssh-globus-usage.c
-Copyright: Copyright 2009 The Board of Trustees of the University of Illinois.
- * See the LICENSE file for detailed license information.
- *
- * Portions, specifically log_usage_stats(), ssh_usage_stats_init(),
- * ssh_usage_stats_close(), ssh_usage_ent_s, ssh_usage_tag_e and
- * TAG #defines were based on those from Usage Metrics portions of:
- * gridftp/server/source/globus_i_gfs_log.c
- *
- * Copyright 1999-2006 University of Chicago
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+Source: http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.5p1.tar.gz
 
 Files: *
 Copyright: Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland

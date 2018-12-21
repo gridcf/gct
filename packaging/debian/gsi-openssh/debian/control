@@ -1,10 +1,10 @@
 Source: gsi-openssh
 Priority: optional
-Maintainer: Globus Support <support@globus.org>
-Build-Depends: debhelper (>= 5), autotools-dev, quilt, libldap2-dev, zlib1g-dev, libaudit-dev, libpam-dev, libwrap0-dev, libssl-dev, libglobus-gss-assist-dev, libglobus-usage-dev, globus-common-progs, libedit-dev, pkg-config, libglobus-gssapi-gsi-dev (>= 12.12)
+Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
+Build-Depends: debhelper (>= 9), dh-autoreconf, libldap2-dev, zlib1g-dev, libaudit-dev, libpam-dev, libwrap0-dev, libssl-dev, libglobus-gss-assist-dev, globus-common-progs, libedit-dev, pkg-config, libglobus-gssapi-gsi-dev (>= 12.12)
 Standards-Version: 3.9.2
 Section: net
-Homepage: http://www.globus.org/
+Homepage: https://github.com/gridcf/gct/
 
 Package: gsi-openssh
 Section: net
@@ -37,7 +37,7 @@ Description: GSI OpenSSH Clients
 Package: gsi-openssh-server
 Section: net
 Architecture: any
-Depends: gsi-openssh (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: gsi-openssh (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-6), adduser
 Description: GSI OpenSSH Server
  OpenSSH is a free version of SSH (Secure SHell), a program for logging
  into and executing commands on a remote machine. This package contains
@@ -51,10 +51,10 @@ Description: GSI OpenSSH Server
 
 Package: gsi-openssh-dbg
 Section: debug
-Priority: extra
+Priority: optional
 Architecture: any
 Depends: gsi-openssh (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: GSI OpenSSH Server
+Description: GSI OpenSSH Debug Symbols
  OpenSSH is a free version of SSH (Secure SHell), a program for logging
  into and executing commands on a remote machine. This package contains
  the secure shell daemon (sshd). The sshd daemon allows SSH clients to
@@ -62,5 +62,5 @@ Description: GSI OpenSSH Server
  .
  This version of OpenSSH has been modified to support GSI authentication.
  .
- The gsi-openssh-server package contains:
+ The gsi-openssh-dbg package contains:
  GSI OpenSSH Debug Symbols
