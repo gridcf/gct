@@ -236,7 +236,7 @@ EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                myproxy-cert-checker myproxy-certreq-checker \
                myproxy.init myproxy.init.sles myproxy.sysconfig \
                README.Fedora \
-               myproxy.spec pkgdata/pkg_data_src.gpt.in m4/myproxy.m4
+               pkgdata/pkg_data_src.gpt.in m4/myproxy.m4
 
 myproxy-admin-addservice: myproxy-admin-adduser
 	rm -f myproxy-admin-addservice
