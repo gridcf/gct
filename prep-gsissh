@@ -6,17 +6,17 @@ openssh_tarball=openssh-${openssh_version}.tar.gz
 Source0=http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${openssh_tarball}
 
 # Patch0 is the HPN-SSH patch to Portable OpenSSH
-Patch0="https://github.com/globus/gsi-openssh/releases/download/${gsissh_version}/openssh-7_5_P1-hpn-14.13.diff"
+Patch0="openssh-7_5_P1-hpn-14.13.diff"
 # Patch1 is the iSSHD patch to HPN-SSH
-Patch1="https://github.com/globus/gsi-openssh/releases/download/${gsissh_version}/hpn-14.13-isshd.v3.19.1.patch"
+Patch1="hpn-14.13-isshd.v3.19.1.patch"
 # Patch2 is the GSI patch to be applied on top of the iSSHD patch
-Patch2="https://github.com/globus/gsi-openssh/releases/download/${gsissh_version}/hpn_isshd-gsi.7.5p1b.patch"
+Patch2="hpn_isshd-gsi.${gsissh_version}.patch"
 ##Patch3 is the OpenSSL 1.1 patch to be applied on top of the GSI patch and is constructed as follows:
-Patch3="https://github.com/globus/gsi-openssh/releases/download/${gsissh_version}/hpn_isshd-gsi_ossl.${gsissh_version}.patch"
+Patch3="hpn_isshd-gsi_ossl.${gsissh_version}.patch"
 
 
 Patches="${Patch0} ${Patch1} ${Patch2} ${Patch3}"
-Sources="${Patches} ${Source0}"
+Sources="${Source0}"
 
 package_output="$(dirname "$0")/packaging/package-output"
 gsissh_sourcedir="$(dirname $0)/gsi_openssh/source"
@@ -48,13 +48,21 @@ mkdir -p "${package_output}" "${gsissh_sourcedir}"
 for f in ${Sources}; do
     source_path="${package_output}/$(basename "${f}")"
 
-    printf "$(basename "${source_path}")..."
+    printf "$(basename "${source_path}")...\n"
     if [ ! -f "${source_path}" ]; then
         download "${f}" "${source_path}"
         printf "download result $?\n"
     else
         printf "already downloaded\n"
     fi
+done
+
+for f in ${Patches}; do
+    patch_path="$(dirname "$0")/packaging/debian/gsi-openssh/debian/patches/${f}"
+    source_path="${package_output}/${f}"
+
+    printf "${f}...\n"
+    cp -p "${patch_path}" "${source_path}"
 done
 
 printf "Unpacking and patching...\n"
@@ -103,5 +111,4 @@ if [ ! -f gsi_openssh/version.m4 ] || \
 else
    rm -f gsi_openssh/version.m4.new 
 fi
-cp build-aux/ltmain.sh m4/l*.m4 gsi_openssh/source
-(cd gsi_openssh/source; aclocal; autoconf)
+( cd gsi_openssh/source; libtoolize -c -f -i 2>&1 >/dev/null )
