@@ -192,8 +192,6 @@ GT_PACKAGE([globus_io],[io/compat],
 GT_PACKAGE([globus_ftp_control],[gridftp/control/source],
     [ globus_common  globus_gss_assist  globus_gssapi_gsi  globus_io
       globus_xio  globus_gssapi_error ], [gridftp])
-GT_PACKAGE([globus_usage],[usage/c/sender/source],
-    [globus_common globus_xio], [ccommonlibs])
 GT_PACKAGE([globus_xio_pipe_driver],[xio/drivers/pipe/source],
     [globus_xio globus_common], [ccommonlibs], 1)
 GT_PACKAGE([globus_gridftp_server_control],[gridftp/server-lib/src],
@@ -215,7 +213,7 @@ GT_PACKAGE([globus_net_manager],[gridftp/net_manager],
 GT_PACKAGE([globus_gridftp_server],[gridftp/server/src],
     [ globus_common  globus_xio  globus_xio_gsi_driver  globus_gfork
       globus_gridftp_server_control  globus_ftp_control  globus_authz
-      globus_usage  globus_gss_assist  globus_gsi_credential ],
+      globus_gss_assist  globus_gsi_credential ],
     [gridftp])
 GT_PACKAGE([globus_gram_protocol],[gram/protocol/source],
     [ globus_common globus_io globus_gssapi_gsi globus_gss_assist], [gram5])
@@ -307,10 +305,10 @@ GT_PACKAGE([globus_gram_audit],
     [gram/jobmanager/auditing/source],
     [], [gram5-auditing])
 GT_PACKAGE([myproxy],[myproxy/source],
-    [ globus_common globus_gss_assist globus_gssapi_gsi globus_proxy_utils
-      globus_usage ], [myproxy])
+    [ globus_common globus_gss_assist globus_gssapi_gsi globus_proxy_utils ],
+    [myproxy])
 GT_PACKAGE([gsi-openssh], [gsi_openssh/source], 
-    [globus_gss_assist globus_usage], [gsi-openssh])
+    [globus_gss_assist], [gsi-openssh])
 GT_PACKAGE([globus_gram_client_tools],[gram/client_tools/source],
     [ globus_common  globus_gram_client  globus_gram_protocol
       globus_gass_transfer  globus_gass_server_ez  globus_rsl
@@ -321,7 +319,7 @@ GT_PACKAGE([globus_gram_job_manager],[gram/jobmanager/source],
       globus_gss_assist  globus_gsi_sysconfig  globus_callout  globus_xio
       globus_xio_popen_driver  globus_rsl
       globus_gram_job_manager_callout_error globus_scheduler_event_generator
-      globus_usage globus_gram_client_tools], [gram5-server])
+      globus_gram_client_tools ], [gram5-server])
 GT_PACKAGE([gridftp_hdfs],[gridftp/hdfs],
     [ globus_gridftp_server ], [gridftp-hdfs])
 

@@ -17,7 +17,6 @@ Requires:	globus-gss-assist-progs
 Requires:	globus-ftp-control
 Requires:	globus-authz-callout-error
 Requires:	globus-authz
-Requires:	globus-usage
 Requires:	globus-xioperf
 Requires:	globus-gridftp-server-progs
 

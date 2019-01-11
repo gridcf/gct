@@ -8,7 +8,7 @@ Homepage: http://www.globus.org/
 
 Package: globus-data-management-server
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, globus-common-progs, globus-gfork-progs, libglobus-xio-pipe-driver, globus-gsi-cert-utils-progs, globus-gss-assist-progs, libglobus-ftp-control1, libglobus-authz-callout-error0, libglobus-authz0, libglobus-usage0, globus-xioperf, globus-gridftp-server-progs
+Depends: ${shlibs:Depends}, ${misc:Depends}, globus-common-progs, globus-gfork-progs, libglobus-xio-pipe-driver, globus-gsi-cert-utils-progs, globus-gss-assist-progs, libglobus-ftp-control1, libglobus-authz-callout-error0, libglobus-authz0, globus-xioperf, globus-gridftp-server-progs
 Description: Globus Data Management Server Metapackage
  This package contains dependencies to install the data management service
  components of the Globus Toolkit.
