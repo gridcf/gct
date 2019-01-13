@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -I .
+ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = rvf scripts seg . test
 
@@ -89,8 +89,7 @@ EXTRA_DIST = dirt.sh \
              $(man_MANS) \
 	     $(doc_DATA) \
 	     main.dox \
-	     dirt.sh \
-             libxml.m4
+	     dirt.sh
 
 globus_gram_job_manager_rsl.dox: globus-gram-job-manager.rvf
 	perl $(top_srcdir)/scripts/create_rsl_documentation.pl < $< > $@
