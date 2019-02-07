@@ -1068,6 +1068,9 @@ done_fake:
         int                             stat_limit_max = GFS_STAT_COUNT_MAX;
         time_t                          stat_limit_time;
         globus_bool_t                   check_cdir = GLOBUS_TRUE;
+        globus_bool_t                   slow_listings;
+
+        slow_listings = globus_gfs_config_get_bool("slow_dirlist");
 
         stat_limit_time = time(NULL) + GFS_STAT_TIME;
         
@@ -1165,8 +1168,9 @@ done_fake:
             i++;
             globus_free(dir_entry);
             
-            /* send updates every GFS_STAT_TIME, checked every GFS_STAT_CHECK */
-            if(i >= stat_limit_check)
+            /* send updates every GFS_STAT_TIME, checked every GFS_STAT_CHECK
+             * unless config is set for a slow listing filesystem */
+            if(slow_listings || i >= stat_limit_check)
             {
                 time_t                  tmp_time;
                 globus_bool_t           send_stats = GLOBUS_FALSE;

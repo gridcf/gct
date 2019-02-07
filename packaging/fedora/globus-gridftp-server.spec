@@ -3,8 +3,8 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.9
-Release:	2%{?dist}
+Version:	13.10
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
 Group:		System Environment/Libraries
@@ -218,6 +218,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Feb 06 2019 Globus Toolkit <support@globus.org> - 13.10-1
+- improvements for filesystems that encounter listing timeouts
+
 * Mon Nov 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.9-2
 - Bump GCT release version to 6.2
 
