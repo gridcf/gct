@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager
 %global _name %(tr - _ <<< %{name})
-Version:	15.3
+Version:	15.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
@@ -115,6 +115,11 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool archives (.la files)
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
+%if %{?rhel}%{!?rhel:0} == 6
+# Remove su option from logrotate file in EPEL 6 (not supported)
+sed '/ su /d' -i $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/globus-job-manager
+%endif
+
 %check
 GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 
@@ -153,6 +158,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Fri Feb 15 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.4-1
+- Add su option to logrotate file
+
 * Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.3-1
 - Remove usage statistics collection support
 

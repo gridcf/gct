@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add su option to logrotate file
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 15 Feb 2019 16:11:09 +0100
+
 globus-gram-job-manager (15.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove usage statistics collection support
