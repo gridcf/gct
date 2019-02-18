@@ -1755,7 +1755,6 @@ globus_l_gram_startup_socket_callback(
             else if(rc != GLOBUS_GRAM_PROTOCOL_ERROR_OLD_JM_ALIVE)
             {
                 assert(old_job_request == NULL);
-                globus_i_gram_send_job_failure_stats(manager, rc);
                 globus_gram_job_manager_log(
                         manager,
                         GLOBUS_GRAM_JOB_MANAGER_LOG_DEBUG,

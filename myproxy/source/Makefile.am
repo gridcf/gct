@@ -44,7 +44,6 @@ LibSources= \
 	myproxy_sasl_server.c \
 	myproxy_server.h \
 	myproxy_server_config.c \
-	myproxy_usage.h \
 	pidfile.c \
 	plugin_common.c \
 	plugin_common.h \
@@ -163,7 +162,7 @@ myproxy_destroy_LDFLAGS = $(GPT_LDFLAGS)
 
 myproxy_destroy_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
-myproxy_server_SOURCES = myproxy_server.c myproxy_usage.c
+myproxy_server_SOURCES = myproxy_server.c
 myproxy_server_LDFLAGS = $(GPT_LDFLAGS)
 
 myproxy_server_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
@@ -236,7 +235,7 @@ EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                myproxy-cert-checker myproxy-certreq-checker \
                myproxy.init myproxy.init.sles myproxy.sysconfig \
                README.Fedora \
-               myproxy.spec pkgdata/pkg_data_src.gpt.in m4/myproxy.m4
+               pkgdata/pkg_data_src.gpt.in m4/myproxy.m4
 
 myproxy-admin-addservice: myproxy-admin-adduser
 	rm -f myproxy-admin-addservice

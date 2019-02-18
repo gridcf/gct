@@ -425,9 +425,6 @@ main(
             globus_l_gram_cputype_and_manufacturer(manager.config);
 
             GlobusTimeAbstimeGetCurrent(manager.usagetracker->jm_start_time);            
-            globus_i_gram_usage_stats_init(&manager);
-            globus_i_gram_usage_start_session_stats(&manager);
-
             located_active_jm = GLOBUS_TRUE;
 
             if (rc2 == GLOBUS_GRAM_PROTOCOL_ERROR_GATEKEEPER_MISCONFIGURED)
@@ -664,8 +661,6 @@ main(
     if (manager.socket_fd != -1)
     {
         globus_gram_job_manager_script_close_all(&manager);
-        globus_i_gram_usage_end_session_stats(&manager);
-        globus_i_gram_usage_stats_destroy(&manager);
         remove(manager.pid_path);
         remove(manager.cred_path);
         remove(manager.socket_path);

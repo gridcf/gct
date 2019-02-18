@@ -431,9 +431,6 @@ main(int argc, char *argv[])
 
  parent_exit:
     pidfile_remove(pfh);
-#ifdef HAVE_GLOBUS_USAGE
-    myproxy_usage_stats_close(server_context);
-#endif
     return 0;
 }   
 
@@ -441,11 +438,6 @@ int
 handle_config(myproxy_server_context_t *server_context)
 {
     if (readconfig) {
-#ifdef HAVE_GLOBUS_USAGE
-        /* Clear usage metrics  */
-        myproxy_usage_stats_close(server_context);
-#endif
-
         if (myproxy_server_config_read(server_context) == -1) {
             return -1;
         }
@@ -477,10 +469,6 @@ handle_config(myproxy_server_context_t *server_context)
     } else {
       setenv( "GRIDMAP", "/etc/grid-security/grid-mapfile", 0 );
     }
-
-#ifdef HAVE_GLOBUS_USAGE
-    myproxy_usage_stats_init(server_context);
-#endif
     }
 
     return 0;
@@ -697,8 +685,6 @@ handle_client(myproxy_socket_attrs_t *attrs,
     if (myproxy_authorize_accept(context, attrs, 
                                  client_request, &client) < 0) {
         myproxy_log("authorization failed");
-        myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
         myproxy_free(NULL, client_request, server_response);
         respond_with_error_and_die(attrs, verror_get_string(), context);
     }
@@ -740,8 +726,6 @@ handle_client(myproxy_socket_attrs_t *attrs,
 	if (!use_ca_callout) {
 	  /* Retrieve the credentials from the repository */
 	  if (myproxy_creds_retrieve(client_creds) < 0) {
-            myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
 	    respond_with_error_and_die(attrs, verror_get_string(), context);
 	  }
 
@@ -760,18 +744,14 @@ handle_client(myproxy_socket_attrs_t *attrs,
 	    error = malloc(strlen(msg)+strlen(client_creds->lockmsg)+1);
 	    strcpy(error, msg);
 	    strcat(error, client_creds->lockmsg);
-            myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
 	    respond_with_error_and_die(attrs, error, context);
 	  }
 
-      if (myproxy_creds_verify(client_creds) < 0) {
-            myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
-        myproxy_creds_free(client_creds);
-        myproxy_free(NULL, client_request, server_response);
+	  if (myproxy_creds_verify(client_creds) < 0) {
+	    myproxy_creds_free(client_creds);
+	    myproxy_free(NULL, client_request, server_response);
 	    respond_with_error_and_die(attrs, verror_get_string(), context);
-      }
+	  }
 	}
 
 	if (client_request->want_trusted_certs) {
@@ -855,10 +835,8 @@ handle_client(myproxy_socket_attrs_t *attrs,
 					    client_request->retrievers,
 					    client_request->renewers,
 					    client.name) < 0) {
-            myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
-        myproxy_creds_free(client_creds);
-        myproxy_free(NULL, client_request, server_response);
+	    myproxy_creds_free(client_creds);
+	    myproxy_free(NULL, client_request, server_response);
 	    respond_with_error_and_die(attrs, verror_get_string(), context);
 	}
 
@@ -890,10 +868,8 @@ handle_client(myproxy_socket_attrs_t *attrs,
 					    client_request->retrievers,
 					    client_request->renewers,
 					    client.name) < 0) {
-            myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 0 /* FAILURE */);
-        myproxy_creds_free(client_creds);
-        myproxy_free(NULL, client_request, server_response);
+	    myproxy_creds_free(client_creds);
+	    myproxy_free(NULL, client_request, server_response);
 	    respond_with_error_and_die(attrs, verror_get_string(), context);
 	}
 
@@ -930,12 +906,8 @@ handle_client(myproxy_socket_attrs_t *attrs,
     /* Log request */
     myproxy_log("Client %s disconnected", client.name);
 
-    /* Send metrics */
-    myproxy_send_usage_metrics(attrs, &client, context, client_request,
-			       client_creds, server_response, 1 /* SUCCESS */);
-   
     /* free stuff up */
-	myproxy_creds_free(client_creds);
+    myproxy_creds_free(client_creds);
     myproxy_free(attrs, client_request, server_response);
     myproxy_free_extensions();
 
@@ -945,10 +917,6 @@ handle_client(myproxy_socket_attrs_t *attrs,
 	  free(*p);
        free(client.fqans);
     }
-
-#ifdef HAVE_GLOBUS_USAGE
-    myproxy_usage_stats_close(context);
-#endif
 
     return 0;
 }
@@ -1228,10 +1196,6 @@ respond_with_error_and_die(myproxy_socket_attrs_t *attrs,
     myproxy_log("Exiting: %s", error);
     
     myproxy_free(attrs, NULL, NULL);
-
-#ifdef HAVE_GLOBUS_USAGE
-    myproxy_usage_stats_close(context);
-#endif
 
     if(debug) exit(1); else _exit(1);
 }

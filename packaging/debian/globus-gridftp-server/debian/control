@@ -1,7 +1,7 @@
 Source: globus-gridftp-server
 Priority: optional
 Maintainer: Mattias Ellert <mattias.ellert@physics.uu.se>
-Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 17), libglobus-xio-dev (>= 5), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-gridftp-server-control-dev (>= 7), libglobus-ftp-control-dev (>= 7), libglobus-authz-dev (>= 2), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-gsi-credential-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 5), libglobus-io-dev (>= 9), libssl-dev, zlib1g-dev, openssl, fakeroot
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config, libglobus-common-dev (>= 17), libglobus-xio-dev (>= 5), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-gridftp-server-control-dev (>= 7), libglobus-ftp-control-dev (>= 7), libglobus-authz-dev (>= 2), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-gsi-credential-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 5), libglobus-io-dev (>= 9), libssl-dev, zlib1g-dev, openssl, fakeroot
 Standards-Version: 4.1.3
 Section: net
 Homepage: https://github.com/gridcf/gct/
@@ -42,7 +42,7 @@ Package: libglobus-gridftp-server-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libglobus-gridftp-server6 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 17), libglobus-xio-dev (>= 5), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-gridftp-server-control-dev (>= 7), libglobus-ftp-control-dev (>= 7), libglobus-authz-dev (>= 2), libglobus-usage-dev (>= 3), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-gsi-credential-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 5), libglobus-io-dev (>= 9), libssl-dev
+Depends: libglobus-gridftp-server6 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 17), libglobus-xio-dev (>= 5), libglobus-xio-gsi-driver-dev (>= 2), libglobus-gfork-dev (>= 3), libglobus-gridftp-server-control-dev (>= 7), libglobus-ftp-control-dev (>= 7), libglobus-authz-dev (>= 2), libglobus-gssapi-gsi-dev (>= 10), libglobus-gss-assist-dev (>= 9), libglobus-gsi-credential-dev (>= 6), libglobus-gsi-sysconfig-dev (>= 5), libglobus-io-dev (>= 9), libssl-dev
 Description: Grid Community Toolkit - Globus GridFTP Server Development Files
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
  building grid systems and applications. It is a fork of the Globus Toolkit

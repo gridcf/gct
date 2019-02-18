@@ -63,7 +63,6 @@ typedef int socklen_t;
 #include "myproxy_extensions.h"
 #include "myproxy_popen.h"
 #include "myproxy_ocsp.h"
-#include "myproxy_usage.h"
 #include "accept_credmap.h"
 #include "certauth_extensions.h"
 #include "certauth_resolveuser.h"

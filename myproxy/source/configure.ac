@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([myproxy],[6.2.3])
+AC_INIT([myproxy],[6.2.4])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT([dlopen win32-dll])
@@ -10,7 +10,7 @@ AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION2%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION2##*.}])
 AC_SUBST([MICRO_VERSION], [${PACKAGE_VERSION##*.}])
 AC_SUBST([AGE_VERSION], [0])
-AC_SUBST([PACKAGE_DEPS], ["globus-gssapi-gsi >= 9, globus-gss-assist >= 8, globus-gsi-sysconfig >= 5, globus-gsi-cert-utils >= 8, globus-gsi-proxy-core >= 6, globus-gsi-credential >= 5, globus-gsi-callback >= 4, globus-common >= 14, globus-usage >= 3"])
+AC_SUBST([PACKAGE_DEPS], ["globus-gssapi-gsi >= 9, globus-gss-assist >= 8, globus-gsi-sysconfig >= 5, globus-gsi-cert-utils >= 8, globus-gsi-proxy-core >= 6, globus-gsi-credential >= 5, globus-gsi-callback >= 4, globus-common >= 14"])
 
 m4_define([myproxy_date], m4_syscmd([
 if git rev-parse --show-toplevel > /dev/null 2>&1; then
@@ -185,20 +185,6 @@ LIBS="$OPENSSL_LIBS $LIBS"
 AC_PATH_PROGS([OPENSSL], openssl)
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$OPENSSL" != x])
 
-dnl
-dnl Check for globus_usage_stats_send
-dnl
-AC_CHECK_LIB(globus_usage,
-             globus_usage_stats_send,
-             AC_DEFINE(HAVE_GLOBUS_USAGE),
-             )
-dnl
-dnl Check for globus_usage_stats_send_array
-dnl
-AC_CHECK_LIB(globus_usage,
-             globus_usage_stats_send_array,
-             AC_DEFINE(HAVE_GLOBUS_USAGE_SEND_ARRAY),
-             )
 dnl
 dnl Check for globus_gsi_proxy_handle_set_extensions
 dnl

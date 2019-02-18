@@ -96,7 +96,8 @@ EXTRA_DIST = \
     $(man_MANS) \
     globus-gridftp-password.txt \
     globus-gridftp-server-setup-chroot.txt \
-    globus-gridftp-server.txt
+    globus-gridftp-server.txt \
+    globus-gridftp-server-options.txt
 
 distuninstallcheck:
 	@:

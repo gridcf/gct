@@ -18,7 +18,6 @@ globus-gssapi-error
 globus-xio-gsi-driver
 globus-io
 globus-ftp-control
-globus-usage
 globus-xio-pipe-driver
 globus-gridftp-server-control
 globus-authz-callout-error

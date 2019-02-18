@@ -263,8 +263,6 @@ if ($startserver) {
     print CONF "accepted_credentials_mapapp $bintrue\n" if (-x $bintrue);
     print CONF "allow_self_authorization true\n"; # for renewal testing
     print CONF "check_multiple_credentials true\n";
-    print CONF "disable_usage_stats \"false\"\n";
-    print CONF "usage_stats_target \"default\"\n";
     close(CONF);
     $SERVERPIDFILE = "$tmpdir/myproxy-test.serverpid.$$";
     $SERVERPORTFILE = "$tmpdir/myproxy-test.serverport.$$";

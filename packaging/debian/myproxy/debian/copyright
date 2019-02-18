@@ -118,11 +118,6 @@ Copyright:
  2007-2008 James A. Kupsch
 License: Apache-2.0
 
-Files: myproxy_usage.[ch]
-Copyright:
- 1999-2006 University of Chicago
-License: Apache-2.0
-
 Files: pidfile.c
 Copyright:
  2005 Pawel Jakub Dawidek <pjd@FreeBSD.org>. All rights reserved.

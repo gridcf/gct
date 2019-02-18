@@ -1,24 +1,3 @@
-diff --git a/.travis.yml b/.travis.yml
-new file mode 100644
-index 0000000..6d6da2c
---- /dev/null
-+++ b/.travis.yml
-@@ -0,0 +1,15 @@
-+language: c
-+sudo: required
-+install:
-+  - wget http://www.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo_latest_all.deb
-+  - sudo dpkg -i globus-toolkit-repo_latest_all.deb
-+  - sudo apt-get update -qq
-+  - sudo apt-get install -qq globus-data-management-sdk libglobus-usage-dev
-+  - pkg-config --exists --print-errors "globus-gss-assist >= 2, globus-gssapi-gsi, globus-usage >= 1, globus-common, openssl"
-+  - pkg-config --libs "globus-gss-assist >= 2, globus-gssapi-gsi, globus-usage >= 1, globus-common, openssl"
-+script:
-+  - autoreconf
-+  - ./configure --with-globus
-+  - make
-+after_success:
-+  - ./ssh -V
 diff --git a/Makefile.in b/Makefile.in
 index c25a31b..af73157 100644
 --- a/Makefile.in
@@ -32,16 +11,6 @@ index c25a31b..af73157 100644
  
  SSHOBJS= ssh.o readconf.o clientloop.o sshtty.o \
  	sshconnect.o sshconnect1.o sshconnect2.o mux.o \
-@@ -305,7 +305,8 @@ catman-do:
- distprep: catman-do
- 	$(AUTORECONF)
- 	-rm -rf autom4te.cache
--distdir=gsi-openssh-7.5p1
-+
-+distdir=gsi-openssh-7.5p1b
- distsubdirs=$(srcdir)/openbsd-compat $(srcdir)/contrib $(srcdir)/regress
- 
- distdir:
 diff --git a/auth-pam.c b/auth-pam.c
 index ed02ae3..079fa13 100644
 --- a/auth-pam.c

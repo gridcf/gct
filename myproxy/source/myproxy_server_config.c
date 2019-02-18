@@ -124,8 +124,6 @@ static struct config_directives our_conf[] = {
 	{"request_size_limit", 1, 1},
 	{"proxy_extfile", 1, 1},
 	{"proxy_extapp", 1, 1},
-	{"disable_usage_stats", 1, 1},
-	{"usage_stats_target", 1, 1},
 #ifdef HAVE_VOMS
 	{"voms_userconf", 1, 1},
 	{"allow_voms_attribute_requests", 1, 1},
@@ -286,8 +284,6 @@ clear_server_context(myproxy_server_context_t *context)
     free_ptr(&myproxy_sasl_serverFQDN);
     free_ptr(&myproxy_sasl_user_realm);
 #endif
-    context->disable_usage_stats = 1;
-    free_ptr(&context->usage_stats_target);
     memset(&context->usage, 0, sizeof(context->usage));
     free_ptr(&context->voms_userconf);
     context->allow_voms_attribute_requests = 0;
@@ -701,17 +697,9 @@ line_parse_callback(void *context_arg,
         goto error;
 #endif
     }
-    else if (strcmp(directive, "disable_usage_stats") == 0) {
-        if ((!strcasecmp(tokens[1], "false")) ||
-            (!strcasecmp(tokens[1], "disabled")) ||
-            (!strcasecmp(tokens[1], "no")) ||
-            (!strcasecmp(tokens[1], "off")) ||
-            (!strcmp(tokens[1], "0"))) {
-            context->disable_usage_stats = 0;
-        }
-    }
-    else if (strcmp(directive, "usage_stats_target") == 0) {
-	context->usage_stats_target = strdup(tokens[1]);
+    else if ((strcmp(directive, "disable_usage_stats") == 0) ||
+             (strcmp(directive, "usage_stats_target") == 0)) {
+        myproxy_log("warning: usage statistics collection is no longer supported. Directive (%s) in myproxy-server.config will be ignored.", directive);
     }
 #ifdef HAVE_VOMS
     else if (strcmp(directive, "voms_userconf") == 0) {
@@ -964,10 +952,6 @@ check_config(myproxy_server_context_t *context)
     }
     if (context->allow_self_authz) {
         myproxy_debug("allow_self_authorization is enabled");
-    }
-    if (context->disable_usage_stats) {
-        myproxy_debug("disable_usage_stats is enabled.");
-        myproxy_debug("server will not report usage metrics");
     }
 #ifdef HAVE_VOMS
     if (context->allow_voms_attribute_requests) {

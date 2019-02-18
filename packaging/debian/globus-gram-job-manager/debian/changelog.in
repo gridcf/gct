@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove usage statistics collection support
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 07 Dec 2018 08:25:30 +0100
+
 globus-gram-job-manager (15.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

@@ -21,7 +21,6 @@ globus_gssapi_error	gsi/gssapi_error/source
 globus_xio_gsi_driver	xio/drivers/gsi
 globus_io	io/compat
 globus_ftp_control	gridftp/control/source
-globus_usage	usage/c/sender/source
 globus_xio_pipe_driver	xio/drivers/pipe/source
 globus_gridftp_server_control	gridftp/server-lib/src
 globus_authz_callout_error	gsi/authz/error
@@ -58,7 +57,6 @@ globus_gass_server_ez	gass/server_ez/source
 globus_xio_gridftp_driver	gridftp/gridftp_driver/source
 globus_gram_job_manager_fork	gram/jobmanager/lrms/fork/source
 gridmap_verify_myproxy_callout gsi/gridmap_verify_myproxy_callout
-globus_usage_tools usage/python/tools/source
 globus_gram_job_manager_condor	gram/jobmanager/lrms/condor/source
 globus_gridmap_verify_myproxy_callout gsi/gridmap_verify_myproxy_callout
 globus_proxy_utils	gsi/proxy/proxy_utils/source
@@ -77,7 +75,6 @@ globus_xio_test	xio/test
 globus_gram_client_tools_test	gram_client_tools/test
 globus_proxy_ssl_test	gsi/proxy/proxy_ssl/test
 globus_proxy_utils_test	gsi/proxy/proxy_utils/test
-globus_usage_tools_test usage/python/tools/test
 globus_gram_client_test	gram/client/test
 globus_gram_protocol_test	gram/protocol/test
 globus_common_test	common/test

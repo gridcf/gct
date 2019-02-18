@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.3
+Version:        6.2.4
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -14,7 +14,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gcc
 BuildRequires:  globus-common-devel >= 14
-BuildRequires:  globus-usage-devel >= 3
 BuildRequires:  globus-gssapi-gsi-devel >= 9
 BuildRequires:  globus-gss-assist-devel >= 8
 BuildRequires:  globus-gsi-sysconfig-devel >= 5
@@ -379,6 +378,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.4-1
+- Remove usage statistics collection support
+
 * Wed Jun 20 2018 Globus Toolkit <support@globus.org> - 6.2.3-1
 - remove macro overquoting
 

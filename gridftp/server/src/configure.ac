@@ -1,11 +1,11 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gridftp_server],[13.10],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gridftp_server],[13.11],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
 AC_SUBST([AGE_VERSION], [7])
-AC_SUBST([PACKAGE_DEPS], ["globus-common >= 17, globus-xio >= 5, globus-xio-gsi-driver >= 2, globus-gfork >= 3, globus-gridftp-server-control >= 7, globus-ftp-control >= 7, globus-authz >= 2, globus-usage >= 3, globus-gssapi-gsi >= 10, globus-gss-assist >= 9, globus-gsi-credential >= 6, globus-gsi-sysconfig >= 5, globus-io >= 9"])
+AC_SUBST([PACKAGE_DEPS], ["globus-common >= 17, globus-xio >= 5, globus-xio-gsi-driver >= 2, globus-gfork >= 3, globus-gridftp-server-control >= 7, globus-ftp-control >= 7, globus-authz >= 2, globus-gssapi-gsi >= 10, globus-gss-assist >= 9, globus-gsi-credential >= 6, globus-gsi-sysconfig >= 5, globus-io >= 9"])
 
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.11 foreign parallel-tests tar-pax])

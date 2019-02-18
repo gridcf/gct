@@ -133,7 +133,6 @@ BUNDLE globus-data-management-server
 	globus_gridmap_callout_error
         globus_xio_pipe_driver
         globus_gridftp_server_control
-        globus_usage
         globus_gfork
         globus_gridftp_server
         globus_xioperf
@@ -309,7 +308,6 @@ BUNDLE gt2
 	globus_gssapi_error
         globus_xio_pipe_driver
         globus_gridftp_server_control
-        globus_usage
         globus_gridftp_server
         globus_xio_gridftp_driver
 
@@ -372,7 +370,6 @@ BUNDLE globus-gridftp
         globus_authz
         globus_authz_null_callout
         globus_gridftp_server_control
-        globus_usage
         globus_gridftp_server
         globus_gridmap_callout_error
         globus_xio_gridftp_multicast
@@ -402,8 +399,3 @@ BUNDLE gram5-lsf
 BUNDLE gsi_openssh_bundle
 	gsi_openssh
 	gsi_openssh_setup
-
-BUNDLE usagestats_server
-        globus_usage_tools
-        globus_usage_tools_test
-

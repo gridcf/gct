@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(tr - _ <<< %{name})
-Version:	13.10
+Version:	13.11
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -21,7 +21,6 @@ BuildRequires:	globus-gfork-devel >= 3
 BuildRequires:	globus-gridftp-server-control-devel >= 7
 BuildRequires:	globus-ftp-control-devel >= 7
 BuildRequires:	globus-authz-devel >= 2
-BuildRequires:	globus-usage-devel >= 3
 BuildRequires:	globus-gssapi-gsi-devel >= 10
 BuildRequires:	globus-gss-assist-devel >= 9
 BuildRequires:	globus-gsi-credential-devel >= 6
@@ -218,6 +217,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Feb 07 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.11-1
+- Remove usage statistics collection support
+
 * Wed Feb 06 2019 Globus Toolkit <support@globus.org> - 13.10-1
 - improvements for filesystems that encounter listing timeouts
 

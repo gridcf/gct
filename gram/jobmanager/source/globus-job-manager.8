@@ -2,12 +2,12 @@
 .\"     Title: globus-job-manager
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\"      Date: 12/06/2018
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-JOB\-MANAGER" "8" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-JOB\-MANAGER" "8" "12/06/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 globus-job-manager \- Execute and monitor jobs
 .SH "SYNOPSIS"
 .sp
-\fBglobus\-job\-manager\fR \-type \fILRM\fR [\-conf \fICONFIG_PATH\fR] [\-help] [\-globus\-host\-manufacturer \fIMANUFACTURER\fR] [\-globus\-host\-cputype \fICPUTYPE\fR] [\-globus\-host\-osname \fIOSNAME\fR] [\-globus\-host\-osversion \fIOSVERSION\fR] [\-globus\-gatekeeper\-host \fIHOST\fR] [\-globus\-gatekeeper\-port \fIPORT\fR] [\-globus\-gatekeeper\-subject \fISUBJECT\fR] [\-home \fIGLOBUS_LOCATION\fR] [\-target\-globus\-location \fITARGET_GLOBUS_LOCATION\fR] [\-condor\-arch \fIARCH\fR] [\-condor\-os \fIOS\fR] [\-history \fIHISTORY_DIRECTORY\fR] [\-scratch\-dir\-base \fISCRATCH_DIRECTORY\fR] [\-enable\-syslog] [\-stdio\-log \fILOG_DIRECTORY\fR] [\-log\-pattern \fIPATTERN\fR] [\-log\-levels \fILEVELS\fR] [\-state\-file\-dir \fISTATE_DIRECTORY\fR] [\-globus\-tcp\-port\-range \fIPORT_RANGE\fR] [\-globus\-tcp\-source\-range \fISOURCE_RANGE\fR] [\-x509\-cert\-dir \fITRUSTED_CERTIFICATE_DIRECTORY\fR] [\-cache\-location \fIGASS_CACHE_DIRECTORY\fR] [\-k] [\-extra\-envvars \fIVAR=VAL,\&...\fR] [\-seg\-module \fISEG_MODULE\fR] [\-audit\-directory \fIAUDIT_DIRECTORY\fR] [\-globus\-toolkit\-version \fITOOLKIT_VERSION\fR] [\-disable\-streaming] [\-no\-disable\-usagestats] [\-usagestats\-targets \fITARGET\fR] [\-service\-tag \fISERVICE_TAG\fR]
+\fBglobus\-job\-manager\fR \-type \fILRM\fR [\-conf \fICONFIG_PATH\fR] [\-help] [\-globus\-host\-manufacturer \fIMANUFACTURER\fR] [\-globus\-host\-cputype \fICPUTYPE\fR] [\-globus\-host\-osname \fIOSNAME\fR] [\-globus\-host\-osversion \fIOSVERSION\fR] [\-globus\-gatekeeper\-host \fIHOST\fR] [\-globus\-gatekeeper\-port \fIPORT\fR] [\-globus\-gatekeeper\-subject \fISUBJECT\fR] [\-home \fIGLOBUS_LOCATION\fR] [\-target\-globus\-location \fITARGET_GLOBUS_LOCATION\fR] [\-condor\-arch \fIARCH\fR] [\-condor\-os \fIOS\fR] [\-history \fIHISTORY_DIRECTORY\fR] [\-scratch\-dir\-base \fISCRATCH_DIRECTORY\fR] [\-enable\-syslog] [\-stdio\-log \fILOG_DIRECTORY\fR] [\-log\-pattern \fIPATTERN\fR] [\-log\-levels \fILEVELS\fR] [\-state\-file\-dir \fISTATE_DIRECTORY\fR] [\-globus\-tcp\-port\-range \fIPORT_RANGE\fR] [\-globus\-tcp\-source\-range \fISOURCE_RANGE\fR] [\-x509\-cert\-dir \fITRUSTED_CERTIFICATE_DIRECTORY\fR] [\-cache\-location \fIGASS_CACHE_DIRECTORY\fR] [\-k] [\-extra\-envvars \fIVAR=VAL,\&...\fR] [\-seg\-module \fISEG_MODULE\fR] [\-audit\-directory \fIAUDIT_DIRECTORY\fR] [\-globus\-toolkit\-version \fITOOLKIT_VERSION\fR] [\-disable\-streaming] [\-service\-tag \fISERVICE_TAG\fR]
 .SH "DESCRIPTION"
 .sp
 The \fBglobus\-job\-manager\fR program is a servivce which starts and controls GRAM jobs which are executed by a local resource management system, such as LSF or Condor\&. The \fBglobus\-job\-manager\fR program is typically started by the \fBglobus\-gatekeeper\fR program and not directly by a user\&. It runs until all jobs it is managing have terminated or its delegated credentials have expired\&.
@@ -232,20 +232,6 @@ as a unique identifier to allow multiple GRAM instances to use the same job stat
 Configure the job manager to disable file streaming\&. This is propagated to the LRM script interface but has no effect in GRAM5\&.
 .RE
 .PP
-\fB\-no\-disable\-usagestats\fR
-.RS 4
-Enable sending of usage stats data\&.
-.RE
-.PP
-\fB\-usagestats\-targets \fR\fB\fITARGET\fR\fR
-.RS 4
-Send usage packets to a data collection service for analysis\&. The
-\fITARGET\fR
-string consists of a comma\-separated list of HOST:PORT combinations, each contaiing an optional list of data to send\&. See
-Usage Stats Packets
-for more information about the tags\&. Special tag strings of all (which enables all tags) and default may be used, or a sequence of characters for the various tags\&. If this option is not present in the configuration, then the default of usage\-stats\&.globus\&.org:4810 is used\&.
-.RE
-.PP
 \fB\-condor\-arch \fR\fB\fIARCH\fR\fR
 .RS 4
 Set the architecture specification for condor jobs to be
@@ -324,11 +310,6 @@ program to be used by the job manager\&.
 \fBGRID_SECURITY_CONTEXT_FD\fR
 .RS 4
 File descriptor containing an exported security context that the job manager should use to reply to the client which submitted the job\&.
-.RE
-.PP
-\fBGLOBUS_USAGE_TARGETS\fR
-.RS 4
-Default list of usagestats services to send usage packets to\&.
 .RE
 .PP
 \fBGLOBUS_TCP_PORT_RANGE\fR
