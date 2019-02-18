@@ -8,4 +8,5 @@
     rotate 4
     sharedscripts
     copytruncate
+    su root root
 }
