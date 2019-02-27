@@ -1,5 +1,5 @@
 Name:		globus-gram5
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	6.0
 Release:	2%{?dist}
 Summary:	Grid Community Toolkit - GRAM5 Bundle

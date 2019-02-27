@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-cert-utils
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	10.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library

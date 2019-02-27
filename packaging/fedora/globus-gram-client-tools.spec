@@ -2,7 +2,7 @@
 
 Name:		globus-gram-client-tools
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	12.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Job Management Tools (globusrun)

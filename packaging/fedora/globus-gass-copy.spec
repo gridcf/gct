@@ -2,7 +2,7 @@
 
 Name:		globus-gass-copy
 %global soname 2
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	10.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy

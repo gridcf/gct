@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-callout-error
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	3.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors

@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-openssl-error
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	4.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling

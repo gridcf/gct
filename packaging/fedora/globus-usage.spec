@@ -2,7 +2,7 @@
 
 Name:		globus-usage
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	5.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Usage Library

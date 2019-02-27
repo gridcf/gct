@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-proxy-core
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	9.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library

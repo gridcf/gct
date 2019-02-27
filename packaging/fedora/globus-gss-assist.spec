@@ -2,7 +2,7 @@
 
 Name:		globus-gss-assist
 %global soname 3
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	12.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library

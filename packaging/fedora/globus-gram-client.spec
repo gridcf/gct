@@ -2,7 +2,7 @@
 
 Name:		globus-gram-client
 %global soname 3
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	14.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Client Library

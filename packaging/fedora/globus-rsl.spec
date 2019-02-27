@@ -2,7 +2,7 @@
 
 Name:		globus-rsl
 %global soname 2
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	11.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Resource Specification Language Library

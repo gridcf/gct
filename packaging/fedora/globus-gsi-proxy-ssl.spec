@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-proxy-ssl
 %global soname 1
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	6.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy SSL Library

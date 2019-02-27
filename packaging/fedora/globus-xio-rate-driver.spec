@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-xio-rate-driver
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	2.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Rate Limiting Driver

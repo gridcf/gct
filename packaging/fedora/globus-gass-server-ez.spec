@@ -2,7 +2,7 @@
 
 Name:		globus-gass-server-ez
 %global soname 2
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	6.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez

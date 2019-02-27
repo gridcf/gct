@@ -1,5 +1,5 @@
 Name:		globus-resource-management-sdk
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	6.0
 Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Resource Management SDK
