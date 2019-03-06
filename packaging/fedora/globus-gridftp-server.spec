@@ -2,7 +2,7 @@
 
 Name:		globus-gridftp-server
 %global soname 6
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	13.11
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server

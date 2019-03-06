@@ -2,7 +2,7 @@
 
 Name:		globus-gram-protocol
 %global soname 3
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	13.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library

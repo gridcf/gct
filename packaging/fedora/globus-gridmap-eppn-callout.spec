@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-gridmap-eppn-callout
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	2.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus gridmap ePPN callout

@@ -2,7 +2,7 @@
 
 Name:		globus-ftp-control
 %global soname 1
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	9.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library

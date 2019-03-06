@@ -1,5 +1,5 @@
 Name:           gridftp-hdfs
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:        2.0
 Release:        1
 Summary:        HDFS DSI plugin for GridFTP

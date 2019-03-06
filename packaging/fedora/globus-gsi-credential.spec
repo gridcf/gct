@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-credential
 %global soname 1
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	8.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Credential Library

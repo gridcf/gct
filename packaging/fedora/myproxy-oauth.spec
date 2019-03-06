@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:           myproxy-oauth
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:        1.1
 Release:        1%{?dist}
 Summary:        MyProxy OAuth Delegation Serice

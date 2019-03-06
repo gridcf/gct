@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-gram-job-manager-slurm
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	3.0
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - SLURM Job Manager Support

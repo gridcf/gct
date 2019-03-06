@@ -2,7 +2,7 @@
 
 Name:		globus-ftp-client
 %global soname 2
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	9.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library

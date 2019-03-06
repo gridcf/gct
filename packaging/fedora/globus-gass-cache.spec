@@ -2,7 +2,7 @@
 
 Name:		globus-gass-cache
 %global soname 5
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	10.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Cache

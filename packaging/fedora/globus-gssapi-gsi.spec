@@ -2,7 +2,7 @@
 
 Name:		globus-gssapi-gsi
 %global soname 4
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	14.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library

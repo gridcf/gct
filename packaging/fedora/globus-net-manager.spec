@@ -2,7 +2,7 @@
 
 Name:		globus-net-manager
 %global soname 0
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	1.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library

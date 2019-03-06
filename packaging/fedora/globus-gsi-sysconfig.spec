@@ -2,7 +2,7 @@
 
 Name:		globus-gsi-sysconfig
 %global soname 1
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	9.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library

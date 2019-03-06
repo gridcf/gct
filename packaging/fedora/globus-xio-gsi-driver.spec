@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:		globus-xio-gsi-driver
-%global _name %(tr - _ <<< %{name})
+%global _name %(echo %{name} | tr - _)
 Version:	5.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GSI Driver
