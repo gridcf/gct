@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-eppn-callout
 %global _name %(echo %{name} | tr - _)
-Version:	2.0
+Version:	2.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus gridmap ePPN callout
 
@@ -95,6 +95,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 05 2019 Globus Toolkit <support@globus.org> - 2.1-1
+- add environment variable GLOBUS_EPPN_KEEP_DOMAIN to return full
+  userid@domain from eppn
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

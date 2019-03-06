@@ -1,3 +1,10 @@
+globus-gridftp-server (13.12-1+gct.@distro@) @distro@; urgency=medium
+
+  * fake stat responses when slow listings enabled
+  * win: error on un-stat()-able files in directory listing
+
+ -- Globus Toolkit <support@globus.org>  Fri, 01 Mar 2019 12:35:42 -0600
+
 globus-gridftp-server (13.11-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove usage statistics collection support

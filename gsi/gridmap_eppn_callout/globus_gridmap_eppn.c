@@ -456,17 +456,20 @@ ggvm_get_myproxy_userid(
         goto error;
     }
 
-    /* get userid from eppn */
-    if (!(at = strchr(eppn, '@')))
+    if(!getenv("GLOBUS_EPPN_KEEP_DOMAIN"))
     {
-        GLOBUS_GRIDMAP_CALLOUT_ERROR(
-            result,
-            GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
-            ("Could not find '@' in eppn"));
-        goto error;
-    }
+        /* get userid from eppn */
+        if (!(at = strchr(eppn, '@')))
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
+                ("Could not find '@' in eppn"));
+            goto error;
+        }
 
-    *at = 0;
+        *at = 0;
+    }
     *userid = globus_libc_strdup(eppn);
 
 error:

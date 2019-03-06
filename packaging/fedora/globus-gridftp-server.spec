@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.11
+Version:	13.12
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -217,6 +217,10 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Mar 01 2019 Globus Toolkit <support@globus.org> - 13.12-1
+- fake stat responses when slow listings enabled
+- win: error on un-stat()-able files in directory listing
+
 * Thu Feb 07 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.11-1
 - Remove usage statistics collection support
 

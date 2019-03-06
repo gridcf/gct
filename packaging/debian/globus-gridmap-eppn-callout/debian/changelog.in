@@ -1,3 +1,10 @@
+globus-gridmap-eppn-callout (2.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * add environment variable GLOBUS_EPPN_KEEP_DOMAIN to return full
+    userid@domain from eppn
+
+ -- Globus Toolkit <support@globus.org>  Tue, 05 Mar 2019 10:47:44 -0600
+
 globus-gridmap-eppn-callout (2.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
