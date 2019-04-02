@@ -365,6 +365,7 @@ typedef struct globus_l_gfs_data_operation_s
     globus_off_t                        recvd_bytes;
     globus_range_list_t                 recvd_ranges;
     int                                 retr_markers;
+    globus_bool_t                       markers;
     
     globus_l_gfs_data_path_list_t *     path_list;
     globus_l_gfs_data_path_list_t *     current_path;
@@ -8572,6 +8573,7 @@ globus_i_gfs_data_request_recv(
     session_handle->node_ndx = recv_info->node_ndx;
     op->node_count = recv_info->node_count;
     op->stripe_count = recv_info->stripe_count;
+    op->markers = globus_i_gfs_config_bool("always_send_markers");
     if(session_handle->storattr_str)
     {
         op->storattr = (globus_l_gfs_storattr_t *) 
@@ -8776,7 +8778,7 @@ globus_i_gfs_data_request_send(
     op->node_count = send_info->node_count;
     op->stripe_count = send_info->stripe_count;
     op->eof_count = (int *) globus_calloc(1, op->stripe_count * sizeof(int));
-
+    op->markers = globus_i_gfs_config_bool("always_send_markers");
     /* events and disconnects cannot happen while i am in this
         function */
     if(data_handle)
@@ -9892,8 +9894,7 @@ globus_l_gfs_data_begin_cb(
         }
         
         if((!op->writing || op->retr_markers)
-            && (op->data_handle->info.mode == 'E' || 
-            globus_i_gfs_config_bool("always_send_markers")))
+            && (op->data_handle->info.mode == 'E' || op->markers))
         {
             /* send first 0 byte marker */
             event_reply.type = GLOBUS_GFS_EVENT_BYTES_RECVD;
@@ -10590,8 +10591,7 @@ globus_l_gfs_data_end_read_kickout(
 
     op = (globus_l_gfs_data_operation_t *) user_arg;
 
-    if(op->data_handle->info.mode == 'E' || 
-        globus_i_gfs_config_bool("always_send_markers"))
+    if(op->data_handle->info.mode == 'E' || op->markers)
     {
         globus_gfs_event_info_t        event_reply;
         unsigned int num_channels;
@@ -12396,10 +12396,12 @@ globus_gridftp_server_begin_transfer(
     if(op->writing && (freq = getenv("GFS_RETR_MARKERS")) != NULL)
     {
         op->retr_markers = strtol(freq, NULL, 10);
+        /* send markers in stream mode when requested */
+        op->markers = GLOBUS_TRUE;
     }
 
     if(!op->data_handle->is_mine || op->data_handle->info.mode == 'E' ||
-        globus_i_gfs_config_bool("always_send_markers"))
+        op->markers)
     {
         event_reply.event_mask |=
             GLOBUS_GFS_EVENT_BYTES_RECVD | GLOBUS_GFS_EVENT_RANGES_RECVD;
@@ -12994,8 +12996,7 @@ globus_gridftp_server_operation_event(
                 }
                 op->bytes_transferred += event_info->recvd_bytes;
             }
-            if(op->data_handle->info.mode == 'E' || 
-                globus_i_gfs_config_bool("always_send_markers"))
+            if(op->data_handle->info.mode == 'E' || op->markers)
             {
                 pass = GLOBUS_TRUE;
             }
