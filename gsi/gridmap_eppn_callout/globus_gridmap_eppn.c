@@ -570,6 +570,7 @@ globus_gridmap_eppn_callout(
     X509 *                              shared_user_cert = NULL;
     STACK_OF(X509) *                    shared_user_chain = NULL;
     time_t                              shared_exp = 0;
+    char *                              tmp_identity = NULL;
 
     rc = globus_module_activate(GLOBUS_GSI_GSS_ASSIST_MODULE);
     rc = globus_module_activate(GLOBUS_GSI_GSSAPI_MODULE);
@@ -615,15 +616,36 @@ globus_gridmap_eppn_callout(
         context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     if(result == GLOBUS_SUCCESS)
     {
-        if(desired_identity && strcmp(found_identity, desired_identity) != 0)
+        if(desired_identity == NULL)
         {
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Credentials specify id of %s, can not allow id of %s.\n",
-                 found_identity, desired_identity));
-            globus_free(found_identity);
-            goto error;
+            if(getenv("GLOBUS_EPPN_FORCE_GRIDMAP"))
+            {
+                rc = globus_gss_assist_gridmap(found_identity, &tmp_identity);
+                if(rc != 0)
+                {
+                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                        result,
+                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                        ("Could not map eppn %s (subject %s)\n", found_identity, subject));
+                    globus_free(found_identity);
+                    goto error;
+                }
+                globus_free(found_identity);
+                found_identity = tmp_identity;
+            }
+        }
+        else
+        {
+            if(strcmp(found_identity, desired_identity) != 0)
+            {
+                GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                    result,
+                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                    ("Credentials specify id of %s, can not allow id of %s.\n",
+                     found_identity, desired_identity));
+                globus_free(found_identity);
+                goto error;
+            }
         }
     }
     else
