@@ -35,7 +35,7 @@ fi
 rm -rf package-output
 mkdir package-output
 echo '================================================================================'
-sed -i 's/gridftp_hdfs-dist//' Makefile
+sed -i -e 's/gridftp_hdfs-dist//' Makefile
 time make -j1 tarballs
 
 echo '================================================================================'
