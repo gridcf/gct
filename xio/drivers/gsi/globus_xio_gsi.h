@@ -106,7 +106,7 @@ extern "C" {
  * - X509_CERT_DIR
  *
  * For details see
- * <a href="https://gridcf.org/gct-docs/gsic/pi/index.html#gsic-pi-env">Globus: GSI Environment Variables</a>
+ * <a href="https://gridcf.org/gct-docs/latest/gsic/pi/index.html#gsic-pi-env">Globus: GSI Environment Variables</a>
  */
 
 /**
