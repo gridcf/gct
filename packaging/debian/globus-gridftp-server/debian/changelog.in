@@ -1,3 +1,9 @@
+globus-gridftp-server (13.14-1+gct.@distro@) @distro@; urgency=medium
+
+  * Update documentation links to always point to the latest documentation
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 11 Apr 2019 21:34:25 +0200
+
 globus-gridftp-server (13.13-1+gct.@distro@) @distro@; urgency=medium
 
   * send markers in stream mode when requested by 'OPTS RETR Markers=n;'

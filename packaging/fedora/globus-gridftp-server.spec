@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.13
+Version:	13.14
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -217,6 +217,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Apr 11 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.14-1
+- Update documentation links to always point to the latest documentation
+
 * Mon Apr 01 2019 Globus Toolkit <support@globus.org> - 13.13-1
 - send markers in stream mode when requested by 'OPTS RETR Markers=n;'
 

@@ -1,3 +1,9 @@
+globus-xio-gsi-driver (5.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Update documentation links to always point to the latest documentation
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 11 Apr 2019 21:35:37 +0200
+
 globus-xio-gsi-driver (5.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
