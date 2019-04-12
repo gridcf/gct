@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gsi-driver
 %global _name %(echo %{name} | tr - _)
-Version:	5.1
+Version:	5.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GSI Driver
 
@@ -134,6 +134,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Apr 11 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
+- Update documentation links to always point to the latest documentation
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-1
 - Doxygen fixes
 
