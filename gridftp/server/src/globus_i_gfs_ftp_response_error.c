@@ -122,7 +122,7 @@ globus_gfs_ftp_response_error_construct(
  *        be formatted as a v=1 error.
  * @param fmt
  *        Response string format
- * @param ap
+ * @param ...
  *        Response string format arguments
  * @return
  *        The resulting error object. You may have to call
