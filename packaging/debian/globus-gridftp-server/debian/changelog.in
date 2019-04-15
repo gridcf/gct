@@ -1,3 +1,9 @@
+globus-gridftp-server (13.15-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix doxygen warning
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sun, 14 Apr 2019 23:50:50 +0200
+
 globus-gridftp-server (13.14-1+gct.@distro@) @distro@; urgency=medium
 
   * Update documentation links to always point to the latest documentation
