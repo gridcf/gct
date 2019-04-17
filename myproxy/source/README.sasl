@@ -1,4 +1,4 @@
-./configure --with-flavor=gcc32dbg --with-sasl2=/usr
+./configure --with-sasl2=/usr
 
 unset SASL_LIBRARY_PATH
 

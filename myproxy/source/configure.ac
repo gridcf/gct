@@ -34,18 +34,6 @@ AC_SUBST([GSI_CERT_UTILS_PATH])
 
 AC_PROG_LN_S
 
-AC_ARG_WITH([flavor],
-    AS_HELP_STRING([--with-flavor=FLAVOR], [Build with Globus Flavor]),
-    [
-    GLOBUS_FLAVOR_NAME="$withval"
-    _GLOBUS_FLAVOR_NAME="_$withval"
-    ],
-    [GLOBUS_FLAVOR_NAME=""
-    _GLOBUS_FLAVOR_NAME=""
-    ])
-AC_SUBST(GLOBUS_FLAVOR_NAME)
-AC_SUBST(_GLOBUS_FLAVOR_NAME)
-
 dnl
 dnl Figure out which regular expression parser to use.
 dnl  (taken from krb5/lib/krb5/os/configure.in)
@@ -277,7 +265,7 @@ AC_ARG_WITH(voms,
 		   SAVE_LIBS="$LIBS"
 		   AC_CHECK_HEADER(voms_apic.h)
 		   AC_CHECK_HEADER(newformat.h)
-                   AC_SEARCH_LIBS(VOMS_Init, vomsapi vomsc vomsc_$GLOBUS_FLAVOR_NAME, ,
+                   AC_SEARCH_LIBS(VOMS_Init, vomsapi vomsc, ,
 			     AC_MSG_ERROR([VOMS_Init not found in libvomsapi/libvomsc]) )
                    VOMS_LIBS="$LIBS"
                    LIBS="$SAVE_LIBS"

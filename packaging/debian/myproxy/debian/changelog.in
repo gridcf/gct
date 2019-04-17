@@ -1,6 +1,7 @@
 myproxy (6.2.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Drop obsolete configure option --with-gpt
+  * Drop obsolete configure option --with-flavor
 
  -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 20:45:16 +0200
 

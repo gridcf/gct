@@ -95,23 +95,23 @@ ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = $(GLOBUS_CFLAGS)
 LDADD = $(GLOBUS_LIBS)
 
-lib_LTLIBRARIES = libmyproxy$(_GLOBUS_FLAVOR_NAME).la 
+lib_LTLIBRARIES = libmyproxy.la
 
 if HAVE_VOMS
-lib_LTLIBRARIES += libmyproxy_voms$(_GLOBUS_FLAVOR_NAME).la
+lib_LTLIBRARIES += libmyproxy_voms.la
 else
-EXTRA_LTLIBRARIES = libmyproxy_voms$(_GLOBUS_FLAVOR_NAME).la
+EXTRA_LTLIBRARIES = libmyproxy_voms.la
 endif
 
-libmyproxy___GLOBUS_FLAVOR_NAME__la_SOURCES = $(LibSources)
-libmyproxy___GLOBUS_FLAVOR_NAME__la_LDFLAGS = \
+libmyproxy_la_SOURCES = $(LibSources)
+libmyproxy_la_LDFLAGS = \
 	-version-info ${MAJOR_VERSION}:${MINOR_VERSION}:${AGE_VERSION}
-libmyproxy___GLOBUS_FLAVOR_NAME__la_LIBADD = $(GLOBUS_LIBS)
+libmyproxy_la_LIBADD = $(GLOBUS_LIBS)
 
-libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_SOURCES = gsi_socket_voms.c vomsclient.c
-libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_LDFLAGS = \
+libmyproxy_voms_la_SOURCES = gsi_socket_voms.c vomsclient.c
+libmyproxy_voms_la_LDFLAGS = \
 	-module -avoid-version -no-undefined
-libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_LIBADD = libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(VOMS_LIBS) $(GLOBUS_LIBS)
+libmyproxy_voms_la_LIBADD = libmyproxy.la $(VOMS_LIBS) $(GLOBUS_LIBS)
 
 bin_PROGRAMS= \
 	myproxy-init \
@@ -131,43 +131,43 @@ sbin_PROGRAMS= \
 	myproxy-admin-change-pass
 
 myproxy_init_SOURCES = 	myproxy_init.c
-myproxy_init_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_init_LDADD = ./libmyproxy.la
 
 myproxy_info_SOURCES = 	myproxy_info.c
-myproxy_info_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_info_LDADD = ./libmyproxy.la
 
 myproxy_store_SOURCES = myproxy_store.c
-myproxy_store_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
+myproxy_store_LDADD = ./libmyproxy.la $(LDADD)
 
 myproxy_retrieve_SOURCES = myproxy_get_credential.c
-myproxy_retrieve_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
+myproxy_retrieve_LDADD = ./libmyproxy.la $(LDADD)
 
 myproxy_destroy_SOURCES = myproxy_destroy.c
-myproxy_destroy_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_destroy_LDADD = ./libmyproxy.la
 
 myproxy_server_SOURCES = myproxy_server.c
-myproxy_server_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
+myproxy_server_LDADD = ./libmyproxy.la $(LDADD)
 
 myproxy_get_trustroots_SOURCES = myproxy_get_trustroots.c
-myproxy_get_trustroots_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_get_trustroots_LDADD = ./libmyproxy.la
 
 myproxy_get_delegation_SOURCES = myproxy_get_delegation.c
-myproxy_get_delegation_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
+myproxy_get_delegation_LDADD = ./libmyproxy.la $(LDADD)
 
 myproxy_logon_SOURCES = myproxy_get_delegation.c
-myproxy_logon_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
+myproxy_logon_LDADD = ./libmyproxy.la $(LDADD)
 
 myproxy_change_pass_phrase_SOURCES = myproxy_cp.c
-myproxy_change_pass_phrase_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_change_pass_phrase_LDADD = ./libmyproxy.la
 
 myproxy_admin_query_SOURCES = myproxy_arq.c
-myproxy_admin_query_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_admin_query_LDADD = ./libmyproxy.la
 
 myproxy_admin_load_credential_SOURCES = myproxy_alcf.c
-myproxy_admin_load_credential_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_admin_load_credential_LDADD = ./libmyproxy.la
 
 myproxy_admin_change_pass_SOURCES = myproxy_acp.c
-myproxy_admin_change_pass_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
+myproxy_admin_change_pass_LDADD = ./libmyproxy.la
 
 pkgdata_DATA = README INSTALL myproxy-server.config \
                LICENSE LICENSE.sasl LICENSE.netbsd LICENSE.pidfile \
