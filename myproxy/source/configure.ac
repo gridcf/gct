@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([myproxy],[6.2.4])
+AC_INIT([myproxy],[6.2.5])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT([dlopen win32-dll])
@@ -125,58 +125,12 @@ if test "$uname" != IRIX -a "$uname" != IRIX64 ; then
 fi
 AC_SUBST(SYSLIBS)
 
-AC_ARG_WITH([gpt],
-	AS_HELP_STRING([--with-gpt], [Use gpt tools to generate compiler/link lines]),
-        [
-if test "$withval" = yes; then
-     GLOBUS_LOCATION=${GLOBUS_LOCATION:-/usr}
-     GPT_LOCATION=${GPT_LOCATION:-$GLOBUS_LOCATION}
-     GPT_LOCATION=${GPT_LOCATION:-/usr}
-     if test x$enable_static != x; then
-         GPT_LINKTYPE=static
-     else
-         GPT_LINKTYPE=shared
-     fi
-     if test -f $GLOBUS_LOCATION/share/globus/globus-build-env-$GLOBUS_FLAVOR_NAME.sh; then
-     	. $GLOBUS_LOCATION/share/globus/globus-build-env-$GLOBUS_FLAVOR_NAME.sh
-     fi
-        if $GPT_LOCATION/sbin/gpt_build_config -src pkgdata/pkg_data_src.gpt.in -f $GLOBUS_FLAVOR_NAME -link $GPT_LINKTYPE; then
-                echo "Dependencies Complete";
-        else
-                exit 1;
-        fi
-
-
-# The following variables are used to manage the build enviroment
-# GPT_CFLAGS, GPT_INCLUDES, GPT_PGM_LINKS, GPT_LIB_LINKS, and GPT_LDFLAGS
-# are the variables used in the Makefile.am's
-# GPT_PKG_CFLAGS, GPT_EXTERNAL_INCLUDES and GPT_EXTERNAL_LIBS are stored
-# as build data in the packaging metadata file.
-# GPT_CONFIG_FLAGS, GPT_CONFIG_INCLUDES, GPT_CONFIG_PGM_LINKS, and
-# GPT_CONFIG_LIB_LINKS are returned by gpt_build_config and contain build
-# environment data from the dependent packages.
-
-
-
-        . ./gpt_build_temp.sh
-        GLOBUS_CFLAGS="$GPT_CONFIG_CFLAGS $GPT_CONFIG_INCLUDES -I$GLOBUS_LOCATION/include/globus -I$GLOBUS_LOCATION/include/globus/$GLOBUS_FLAVOR_NAME"
-        GLOBUS_LIBS="$GPT_CONFIG_LIB_LINKS $GPT_CONFIG_LIBS"
-AC_SUBST(GLOBUS_CFLAGS)
-AC_SUBST(GLOBUS_LIBS)
-with_gpt=yes
-fi
-])
-
-if test x$with_gpt = x; then
-dnl
-dnl The following tests need/use GPT_LIBS
-dnl
 if test "x$PKG_CONFIG_PATH" = "x" -a "x$GLOBUS_LOCATION" != "x" ; then
    PKG_CONFIG_PATH=$GLOBUS_LOCATION/lib/pkgconfig
    export PKG_CONFIG_PATH
 fi
 PKG_CHECK_MODULES([GLOBUS], [$PACKAGE_DEPS], [], AC_MSG_ERROR([GLOBUS_PKG_ERRORS]))
-fi
+
 PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0],
     [OPENSSL_PKGCONFIG="openssl >= 1.0"])
 CPPFLAGS="$OPENSSL_CFLAGS $CPPFLAGS"

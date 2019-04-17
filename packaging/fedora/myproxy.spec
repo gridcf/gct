@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.4
+Version:        6.2.5
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -378,6 +378,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.5-1
+- Drop obsolete configure option --with-gpt
+
 * Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.4-1
 - Remove usage statistics collection support
 

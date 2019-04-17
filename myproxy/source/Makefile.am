@@ -104,14 +104,12 @@ EXTRA_LTLIBRARIES = libmyproxy_voms$(_GLOBUS_FLAVOR_NAME).la
 endif
 
 libmyproxy___GLOBUS_FLAVOR_NAME__la_SOURCES = $(LibSources)
-
-libmyproxy___GLOBUS_FLAVOR_NAME__la_LDFLAGS = $(GPT_LDFLAGS) \
+libmyproxy___GLOBUS_FLAVOR_NAME__la_LDFLAGS = \
 	-version-info ${MAJOR_VERSION}:${MINOR_VERSION}:${AGE_VERSION}
-
 libmyproxy___GLOBUS_FLAVOR_NAME__la_LIBADD = $(GLOBUS_LIBS)
 
 libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_SOURCES = gsi_socket_voms.c vomsclient.c
-libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_LDFLAGS = $(GPT_LDFLAGS) \
+libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_LDFLAGS = \
 	-module -avoid-version -no-undefined
 libmyproxy_voms___GLOBUS_FLAVOR_NAME__la_LIBADD = libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(VOMS_LIBS) $(GLOBUS_LIBS)
 
@@ -133,80 +131,42 @@ sbin_PROGRAMS= \
 	myproxy-admin-change-pass
 
 myproxy_init_SOURCES = 	myproxy_init.c
-
-myproxy_init_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_init_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_info_SOURCES = 	myproxy_info.c
-
-myproxy_info_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_info_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_store_SOURCES = myproxy_store.c
-
-myproxy_store_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_store_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
 
 myproxy_retrieve_SOURCES = myproxy_get_credential.c
-
-myproxy_retrieve_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_retrieve_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
 
 myproxy_destroy_SOURCES = myproxy_destroy.c
-
-myproxy_destroy_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_destroy_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_server_SOURCES = myproxy_server.c
-myproxy_server_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_server_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
 
 myproxy_get_trustroots_SOURCES = myproxy_get_trustroots.c
-
-myproxy_get_trustroots_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_get_trustroots_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_get_delegation_SOURCES = myproxy_get_delegation.c
-
-myproxy_get_delegation_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_get_delegation_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
 
 myproxy_logon_SOURCES = myproxy_get_delegation.c
-
-myproxy_logon_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_logon_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la $(LDADD)
 
 myproxy_change_pass_phrase_SOURCES = myproxy_cp.c
-
-myproxy_change_pass_phrase_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_change_pass_phrase_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_admin_query_SOURCES = myproxy_arq.c
-
-myproxy_admin_query_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_admin_query_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_admin_load_credential_SOURCES = myproxy_alcf.c
-
-myproxy_admin_load_credential_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_admin_load_credential_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 myproxy_admin_change_pass_SOURCES = myproxy_acp.c
-
-myproxy_admin_change_pass_LDFLAGS = $(GPT_LDFLAGS)
-
 myproxy_admin_change_pass_LDADD = ./libmyproxy$(_GLOBUS_FLAVOR_NAME).la
 
 pkgdata_DATA = README INSTALL myproxy-server.config \
@@ -250,7 +210,7 @@ splint:
 	splint +posixlib \
 	-Dsocklen_t=int -Din_addr_t=int \
 	-Du_int="unsigned int" -Du_char="unsigned char" \
-	$(DEFS) $(GPT_INCLUDES) *.c
+	$(DEFS) *.c
 
 pkgconfdir = ${libdir}/pkgconfig
 
