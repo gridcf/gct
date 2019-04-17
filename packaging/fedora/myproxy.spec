@@ -381,6 +381,7 @@ fi
 * Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.5-1
 - Drop obsolete configure option --with-gpt
 - Drop obsolete configure option --with-flavor
+- Drop globus_automake_pre and globus_automake_post
 
 * Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.4-1
 - Remove usage statistics collection support
