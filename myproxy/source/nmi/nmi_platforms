@@ -1,2 +1,0 @@
-#!/bin/sh
-nmi_condor_status -a | awk '{print $3}' | sort | uniq -c | sort -n

@@ -1,4 +1,0 @@
-method = cvs
-cvs_root = :pserver:anonymous@jra1mw.cvs.cern.ch:/cvs/jra1mw
-cvs_module = org.glite.security.voms
-cvs_tag = glite-security-voms_R_1_9_19_2
