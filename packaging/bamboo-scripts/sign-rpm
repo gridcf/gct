@@ -1,6 +1,0 @@
-spawn rpm --resign $argv
-
-expect {
-"^Enter pass phrase: " { send -- "\r" ; exp_continue }
-eof
-}
