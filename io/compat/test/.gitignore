@@ -1,17 +1,6 @@
-aclocal.m4
-missing
-install-sh
-mkinstalldirs
 Makefile.in
 Makefile
-config.log
-config.cache
-config.guess
-config.status
-config.sub
 globus_io_test-[0-9]*
 *.lo
 *.la
 .libs
-ltconfig
-ltmain.sh

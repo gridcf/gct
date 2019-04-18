@@ -3,7 +3,6 @@ autom4te.cache
 config.h
 config.h.in
 missing
-gptdata.sh
 install-sh
 mkinstalldirs
 Makefile.in

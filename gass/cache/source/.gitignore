@@ -5,7 +5,6 @@ autom4te.cache
 config.guess
 config.sub
 configure
-gptdata.sh
 install-sh
 ltmain.sh
 missing

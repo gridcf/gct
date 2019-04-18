@@ -1,7 +1,6 @@
 aclocal.m4
 autom4te.cache
 missing
-gptdata.sh
 install-sh
 mkinstalldirs
 Makefile.in

@@ -17,4 +17,3 @@ globus_gram_client-[0-9]*
 *.la
 .libs
 version.h
-gptdata.sh

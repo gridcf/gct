@@ -1,17 +1,5 @@
-autom4te.cache
-aclocal.m4
-configure
-missing
-install-sh
-ltmain.sh
-mkinstalldirs
 Makefile.in
 Makefile
-config.log
-config.guess
-config.cache
-config.status
-config.sub
 globus_gram_protocol_test-[0-9]*
 *-test
 *-test.pl
