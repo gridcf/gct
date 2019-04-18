@@ -14,6 +14,7 @@ man_MANS = myproxy-admin-adduser.8 \
            myproxy-change-pass-phrase.1 \
            myproxy-destroy.1 \
            myproxy-get-delegation.1 \
+           myproxy-get-trustroots.1 \
            myproxy-info.1 \
            myproxy-init.1 \
            myproxy-logon.1 \

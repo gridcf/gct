@@ -85,7 +85,7 @@ install: build-stamp
 	     $(INSTALLDIR)$(_docdir)/extras ; \
 	done
 
-	for FILE in PROTOCOL VERSION ; do \
+	for FILE in PROTOCOL README.sasl REPOSITORY VERSION ; do \
 	  mv $(INSTALLDIR)$(_datadir)/$(name)/$$FILE \
 	    $(INSTALLDIR)$(_docdir) ; \
 	done
@@ -93,7 +93,7 @@ install: build-stamp
 	# Remove irrelavent example configuration files.
 	for FILE in etc.inetd.conf.modifications etc.init.d.myproxy.nonroot \
 	  etc.services.modifications etc.xinetd.myproxy \
-	  etc.init.d.myproxy LICENSE* INSTALL README ; do \
+	  etc.init.d.myproxy LICENSE* ; do \
 	  rm $(INSTALLDIR)$(_datadir)/$(name)/$$FILE ; \
 	done
 

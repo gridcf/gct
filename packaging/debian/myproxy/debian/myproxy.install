@@ -11,6 +11,7 @@ debian/tmp/usr/bin/myproxy-store
 debian/tmp/usr/share/man/man1/myproxy-change-pass-phrase.1
 debian/tmp/usr/share/man/man1/myproxy-destroy.1
 debian/tmp/usr/share/man/man1/myproxy-get-delegation.1
+debian/tmp/usr/share/man/man1/myproxy-get-trustroots.1
 debian/tmp/usr/share/man/man1/myproxy-info.1
 debian/tmp/usr/share/man/man1/myproxy-init.1
 debian/tmp/usr/share/man/man1/myproxy-logon.1

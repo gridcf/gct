@@ -169,10 +169,11 @@ myproxy_admin_load_credential_LDADD = ./libmyproxy.la
 myproxy_admin_change_pass_SOURCES = myproxy_acp.c
 myproxy_admin_change_pass_LDADD = ./libmyproxy.la
 
-pkgdata_DATA = README INSTALL myproxy-server.config \
+pkgdata_DATA = \
                LICENSE LICENSE.sasl LICENSE.netbsd LICENSE.pidfile \
                LICENSE.safefile LICENSE.globus \
-               VERSION PROTOCOL \
+               VERSION PROTOCOL README.sasl REPOSITORY \
+               myproxy-server.config \
                etc.services.modifications etc.inetd.conf.modifications \
                myproxy.cron myproxy-crl.cron myproxy-get-trustroots.cron \
                etc.init.d.myproxy etc.init.d.myproxy.nonroot \
@@ -184,7 +185,7 @@ pkgdata_DATA = README INSTALL myproxy-server.config \
 EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                LICENSE LICENSE.sasl LICENSE.netbsd LICENSE.pidfile \
                LICENSE.safefile LICENSE.globus \
-               VERSION PROTOCOL \
+               VERSION PROTOCOL README.sasl REPOSITORY \
                myproxy-server.config \
                etc.services.modifications etc.inetd.conf.modifications \
                myproxy.cron myproxy-crl.cron myproxy-get-trustroots.cron \
@@ -194,8 +195,7 @@ EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                myproxy-accepted-credentials-mapapp \
                myproxy-cert-checker myproxy-certreq-checker \
                myproxy.init myproxy.init.sles myproxy.sysconfig \
-               README.Fedora \
-               m4/myproxy.m4
+               README.Fedora
 
 myproxy-admin-addservice: myproxy-admin-adduser
 	rm -f myproxy-admin-addservice
