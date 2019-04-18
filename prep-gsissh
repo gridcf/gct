@@ -3,7 +3,7 @@
 openssh_version=7.5p1
 gsissh_version=${openssh_version}c
 openssh_tarball=openssh-${openssh_version}.tar.gz
-Source0=http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${openssh_tarball}
+Source0=https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${openssh_tarball}
 
 # Patch0 is the HPN-SSH patch to Portable OpenSSH
 Patch0="openssh-7_5_P1-hpn-14.13.diff"
