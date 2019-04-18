@@ -68,7 +68,7 @@ libglobus_memory_debug_la_CPPFLAGS = \
 libglobus_memory_debug_la_SOURCES = \
         globus_memory.c
 libglobus_memory_debug_la_LDFLAGS = \
-        -version-info ${MAJOR_VERSION}:${MINOR_VERSION}:${AGE_VERSION} \
+        -version-info $(MAJOR_VERSION):$(MINOR_VERSION):$(AGE_VERSION) \
         -no-undefined 
 libglobus_memory_debug_la_DEPENDENCIES = libglobus_common.la
 libglobus_common_la_LIBADD = $(LT_LIBOBJS) $(PACKAGE_DEP_LIBS) $(LIBS)
@@ -159,9 +159,8 @@ libglobus_common_la_SOURCES = \
         globus_uuid.c \
         globus_uuid.h \
         globus_thread_none.c
-libglobus_common_la_CFLAGS = $(AM_CFLAGS)
 libglobus_common_la_LDFLAGS = \
-        -version-info ${MAJOR_VERSION}:${MINOR_VERSION}:${AGE_VERSION} \
+        -version-info $(MAJOR_VERSION):$(MINOR_VERSION):$(AGE_VERSION) \
         -no-undefined 
 
 if USE_SYMBOL_LABELS
@@ -170,21 +169,18 @@ libglobus_common_la_LDFLAGS += -Wl,--version-script,sym
 endif
 
 if BUILD_PTHREADS
-libglobus_thread_pthread_la_LIBADD = libglobus_common.la
+libglobus_thread_pthread_la_LIBADD = libglobus_common.la $(PACKAGE_DEP_LIBS) -lpthread
 libglobus_thread_pthread_la_SOURCES = globus_thread_pthreads.c
-libglobus_thread_pthread_la_LDFLAGS = $(PACKAGE_DEP_LDFLAGS) -module -no-undefined -avoid-version
-libglobus_thread_pthread_la_CFLAGS = $(CFLAGS)
+libglobus_thread_pthread_la_LDFLAGS = -module -no-undefined -avoid-version
 endif
 
 if BUILD_WINDOWS_THREADS
 libglobus_thread_windows_la_LIBADD = libglobus_common.la $(PACKAGE_DEP_LIBS)
 libglobus_thread_windows_la_SOURCES = globus_thread_windows.c globus_thread_windows.h
-libglobus_thread_windows_la_LDFLAGS = $(PACKAGE_DEP_LIBS) -module -no-undefined -avoid-version
+libglobus_thread_windows_la_LDFLAGS = -module -no-undefined -avoid-version
 endif
 
 EXTRA_DIST = \
-        globus_callback_nothreads.c \
-        globus_callback_threads.c \
         $(pthreads_sources) \
         $(windowsthreads_sources) \
         sym

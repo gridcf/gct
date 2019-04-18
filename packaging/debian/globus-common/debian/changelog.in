@@ -1,3 +1,9 @@
+globus-common (18.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Clean up old GPT references
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 00:23:43 +0200
+
 globus-common (18.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix FTBR (failed to build reproducibly)

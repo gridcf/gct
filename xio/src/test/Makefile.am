@@ -63,7 +63,7 @@ AM_CPPFLAGS = \
     -I$(XIO_BUILTIN_PC_INCLUDES) \
     -I$(srcdir)/drivers \
     -DGLOBUS_BUILTIN=1 $(PACKAGE_DEP_CFLAGS)
-AM_LDFLAGS = $(GPT_LDFLAGS)
+
 LDADD = $(PACKAGE_DEP_LIBS) \
 	-dlpreopen drivers/libglobus_xio_test_drivers.la \
 	../libglobus_xio.la \

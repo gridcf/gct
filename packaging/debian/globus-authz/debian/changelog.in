@@ -1,3 +1,9 @@
+globus-authz (4.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Clean up old GPT references
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 05:48:29 +0200
+
 globus-authz (4.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

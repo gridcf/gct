@@ -19,8 +19,7 @@ authz_cred_test_SOURCES = authz_cred_test.c
 authz_cred_test_DEPENDENCIES = libglobus_authz_test_callout.la
 
 libglobus_authz_test_callout_la_SOURCES = authz_test_callout.c
-libglobus_authz_test_callout_la_LIBADD = $(GPT_LIB_LINKS)
-
+libglobus_authz_test_callout_la_LIBADD = ../libglobus_authz.la $(LDADD)
 libglobus_authz_test_callout_la_LDFLAGS = \
 	-module \
 	-no-undefined \

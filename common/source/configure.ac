@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([globus_common], [18.2], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_common], [18.3], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -146,8 +146,6 @@ AM_CONDITIONAL(USE_SYMBOL_LABELS, test "$use_symbol_labels" = "yes")
 
 if test "$use_symbol_labels" = yes; then
     AC_DEFINE(USE_SYMBOL_LABELS, 1, [Use backward-compatibility symbol labels])
-    GPT_EXTERNAL_LIBS=-lpthread
-    AC_SUBST(GPT_EXTERNAL_LIBS)
 fi
 
 AC_PATH_PROGS([A2X], [a2x a2x.py])

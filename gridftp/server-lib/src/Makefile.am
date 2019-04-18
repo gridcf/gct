@@ -7,7 +7,6 @@ lib_LTLIBRARIES = libglobus_gridftp_server_control.la
 doc_DATA = GLOBUS_LICENSE
 pkgconfig_DATA = globus-gridftp-server-control.pc
 
-AM_CPPFLAGS = $(GPT_INCLUDES)
 libglobus_gridftp_server_control_la_CPPFLAGS = $(PACKAGE_DEP_CFLAGS)
 libglobus_gridftp_server_control_la_LIBADD = $(PACKAGE_DEP_LIBS)
 libglobus_gridftp_server_control_la_LDFLAGS = \

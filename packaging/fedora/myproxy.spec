@@ -382,6 +382,7 @@ fi
 - Drop obsolete configure option --with-gpt
 - Drop obsolete configure option --with-flavor
 - Drop globus_automake_pre and globus_automake_post
+- Clean up old GPT references
 
 * Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.4-1
 - Remove usage statistics collection support

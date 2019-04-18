@@ -105,7 +105,7 @@ endif
 
 libmyproxy_la_SOURCES = $(LibSources)
 libmyproxy_la_LDFLAGS = \
-	-version-info ${MAJOR_VERSION}:${MINOR_VERSION}:${AGE_VERSION}
+	-version-info $(MAJOR_VERSION):$(MINOR_VERSION):$(AGE_VERSION)
 libmyproxy_la_LIBADD = $(GLOBUS_LIBS)
 
 libmyproxy_voms_la_SOURCES = gsi_socket_voms.c vomsclient.c
@@ -195,7 +195,7 @@ EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                myproxy-cert-checker myproxy-certreq-checker \
                myproxy.init myproxy.init.sles myproxy.sysconfig \
                README.Fedora \
-               pkgdata/pkg_data_src.gpt.in m4/myproxy.m4
+               m4/myproxy.m4
 
 myproxy-admin-addservice: myproxy-admin-adduser
 	rm -f myproxy-admin-addservice
