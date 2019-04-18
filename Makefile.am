@@ -139,7 +139,7 @@ install-exec-local:
 	        export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; $(MAKE) $(AM_MAKEFLAGS) $${stamp_pkg}-install ; \
 	    fi; \
 	done
-EXTRA_DIST=doxygen/index.dox globus-vararg-enums-doxygen-filter.pl GLOBUS_LICENSE osx/resources/GLOBUS_LICENSE  osx/resources/logo.png
+EXTRA_DIST = globus-vararg-enums-doxygen-filter.pl GLOBUS_LICENSE osx/resources/GLOBUS_LICENSE osx/resources/logo.png
 
 
 if !HAVE_LTDL
