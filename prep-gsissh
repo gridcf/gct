@@ -1,7 +1,7 @@
 #! /bin/sh
 
 openssh_version=7.5p1
-gsissh_version=${openssh_version}b
+gsissh_version=${openssh_version}c
 openssh_tarball=openssh-${openssh_version}.tar.gz
 Source0=http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${openssh_tarball}
 
@@ -62,7 +62,12 @@ for f in ${Patches}; do
     source_path="${package_output}/${f}"
 
     printf "${f}...\n"
-    cp -p "${patch_path}" "${source_path}"
+    if [ ! -f "${source_path}" ]; then
+        cp -p "${patch_path}" "${source_path}"
+        printf "copied\n"
+    else
+        printf "already present\n"
+    fi
 done
 
 printf "Unpacking and patching...\n"

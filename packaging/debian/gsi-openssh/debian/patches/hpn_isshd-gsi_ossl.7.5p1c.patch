@@ -2850,7 +2850,7 @@ diff --git a/sshd.c b/sshd.c
 index 10cc69c..19a695b 100644
 --- a/sshd.c
 +++ b/sshd.c
-@@ -1479,6 +1479,7 @@ main(int ac, char **av)
+@@ -1478,6 +1478,7 @@ main(int ac, char **av)
  	(void)set_auth_parameters(ac, av);
  #endif
  	__progname = ssh_get_progname(av[0]);
