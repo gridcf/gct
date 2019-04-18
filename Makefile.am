@@ -178,13 +178,11 @@ endif
 # We'll preserve the output from the prep-gsissh so that
 # configuration will work without re-downloading the sources
 dist-hook:
-	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/myproxy $(distdir)/packaging/package-output
+	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/packaging/package-output
 	$(INSTALL) -p $(srcdir)/prep-gsissh $(distdir)
 	$(INSTALL) -p $(srcdir)/packaging/package-output/* $(distdir)/packaging/package-output
 	(cd $(distdir); ./prep-gsissh;)
 	(if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi )
-	(if [ ! -d $(distdir)/myproxy/source ]; then cp -pPR $(srcdir)/myproxy/source $(distdir)/myproxy/source; fi )
-	
 
 globus_gridftp_server-stamp: $(GT_ENABLED_XIO_DRIVERS)
 .PHONY: $(GT_TARGETS_ALL) $(GT_TARGETS_ONLY) $(GT_TARGETS_CLEAN) $(GT_TARGETS_INSTALL) $(GT_TARGETS_CHECK) $(GT_TARGETS_DISTCLEAN) $(GT_TARGETS_DIST) $(DOC_PHONY) $(GT_TARGETS_RPM) $(GT_TARGETS_DEB) $(GT_BUNDLES)

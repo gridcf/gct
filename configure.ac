@@ -118,8 +118,7 @@ $1-osx-pkg: \$($1-osx-pkg)
     m4_append([GT_PKGCONFIG_DIRS_MACRO], ${ac_pwd}/[$2], [:])
     ifelse([$1], [gsi-openssh], [], [
         ifelse([$1], [gridftp_hdfs], [], [
-            ifelse([$1], [myproxy], [], [
-                    m4_append([GT_SUBDIRS_MACRO], [$2], [ ])])])])dnl
+            m4_append([GT_SUBDIRS_MACRO], [$2], [ ])])])dnl
     ifelse([$1], [gsi_openssh], [], [
         m4_append([GT_TARGETS_CHECK_MACRO], [$1]-check, [ ])])dnl
     m4_append_uniq([GT_BUNDLES_MACRO],[$4], [ ])dnl
@@ -461,7 +460,6 @@ fi
 final_enabled_bundles=""
 final_enabled_xio_drivers=""
 gsi_openssh_enabled=no
-myproxy_enabled=no
 gridftp_hdfs_enabled=no
 for en_name in ""$enabled_buns; do
     skip=0
@@ -474,8 +472,6 @@ for en_name in ""$enabled_buns; do
     if test "$skip" = 0; then
         if test X"$en_name" = X"gsi-openssh"; then
             gsi_openssh_enabled=yes
-        elif test X"$en_name" = X"myproxy"; then
-            myproxy_enabled=yes
         elif test X"$en_name" = X"gridftp-hdfs"; then
             gridftp_hdfs_enabled=yes
         fi
@@ -620,9 +616,6 @@ fi
 
 if test x"$gridftp_hdfs_enabled" = x"yes"; then
     AC_CONFIG_SUBDIRS(gridftp/hdfs)
-fi
-if test x"$myproxy_enabled" = x"yes"; then
-    AC_CONFIG_SUBDIRS(myproxy/source)
 fi
 
 AC_OUTPUT
