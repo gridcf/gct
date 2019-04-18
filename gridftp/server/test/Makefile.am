@@ -1,5 +1,3 @@
-SUBDIRS = pkgdata 
-
 globusperldir = $(libdir)/perl/Globus
 
 test_SCRIPTS = \

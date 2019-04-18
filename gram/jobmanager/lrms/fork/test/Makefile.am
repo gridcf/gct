@@ -1,4 +1,4 @@
-SUBDIRS = seg pkgdata 
+SUBDIRS = seg
 
 test_SCRIPTS = TESTS.pl TESTS-junit.pl
 

@@ -13,8 +13,6 @@ GLOBUS_FINALIZE
 
 AC_OUTPUT(
 	Makefile
-	pkgdata/Makefile
-	pkgdata/pkg_data_src.gpt
         seg/Makefile
         TESTS.pl
         TESTS-junit.pl

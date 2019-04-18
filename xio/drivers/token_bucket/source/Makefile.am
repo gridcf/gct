@@ -1,5 +1,3 @@
-SUBDIRS = pkgdata doxygen
-
 include_HEADERS = globus_xio_token_bucket_driver.h
 lib_LTLIBRARIES = libglobus_xio_token_bucket_driver.la
 
