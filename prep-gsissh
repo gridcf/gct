@@ -116,4 +116,4 @@ if [ ! -f gsi_openssh/version.m4 ] || \
 else
    rm -f gsi_openssh/version.m4.new 
 fi
-( cd gsi_openssh/source; libtoolize -c -f -i 2>&1 >/dev/null; aclocal; autoconf )
+( cd gsi_openssh/source; libtoolize -c -f -i 2>&1 >/dev/null; aclocal; autoheader; autoconf )
