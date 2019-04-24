@@ -1,4 +1,0 @@
-method = ftp
-ftp_root = http://
-ftp_target = http://www.globus.org/cog/distribution/1.8.0/cog-jglobus-1.8.0-bin.tar.gz
-untar = false

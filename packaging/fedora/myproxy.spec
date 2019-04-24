@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.4
+Version:        6.2.5
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -218,7 +218,7 @@ for FILE in login.html myproxy-accepted-credentials-mapapp \
 done
 
 mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}
-for FILE in LICENSE LICENSE.* PROTOCOL README VERSION ; do
+for FILE in LICENSE LICENSE.* PROTOCOL README.sasl REPOSITORY VERSION ; do
    mv $RPM_BUILD_ROOT%{_datadir}/%{name}/$FILE \
       $RPM_BUILD_ROOT%{_pkgdocdir}
 done
@@ -226,7 +226,7 @@ done
 # Remove irrelavent example configuration files
 for FILE in etc.inetd.conf.modifications etc.init.d.myproxy.nonroot \
             etc.services.modifications etc.xinetd.myproxy etc.init.d.myproxy \
-            myproxy-server.service myproxy-server.conf INSTALL ; do
+            myproxy-server.service myproxy-server.conf ; do
    rm $RPM_BUILD_ROOT%{_datadir}/%{name}/$FILE
 done
 
@@ -309,6 +309,7 @@ fi
 %{_mandir}/man1/myproxy-change-pass-phrase.1*
 %{_mandir}/man1/myproxy-destroy.1*
 %{_mandir}/man1/myproxy-get-delegation.1*
+%{_mandir}/man1/myproxy-get-trustroots.1*
 %{_mandir}/man1/myproxy-info.1*
 %{_mandir}/man1/myproxy-init.1*
 %{_mandir}/man1/myproxy-logon.1*
@@ -320,7 +321,8 @@ fi
 %{_libdir}/libmyproxy.so.*
 %dir %{_pkgdocdir}
 %doc %{_pkgdocdir}/PROTOCOL
-%doc %{_pkgdocdir}/README
+%doc %{_pkgdocdir}/README.sasl
+%doc %{_pkgdocdir}/REPOSITORY
 %doc %{_pkgdocdir}/VERSION
 %doc %{_pkgdocdir}/LICENSE*
 
@@ -378,6 +380,13 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.5-1
+- Drop obsolete configure option --with-gpt
+- Drop obsolete configure option --with-flavor
+- Drop globus_automake_pre and globus_automake_post
+- Clean up old GPT references
+- Install myproxy-get-trustroots man page
+
 * Fri Dec 07 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.4-1
 - Remove usage statistics collection support
 

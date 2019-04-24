@@ -127,7 +127,6 @@ case $TASK in
     rpms)
         make_tarballs
         echo '==========================================================================================='
-        patch -p1 < /gct/travis-ci/Disable-globus-gram-job-manager-RPM-check.patch
         if [[ $OS == centos6 ]]; then
             # doesn't support rpmbuild --nocheck
             nocheck=

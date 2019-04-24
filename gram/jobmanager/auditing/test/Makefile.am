@@ -1,4 +1,4 @@
-SUBDIRS = pkgdata records jobs perl_modules
+SUBDIRS = records jobs perl_modules
 
 pkgtestdir = $(GLOBUS_LOCATION)/test/$(PACKAGE)
 

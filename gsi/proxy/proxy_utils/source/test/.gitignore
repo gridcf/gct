@@ -1,17 +1,2 @@
-aclocal.m4
-autom4te.cache
-config.h
-config.h.in
-missing
-install-sh
-mkinstalldirs
 Makefile.in
 Makefile
-config.log
-config.cache
-config.guess
-config.sub
-config.status
-configure
-ltmain.sh
-*.tar.gz

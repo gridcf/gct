@@ -21,10 +21,6 @@ use Pod::Usage;
 use Getopt::Long;
 use Cwd;
 
-#
-# do GPT version checking
-#
-
 my($flavor, $static, $link, @pkgs, $help, $verbose);
 
 GetOptions(

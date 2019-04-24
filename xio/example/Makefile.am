@@ -1,5 +1,3 @@
-SUBDIRS = pkgdata
-
 test_PROGRAMS = \
 	globus-xio-client \
 	globus-xio-email \

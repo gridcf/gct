@@ -2,7 +2,7 @@
 
 Name:		globus-gatekeeper
 %global _name %(echo %{name} | tr - _)
-Version:	11.0
+Version:	11.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gatekeeper
 
@@ -123,6 +123,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.1-1
+- Remove obsolete acconfig.h file
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.0-1
 - First Grid Community Toolkit release
 - Remove support for openssl101e (RHEL5 is EOL)

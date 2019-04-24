@@ -1,3 +1,9 @@
+globus-gridftp-server (13.16-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove obsolete acconfig.h file
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 19:43:36 +0200
+
 globus-gridftp-server (13.15-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix doxygen warning

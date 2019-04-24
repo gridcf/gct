@@ -1,3 +1,9 @@
+globus-gatekeeper (11.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove obsolete acconfig.h file
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 19:41:59 +0200
+
 globus-gatekeeper (11.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

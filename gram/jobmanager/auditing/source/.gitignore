@@ -5,7 +5,6 @@ globus-script-initializer
 globus-perl-initializer
 globus-gram-audit
 globus-gram-audit.cron
-gptdata.sh
 gram-audit.conf
 install-sh
 libtool

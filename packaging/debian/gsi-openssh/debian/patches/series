@@ -1,4 +1,4 @@
 openssh-7_5_P1-hpn-14.13.diff
 hpn-14.13-isshd.v3.19.1.patch
-hpn_isshd-gsi.7.5p1b.patch
-hpn_isshd-gsi_ossl.7.5p1b.patch
+hpn_isshd-gsi.7.5p1c.patch
+hpn_isshd-gsi_ossl.7.5p1c.patch

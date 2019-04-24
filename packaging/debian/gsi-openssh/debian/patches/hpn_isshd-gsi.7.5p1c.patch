@@ -13612,7 +13612,7 @@ diff -Nur openssh-7.5p1/Makefile.in gsi-openssh/Makefile.in
  distprep: catman-do
  	$(AUTORECONF)
  	-rm -rf autom4te.cache
-+distdir=gsi-openssh-7.5p1b
++distdir=gsi-openssh-7.5p1c
 +distsubdirs=$(srcdir)/openbsd-compat $(srcdir)/contrib $(srcdir)/regress
 +
 +distdir:
@@ -16720,7 +16720,7 @@ diff -Nur openssh-7.5p1/version.h gsi-openssh/version.h
 +#endif
  
  #define SSH_PORTABLE	"p1"
-+#define GSI_PORTABLE	"b-GSI"
++#define GSI_PORTABLE	"c-GSI"
  #define SSH_HPN		"-hpn14v13"
  #define SSH_RELEASE	SSH_VERSION SSH_PORTABLE SSH_HPN
  

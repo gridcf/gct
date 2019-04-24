@@ -18,4 +18,3 @@ version.h
 *.lo
 *.la
 .libs
-gptdata.sh

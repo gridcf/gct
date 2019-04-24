@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.2
+Version:	18.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -236,6 +236,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.3-1
+- Clean up old GPT references
+
 * Wed Nov 28 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.2-1
 - Fix FTBR (failed to build reproducibly)
 

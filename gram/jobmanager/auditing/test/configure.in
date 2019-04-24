@@ -18,8 +18,6 @@ AC_OUTPUT(
 	Makefile
         globus-gram-job-manager-auditing-tg-job-submission-test.pl
         globus-gram-job-manager-auditing-job-submission-test.pl
-	pkgdata/Makefile
-	pkgdata/pkg_data_src.gpt
 	jobs/Makefile
 	records/Makefile
 	perl_modules/Makefile

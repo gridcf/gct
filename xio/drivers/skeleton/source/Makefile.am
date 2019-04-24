@@ -1,5 +1,3 @@
-SUBDIRS = pkgdata 
-
 include_HEADERS = globus_xio_skeleton_driver.h
 lib_LTLIBRARIES = libglobus_xio_skeleton_driver.la
 

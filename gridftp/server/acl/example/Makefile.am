@@ -1,5 +1,3 @@
-SUBDIRS = pkgdata 
-
 lib_LTLIBRARIES = libglobus_gridftp_server_acl_example.la
 
 AM_CPPFLAGS = $(GPT_INCLUDES)

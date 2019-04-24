@@ -1,3 +1,13 @@
+myproxy (6.2.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Drop obsolete configure option --with-gpt
+  * Drop obsolete configure option --with-flavor
+  * Drop globus_automake_pre and globus_automake_post
+  * Clean up old GPT references
+  * Install myproxy-get-trustroots man page
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 20:45:16 +0200
+
 myproxy (6.2.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove usage statistics collection support

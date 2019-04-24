@@ -1,12 +1,5 @@
-aclocal.m4
-missing
-install-sh
-mkinstalldirs
 Makefile.in
 Makefile
-config.log
-config.cache
-config.status
 globus_ftp_client_test-[0-9]*
 *.lo
 *.la

@@ -1,4 +1,0 @@
-method = cvs
-cvs_root = :pserver:anonymous@cilogon.cvs.sourceforge.net:/cvsroot/cilogon
-cvs_module = myproxy
-#cvs_tag = 

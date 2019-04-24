@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	8.0
+Version:	8.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.1-1
+- Clean up old GPT references
+
 * Tue Aug 07 2018 Globus Toolkit <support@globus.org> - 8.0-1
 - add support for x.abspath
 
