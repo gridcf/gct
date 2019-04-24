@@ -278,6 +278,7 @@ if test ${openssl_result} != 0; then
         for p in ${GRID_CA_DIR}/newcerts/*.pem; do
             subj_tmp_output=/tmp/tmp_output.$$
             "${openssl_cmd}" x509 -noout -subject -in $(construct_path ${p}) \
+                               -nameopt rfc2253,-dn_rev \
                                > ${subj_tmp_output} 2>&1
             res=$?
             if test $res != 0; then
