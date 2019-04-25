@@ -86,7 +86,7 @@ start()
         kflag=""
     fi
 
-    start_daemon -p "${GLOBUS_GATEKEEPER_PIDFILE}" \
+    start_daemon \
         ${GLOBUS_GATEKEEPER_NICE_LEVEL:+-n "${GLOBUS_GATEKEEPER_NICE_LEVEL}"} \
         "$prog" \
         -pidfile ${GLOBUS_GATEKEEPER_PIDFILE} \
