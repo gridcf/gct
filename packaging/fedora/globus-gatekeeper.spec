@@ -2,7 +2,7 @@
 
 Name:		globus-gatekeeper
 %global _name %(echo %{name} | tr - _)
-Version:	11.1
+Version:	11.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gatekeeper
 
@@ -123,6 +123,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Apr 25 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.2-1
+- Fix broken init.d script (lsb version)
+
 * Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.1-1
 - Remove obsolete acconfig.h file
 

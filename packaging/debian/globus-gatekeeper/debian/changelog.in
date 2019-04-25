@@ -1,3 +1,9 @@
+globus-gatekeeper (11.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix broken init.d script (lsb version)
+
+ -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 25 Apr 2019 09:51:07 +0200
+
 globus-gatekeeper (11.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove obsolete acconfig.h file
