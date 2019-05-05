@@ -1,3 +1,9 @@
+globus-gridmap-verify-myproxy-callout (3.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * fix verification to allow proxy certs
+
+ -- Globus Toolkit <support@globus.org>  Fri, 03 May 2019 15:02:13 -0500
+
 globus-gridmap-verify-myproxy-callout (3.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

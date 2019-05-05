@@ -80,16 +80,16 @@ static
 globus_result_t
 ggvm_extract_cert_from_chain(
     gss_ctx_id_t                        context,
-    int                                 cert_index,
     X509 **                             out_cert)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
     OM_uint32                           major_status;
     OM_uint32                           minor_status;
     gss_buffer_set_t                    cert_chain_buffers = 0;
-    X509 *                              cert;
+    X509 *                              cert = NULL;
     const unsigned char *               ptr;
-    
+    int                                 cert_index = 0;
+
     major_status = gss_inquire_sec_context_by_oid(
         &minor_status,
         context,
@@ -104,30 +104,52 @@ ggvm_extract_cert_from_chain(
             ("can't extract cert chain"));
         goto err;
     }
-    
-    if(cert_chain_buffers->count <= cert_index)
+
+    while(!cert && cert_index < cert_chain_buffers->count)
+    {
+        globus_gsi_cert_utils_cert_type_t   cert_type;
+
+        ptr = cert_chain_buffers->elements[cert_index].value;
+        cert = d2i_X509(
+            NULL,
+            GT_D2I_ARG_CAST &ptr,
+            cert_chain_buffers->elements[cert_index].length);
+        if(cert == NULL)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
+                ("error reading cert chain"));
+            goto err;
+        }
+
+        result = globus_gsi_cert_utils_get_cert_type(cert, &cert_type);
+        if(result != GLOBUS_SUCCESS)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
+                ("error searching for EEC in cert chain"));
+            goto err;
+        }
+
+        if(cert_type != GLOBUS_GSI_CERT_UTILS_TYPE_EEC)
+        {
+            X509_free(cert);
+            cert = NULL;
+            cert_index++;
+        }
+    }
+
+    if(!cert)
     {
         GLOBUS_GRIDMAP_CALLOUT_ERROR(
             result,
             GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
-            ("too few certs in chain"));
+            ("no EEC found in cert chain"));
         goto err;
     }
 
-    ptr = cert_chain_buffers->elements[cert_index].value;
-    cert = d2i_X509(
-        NULL, 
-        GT_D2I_ARG_CAST &ptr, 
-        cert_chain_buffers->elements[cert_index].length);
-    if(cert == NULL)
-    {
-        GLOBUS_GRIDMAP_CALLOUT_ERROR(
-            result,
-            GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
-            ("can't extract cert from chain"));
-        goto err;
-    }
-    
     *out_cert = cert;
 
 err:
@@ -135,7 +157,7 @@ err:
     {
         gss_release_buffer_set(&minor_status, &cert_chain_buffers);
     }
-    
+
     return result;
 }
 
@@ -235,6 +257,7 @@ ggvm_get_myproxy_userid(
     char *                              subject,
     char **                             userid,
     X509 *                              shared_user_cert,
+    STACK_OF(X509) *                    shared_user_chain,
     time_t                              shared_exp)
 {
     X509 *                              user_cert = NULL;
@@ -243,15 +266,43 @@ ggvm_get_myproxy_userid(
     char *                              ptr;
     globus_result_t                     result = GLOBUS_SUCCESS;
 
-
     if(shared_user_cert)
     {
-        user_cert = shared_user_cert;
+        globus_gsi_cert_utils_cert_type_t   cert_type;
+
+        result = globus_gsi_cert_utils_get_cert_type(
+            shared_user_cert, &cert_type);
+        if(result != GLOBUS_SUCCESS)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
+                ("error checking shared user cert type"));
+            goto error;
+        }
+
+        if(cert_type == GLOBUS_GSI_CERT_UTILS_TYPE_EEC)
+        {
+            user_cert = shared_user_cert;
+        }
+        else if(shared_user_chain)
+        {
+            result = globus_gsi_cert_utils_get_eec(
+                shared_user_chain, &user_cert);
+        }
+        if(result != GLOBUS_SUCCESS || !user_cert)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
+                ("EEC not found in shared user cert chain"));
+            goto error;
+        }
     }
     else
     {
         /* extract user cert */
-        result = ggvm_extract_cert_from_chain(context, 0, &user_cert);
+        result = ggvm_extract_cert_from_chain(context, &user_cert);
         if(result != GLOBUS_SUCCESS)
         {
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -259,8 +310,9 @@ ggvm_get_myproxy_userid(
                 GLOBUS_GRIDMAP_CALLOUT_GSSAPI_ERROR,
                 ("Could not extract user credentials."));
             goto error;
-        }    
+        }
     }
+
     myproxy_ca_cert_file = getenv("GLOBUS_MYPROXY_CA_CERT");
     if(!myproxy_ca_cert_file)
     {
@@ -409,6 +461,7 @@ globus_gridmap_verify_myproxy_callout(
     int                                 rc;
     char *                              shared_user_buf = NULL;
     X509 *                              shared_user_cert = NULL;
+    STACK_OF(X509) *                    shared_user_chain = NULL;
     time_t                              shared_exp = 0;
 
     rc = globus_module_activate(GLOBUS_GSI_GSS_ASSIST_MODULE);
@@ -427,7 +480,11 @@ globus_gridmap_verify_myproxy_callout(
         shared_user_buf = va_arg(ap, char *);
         
         result = globus_gsi_cred_read_cert_buffer(
-            shared_user_buf, &tmp_cred_handle, &shared_user_cert, NULL, &subject);
+            shared_user_buf,
+            &tmp_cred_handle,
+            &shared_user_cert,
+            &shared_user_chain,
+            &subject);
         if(result != GLOBUS_SUCCESS)
         {
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -455,7 +512,7 @@ globus_gridmap_verify_myproxy_callout(
     }    
 
     result = ggvm_get_myproxy_userid(
-        context, subject, &found_identity, shared_user_cert, shared_exp);
+        context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     if(result == GLOBUS_SUCCESS)
     {
         if(desired_identity && strcmp(found_identity, desired_identity) != 0)
@@ -518,7 +575,6 @@ globus_gridmap_verify_myproxy_callout(
         globus_free(found_identity);
     }
 
-    
 error:
 
     if(subject)
@@ -529,7 +585,11 @@ error:
     {
         X509_free(shared_user_cert);
     }
-    
+    if(shared_user_chain)
+    {
+        sk_X509_free(shared_user_chain);
+    }
+
     globus_module_deactivate(GLOBUS_GRIDMAP_CALLOUT_ERROR_MODULE);
     globus_module_deactivate(GLOBUS_GSI_GSSAPI_MODULE);
     globus_module_deactivate(GLOBUS_GSI_GSS_ASSIST_MODULE);
