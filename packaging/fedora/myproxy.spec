@@ -39,6 +39,7 @@ BuildRequires:  insserv
 #               Additional requirements for make check
 BuildRequires:  globus-proxy-utils
 BuildRequires:  globus-gsi-cert-utils-progs
+BuildRequires:  openssl
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:  voms-clients
 %endif

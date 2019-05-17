@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2
 #
 # Copyright 2010-2011 University of Chicago
 #

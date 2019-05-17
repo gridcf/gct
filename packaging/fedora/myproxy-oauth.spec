@@ -2,9 +2,9 @@
 
 Name:           myproxy-oauth
 %global _name %(echo %{name} | tr - _)
-Version:        1.1
+Version:        1.2
 Release:        1%{?dist}
-Summary:        MyProxy OAuth Delegation Serice
+Summary:        MyProxy OAuth Delegation Service
 
 Group:          System Environment/Libraries
 License:        %{?suse_version:Apache-2.0}%{!?suse_version:ASL 2.0}
@@ -12,14 +12,22 @@ URL:            https://github.com/gridcf/gct/
 Source:         %{_name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  python
+BuildRequires:  python2
 BuildArch:      noarch
 
+%if %{?fedora}%{!?fedora:0} >= 26
+Requires:       python2-pyOpenSSL
+%else
 Requires:       pyOpenSSL
+%endif
 
 %if 0%{?suse_version} == 0
 Requires:       mod_ssl
+%if %{?fedora}%{!?fedora:0} >= 28
+Requires:       python2-mod_wsgi
+%else
 Requires:       mod_wsgi
+%endif
 Requires(pre):  shadow-utils
 %else
 # Available from http://download.opensuse.org/repositories/Apache/SLE_11_SP3/Apache.repo
@@ -29,7 +37,7 @@ Requires:       apache2-mod_wsgi
 Requires(pre):  shadow
 %endif
 
-%if 0%{?rhel} != 0
+%if 0%{?rhel} == 6
 Requires:       python-crypto
 Requires:       m2crypto
 %else
@@ -37,7 +45,8 @@ Requires:       m2crypto
 Requires:       python-crypto
 Requires:       python-m2crypto
 %else
-Requires:       python-crypto >= 2.2
+Requires:       python2-crypto
+Requires:       m2crypto
 %endif
 %endif
 
@@ -58,7 +67,7 @@ MyProxy OAuth Delegation Service
 :
 
 %install
-python setup.py install \
+%{__python2} setup.py install \
     --install-lib /usr/share/%{name} \
     --install-scripts /usr/share/%{name} \
     --install-data %{_pkgdocdir} \
@@ -72,7 +81,8 @@ cat > $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup <<EOF
 if [ "\$(id -u)" = 0 ]; then
     idarg="-i \$(id -u myproxyoauth)"
 fi
-exec /usr/bin/env PYTHONPATH="$pythonpath" python /usr/share/%{name}/myproxy-oauth-setup "\$@" \${idarg}
+export PYTHONPATH="$pythonpath"
+exec %{__python2} /usr/share/%{name}/myproxy-oauth-setup "\$@" \${idarg}
 EOF
 chmod a+x $RPM_BUILD_ROOT%{_sbindir}/myproxy-oauth-setup
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
@@ -122,6 +132,9 @@ exit 0
 %{_sbindir}/myproxy-oauth-setup
 
 %changelog
+* Fri May 10 2019 Globus Toolkit <support@globus.org> - 1.2-1
+- Explicitly py2
+
 * Mon May 14 2018 Globus Toolkit <support@globus.org> - 1.1-1
 - Allow newer TLS versions
 
