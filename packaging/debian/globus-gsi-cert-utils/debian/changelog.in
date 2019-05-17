@@ -2,19 +2,19 @@ globus-gsi-cert-utils (10.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:29:16 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:29:16 +0100
 
 globus-gsi-cert-utils (10.1-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:21:53 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 05 Nov 2018 10:21:53 +0100
 
 globus-gsi-cert-utils (10.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix broken subject in grid-cert-request
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 19 Oct 2018 16:08:39 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 19 Oct 2018 16:08:39 +0200
 
 globus-gsi-cert-utils (10.0-1+gct.@distro@) @distro@; urgency=medium
 

@@ -2,7 +2,7 @@ globus-gass-server-ez (6.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:04:32 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:04:32 +0100
 
 globus-gass-server-ez (6.0-1+gct.@distro@) @distro@; urgency=medium
 

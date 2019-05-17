@@ -2,7 +2,7 @@ globus-gssapi-gsi (14.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:35:04 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:35:04 +0100
 
 globus-gssapi-gsi (14.9-1+gct.@distro@) @distro@; urgency=medium
 
@@ -14,7 +14,7 @@ globus-gssapi-gsi (14.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Allow TLS 1.0/1.1
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 21 Sep 2018 22:45:02 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 21 Sep 2018 22:45:02 +0200
 
 globus-gssapi-gsi (14.7-1+gct.@distro@) @distro@; urgency=medium
 
@@ -34,7 +34,7 @@ globus-gssapi-gsi (14.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix dep version
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Tue, 26 Jun 2018 08:20:14 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 26 Jun 2018 08:20:14 +0200
 
 globus-gssapi-gsi (14.4-1+gct.@distro@) @distro@; urgency=medium
 
@@ -55,13 +55,13 @@ globus-gssapi-gsi (14.2-1+gct.@distro@) @distro@; urgency=medium
     Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
     protocol version until it has been ported
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 25 May 2018 14:01:08 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 25 May 2018 14:01:08 +0200
 
 globus-gssapi-gsi (14.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:41:06 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:41:06 +0200
 
 globus-gssapi-gsi (14.0-1+gct.@distro@) @distro@; urgency=medium
 

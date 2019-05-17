@@ -2,19 +2,19 @@ globus-gridftp-server (13.16-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove obsolete acconfig.h file
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 19:43:36 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 17 Apr 2019 19:43:36 +0200
 
 globus-gridftp-server (13.15-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix doxygen warning
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sun, 14 Apr 2019 23:50:50 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 14 Apr 2019 23:50:50 +0200
 
 globus-gridftp-server (13.14-1+gct.@distro@) @distro@; urgency=medium
 
   * Update documentation links to always point to the latest documentation
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 11 Apr 2019 21:34:25 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 11 Apr 2019 21:34:25 +0200
 
 globus-gridftp-server (13.13-1+gct.@distro@) @distro@; urgency=medium
 
@@ -33,7 +33,7 @@ globus-gridftp-server (13.11-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove usage statistics collection support
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 07 Feb 2019 16:26:41 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 07 Feb 2019 16:26:41 +0100
 
 globus-gridftp-server (13.10-1+gct.@distro@) @distro@; urgency=medium
 
@@ -45,7 +45,7 @@ globus-gridftp-server (13.9-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:21:36 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 05 Nov 2018 10:21:36 +0100
 
 globus-gridftp-server (13.9-1+gct.@distro@) @distro@; urgency=medium
 
@@ -88,7 +88,7 @@ globus-gridftp-server (13.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:20:48 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:20:48 +0200
 
 globus-gridftp-server (13.2-1+gct.@distro@) @distro@; urgency=medium
 

@@ -2,13 +2,13 @@ globus-scheduler-event-generator (6.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:11:18 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:11:18 +0100
 
 globus-scheduler-event-generator (6.0-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:08:26 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 05 Nov 2018 10:08:26 +0100
 
 globus-scheduler-event-generator (6.0-1+gct.@distro@) @distro@; urgency=medium
 

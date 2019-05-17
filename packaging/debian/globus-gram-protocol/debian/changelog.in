@@ -2,13 +2,13 @@ globus-gram-protocol (13.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:14:00 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:14:00 +0100
 
 globus-gram-protocol (13.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:12:24 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:12:24 +0200
 
 globus-gram-protocol (13.0-1+gct.@distro@) @distro@; urgency=medium
 

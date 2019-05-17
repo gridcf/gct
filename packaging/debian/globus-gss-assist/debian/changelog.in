@@ -2,13 +2,13 @@ globus-gss-assist (12.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:33:47 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:33:47 +0100
 
 globus-gss-assist (12.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:39:18 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:39:18 +0200
 
 globus-gss-assist (12.0-1+gct.@distro@) @distro@; urgency=medium
 

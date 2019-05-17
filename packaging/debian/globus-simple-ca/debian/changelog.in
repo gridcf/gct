@@ -2,7 +2,7 @@ globus-simple-ca (5.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix openssl output format issue (incomplete openssl 1.1 port)
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 25 Apr 2019 09:54:08 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 25 Apr 2019 09:54:08 +0200
 
 globus-simple-ca (5.0-1+gct.@distro@) @distro@; urgency=medium
 

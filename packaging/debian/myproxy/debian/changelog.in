@@ -6,13 +6,13 @@ myproxy (6.2.5-1+gct.@distro@) @distro@; urgency=medium
   * Clean up old GPT references
   * Install myproxy-get-trustroots man page
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 17 Apr 2019 20:45:16 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 17 Apr 2019 20:45:16 +0200
 
 myproxy (6.2.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove usage statistics collection support
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Fri, 07 Dec 2018 08:29:23 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 07 Dec 2018 08:29:23 +0100
 
 myproxy (6.2.3-1+gct.@distro@) @distro@; urgency=medium
 
@@ -24,7 +24,7 @@ myproxy (6.2.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit CA key for myproxy tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 17 May 2018 11:31:31 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 17 May 2018 11:31:31 +0200
 
 myproxy (6.2.1-1+gct.@distro@) @distro@; urgency=medium
 

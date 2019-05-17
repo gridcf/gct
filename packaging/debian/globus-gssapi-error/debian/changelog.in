@@ -2,7 +2,7 @@ globus-gssapi-error (6.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:36:33 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:36:33 +0100
 
 globus-gssapi-error (6.0-1+gct.@distro@) @distro@; urgency=medium
 

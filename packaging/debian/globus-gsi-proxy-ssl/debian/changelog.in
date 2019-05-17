@@ -2,13 +2,13 @@ globus-gsi-proxy-ssl (6.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 05:51:22 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Apr 2019 05:51:22 +0200
 
 globus-gsi-proxy-ssl (6.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:42:21 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:42:21 +0100
 
 globus-gsi-proxy-ssl (6.0-1+gct.@distro@) @distro@; urgency=medium
 

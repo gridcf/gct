@@ -2,13 +2,13 @@ globus-gsi-sysconfig (9.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:43:32 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:43:32 +0100
 
 globus-gsi-sysconfig (9.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Correct bitshift direction in perl test file
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 05 Sep 2018 07:48:39 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 05 Sep 2018 07:48:39 +0200
 
 globus-gsi-sysconfig (9.0-2+gct.@distro@) @distro@; urgency=medium
 

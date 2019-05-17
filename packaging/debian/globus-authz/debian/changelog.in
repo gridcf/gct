@@ -2,19 +2,19 @@ globus-authz (4.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 05:48:29 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Apr 2019 05:48:29 +0200
 
 globus-authz (4.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:23:52 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:23:52 +0100
 
 globus-authz (4.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:35:48 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:35:48 +0200
 
 globus-authz (4.0-1+gct.@distro@) @distro@; urgency=medium
 

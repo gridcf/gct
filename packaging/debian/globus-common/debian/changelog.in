@@ -2,25 +2,25 @@ globus-common (18.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 00:23:43 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Apr 2019 00:23:43 +0200
 
 globus-common (18.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix FTBR (failed to build reproducibly)
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 28 Nov 2018 10:22:50 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 28 Nov 2018 10:22:50 +0100
 
 globus-common (18.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 10:55:51 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 10:55:51 +0100
 
 globus-common (18.0-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:05:11 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 05 Nov 2018 10:05:11 +0100
 
 globus-common (18.0-1+gct.@distro@) @distro@; urgency=medium
 

@@ -2,7 +2,7 @@ gsi-openssh (7.5p1c-1+gct.@distro@) @distro@; urgency=medium
 
   * Bump gsi-openssh source version
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Thu, 18 Apr 2019 08:38:03 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Apr 2019 08:38:03 +0200
 
 gsi-openssh (7.5p1b-3+gct.@distro@) @distro@; urgency=medium
 

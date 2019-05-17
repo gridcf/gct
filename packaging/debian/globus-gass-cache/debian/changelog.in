@@ -2,7 +2,7 @@ globus-gass-cache (10.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 10:59:06 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 10:59:06 +0100
 
 globus-gass-cache (10.0-1+gct.@distro@) @distro@; urgency=medium
 

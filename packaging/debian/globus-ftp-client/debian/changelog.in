@@ -2,19 +2,19 @@ globus-ftp-client (9.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:20:22 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:20:22 +0100
 
 globus-ftp-client (9.1-2+gct.@distro@) @distro@; urgency=medium
 
   * Bump GCT release version to 6.2
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Mon, 05 Nov 2018 10:05:26 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 05 Nov 2018 10:05:26 +0100
 
 globus-ftp-client (9.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use 2048 bit RSA key for tests
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 05 May 2018 12:14:28 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 05 May 2018 12:14:28 +0200
 
 globus-ftp-client (9.0-1+gct.@distro@) @distro@; urgency=medium
 

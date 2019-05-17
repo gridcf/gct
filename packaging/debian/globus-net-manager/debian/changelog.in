@@ -4,13 +4,13 @@ globus-net-manager (1.3-1+gct.@distro@) @distro@; urgency=medium
   * Build using Python 3 for Fedora 30+
   * Enable checks
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Sat, 24 Nov 2018 09:53:15 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 24 Nov 2018 09:53:15 +0100
 
 globus-net-manager (1.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:22:32 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:22:32 +0100
 
 globus-net-manager (1.1-1+gct.@distro@) @distro@; urgency=medium
 

@@ -2,7 +2,7 @@ globus-openssl-module (5.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
 
- -- Mattias Ellert <mattias.ellert@physica.uu.se>  Wed, 21 Nov 2018 11:38:57 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Nov 2018 11:38:57 +0100
 
 globus-openssl-module (5.0-1+gct.@distro@) @distro@; urgency=medium
 
