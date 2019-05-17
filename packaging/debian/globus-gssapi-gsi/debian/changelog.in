@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Keep peers in sync after SSL handshake failure in gssapi
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 17 May 2019 13:17:05 +0200
+
 globus-gssapi-gsi (14.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

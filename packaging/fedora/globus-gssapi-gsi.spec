@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.10
+Version:	14.11
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri May 17 2019 Mattias Ellert - 14.11-1
+- Keep peers in sync after SSL handshake failure in gssapi
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.10-1
 - Doxygen fixes
 
