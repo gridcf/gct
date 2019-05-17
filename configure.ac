@@ -1,3 +1,14 @@
+m4_define([gct_current_tag], [m4_syscmd([
+if test -e .git ; then
+    git describe --tags > gct-current-tag.inc.new;
+    if ! cmp gct-current-tag.inc.new gct-current-tag.inc > /dev/null 2>&1; then
+        mv gct-current-tag.inc.new gct-current-tag.inc
+    else
+        rm gct-current-tag.inc.new
+    fi
+fi])dnl
+m4_[]include(gct-current-tag.inc)])dnl
+
 m4_define([globus_buildno], [m4_syscmd([
 if test -e .git ; then
     git log -n 1 --pretty=format:%ct > globus-version.inc.new;
@@ -20,6 +31,7 @@ syscmd([test -x ./prep-gsissh && sh -x ./prep-gsissh || true])
 syscmd([test -x ./write-globus-version && sh -x ./write-globus-version ]AC_PACKAGE_VERSION)
 m4_include([gsi_openssh/version.m4])
 AC_SUBST([GSI_OPENSSH_VERSION], [gsissh_version])
+AC_SUBST([GCT_CURRENT_TAG], gct_current_tag)
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.11 foreign parallel-tests tar-pax subdir-objects])
 AC_CONFIG_HEADERS([ltdlconfig.h])

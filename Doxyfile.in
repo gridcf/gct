@@ -1,5 +1,5 @@
 PROJECT_NAME           = "Grid Community Toolkit"
-PROJECT_NUMBER         = @VERSION@
+PROJECT_NUMBER         = "@VERSION@ (tag: @GCT_CURRENT_TAG@)"
 OPTIMIZE_OUTPUT_FOR_C  = YES
 GENERATE_MAN           = YES
 MAN_LINKS              = YES
