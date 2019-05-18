@@ -3,7 +3,7 @@
 Name:		globus-gram-client
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	14.2
+Version:	14.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Client Library
 
@@ -137,6 +137,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat May 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.3-1
+- Doxygen fix
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.2-1
 - Doxygen fixes
 

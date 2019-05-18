@@ -3487,15 +3487,6 @@ globus_gram_client_callback_disallow(
 } /* globus_gram_client_callback_allow() */
 
 
-
-/**
- * Releases the resources storing a job contact string.
- * @ingroup globus_gram_client
- *
- * @param job_contact
- *        A job contact string returned in a successful call to
- *        globus_gram_client_job_request()
- */
 /**
  * @brief Free a job contact string
  * @ingroup globus_gram_client
