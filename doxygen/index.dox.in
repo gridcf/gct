@@ -1,5 +1,5 @@
 /**
- * @mainpage Grid Community Toolkit API Documentation @VERSION@
+ * @mainpage Grid Community Toolkit API Documentation @VERSION@ (tag: @GCT_CURRENT_TAG@)
  *
  * @section gridftp_section GridFTP
  * - @ref globus_gass_copy
