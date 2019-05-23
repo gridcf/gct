@@ -72,6 +72,12 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
+if [ "%{_initddir}" != "%{_sysconfdir}/init.d" ] ; then
+    mkdir -p $RPM_BUILD_ROOT%{_initddir}
+    mv $RPM_BUILD_ROOT%{_sysconfdir}/init.d/* $RPM_BUILD_ROOT%{_initddir}
+    rmdir $RPM_BUILD_ROOT%{_sysconfdir}/init.d
+fi
+
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-services
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-services/available
 

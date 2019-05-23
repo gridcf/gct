@@ -156,6 +156,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool archives (.la files)
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
+if [ "%{_initddir}" != "%{_sysconfdir}/init.d" ] ; then
+    mkdir -p $RPM_BUILD_ROOT%{_initddir}
+    mv $RPM_BUILD_ROOT%{_sysconfdir}/init.d/* $RPM_BUILD_ROOT%{_initddir}
+    rmdir $RPM_BUILD_ROOT%{_sysconfdir}/init.d
+fi
+
 %check
 make %{?_smp_mflags} check VERBOSE=1
 

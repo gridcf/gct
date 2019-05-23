@@ -148,6 +148,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool archives (.la files)
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
+if [ "%{_initddir}" != "%{_sysconfdir}/init.d" ] ; then
+    mkdir -p $RPM_BUILD_ROOT%{_initddir}
+    mv $RPM_BUILD_ROOT%{_sysconfdir}/init.d/* $RPM_BUILD_ROOT%{_initddir}
+    rmdir $RPM_BUILD_ROOT%{_sysconfdir}/init.d
+fi
+
 mv $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf.default \
    $RPM_BUILD_ROOT%{_sysconfdir}/gridftp.conf
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d
