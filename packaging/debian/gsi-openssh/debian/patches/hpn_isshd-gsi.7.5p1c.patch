@@ -14795,7 +14795,7 @@ diff -Nur openssh-7.5p1/readconf.c gsi-openssh/readconf.c
 -		options->gss_deleg_creds = 0;
 +		options->gss_deleg_creds = 1;
 +	if (options->gss_trust_dns == -1)
-+		options->gss_trust_dns = 1;
++		options->gss_trust_dns = 0;
 +	if (options->gss_renewal_rekey == -1)
 +		options->gss_renewal_rekey = 0;
  	if (options->password_authentication == -1)
@@ -15685,7 +15685,7 @@ diff -Nur openssh-7.5p1/ssh_config gsi-openssh/ssh_config
 +#   GSSAPIAuthentication yes
 +#   GSSAPIDelegateCredentials yes
 +#   GSSAPIKeyExchange yes
-+#   GSSAPITrustDNS yes
++#   GSSAPITrustDNS no
 +#   GSSAPIRenewalForcesRekey no
  #   BatchMode no
  #   CheckHostIP yes
@@ -15748,7 +15748,7 @@ diff -Nur openssh-7.5p1/ssh_config.5 gsi-openssh/ssh_config.5
 +.Cm no, the hostname entered on the
 +command line will be passed untouched to the GSSAPI library.
 +The default is
-+.Cm yes .
++.Cm no .
 +This option only applies to protocol version 2 connections using GSSAPI.
  .It Cm HashKnownHosts
  Indicates that
