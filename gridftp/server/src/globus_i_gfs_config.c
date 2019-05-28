@@ -413,6 +413,9 @@ static const globus_l_gfs_config_option_t option_list[] =
     "This is the same as setting the environment variable GLOBUS_TCP_PORT_RANGE.", NULL, NULL, GLOBUS_FALSE, NULL},
  {"epsv_ip", "epsv_ip", NULL, "epsv-ip", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "Adds an IPv6 address to EPSV response. Breaks RFC 2428, but allows redirection to work with IPv6.", NULL, NULL, GLOBUS_FALSE, NULL},
+ {"epsv_match", "epsv_match", NULL, "epsv-match", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
+    "Makes EPSV behaviour more compliant with RFC 2428 by choosing the default data connection protocol "
+    "based on the control connection protocol.", NULL, NULL,GLOBUS_FALSE, NULL},
 {NULL, "User Messages", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL},
  {"banner", "banner", NULL, "banner", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Message to display to the client before authentication.", NULL, NULL,GLOBUS_TRUE, NULL},
@@ -531,6 +534,8 @@ static const globus_l_gfs_config_option_t option_list[] =
     NULL /* original argv */, NULL, NULL,GLOBUS_FALSE, NULL},
  {"argc", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL /* original argc */, NULL, NULL, GLOBUS_FALSE, NULL},
+ {"ipv6", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_TRUE, NULL,
+    NULL /* control connection is IPv6 */, NULL, NULL, GLOBUS_FALSE, NULL},
 
 /* service container stuff */
  {"extension", "extension", NULL, "extension", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,

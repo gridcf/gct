@@ -2255,7 +2255,9 @@ globus_l_gsc_cmd_pasv(
     else if(strncmp(cmd_a[0], "EPSV", 4) == 0)
     {
         wrapper->dc_parsing_alg = 1;
-        wrapper->prt = GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV6;
+        wrapper->prt = op->server_handle->ipv6 == GLOBUS_TRUE ?
+                       GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV6 :
+                       GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV4;
         wrapper->max = 1;
         if(argc == 2)
         {
