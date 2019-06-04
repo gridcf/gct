@@ -1,3 +1,9 @@
+globus-gridftp-server (13.17-1+gct.@distro@) @distro@; urgency=medium
+
+  * add simple checksum read throttling
+
+ -- Globus Toolkit <support@globus.org>  Mon, 03 Jun 2019 08:58:23 -0500
+
 globus-gridftp-server (13.16-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove obsolete acconfig.h file

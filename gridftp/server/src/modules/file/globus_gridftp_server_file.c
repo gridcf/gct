@@ -98,6 +98,8 @@ typedef struct globus_l_gfs_file_cksm_monitor_s
     globus_bool_t                       send_marker;
     globus_off_t                        total_bytes;
 
+    int                                 delay_read;
+
     unsigned char                       cksum_type;
     MD5_CTX                             mdctx;
     uint32_t                            adler32ctx;
@@ -1818,6 +1820,11 @@ globus_l_gfs_file_cksm_read_cb(
                 monitor->op, GLOBUS_SUCCESS, count);
         }
 
+        if (monitor->delay_read)
+        {
+            nanosleep(&(struct timespec) {.tv_nsec = monitor->delay_read * 1000}, NULL);
+        }
+
         result = globus_xio_register_read(
             handle,
             monitor->buffer,
@@ -2130,6 +2137,7 @@ globus_l_gfs_file_cksm(
     monitor->block_size = block_size;
     monitor->internal_cb = internal_cb;
     monitor->internal_cb_arg = internal_cb_arg;
+    monitor->delay_read = globus_gfs_config_get_int("checksum_throttle");
 
     monitor->cksum_type = 0;
     if(!strcasecmp("md5", algorithm))
