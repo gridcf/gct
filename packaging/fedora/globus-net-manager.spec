@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	1.3
+Version:	1.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -205,6 +205,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 05 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.4-1
+- Check python-config for --embed flag (python 3.8 compatibility)
+
 * Sat Nov 24 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.3-1
 - Python 3 support
 - Build using Python 3 for Fedora 30+
