@@ -5,11 +5,11 @@ Minimal tools needed
 --------------------
 
 The minimal RPMs (as provided by CentOS7 yum) needed to build this package are:
-autoconf automake make libtool libtool-ltdl gcc gcc-c++ patch openssl openssl-devel
+autoconf automake make libtool libtool-ltdl libtool-ltdl-devel gcc gcc-c++ patch openssl openssl-devel
 
 Additionally, if UDT support is desired, you will need
 epel-release
-udl
+udt
 
 Install instructions:
 --------------------
