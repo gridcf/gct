@@ -170,6 +170,10 @@ globus_i_gfs_kv_replaceval(
 char *
 globus_i_gfs_data_dsi_version();
 
+const char *
+globus_i_gfs_data_dsi_checksum_support(
+    void *                              session_arg);
+
 #define GFS_L_READ  1<<0
 #define GFS_L_WRITE 1<<1
 #define GFS_L_LIST  1<<2

@@ -257,6 +257,7 @@ typedef struct
     globus_extension_handle_t           dsi_handle;
     char *                              dsi_data;
     char *                              dsi_data_global;
+    char *                              dsi_checksum_support;
 
     char *                              mod_dsi_name;
     globus_gfs_storage_iface_t *        mod_dsi;
@@ -1914,6 +1915,10 @@ globus_l_gfs_free_session_handle(
     if(session_handle->dsi_data_global)
     {
         globus_free(session_handle->dsi_data_global);
+    }
+    if(session_handle->dsi_checksum_support)
+    {
+        globus_free(session_handle->dsi_checksum_support);
     }
     if(session_handle->taskid)
     {
@@ -5101,6 +5106,16 @@ globus_l_gfs_base64_encode(
     }
 
     return GLOBUS_SUCCESS;
+}
+
+
+const char *
+globus_i_gfs_data_dsi_checksum_support(
+    void *                              session_arg)
+{
+    globus_l_gfs_data_session_t *       session_handle = session_arg;
+
+    return session_handle->dsi_checksum_support;
 }
 
 
@@ -13364,8 +13379,26 @@ err:
     GlobusGFSDebugExitWithError();
     return res;
 }        
-    
 
+globus_result_t
+globus_gridftp_server_set_checksum_support(
+    globus_gfs_operation_t              op,
+    const char *                        cksm_str)
+{
+    globus_result_t                     result;
+    GlobusGFSName(globus_gridftp_server_set_checksum_support);
+    GlobusGFSDebugEnter();
+
+    if (!cksm_str || !cksm_str[0])
+    {
+        return GlobusGFSErrorGeneric("Invalid checksum support string.");
+    }
+
+    op->session_handle->dsi_checksum_support = strdup(cksm_str);
+
+    GlobusGFSDebugExit();
+    return GLOBUS_SUCCESS;
+}
 
 globus_result_t
 globus_gridftp_server_add_command(

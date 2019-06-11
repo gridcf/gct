@@ -2,9 +2,8 @@
 
 Name:		globus-gridftp-server
 %global soname 6
-
 %global _name %(echo %{name} | tr - _)
-Version:	13.17
+Version:	13.18
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -224,6 +223,10 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Jun 07 2019 Globus Toolkit <support@globus.org> - 13.18-1
+- Add support for supported checksum advertising
+- Add support for SHA1, SHA256, SHA512 to POSIX DSI
+
 * Mon Jun 03 2019 Globus Toolkit <support@globus.org> - 13.17-1
 - add simple checksum read throttling
 

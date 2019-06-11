@@ -1048,6 +1048,25 @@ globus_gridftp_server_add_command(
     globus_bool_t                       has_pathname,
     int                                 access_type);
 
+/** Register support for checksum algorithms
+*
+* cksm_str is a string in the form of alg1:metric1;alg2:metric2;[...]
+* example: SHA1:10;MD5:10:ADLER32:10;
+*
+* Range of metrics should be 1-20, and should be set to indicate not only
+* a relative preference within the connector, but a general preference in
+* terms of how expensive an algorithm is.
+* General guidelines:
+* 1-5: checksum is available with inexpensive metadata reads
+* 6-9: checksum is often available with metadata reads
+* 10-15: checksum is often recomputed, but data is readily available
+* 15-20: checksum is often recomputed, data may be costly to read
+*/
+globus_result_t
+globus_gridftp_server_set_checksum_support(
+    globus_gfs_operation_t              op,
+    const char *                        cksm_str);
+
 /**
  * Helper Functions
  **/

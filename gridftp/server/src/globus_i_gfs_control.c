@@ -540,6 +540,8 @@ globus_l_gfs_auth_session_cb(
 {
     globus_l_gfs_auth_info_t *          auth_info;
     char *                              tmp_str;
+    const char *                        cksm_str;
+    globus_result_t                     result;
     GlobusGFSName(globus_l_gfs_auth_session_cb);
     GlobusGFSDebugEnter();
 
@@ -607,7 +609,6 @@ globus_l_gfs_auth_session_cb(
         {
             globus_list_t *             list;
             int                         rc;
-            globus_result_t             result;
             globus_i_gfs_cmd_ent_t *    cmd_ent;
             
             auth_info->instance->custom_cmd_table = 
@@ -645,6 +646,30 @@ globus_l_gfs_auth_session_cb(
                 }
             }
         }
+
+        cksm_str = globus_i_gfs_data_dsi_checksum_support(
+            auth_info->instance->session_arg);
+        if (cksm_str)
+        {
+            char                        feat_str[6 + strlen(cksm_str)];
+
+            snprintf(feat_str, sizeof(feat_str), "CKSM %s", cksm_str);
+            result = globus_gridftp_server_control_add_feature(
+                auth_info->instance->server_handle, feat_str);
+            if(result != GLOBUS_SUCCESS)
+            {
+                char *                  tmp_msg;
+                tmp_msg = globus_error_print_friendly(
+                    globus_error_peek(result));
+
+                globus_gfs_log_message(
+                    GLOBUS_GFS_LOG_ERR,
+                    "Could not add CKSM to FEAT: %s",
+                    tmp_msg);
+                globus_free(tmp_msg);
+            }
+        }
+
         globus_gridftp_server_control_finished_auth(
             auth_info->control_op,
             reply->info.session.username,

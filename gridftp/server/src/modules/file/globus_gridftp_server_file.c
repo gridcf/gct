@@ -19,6 +19,7 @@
 #include "globus_xio.h"
 #include "globus_xio_file_driver.h"
 #include <openssl/md5.h>
+#include <openssl/sha.h>
 #include <zlib.h>
 #include "version.h"
 
@@ -45,6 +46,8 @@
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif
+
+#define GFS_L_FILE_CKSM_SUPPORT "MD5:10;ADLER32:10;SHA1:10;SHA256:11;SHA512:12;"
 
 GlobusDebugDeclare(GLOBUS_GRIDFTP_SERVER_FILE);
 
@@ -79,7 +82,10 @@ enum
 {
     GLOBUS_GFS_FILE_CKSM_TYPE_NONE = 0,
     GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32,
-    GLOBUS_GFS_FILE_CKSM_TYPE_MD5
+    GLOBUS_GFS_FILE_CKSM_TYPE_MD5,
+    GLOBUS_GFS_FILE_CKSM_TYPE_SHA1,
+    GLOBUS_GFS_FILE_CKSM_TYPE_SHA256,
+    GLOBUS_GFS_FILE_CKSM_TYPE_SHA512
 };
 
 typedef struct globus_l_gfs_file_cksm_monitor_s
@@ -102,6 +108,9 @@ typedef struct globus_l_gfs_file_cksm_monitor_s
 
     unsigned char                       cksum_type;
     MD5_CTX                             mdctx;
+    SHA_CTX                             sha1ctx;
+    SHA256_CTX                          sha256ctx;
+    SHA512_CTX                          sha512ctx;
     uint32_t                            adler32ctx;
 
     globus_byte_t                       buffer[];
@@ -1764,10 +1773,14 @@ globus_l_gfs_file_cksm_read_cb(
     globus_bool_t                       eof = GLOBUS_FALSE;
     char *                              cksmptr = NULL;
     char *                              md5ptr;
+    char *                              shaptr;
     unsigned char                       md[MD5_DIGEST_LENGTH];
     char                                md5sum[MD5_DIGEST_LENGTH * 2 + 1] = {0};
+    unsigned char                       sha[SHA512_DIGEST_LENGTH];
+    char                                shasum[SHA512_DIGEST_LENGTH * 2 + 1] = {0};
     char                                adler32_human[2*sizeof(uint32_t)+1];
     int                                 i;    
+
     GlobusGFSName(globus_l_gfs_file_cksm_read_cb);
     GlobusGFSFileDebugEnter();
     
@@ -1801,6 +1814,18 @@ globus_l_gfs_file_cksm_read_cb(
     if(monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_MD5)
     {
         MD5_Update(&monitor->mdctx, buffer, nbytes);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA1)
+    {
+        SHA1_Update(&monitor->sha1ctx, buffer, nbytes);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA256)
+    {
+        SHA256_Update(&monitor->sha256ctx, buffer, nbytes);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA512)
+    {
+        SHA512_Update(&monitor->sha512ctx, buffer, nbytes);
     }
     else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32)
     {
@@ -1867,6 +1892,36 @@ globus_l_gfs_file_cksm_read_cb(
                md5ptr += sprintf(md5ptr, "%02x", md[i]);
             }
             cksmptr = md5sum;
+        }
+        else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA1)
+        {
+            SHA1_Final(sha, &monitor->sha1ctx);
+            shaptr = shasum;
+            for(i = 0; i < SHA_DIGEST_LENGTH; i++)
+            {
+               shaptr += sprintf(shaptr, "%02x", sha[i]);
+            }
+            cksmptr = shasum;
+        }
+        else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA256)
+        {
+            SHA256_Final(sha, &monitor->sha256ctx);
+            shaptr = shasum;
+            for(i = 0; i < SHA256_DIGEST_LENGTH; i++)
+            {
+               shaptr += sprintf(shaptr, "%02x", sha[i]);
+            }
+            cksmptr = shasum;
+        }
+        else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA512)
+        {
+            SHA512_Final(sha, &monitor->sha512ctx);
+            shaptr = shasum;
+            for(i = 0; i < SHA512_DIGEST_LENGTH; i++)
+            {
+               shaptr += sprintf(shaptr, "%02x", sha[i]);
+            }
+            cksmptr = shasum;
         }
         else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32)
         {
@@ -1985,9 +2040,28 @@ globus_l_gfs_file_open_cksm_cb(
             goto error_seek;
         }
     }
+
+    if(monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_MD5)
+    {
+        MD5_Init(&monitor->mdctx);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA1)
+    {
+        SHA1_Init(&monitor->sha1ctx);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA256)
+    {
+        SHA256_Init(&monitor->sha256ctx);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_SHA512)
+    {
+        SHA512_Init(&monitor->sha512ctx);
+    }
+    else if (monitor->cksum_type == GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32)
+    {
+        monitor->adler32ctx = adler32(0, NULL, 0);
+    }
     
-    MD5_Init(&monitor->mdctx);
-    monitor->adler32ctx = adler32(0, NULL, 0);
     
     result = globus_xio_register_read(
         handle,
@@ -2044,6 +2118,7 @@ globus_l_gfs_file_cksm(
     globus_l_gfs_file_cksm_monitor_t *  monitor;
     globus_size_t                       block_size;
     int                                 timeout;
+    int                                 cksm_type = 0;
     GlobusGFSName(globus_l_gfs_file_cksm);
     GlobusGFSFileDebugEnter();
     
@@ -2053,7 +2128,27 @@ globus_l_gfs_file_cksm(
         goto param_error;
     }
 
-    if (strcasecmp(algorithm, "md5") && strcasecmp(algorithm, "adler32"))
+    if(!strcasecmp("md5", algorithm))
+    {
+        cksm_type = GLOBUS_GFS_FILE_CKSM_TYPE_MD5;
+    }
+    else if(!strcasecmp("sha1", algorithm))
+    {
+        cksm_type = GLOBUS_GFS_FILE_CKSM_TYPE_SHA1;
+    }
+    else if(!strcasecmp("sha256", algorithm))
+    {
+        cksm_type = GLOBUS_GFS_FILE_CKSM_TYPE_SHA256;
+    }
+    else if(!strcasecmp("sha512", algorithm))
+    {
+        cksm_type = GLOBUS_GFS_FILE_CKSM_TYPE_SHA512;
+    }
+    else if(!strcasecmp("adler32", algorithm))
+    {
+        cksm_type = GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32;
+    }
+    else
     {
         result = GlobusGFSErrorGeneric("Unknown checksum algorithm requested.");
         goto alg_error;
@@ -2127,7 +2222,7 @@ globus_l_gfs_file_cksm(
         1, sizeof(globus_l_gfs_file_cksm_monitor_t) + block_size);
     if(monitor == NULL)
     {
-        result = GlobusGFSErrorMemory("cheksum buffer");
+        result = GlobusGFSErrorMemory("checksum buffer");
         goto error_mem;
     }
     
@@ -2138,16 +2233,7 @@ globus_l_gfs_file_cksm(
     monitor->internal_cb = internal_cb;
     monitor->internal_cb_arg = internal_cb_arg;
     monitor->delay_read = globus_gfs_config_get_int("checksum_throttle");
-
-    monitor->cksum_type = 0;
-    if(!strcasecmp("md5", algorithm))
-    {
-        monitor->cksum_type = GLOBUS_GFS_FILE_CKSM_TYPE_MD5;
-    }
-    else if(!strcasecmp("adler32", algorithm))
-    {
-        monitor->cksum_type = GLOBUS_GFS_FILE_CKSM_TYPE_ADLER32;
-    }
+    monitor->cksum_type = cksm_type;
 
     result = globus_xio_register_open(
         file_handle,
@@ -3409,6 +3495,8 @@ globus_l_gfs_file_init(
     session_h->sbj = globus_libc_strdup(session_info->subject);
     session_h->username = globus_libc_strdup(session_info->username);
     session_h->pw = globus_libc_strdup(session_info->password);
+
+    globus_gridftp_server_set_checksum_support(op, GFS_L_FILE_CKSM_SUPPORT);
 
     /* just make it so we can get the cred. */
     globus_gridftp_server_finished_session_start(
