@@ -30,9 +30,9 @@ if test "$enableval" = yes; then
         PYTHON_CPPFLAGS="$CPPFLAGS $($PYTHON_CONFIG --includes)"
         if $PYTHON_CONFIG --embed >/dev/null 2>&1; then
             PYTHON_LIBS="$LIBS $($PYTHON_CONFIG --libs --embed)"
-	else
+        else
             PYTHON_LIBS="$LIBS $($PYTHON_CONFIG --libs)"
-	fi
+        fi
     else
         AC_MSG_ERROR([Cannot find usable python-config])
     fi
