@@ -1,22 +1,21 @@
-This package is part of of the Globus Toolkit. For more information visit:
+This package is part of the Grid Community Toolkit. For more information visit:
 
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/
+https://gridcf.org/gct-docs/latest/gsiopenssh/
 
 Admin Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/admin/
+https://gridcf.org/gct-docs/latest/gsiopenssh/admin/
 
 Developer's Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/developer/
+https://gridcf.org/gct-docs/latest/gsiopenssh/developer/
 
 Release Notes:
-http://www.globus.org/toolkit/docs/latest-stable/data/gridftp/rn/
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/rn/
+https://gridcf.org/gct-docs/latest/gsiopenssh/rn/
 
 Public Interface Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/pi/
+https://gridcf.org/gct-docs/latest/gsiopenssh/pi/
 
 Quality Profile:
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/qp/
+https://gridcf.org/gct-docs/latest/gsiopenssh/qp/
 
 Migrating Guide:
-http://www.globus.org/toolkit/docs/latest-stable/security/openssh/mig/
+https://gridcf.org/gct-docs/latest/gsiopenssh/mig/

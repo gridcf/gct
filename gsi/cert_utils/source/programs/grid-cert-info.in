@@ -81,7 +81,7 @@ ${short_usage}
 EOF
 }
 
-# See http://www-unix.globus.org/toolkit/docs/4.0/admin/docbook/ch05.html#prewsaa-env-credentials
+# See https://gridcf.org/gct-docs/latest/gsic/pi/index.html#gsic-pi-env
 find_default_credential()
 {
     if [ -n "$X509_USER_CERT" ]; then
