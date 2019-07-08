@@ -1,25 +1,34 @@
 Installation instructions
 =========================
 
-Minimal tools needed
---------------------
+Minimal tools needed (for CentOS7)
+---------------------------------
 
 The minimal RPMs (as provided by CentOS7 yum) needed to build this package are:
 autoconf automake make libtool libtool-ltdl libtool-ltdl-devel gcc gcc-c++ patch openssl openssl-devel
 
+If not already installed, please also add
+ curl
+
 Additionally, if UDT support is desired, you will need
-epel-release
-udt
+udt-devel
+
+Note: udt-devel comes from the EPEL repositories. Install 
+          epel-release 
+      to get them
 
 Install instructions:
 --------------------
 
 autoreconf -i
 ./configure <options>
+make -j <numcpus>
+make -j <numcpus>
+
 # for example:
 # ./configure --disable-gram5 --disable-gsi-openssh --enable-udt
-make -j 4
-make -j 4 install
+# make -j 4
+# make -j 4 install
 
 The files will be avaialble in
 /usr/local/globus-6/*
