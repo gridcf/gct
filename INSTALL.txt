@@ -23,7 +23,7 @@ Install instructions:
 autoreconf -i
 ./configure <options>
 make -j <numcpus>
-make -j <numcpus>
+make -j <numcpus> install
 
 # for example:
 # ./configure --disable-gram5 --disable-gsi-openssh --enable-udt
