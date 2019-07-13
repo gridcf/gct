@@ -1,6 +1,6 @@
 udt_version = 4.11
 udt_tarball = udt.sdk.$(udt_version).tar.gz
-udt_tarball_url = http://toolkit.globus.org/ftppub/gt6/packages/$(udt_tarball)
+udt_tarball_url = http://downloads.sourceforge.net/project/udt/udt/$(udt_version)/$(udt_tarball)
 
 privlibdir = $(libdir)/globus
 privlib_LTLIBRARIES = libudt.la

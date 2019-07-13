@@ -2,7 +2,7 @@
 
 Name:		globus-xio-udt-driver
 %global _name %(echo %{name} | tr - _)
-Version:	2.0
+Version:	2.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO UDT Driver
 
@@ -105,6 +105,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Jul 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.1-1
+- Replace broken URL
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.0-1
 - First Grid Community Toolkit release
 
