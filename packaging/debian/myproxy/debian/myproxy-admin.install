@@ -4,7 +4,6 @@ debian/tmp/usr/sbin/myproxy-admin-change-pass
 debian/tmp/usr/sbin/myproxy-admin-load-credential
 debian/tmp/usr/sbin/myproxy-admin-query
 debian/tmp/usr/sbin/myproxy-replicate
-debian/tmp/usr/sbin/myproxy-server-setup
 debian/tmp/usr/sbin/myproxy-test
 debian/tmp/usr/sbin/myproxy-test-replicate
 debian/tmp/usr/share/man/man8/myproxy-admin-addservice.8

@@ -23,6 +23,8 @@ Package: libmyproxy6
 Section: libs
 Architecture: any
 Multi-Arch: same
+Replaces: libmyproxy-doc (<< 6.2.6)
+Breaks: libmyproxy-doc (<< 6.2.6)
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}, globus-proxy-utils
 Description: Credential Management Service Library
@@ -56,7 +58,6 @@ Section: libdevel
 Architecture: any
 Multi-Arch: same
 Depends: libmyproxy6 (= ${binary:Version}), libglobus-common-dev (>= 14), libglobus-gssapi-gsi-dev (>= 9), libglobus-gss-assist-dev (>= 8), libglobus-gsi-sysconfig-dev (>= 5), libglobus-gsi-cert-utils-dev (>= 8), libglobus-gsi-proxy-core-dev (>= 6), libglobus-gsi-credential-dev (>= 5), libglobus-gsi-callback-dev (>= 4), ${misc:Depends}
-Suggests: libmyproxy-doc (= ${source:Version})
 Description: Credential Management Service Development
  MyProxy is open source software for managing X.509 Public Key Infrastructure
  (PKI) security credentials (certificates and private keys). MyProxy
@@ -97,11 +98,12 @@ Description: Credential Management Service Administration Tools
  .
  This package contains the MyProxy server admin commands.
 
-Package: libmyproxy-doc
+Package: myproxy-doc
 Section: doc
 Architecture: all
 Multi-Arch: foreign
-Pre-Depends: dpkg (>= 1.17.5)
+Replaces: libmyproxy-doc (<< 6.2.6)
+Breaks: libmyproxy-doc (<< 6.2.6)
 Depends: ${misc:Depends}
 Description: Credential Management Service Documentation
  MyProxy is open source software for managing X.509 Public Key Infrastructure

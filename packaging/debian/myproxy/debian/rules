@@ -14,7 +14,7 @@ _includedir = $(_prefix)/include
 _libdir = $(_prefix)/lib
 _datadir = $(_prefix)/share
 _mandir = $(_datadir)/man
-_docdir = $(_datadir)/doc/lib$(name)-dev
+_docdir = $(_datadir)/doc/$(name)
 _sysconfdir = /etc
 
 configure: configure-stamp
@@ -27,8 +27,6 @@ configure-stamp:
 	dh_auto_configure -- \
 	   --disable-static \
 	   --includedir=$(_includedir)/globus \
-	   --libexecdir=$(_datadir)/globus \
-	   --docdir=$(_docdir) \
 	   --with-voms=/usr \
 	   --with-openldap=/usr \
 	   --with-kerberos5=/usr \
@@ -74,11 +72,15 @@ install: build-stamp
 	# Remove libtool archives (.la files)
 	rm $(INSTALLDIR)$(_libdir)/*/*.la
 
+	# No need for myproxy-server-setup since the debian package will
+	# perform the needed setup
+	rm $(INSTALLDIR)/usr/sbin/myproxy-server-setup
+
 	# Move documentation to default debian location
 	mkdir -p $(INSTALLDIR)$(_docdir)/extras
 	for FILE in login.html myproxy-accepted-credentials-mapapp \
 	  myproxy-cert-checker myproxy-certificate-mapapp \
-          myproxy-certreq-checker myproxy-crl.cron myproxy.cron \
+	  myproxy-certreq-checker myproxy-crl.cron myproxy.cron \
 	  myproxy-get-delegation.cgi myproxy-get-trustroots.cron \
 	  myproxy-passphrase-policy myproxy-revoke ; do \
 	  mv $(INSTALLDIR)$(_datadir)/$(name)/$$FILE \
@@ -90,14 +92,14 @@ install: build-stamp
 	    $(INSTALLDIR)$(_docdir) ; \
 	done
 
-	# Remove irrelavent example configuration files.
+	# Remove irrelevant example configuration files
 	for FILE in etc.inetd.conf.modifications etc.init.d.myproxy.nonroot \
 	  etc.services.modifications etc.xinetd.myproxy \
 	  etc.init.d.myproxy LICENSE* ; do \
 	  rm $(INSTALLDIR)$(_datadir)/$(name)/$$FILE ; \
 	done
 
-	# Move example configuration file into place.
+	# Move example configuration file into place
 	mkdir -p $(INSTALLDIR)$(_sysconfdir)
 	mv $(INSTALLDIR)$(_datadir)/$(name)/myproxy-server.config \
 	   $(INSTALLDIR)$(_sysconfdir)
@@ -105,7 +107,7 @@ install: build-stamp
 	mkdir -p $(INSTALLDIR)/var/lib/$(name)
 	chmod 700 $(INSTALLDIR)/var/lib/$(name)
 
-	# Create a directory to hold myproxy owned host certificates.
+	# Create a directory to hold myproxy owned host certificates
 	mkdir -p $(INSTALLDIR)$(_sysconfdir)/grid-security/$(name)
 
 	# systemd unit files

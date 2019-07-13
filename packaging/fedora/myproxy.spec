@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.5
+Version:        6.2.6
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -208,6 +208,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 # the needed setup
 rm $RPM_BUILD_ROOT%{_sbindir}/myproxy-server-setup
 
+# Put documentation in Fedora default location
 mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}/extras
 for FILE in login.html myproxy-accepted-credentials-mapapp \
             myproxy-cert-checker myproxy-certificate-mapapp \
@@ -224,7 +225,7 @@ for FILE in LICENSE LICENSE.* PROTOCOL README.sasl REPOSITORY VERSION ; do
       $RPM_BUILD_ROOT%{_pkgdocdir}
 done
 
-# Remove irrelavent example configuration files
+# Remove irrelevant example configuration files
 for FILE in etc.inetd.conf.modifications etc.init.d.myproxy.nonroot \
             etc.services.modifications etc.xinetd.myproxy etc.init.d.myproxy \
             myproxy-server.service myproxy-server.conf ; do
@@ -381,6 +382,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sat Jul 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.6-1
+- Remove LICENSE.globus file
+
 * Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.5-1
 - Drop obsolete configure option --with-gpt
 - Drop obsolete configure option --with-flavor
