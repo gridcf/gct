@@ -1,3 +1,9 @@
+globus-gsi-cert-utils (10.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Update additional old document references
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 13 Jul 2019 11:56:42 +0200
+
 globus-gsi-cert-utils (10.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes
