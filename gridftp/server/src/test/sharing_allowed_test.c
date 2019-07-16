@@ -91,7 +91,8 @@ test_cleanup:
 int main()
 {
     uid_t                               my_uid;
-    uid_t                               my_groups[NGROUPS_MAX];
+    gid_t                               my_groups[NGROUPS_MAX];
+    gid_t                               my_default_gid;
     char *                              my_username;
     char *                              my_default_group;
     char *                              my_other_group;
@@ -124,10 +125,19 @@ int main()
     }
 
     rc = getgroups(NGROUPS_MAX, my_groups);
-    grent = getgrgid(my_groups[0]);
+    if (rc<0)
+    {
+        fprintf(stderr, "Error: getgroups(NGROUPS_MAX, my_groups) failed: %s\n",
+                strerror(errno));
+        exit(99);
+    }
+    my_default_gid = (rc>0 ? my_groups[0] : getgid());
+    grent = getgrgid(my_default_gid);
     if (grent == NULL)
     {
-        fprintf(stderr, "Unable to determine my default group name");
+        fprintf(stderr,
+                "Unable to determine my default group name (gid %d)\n",
+                my_default_gid);
         exit(99);
     }
     my_default_group = strdup(grent->gr_name);
