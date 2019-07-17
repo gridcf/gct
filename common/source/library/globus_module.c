@@ -156,12 +156,15 @@ __asm__(".symver globus_module_activate_array_new,"
 #define globus_module_activate_proxy globus_module_activate_proxy_new
 #define globus_module_activate globus_module_activate_new
 #define globus_module_activate_array globus_module_activate_array_new
-extern int WARNING_USING_MIXED_THREAD_MODELS = 0;
+int WARNING_USING_MIXED_THREAD_MODELS = 0;
 #endif
 
 /*
  * globus_module_activate()
  */
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate_proxy(
     globus_module_descriptor_t *	module_descriptor,
@@ -256,6 +259,9 @@ globus_module_activate_proxy(
  * @param module_descriptor
  *     Module to activate
  */
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate(
     globus_module_descriptor_t *	module_descriptor)
@@ -276,6 +282,9 @@ globus_module_activate(
  * @param failed_module
  *     Pointer to set to the first module whose activation function failed.
  */
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate_array(
     globus_module_descriptor_t *        module_array[],
@@ -315,6 +324,9 @@ deactivate_out:
 /* globus_module_activate_array() */
 
 #if USE_SYMBOL_LABELS
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate_proxy_compat(
     globus_module_descriptor_t *	module_descriptor,
@@ -333,6 +345,9 @@ globus_module_activate_proxy_compat(
 }
 /* globus_module_activate_proxy_compat() */
 
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate_compat(
     globus_module_descriptor_t *	module_descriptor)
@@ -348,6 +363,9 @@ globus_module_activate_compat(
 }
 /* globus_module_activate_compat() */
 
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_module_activate_array_compat(
     globus_module_descriptor_t *        module_array[],
