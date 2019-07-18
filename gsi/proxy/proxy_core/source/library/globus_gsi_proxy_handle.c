@@ -1375,6 +1375,9 @@ __asm__(".symver globus_gsi_proxy_handle_get_proxy_cert_info_openssl,"
  *        GLOBUS_GSI_PROXY_ERROR_WITH_PROXYCERTINFO if the pci
  *        pointer is invalid or if the get failed.
  */
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 globus_result_t
 globus_gsi_proxy_handle_get_proxy_cert_info_openssl(
     globus_gsi_proxy_handle_t           handle,
@@ -1429,6 +1432,9 @@ globus_gsi_proxy_handle_get_proxy_cert_info_openssl(
 }
 /* globus_gsi_proxy_handle_get_proxy_cert_info_openssl() */
 
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 globus_result_t
 globus_gsi_proxy_handle_get_proxy_cert_info_proxy_ssl(
     globus_gsi_proxy_handle_t           handle,
@@ -1538,6 +1544,9 @@ free_pci_new_exit:
  * @retval GLOBUS_GSI_PROXY_ERROR_WITH_HANDLE Handle is invalid
  * @retval GLOBUS_GSI_PROXY_ERROR_WITH_PROXYCERTINFO pci pointer is invalid or if the set failed.
  */
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 globus_result_t
 globus_gsi_proxy_handle_set_proxy_cert_info_openssl(
     globus_gsi_proxy_handle_t           handle,
@@ -1602,6 +1611,9 @@ globus_gsi_proxy_handle_set_proxy_cert_info_openssl(
 }
 /* globus_gsi_proxy_handle_set_proxy_cert_info_openssl */
 
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 globus_result_t
 globus_gsi_proxy_handle_set_proxy_cert_info_proxy_ssl(
     globus_gsi_proxy_handle_t           handle,

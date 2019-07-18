@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.3
+Version:	18.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -236,6 +236,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jul 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.4-1
+- Make symbol versioning work with link time optimization (LTO)
+
 * Wed Apr 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.3-1
 - Clean up old GPT references
 

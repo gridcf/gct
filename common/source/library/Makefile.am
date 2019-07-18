@@ -166,6 +166,9 @@ libglobus_common_la_LDFLAGS = \
 if USE_SYMBOL_LABELS
 libglobus_common_la_LIBADD += -lpthread
 libglobus_common_la_LDFLAGS += -Wl,--version-script,sym
+if USES_LTO
+libglobus_common_la_LDFLAGS += -flto-partition=none
+endif
 endif
 
 if BUILD_PTHREADS

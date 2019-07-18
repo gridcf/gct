@@ -1,3 +1,9 @@
+globus-common (18.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make symbol versioning work with link time optimization (LTO)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 17 Jul 2019 07:36:10 +0200
+
 globus-common (18.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references
