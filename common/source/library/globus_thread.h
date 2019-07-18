@@ -251,94 +251,77 @@ extern const globus_thread_once_t GLOBUS_THREAD_ONCE_INIT_VALUE;
 #   define GLOBUS_THREAD_ONCE_INIT { .none = 0 }
 #endif
 
-extern
 int
 globus_thread_set_model(
     const char *                        model);
 
-extern
 int
 globus_mutex_init(
     globus_mutex_t *                    mutex,
     globus_mutexattr_t *                attr);
 
-extern
 int
 globus_mutex_destroy(
     globus_mutex_t *                    mutex);
 
-extern
 int
 globus_mutex_lock(
     globus_mutex_t *                    mutex);
 
-extern
 int
 globus_mutex_unlock(
     globus_mutex_t *                    mutex);
 
-extern
 int
 globus_mutex_trylock(
     globus_mutex_t *                    mutex);
 
-extern
 int
 globus_cond_init(
     globus_cond_t *                     cond,
     globus_condattr_t *                 attr);
 
-extern
 int
 globus_cond_destroy(
     globus_cond_t *                     cond);
 
-extern
 int
 globus_cond_wait(
     globus_cond_t *                     cond,
     globus_mutex_t *                    mutex);
 
-extern
 int
 globus_cond_timedwait(
     globus_cond_t *                     cond,
     globus_mutex_t *                    mutex,
     globus_abstime_t *                  abstime);
 
-extern
 int
 globus_cond_signal(
     globus_cond_t *                     cond);
 
-extern
 int
 globus_cond_broadcast(
     globus_cond_t *                     cond);
 
-extern
 int
 globus_condattr_init(
     globus_condattr_t *                 cond_attr);
 
-extern
 int
 globus_condattr_destroy(
     globus_condattr_t *                 cond_attr);
 
-extern
 int
 globus_condattr_setspace(
     globus_condattr_t *                 cond_attr,
     int                                 space);
 
-extern
 int
 globus_condattr_getspace(
     globus_condattr_t *                 cond_attr,
     int *                               space);
 
-extern
 int
 globus_thread_create(
     globus_thread_t *                   thread,
@@ -346,74 +329,60 @@ globus_thread_create(
     globus_thread_func_t                func,
     void *                              user_arg);
 
-extern
 void *
 globus_thread_getspecific(
     globus_thread_key_t                 key);
 
-extern
 int
 globus_thread_setspecific(
     globus_thread_key_t                 key,
     void *                              value);
 
-extern
 int
 globus_thread_key_create(
     globus_thread_key_t *               key,
     globus_thread_key_destructor_func_t func);
-    
-extern
+
 int
 globus_thread_key_delete(
     globus_thread_key_t                 key);
 
-extern
 int
 globus_thread_once(
     globus_thread_once_t *              once,
     void (*init_routine)(void));
 
-extern
 void
 globus_thread_yield(void);
 
-extern
 int
 globus_thread_sigmask(
     int                                 how,
     const sigset_t *                    newmask,
     sigset_t *                          oldmask);
 
-extern
 int
 globus_thread_kill(
     globus_thread_t                     thread,
     int                                 sig);
 
-extern
 void
 globus_thread_exit(void *value);
 
-extern
 globus_thread_t
 globus_thread_self(void);
 
-extern
 int
 globus_thread_equal(
     globus_thread_t                     thread1,
     globus_thread_t                     thread2);
 
-extern
 globus_bool_t
 globus_i_am_only_thread(void);
 
-extern
 globus_bool_t
 globus_thread_preemptive_threads(void);
 
-extern
 void *
 globus_thread_cancellable_func(
     void *                              (*func)(void *),
@@ -422,15 +391,12 @@ globus_thread_cancellable_func(
     void *                              cleanup_arg,
     globus_bool_t                       execute_cleanup);
 
-extern
 int
 globus_thread_cancel(globus_thread_t thr);
 
-extern
 void
 globus_thread_testcancel(void);
 
-extern
 int
 globus_thread_setcancelstate(
     int                                 state,
@@ -450,7 +416,6 @@ globus_thread_setcancelstate(
 #define GLOBUS_THREAD_CANCEL_ENABLE 1
 
 /* Module definition */
-extern
 int
 globus_i_thread_pre_activate();
 

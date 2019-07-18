@@ -29,7 +29,7 @@
 #include "globus_common_include.h"
 #include <string.h>
 
-extern globus_result_t globus_eval_path(const char *, char **);
+globus_result_t globus_eval_path(const char *, char **);
 
 #include "ltdl.h"
 extern globus_module_descriptor_t globus_i_thread_none_module;
@@ -113,7 +113,6 @@ globus_module_descriptor_t              globus_i_thread_module =
  * model to use and returns GLOBUS_SUCCESS. If an error occurs, then
  * globus_thread_set_model() returns GLOBUS_FAILURE.
  */
-extern
 int
 globus_thread_set_model(
     const char *                        model)
@@ -150,7 +149,6 @@ globus_l_thread_deactivate(void)
     return globus_module_deactivate(globus_l_thread_impl_module);
 }
 
-extern
 int
 globus_i_thread_pre_activate(void)
 {
@@ -265,7 +263,6 @@ globus_i_thread_pre_activate(void)
  *     On success, globus_mutex_init() initializes the mutex and
  *     returns GLOBUS_SUCCESS. Otherwise, a non-0 value is returned.
  */
-extern
 int
 globus_mutex_init(
     globus_mutex_t *                    mutex,
@@ -304,7 +301,6 @@ globus_mutex_init(
  *     On success, globus_mutex_destroy() returns GLOBUS_SUCCESS. Otherwise,
  *     a non-zero implementation-specific error value is returned. 
  */
-extern
 int
 globus_mutex_destroy(
     globus_mutex_t *                    mutex)
@@ -347,7 +343,6 @@ globus_mutex_destroy(
  *     On success, globus_mutex_lock() returns GLOBUS_SUCCESS. Otherwise,
  *     a non-zero implementation-specific error value is returned. 
  */
-extern
 int
 globus_mutex_lock(
     globus_mutex_t *                    mutex)
@@ -389,7 +384,6 @@ globus_mutex_lock(
  *     On success, globus_mutex_unlock() returns GLOBUS_SUCCESS. Otherwise,
  *     a non-zero implementation-specific error value is returned. 
  */
-extern
 int
 globus_mutex_unlock(
     globus_mutex_t *                    mutex)
@@ -433,7 +427,6 @@ globus_mutex_unlock(
  *     returns EBUSY. Otherwise, a non-zero implementation-specific error value
  *     is returned. 
  */
-extern
 int
 globus_mutex_trylock(
     globus_mutex_t *                    mutex)
@@ -490,7 +483,6 @@ globus_mutex_trylock(
  *     On success, globus_cond_init() initializes the condition variable and
  *     returns GLOBUS_SUCCESS. Otherwise, a non-0 value is returned.
  */
-extern
 int
 globus_cond_init(
     globus_cond_t *                     cond,
@@ -530,7 +522,6 @@ globus_cond_init(
  *     On success, globus_cond_destroy() returns GLOBUS_SUCCESS. Otherwise,
  *     a non-zero implementation-specific error value is returned. 
  */
-extern
 int
 globus_cond_destroy(
     globus_cond_t *                     cond)
@@ -576,7 +567,6 @@ globus_cond_destroy(
  *     globus_cond_wait() returns an implementation-specific non-zero error
  *     value.
  */
-extern
 int
 globus_cond_wait(
     globus_cond_t *                     cond,
@@ -629,7 +619,6 @@ globus_cond_wait(
  *     globus_cond_timedwait() returns an implementation-specific non-zero
  *     error value.
  */
-extern
 int
 globus_cond_timedwait(
     globus_cond_t *                     cond,
@@ -668,7 +657,7 @@ globus_cond_timedwait(
  *     an error occurs, globus_cond_signal() returns an implementation-specific
  *     non-zero error code.
  */
-extern int
+int
 globus_cond_signal(
     globus_cond_t *                     cond)
 {
@@ -704,7 +693,6 @@ globus_cond_signal(
  *     an error occurs, globus_cond_broadcast() returns an
  *     implementation-specific non-zero error code.
  */
-extern
 int
 globus_cond_broadcast(
     globus_cond_t *                     cond)
@@ -745,7 +733,6 @@ globus_cond_broadcast(
  *     globus_mutexattr_init() returns an implementation-specific non-zero
  *     error code.
  */
-extern
 int
 globus_mutexattr_init(
     globus_mutexattr_t *                attr)
@@ -784,7 +771,6 @@ globus_mutexattr_init(
  *     globus_mutexattr_destroy() returns an implementation-specific non-zero
  *     error code.
  */
-extern
 int
 globus_mutexattr_destroy(
     globus_mutexattr_t *                attr)
@@ -824,7 +810,7 @@ globus_mutexattr_destroy(
  *     globus_condattr_init() returns an implementation-specific non-zero
  *     error code.
  */
-extern int
+int
 globus_condattr_init(
     globus_condattr_t *                 cond_attr)
 {
@@ -862,7 +848,7 @@ globus_condattr_init(
  *     globus_condattr_destroy() returns an implementation-specific non-zero
  *     error code.
  */
-extern int
+int
 globus_condattr_destroy(
     globus_condattr_t *                 cond_attr)
 {
@@ -904,7 +890,7 @@ globus_condattr_destroy(
  *     attribute. If an error occurs, globus_condattr_setspace() returns
  *     an implementation-specific non-zero error code.
  */
-extern int
+int
 globus_condattr_setspace(
     globus_condattr_t *                 cond_attr,
     int                                 space)
@@ -947,7 +933,7 @@ globus_condattr_setspace(
  *     If an error occurs, globus_condattr_getspace() returns
  *     an implementation-specific non-zero error code.
  */
-extern int
+int
 globus_condattr_getspace(
     globus_condattr_t *                 cond_attr,
     int *                               space)
@@ -1008,7 +994,6 @@ globus_condattr_getspace(
  *     undefined and globus_thread_create() returns an implementation-specific
  *     non-zero error value.
  */
-extern
 int
 globus_thread_create(
     globus_thread_t *                   thread,
@@ -1045,6 +1030,9 @@ __asm__(".symver globus_thread_key_create_new,"
         "globus_thread_key_create@@GLOBUS_COMMON_14");
 
 #define globus_thread_key_create globus_thread_key_create_new
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_key_create_compat(
     pthread_key_t *                     key,
@@ -1086,7 +1074,9 @@ globus_thread_key_create_compat(
  *     the value of @a key is undefined and globus_thread_create_key() returns
  *     an implementation-specific non-zero error value.
  */
-extern
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_key_create(
     globus_thread_key_t *               key,
@@ -1129,7 +1119,6 @@ globus_thread_key_create(
  *     the value of @a key is undefined and globus_thread_create_key() returns
  *     an implementation-specific non-zero error value.
  */
-extern
 int
 globus_thread_key_delete(
     globus_thread_key_t                 key)
@@ -1173,7 +1162,9 @@ __asm__(".symver globus_thread_once_new,"
         "globus_thread_once@@GLOBUS_COMMON_14");
 
 #define globus_thread_once globus_thread_once_new
-
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_once_compat(
     pthread_once_t *                    once, 
@@ -1208,7 +1199,9 @@ globus_thread_once_compat(
  *     globus_thread_once() returns an implementation-specific non-zero error
  *     value.
  */
-extern
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_once(
     globus_thread_once_t *              once,
@@ -1243,6 +1236,9 @@ __asm__(".symver globus_thread_getspecific_new,"
         "globus_thread_getspecific@@GLOBUS_COMMON_14");
 
 #define globus_thread_getspecific globus_thread_getspecific_new
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 void *
 globus_thread_getspecific_compat(
     pthread_key_t                       key)
@@ -1266,7 +1262,9 @@ globus_thread_getspecific_compat(
  *     The value passed to a previous call to globus_thread_setspecific() in
  *     the current thread for this key.
  */
-extern
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 void *
 globus_thread_getspecific(
     globus_thread_key_t                 key)
@@ -1295,6 +1293,9 @@ __asm__(".symver globus_thread_setspecific_new,"
         "globus_thread_setspecific@@GLOBUS_COMMON_14");
 
 #define globus_thread_setspecific globus_thread_setspecific_new
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_setspecific_compat(
     pthread_key_t                       key,
@@ -1323,7 +1324,9 @@ globus_thread_setspecific_compat(
  *     implementation-specific non-zero error code and does not modify the
  *     key's value for this thread.
  */
-extern
+#ifdef __GNUC__
+__attribute__ ((externally_visible))
+#endif
 int
 globus_thread_setspecific(
     globus_thread_key_t                 key,
@@ -1355,7 +1358,6 @@ globus_thread_setspecific(
  * which are ready for execution. The current thread may continue to
  * execute if there are no other threads in the system's ready queue.
  */
-extern
 void
 globus_thread_yield(void)
 {
@@ -1380,7 +1382,6 @@ globus_thread_yield(void)
  * The globus_thread_exit() terminates the current thread with the value
  * passed to it. This function does not return.
  */
-extern
 void
 globus_thread_exit(
     void *                              value)
@@ -1430,7 +1431,6 @@ globus_thread_exit(
  *     error occurs, globus_thread_sigmask() returns an implementation-specific
  *     non-zero error value.
  */
-extern
 int
 globus_thread_sigmask(
     int                                 how,
@@ -1476,7 +1476,6 @@ globus_thread_sigmask(
  *     globus_thread_kill() returns an implementation-specific non-zero error
  *     value.
  */
-extern
 int
 globus_thread_kill(
     globus_thread_t                     thread,
@@ -1510,7 +1509,6 @@ globus_thread_kill(
  * @return 
  *     The globus_thread_self() function returns the current thread's ID.
  */
-extern
 globus_thread_t
 globus_thread_self(void)
 {
@@ -1550,7 +1548,6 @@ globus_thread_self(void)
  * @retval GLOBUS_TRUE thread1 and thread2 refer to the same thread.
  * @retval GLOBUS_TRUE thread1 and thread2 do not refer to the same thread.
  */
-extern
 globus_bool_t
 globus_thread_equal(
     globus_thread_t                     thread1,
@@ -1582,7 +1579,6 @@ globus_thread_equal(
  *     if the current thread model supports thread preemption; otherwise
  *     it returns GLOBUS_FALSE.
  */
-extern
 globus_bool_t
 globus_thread_preemptive_threads(void)
 {
@@ -1614,7 +1610,6 @@ globus_thread_preemptive_threads(void)
  *     The globus_i_am_only_thread() function returns GLOBUS_TRUE if the
  *     current thread model is the "none" thread model; GLOBUS_FALSE otherwise.
  */
-extern
 globus_bool_t
 globus_i_am_only_thread(void)
 {
@@ -1665,7 +1660,6 @@ globus_i_am_only_thread(void)
  * @return
  *     globus_thread_cancellable_func() returns the value returned by @a func.
  */
-extern
 void *
 globus_thread_cancellable_func(
     void *                              (*func)(void *),
@@ -1711,7 +1705,6 @@ globus_thread_cancellable_func(
  *     error occurs, globus_thread_cancel() returns an implementation-specific
  *     non-zero error value.
  */
-extern
 int
 globus_thread_cancel(globus_thread_t thr)
 {
@@ -1743,7 +1736,6 @@ globus_thread_cancel(globus_thread_t thr)
  * and any functions on the thread's cleanup stack to be executed. This
  * function will not return if the thread is cancelled.
  */
-extern
 void
 globus_thread_testcancel(void)
 {
@@ -1785,7 +1777,6 @@ globus_thread_testcancel(void)
  *     globus_thread_setcancelstate() returns an implementation-specific
  *     non-zero error value.
  */
-extern
 int
 globus_thread_setcancelstate(
     int                                 state,
