@@ -3,7 +3,7 @@
 Name:		globus-callout
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	4.1
+Version:	4.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Callout Library
 
@@ -137,6 +137,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.2-1
+- Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.1-1
 - Doxygen fixes
 

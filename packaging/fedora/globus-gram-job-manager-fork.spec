@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-fork
 %global _name %(echo %{name} | tr - _)
-Version:	3.0
+Version:	3.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Fork Job Manager Support
 
@@ -172,6 +172,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/fork
 
 %changelog
+* Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
+- Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
 - First Grid Community Toolkit release
 

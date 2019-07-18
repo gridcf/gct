@@ -1,3 +1,9 @@
+globus-gatekeeper (11.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Jul 2019 18:40:31 +0200
+
 globus-gatekeeper (11.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix broken init.d script (lsb version)

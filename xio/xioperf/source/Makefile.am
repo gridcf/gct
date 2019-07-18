@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 bin_PROGRAMS = globus-xioperf
 doc_DATA = GLOBUS_LICENSE
 

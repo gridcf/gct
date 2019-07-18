@@ -1,3 +1,9 @@
+globus-xio-popen-driver (4.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Jul 2019 18:47:35 +0200
+
 globus-xio-popen-driver (4.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release
