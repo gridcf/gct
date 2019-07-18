@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 pkgconfdir = $(libdir)/pkgconfig
 
 include_HEADERS = globus_xio_rate_driver.h

@@ -171,7 +171,7 @@ myproxy_admin_change_pass_LDADD = ./libmyproxy.la
 
 pkgdata_DATA = \
                LICENSE LICENSE.sasl LICENSE.netbsd LICENSE.pidfile \
-               LICENSE.safefile LICENSE.globus \
+               LICENSE.safefile \
                VERSION PROTOCOL README.sasl REPOSITORY \
                myproxy-server.config \
                etc.services.modifications etc.inetd.conf.modifications \
@@ -184,7 +184,7 @@ pkgdata_DATA = \
 
 EXTRA_DIST = $(Scripts) $(check_SCRIPTS) \
                LICENSE LICENSE.sasl LICENSE.netbsd LICENSE.pidfile \
-               LICENSE.safefile LICENSE.globus \
+               LICENSE.safefile \
                VERSION PROTOCOL README.sasl REPOSITORY \
                myproxy-server.config \
                etc.services.modifications etc.inetd.conf.modifications \

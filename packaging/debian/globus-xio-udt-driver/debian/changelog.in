@@ -1,3 +1,15 @@
+globus-xio-udt-driver (2.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 18 Jul 2019 18:48:49 +0200
+
+globus-xio-udt-driver (2.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Replace broken URL
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 13 Jul 2019 12:00:37 +0200
+
 globus-xio-udt-driver (2.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

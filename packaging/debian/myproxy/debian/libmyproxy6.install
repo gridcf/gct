@@ -1,1 +1,5 @@
 debian/tmp/usr/lib/*/libmyproxy.so.*
+debian/tmp/usr/share/doc/myproxy/PROTOCOL
+debian/tmp/usr/share/doc/myproxy/README.sasl
+debian/tmp/usr/share/doc/myproxy/REPOSITORY
+debian/tmp/usr/share/doc/myproxy/VERSION

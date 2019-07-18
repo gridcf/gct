@@ -2,7 +2,7 @@
 
 Name:		globus-xio-popen-driver
 %global _name %(echo %{name} | tr - _)
-Version:	4.0
+Version:	4.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Pipe Open Driver
 
@@ -104,6 +104,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.1-1
+- Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.0-1
 - First Grid Community Toolkit release
 
