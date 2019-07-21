@@ -41,18 +41,25 @@ test_sharing_allowed(const sharing_allow_test_case_t *test_case)
     globus_l_gfs_data_session_t         session_handle = 
     {
         .username = test_case->sharing_user,
-        .gid_count = getgroups(0, NULL) + 1,
+        .gid_count = getgroups(0, NULL)
     };
 
-    session_handle.gid_array = malloc(session_handle.gid_count * sizeof(gid_t));
+    session_handle.gid_count =
+        (session_handle.gid_count < 0) ? 1 : session_handle.gid_count + 1;
+    session_handle.gid_array =
+        malloc(session_handle.gid_count * sizeof(gid_t));
+
     TEST_ASSERT(session_handle.gid_array != NULL);
 
-    rc = getgroups(session_handle.gid_count, session_handle.gid_array);
-    if (rc < session_handle.gid_count)
+    if (session_handle.gid_count > 1)
     {
-        session_handle.gid_array[session_handle.gid_count-1] = getegid();
+        session_handle.gid_count =
+	    getgroups(session_handle.gid_count, session_handle.gid_array);
+        session_handle.gid_count =
+            (session_handle.gid_count < 0) ? 1 : session_handle.gid_count + 1;
     }
 
+    session_handle.gid_array[session_handle.gid_count - 1] = getegid();
     session_handle.gid = getegid();
 
     if (test_case->sharing_users_allow)
@@ -91,14 +98,15 @@ test_cleanup:
 int main()
 {
     uid_t                               my_uid;
-    uid_t                               my_groups[NGROUPS_MAX];
+    gid_t                               my_gid;
+    gid_t                               my_groups[NGROUPS_MAX];
     char *                              my_username;
     char *                              my_default_group;
     char *                              my_other_group;
     struct passwd                      *pwent;
     struct group                       *grent;
     int                                 rc;
-    int failed = 0;
+    int                                 failed = 0;
     bool                                skip_other_group = false;
     globus_module_descriptor_t         *modules[] = {
         GLOBUS_COMMON_MODULE,
@@ -123,11 +131,12 @@ int main()
         exit(99);
     }
 
-    rc = getgroups(NGROUPS_MAX, my_groups);
-    grent = getgrgid(my_groups[0]);
+    my_gid = getgid();
+    grent = getgrgid(my_gid);
     if (grent == NULL)
     {
-        fprintf(stderr, "Unable to determine my default group name");
+        fprintf(stderr, "Unable to determine my default group name (gid %u)\n",
+                my_gid);
         exit(99);
     }
     my_default_group = strdup(grent->gr_name);
@@ -137,19 +146,30 @@ int main()
                 strerror(errno));
         exit(99);
     }
-    if (rc < 2)
+
+    grent = NULL;
+    rc = getgroups(NGROUPS_MAX, my_groups);
+    for (int i = 0; i < rc; i++)
+    {
+        if (my_groups[i] == my_gid)
+            continue;
+        grent = getgrgid(my_groups[i]);
+        /* Check for unknown groups (launchpad) */
+        if (grent == NULL)
+        {
+            fprintf(stderr, "Found unknown group (gid %u). Ignoring.\n",
+                    my_groups[i]);
+            continue;
+        }
+        break;
+    }
+    if (grent == NULL)
     {
         my_other_group = "";
         skip_other_group = true;
     }
     else
     {
-        grent = getgrgid(my_groups[1]);
-        if (grent == NULL)
-        {
-            fprintf(stderr, "Unable to determine a secondary group name\n");
-            exit(99);
-        }
         my_other_group = strdup(grent->gr_name);
         if (my_other_group == NULL)
         {
