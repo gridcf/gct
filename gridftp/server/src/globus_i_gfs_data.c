@@ -4651,9 +4651,14 @@ globus_l_gfs_data_authorize(
     op->session_handle->uid = pwent->pw_uid;
     op->session_handle->gid = pwent->pw_gid;
     op->session_handle->gid_count = getgroups(0, NULL);
-    op->session_handle->gid_array = (gid_t *) globus_malloc(
-        op->session_handle->gid_count * sizeof(gid_t));
-    getgroups(op->session_handle->gid_count, op->session_handle->gid_array);
+    if (op->session_handle->gid_count > 0)
+    {
+        op->session_handle->gid_array = (gid_t *) globus_malloc(
+            op->session_handle->gid_count * sizeof(gid_t));
+        op->session_handle->gid_count =
+            getgroups(op->session_handle->gid_count,
+                      op->session_handle->gid_array);
+    }
 #endif
 
     op->session_handle->username = globus_libc_strdup(session_info->username);
@@ -11669,9 +11674,14 @@ globus_i_gfs_data_session_start(
         op->session_handle->uid = getuid();
         op->session_handle->gid = getgid();
         op->session_handle->gid_count = getgroups(0, NULL);
-        op->session_handle->gid_array = (gid_t *) globus_malloc(
-            op->session_handle->gid_count * sizeof(gid_t));
-        getgroups(op->session_handle->gid_count, op->session_handle->gid_array);
+        if (op->session_handle->gid_count > 0)
+        {
+            op->session_handle->gid_array = (gid_t *) globus_malloc(
+                op->session_handle->gid_count * sizeof(gid_t));
+            op->session_handle->gid_count =
+                getgroups(op->session_handle->gid_count,
+                          op->session_handle->gid_array);
+        }
 
         op->session_handle->username = 
             globus_libc_strdup(session_info->username);
