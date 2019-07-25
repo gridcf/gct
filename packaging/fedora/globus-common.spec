@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.4
+Version:	18.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -61,6 +61,8 @@ Obsoletes:	globus-rls-client < 6
 Obsoletes:	globus-rls-client-doc < 6
 Obsoletes:	globus-rls-client-progs < 6
 Obsoletes:	globus-rls-server < 5
+#		Obsolete dropped packages from GCT
+Obsoletes:	globus-usage < 6
 
 %package progs
 Summary:	Grid Community Toolkit - Common Library Programs
@@ -92,6 +94,8 @@ Obsoletes:	globus-libxml2-devel < 2
 Obsoletes:	grid-packaging-tools < 3.7
 Obsoletes:	globus-core < 9
 Obsoletes:	globus-rls-client-devel < 6
+#		Obsolete dropped packages from GCT
+Obsoletes:	globus-usage-devel < 6
 
 %package doc
 Summary:	Grid Community Toolkit - Common Library Documentation Files
@@ -236,6 +240,10 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Jul 20 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.5-1
+- Obsolete globus-usage packages
+- Remove unused perlmoduledir references
+
 * Wed Jul 17 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.4-1
 - Make symbol versioning work with link time optimization (LTO)
 

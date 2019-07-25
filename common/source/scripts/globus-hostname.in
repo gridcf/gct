@@ -40,7 +40,6 @@ libexecdir="@libexecdir@"
 sysconfdir="@sysconfdir@"
 sharedstatedir="@sharedstatedir@"
 localstatedir="@localstatedir@"
-perlmoduledir="@perlmoduledir@"
 
 PATH=${bindir}:${sbindir}:${PATH}
 

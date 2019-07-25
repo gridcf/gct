@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-scripts
 %global _name %(echo %{name} | tr - _)
-Version:	7.1
+Version:	7.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Job ManagerScripts
 
@@ -63,6 +63,10 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# Remove libdir reference from noarch package
+sed '/$libdir =/d' \
+    -i $RPM_BUILD_ROOT%{_datadir}/globus/globus-job-manager-script.pl
+
 %files
 %defattr(-,root,root,-)
 %{_sbindir}/globus-gatekeeper-admin
@@ -87,6 +91,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Jul 20 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.2-1
+- Repair broken perlmoduledir definition in globus-job-manager-script.pl
+
 * Fri Sep 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.1-1
 - Architecture independent package should not depend on libtool
 

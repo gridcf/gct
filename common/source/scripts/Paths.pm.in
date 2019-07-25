@@ -14,6 +14,8 @@
 # 
 package Globus::Core::Paths;
 
+use File::Basename qw(dirname);
+
 require Exporter;
 
 @ISA = qw(Exporter);
@@ -66,6 +68,6 @@ $libexecdir = "@libexecdir@";
 $sysconfdir = "@sysconfdir@";
 $sharedstatedir = "@sharedstatedir@";
 $localstatedir = "@localstatedir@";
-$perlmoduledir = "@perlmoduledir@";
+$perlmoduledir = dirname(dirname(dirname(__FILE__)));
 
 1;
