@@ -10,8 +10,8 @@ Package: libglobus-common0
 Section: libs
 Architecture: any
 Multi-Arch: same
-Replaces: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5), globus-common-progs (<< 14)
-Conflicts: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5)
+Replaces: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5), globus-usage0 (<< 6), globus-common-progs (<< 14)
+Conflicts: libglobus-libtool (<< 2), libglobus-openssl (<< 6), libglobus-libxml2 (<< 2), libglobus-rls-client5 (<< 6), libglobus-rls-client-doc (<< 6), globus-rls-client-progs (<< 6), globus-rls-server (<< 5), globus-usage0 (<< 6)
 Breaks: globus-common-progs (<< 14)
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
@@ -46,8 +46,8 @@ Package: libglobus-common-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Replaces: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-common-progs (<< 18)
-Conflicts: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7)
+Replaces: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-usage-dev (<< 6), globus-common-progs (<< 18)
+Conflicts: libglobus-libtool-dev (<< 2), libglobus-openssl-dev (<< 6), libglobus-libxml2-dev (<< 2), libglobus-rls-client-dev (<< 6), globus-core (<< 9), grid-packaging-tools (<< 3.7), globus-usage-dev (<< 6)
 Breaks: globus-common-progs (<< 18)
 Depends: libglobus-common0 (= ${binary:Version}), ${misc:Depends}, ${perl:Depends}, libltdl-dev
 Suggests: libglobus-common-doc (= ${source:Version})

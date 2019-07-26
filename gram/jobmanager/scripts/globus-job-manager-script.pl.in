@@ -20,7 +20,7 @@
 #$FILTER_COMMAND = '/usr/local/bin/commsh --check-user';
 
 
-my $prefix = "@prefix@";
+my $prefix;
 my $exec_prefix;
 my $sbindir;
 my $bindir;
@@ -35,6 +35,7 @@ my $localstatedir;
 my $perlmoduledir;
 
 BEGIN {
+    $prefix = "@prefix@";
     $prefix = $ENV{GLOBUS_LOCATION} if $ENV{GLOBUS_LOCATION};
     $exec_prefix = "@exec_prefix@";
     $sbindir = "@sbindir@";
@@ -42,6 +43,7 @@ BEGIN {
     $includedir = "@includedir@";
     $datarootdir = "@datarootdir@";
     $datadir = "@datadir@";
+    $libdir = "@libdir@";
     $libexecdir = "@libexecdir@";
     $sysconfdir = "@sysconfdir@";
     $sharedstatedir = "@sharedstatedir@";

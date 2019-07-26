@@ -64,6 +64,10 @@ install: build-stamp
 
 	$(MAKE) install DESTDIR=$(INSTALLDIR)
 
+	# Remove libdir reference from noarch package
+	sed '/$$libdir =/d' \
+	    -i $(INSTALLDIR)$(_datadir)/globus/globus-job-manager-script.pl
+
 	# Remove installed license file
 	rm $(INSTALLDIR)$(_docdir)/GLOBUS_LICENSE
 
