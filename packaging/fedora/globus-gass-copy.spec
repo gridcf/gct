@@ -3,7 +3,7 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	10.4
+Version:	10.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
@@ -170,6 +170,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jul 25 2019 Frank Scheiner <scheiner@hlrs.de> - 10.5-1
+- Document guc/dcpriv behaviour with servers not supporting DC encryption
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.4-1
 - Doxygen fixes
 

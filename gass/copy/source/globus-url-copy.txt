@@ -147,6 +147,10 @@ OPTIONS
 *-dcpriv, -data-channel-private*::
     Set data channel protection mode to PRIVATE
 
+WARNING: Despite having -dcpriv in its command line globus-url-copy
+will silently fall back to an unencryted data channel when connected
+to a server that does not support data channel encryption (e.g. dCache)!
+
 *-off, -partial-offset*::
     Offset for partial ftp file transfers, defaults to 0.
 

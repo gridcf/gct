@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: globus-url-copy
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 07/25/2019
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-URL\-COPY" "1" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-URL\-COPY" "1" "07/25/2019" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -196,6 +196,22 @@ Set data channel protection mode to SAFE
 \fB\-dcpriv, \-data\-channel\-private\fR
 .RS 4
 Set data channel protection mode to PRIVATE
+.RE
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBWarning\fR
+.ps -1
+.br
+.sp
+Despite having \-dcpriv in its command line globus\-url\-copy will silently fall back to an unencryted data channel when connected to a server that does not support data channel encryption (e\&.g\&. dCache)!
+.sp .5v
 .RE
 .PP
 \fB\-off, \-partial\-offset\fR
