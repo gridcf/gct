@@ -112,6 +112,8 @@ sub basic_func
    chomp($port);
    $port =~ s/listening on port //;
 
+   sleep(2);
+
    $command = "$valgrind $client_prog -h localhost -p $port $client_args |";
    diag("Running client: $command");
    $client_pid = open(CLIENT, $command);
