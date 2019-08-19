@@ -658,6 +658,14 @@ This option can also be set in the configuration file as +epsv_ip+.
     The default value of this option is +FALSE+.
 
 
+*-epsv-match*::
+    
+Makes EPSV behaviour more compliant with RFC 2428 by choosing the default data connection protocol based on the control connection protocol.
++
+This option can also be set in the configuration file as +epsv_match+.
+    The default value of this option is +FALSE+.
+
+
 
 User Messages
 ~~~~~~~~~~~~~
