@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
+/*
+ * The gridmpa_eppn plugin works as follows
+ *
+ * The received certificate is inspected for the ePPN OID attribute.
+ * (In case of a proxy certificate, the certificate that signed the proxy is inspected (obviously)).
+ * If one is found, the ePPN is extracted.
+ *   (If GLOBUS_EPPN_KEEP_DOMAIN is not set, the realm (or domain) including the '@' is removed)
+ *
+ *   If GLOBUS_EPPN_FORCE_GRIDMAP is set, proceed with gridmap lookup based on the ePPN,
+ *     and return a mapped identity (or nothing).
+ *   Else, return the ePPN as the identity.
+ * If no ePPN is found, proceed with (regular) gridmap lookup based on DN,
+ *   and return a mapped identity (or nothing).
+ */
+
 #include "globus_common.h"
 #include "globus_gsi_system_config.h"
 #include "gssapi.h"
