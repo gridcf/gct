@@ -1,17 +1,32 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ */
+
+/*
+ * The gridmpa_eppn plugin works as follows
+ *
+ * The received certificate is inspected for the ePPN OID attribute.
+ * (In case of a proxy certificate, the certificate that signed the proxy is inspected (obviously)).
+ * If one is found, the ePPN is extracted.
+ *   (If GLOBUS_EPPN_KEEP_DOMAIN is not set, the realm (or domain) including the '@' is removed)
+ *
+ *   If GLOBUS_EPPN_FORCE_GRIDMAP is set, proceed with gridmap lookup based on the ePPN,
+ *     and return a mapped identity (or nothing).
+ *   Else, return the ePPN as the identity.
+ * If no ePPN is found, proceed with (regular) gridmap lookup based on DN,
+ *   and return a mapped identity (or nothing).
  */
 
 #include "globus_common.h"
@@ -32,7 +47,7 @@
 #endif
 
 #if OPENSSL_VERSION_NUMBER < 0x0090801fL
-#define GT_ASN1_GET_OBJECT_CAST 
+#define GT_ASN1_GET_OBJECT_CAST
 #else
 #define GT_ASN1_GET_OBJECT_CAST (const unsigned char **)
 #endif
@@ -40,7 +55,7 @@
 
 /* 1.2.3.4.4.3.2.1.7.8 */
 static const gss_OID_desc               ggvm_cert_chain_oid =
-    {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x08"}; 
+    {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x08"};
 
 /* 1.3.6.1.4.1.5923.1.1.1.6 */
 static const char*                      ggvm_eppn_oid =
@@ -119,7 +134,7 @@ ggvm_extract_cert_from_chain(
     while(!cert && cert_index < cert_chain_buffers->count)
     {
         globus_gsi_cert_utils_cert_type_t   cert_type;
-        
+
         ptr = cert_chain_buffers->elements[cert_index].value;
         cert = d2i_X509(
             NULL,
@@ -174,7 +189,7 @@ err:
 
 
 static
-globus_result_t 
+globus_result_t
 ggvm_verify_cert(
     X509 *                              cert,
     X509 *                              ca_cert,
@@ -239,7 +254,7 @@ ggvm_verify_cert(
             cert_ctx, X509_V_FLAG_USE_CHECK_TIME);
         X509_STORE_CTX_set_time(cert_ctx, 0, shared_exp - 1);
     }
-    
+
     rc = X509_verify_cert(cert_ctx);
     if(rc != 1)
     {
@@ -361,7 +376,7 @@ ggvm_get_myproxy_userid(
     if(shared_user_cert)
     {
         globus_gsi_cert_utils_cert_type_t   cert_type;
-        
+
         result = globus_gsi_cert_utils_get_cert_type(
             shared_user_cert, &cert_type);
         if(result != GLOBUS_SUCCESS)
@@ -380,7 +395,7 @@ ggvm_get_myproxy_userid(
         else if(shared_user_chain)
         {
             result = globus_gsi_cert_utils_get_eec(
-                shared_user_chain, &user_cert);            
+                shared_user_chain, &user_cert);
         }
         if(result != GLOBUS_SUCCESS || !user_cert)
         {
@@ -570,7 +585,8 @@ globus_gridmap_eppn_callout(
     X509 *                              shared_user_cert = NULL;
     STACK_OF(X509) *                    shared_user_chain = NULL;
     time_t                              shared_exp = 0;
-    
+    char *                              tmp_identity = NULL;
+
     rc = globus_module_activate(GLOBUS_GSI_GSS_ASSIST_MODULE);
     rc = globus_module_activate(GLOBUS_GSI_GSSAPI_MODULE);
     rc = globus_module_activate(GLOBUS_GRIDMAP_CALLOUT_ERROR_MODULE);
@@ -586,14 +602,14 @@ globus_gridmap_eppn_callout(
     {
         globus_gsi_cred_handle_t    tmp_cred_handle = NULL;
         shared_user_buf = va_arg(ap, char *);
-        
+
         result = globus_gsi_cred_read_cert_buffer(
-            shared_user_buf, 
-            &tmp_cred_handle, 
-            &shared_user_cert, 
-            &shared_user_chain, 
+            shared_user_buf,
+            &tmp_cred_handle,
+            &shared_user_cert,
+            &shared_user_chain,
             &subject);
-        
+
         globus_gsi_cred_get_goodtill(tmp_cred_handle, &shared_exp);
         globus_gsi_cred_handle_destroy(tmp_cred_handle);
     }
@@ -601,7 +617,7 @@ globus_gridmap_eppn_callout(
     {
         result = ggvm_get_subject(context, &subject);
     }
-    
+
     if(result != GLOBUS_SUCCESS || subject == NULL)
     {
         GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -615,15 +631,36 @@ globus_gridmap_eppn_callout(
         context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     if(result == GLOBUS_SUCCESS)
     {
-        if(desired_identity && strcmp(found_identity, desired_identity) != 0)
+        if(desired_identity == NULL)
         {
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Credentials specify id of %s, can not allow id of %s.\n",
-                 found_identity, desired_identity));
-            globus_free(found_identity);
-            goto error;
+            if(getenv("GLOBUS_EPPN_FORCE_GRIDMAP"))
+            {
+                rc = globus_gss_assist_gridmap(found_identity, &tmp_identity);
+                if(rc != 0)
+                {
+                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                        result,
+                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                        ("Could not map eppn %s (subject %s)\n", found_identity, subject));
+                    globus_free(found_identity);
+                    goto error;
+                }
+                globus_free(found_identity);
+                found_identity = tmp_identity;
+            }
+        }
+        else
+        {
+            if(strcmp(found_identity, desired_identity) != 0)
+            {
+                GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                    result,
+                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                    ("Credentials specify id of %s, can not allow id of %s.\n",
+                     found_identity, desired_identity));
+                globus_free(found_identity);
+                goto error;
+            }
         }
     }
     else
