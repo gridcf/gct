@@ -1,3 +1,10 @@
+globus-gridmap-eppn-callout (2.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add environment variable GLOBUS_EPPN_FORCE_GRIDMAP to return mapped
+    identity from gridmap lookup based on the ePPN
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Aug 2019 10:04:33 +0200
+
 globus-gridmap-eppn-callout (2.1-1+gct.@distro@) @distro@; urgency=medium
 
   * add environment variable GLOBUS_EPPN_KEEP_DOMAIN to return full
