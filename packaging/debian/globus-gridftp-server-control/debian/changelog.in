@@ -1,3 +1,9 @@
+globus-gridftp-server-control (9.0-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients
+
+ -- Frank Scheiner <scheiner@hlrs.de>  Thu, 08 Aug 2019 16:27:18 +0200
+
 globus-gridftp-server-control (8.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS

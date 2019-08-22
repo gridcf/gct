@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: globus-gridftp-server
-.\"    Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 12/06/2018
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 08/22/2019
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-GRIDFTP\-SER" "8" "12/06/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-GRIDFTP\-SER" "8" "08/22/2019" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -824,6 +824,15 @@ Adds an IPv6 address to EPSV response\&. Breaks RFC 2428, but allows redirection
 .sp
 This option can also be set in the configuration file as
 epsv_ip\&. The default value of this option is
+FALSE\&.
+.RE
+.PP
+\fB\-epsv\-match\fR
+.RS 4
+Makes EPSV behaviour more compliant with RFC 2428 by choosing the default data connection protocol based on the control connection protocol\&.
+.sp
+This option can also be set in the configuration file as
+epsv_match\&. The default value of this option is
 FALSE\&.
 .RE
 .SS "User Messages"

@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.19
+Version:	13.20
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -18,7 +18,7 @@ BuildRequires:	globus-common-devel >= 17
 BuildRequires:	globus-xio-devel >= 5
 BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-gfork-devel >= 3
-BuildRequires:	globus-gridftp-server-control-devel >= 7
+BuildRequires:	globus-gridftp-server-control-devel >= 9
 BuildRequires:	globus-ftp-control-devel >= 7
 BuildRequires:	globus-authz-devel >= 2
 BuildRequires:	globus-gssapi-gsi-devel >= 10
@@ -61,7 +61,7 @@ Requires:	globus-xio-gsi-driver%{?_isa} >= 2
 Requires:	globus-xio-udt-driver%{?_isa} >= 1
 Requires:	globus-common%{?_isa} >= 17
 Requires:	globus-xio%{?_isa} >= 5
-Requires:	globus-gridftp-server-control%{?_isa} >= 7
+Requires:	globus-gridftp-server-control%{?_isa} >= 9
 Requires:	globus-ftp-control%{?_isa} >= 7
 
 %package progs
@@ -223,6 +223,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Aug 08 2019 Frank Scheiner <scheiner@hlrs.de> - 13.20-1
+- Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients
+
 * Mon Jul 22 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.19-1
 - Avoid unknown secondary groups in test. Causes failures on launchpad
 
