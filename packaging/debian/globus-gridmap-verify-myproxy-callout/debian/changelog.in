@@ -1,3 +1,9 @@
+globus-gridmap-verify-myproxy-callout (3.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add missing dependency
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 31 Aug 2019 08:07:46 +0200
+
 globus-gridmap-verify-myproxy-callout (3.1-1+gct.@distro@) @distro@; urgency=medium
 
   * fix verification to allow proxy certs
