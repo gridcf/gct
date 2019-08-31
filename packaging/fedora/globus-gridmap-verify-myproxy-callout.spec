@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-verify-myproxy-callout
 %global _name %(echo %{name} | tr - _)
-Version:	3.1
+Version:	3.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus gridmap myproxy callout
 
@@ -19,6 +19,7 @@ BuildRequires:	globus-gssapi-gsi-devel >= 9
 BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	globus-gridmap-callout-error-devel
 BuildRequires:	globus-gsi-credential-devel >= 6
+BuildRequires:	globus-gsi-cert-utils-devel >= 8
 BuildRequires:	globus-gssapi-error-devel >= 4
 %if %{?suse_version}%{!?suse_version:0}
 BuildRequires:	libopenssl-devel
@@ -93,6 +94,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat Aug 31 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.2-1
+- Add missing dependency
+
 * Fri May 03 2019 Globus Toolkit <support@globus.org> - 3.1-1
 - fix verification to allow proxy certs
 
