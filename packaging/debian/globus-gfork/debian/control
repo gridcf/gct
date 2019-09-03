@@ -44,7 +44,6 @@ Package: libglobus-gfork-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
 Depends: libglobus-gfork0 (= ${binary:Version}), ${misc:Depends}, libglobus-common-dev (>= 15), libglobus-xio-dev (>= 3)
 Description: Grid Community Toolkit - GFork Development Files
  The Grid Community Toolkit (GCT) is an open source software toolkit used for
