@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (9.2-2+gct.@distro@) @distro@; urgency=medium
+
+  * Don't package /etc/grid-security/certificates
+
+ -- Frank Scheiner <scheiner@hlrs.de>  Tue, 27 Aug 2019 14:25:43 +0200
+
 globus-gsi-sysconfig (9.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

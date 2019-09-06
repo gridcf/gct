@@ -4,7 +4,7 @@ Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(echo %{name} | tr - _)
 Version:	9.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
 Group:		System Environment/Libraries
@@ -113,7 +113,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Create config directory
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security/certificates
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/grid-security
 
 %check
 make %{?_smp_mflags} check VERBOSE=1
@@ -126,7 +126,6 @@ make %{?_smp_mflags} check VERBOSE=1
 %defattr(-,root,root,-)
 %{_libdir}/libglobus_gsi_sysconfig.so.*
 %dir %{_sysconfdir}/grid-security
-%dir %{_sysconfdir}/grid-security/certificates
 %dir %{_pkgdocdir}
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
@@ -145,6 +144,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 19 2019 Mátyás Selmeci <matyas@cs.wisc.edu> - 9.2-2
+- Don't package /etc/grid-security/certificates
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.2-1
 - Doxygen fixes
 
