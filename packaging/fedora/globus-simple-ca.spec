@@ -3,7 +3,7 @@
 Name:		globus-simple-ca
 %global _name %(echo %{name} | tr - _)
 Version:	5.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
 Group:		Applications/Internet
@@ -83,10 +83,12 @@ if [ ! -f ${simplecadir}/cacert.pem ] ; then
     if [ ! -r /etc/grid-security/globus-user-ssl.conf ]; then
 	grid-default-ca -ca $simplecahash
     fi
+    hostname=`hostname -f 2>/dev/null`
     if [ ! -f /etc/grid-security/hostcert.pem ] && \
        [ ! -f /etc/grid-security/hostcert_request.pem ] && \
-       [ ! -f /etc/grid-security/hostkey.pem ]; then
-	grid-cert-request -cn `hostname -f` -host `hostname -f`
+       [ ! -f /etc/grid-security/hostkey.pem ] && \
+       [ ! -z "${hostname}" ]; then
+	grid-cert-request -cn ${hostname} -host ${hostname}
 	su -s /bin/sh simpleca -c "umask 007; grid-ca-sign \
 	   -in /etc/grid-security/hostcert_request.pem \
 	   -out ${simplecadir}/hostcert.pem"
@@ -108,6 +110,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Sep 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-2
+- Check that hostname command succeeds in post install script
+
 * Thu Apr 25 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-1
 - Fix openssl output format issue (incomplete openssl 1.1 port)
 

@@ -1,3 +1,9 @@
+globus-simple-ca (5.1-2+gct.@distro@) @distro@; urgency=medium
+
+  * Check that hostname command succeeds in post install script
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 13 Sep 2019 13:55:53 +0200
+
 globus-simple-ca (5.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix openssl output format issue (incomplete openssl 1.1 port)
