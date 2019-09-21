@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.11
+Version:	14.12
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -154,6 +154,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Sep 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.12-1
+- Disallow TLS 1.0/1.1 by default again
+
 * Fri May 17 2019 Mattias Ellert - 14.11-1
 - Keep peers in sync after SSL handshake failure in gssapi
 

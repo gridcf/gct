@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.12-1+gct.@distro@) @distro@; urgency=medium
+
+  * Disallow TLS 1.0/1.1 by default again
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 13 Sep 2019 11:50:42 +0200
+
 globus-gssapi-gsi (14.11-1+gct.@distro@) @distro@; urgency=medium
 
   * Keep peers in sync after SSL handshake failure in gssapi
