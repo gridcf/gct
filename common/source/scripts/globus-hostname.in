@@ -137,7 +137,11 @@ if [ -z "${GLOBUS_HOSTNAME}" ] ; then
   GLOBUS_HOSTNAME="`echo ${_fullname} | tr 'A-Z' 'a-z'`"
 fi
 
-GLOBUS_DOMAINNAME="`echo $GLOBUS_HOSTNAME | cut -s -d '.' -f '2-'`"
+if $(echo "$GLOBUS_HOSTNAME" | grep -Eq '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'); then
+	GLOBUS_DOMAINNAME=""
+else
+	GLOBUS_DOMAINNAME="`echo $GLOBUS_HOSTNAME | cut -s -d '.' -f '2-'`"
+fi
 
 case "${PROGRAM_NAME}" in
 
@@ -149,7 +153,6 @@ case "${PROGRAM_NAME}" in
     ;;
 
 esac
-
 
 
 
