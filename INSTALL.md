@@ -6,9 +6,11 @@ Minimal tools needed
 --------------------
 
 The minimal RPMs (as provided by CentOS 7 yum) needed to build this package are:
+
 `autoconf automake make libtool libtool-ltdl libtool-ltdl-devel gcc gcc-c++ patch openssl openssl-devel`
 
-The minimal DEBs (as provided by Ubuntu 18.04) are
+The minimal DEBs (as provided by Ubuntu 18.04) are:
+
 `autoconf automake make libtool libltdl-dev gcc g++ patch openssl libssl-dev pkg-config`
 
 If not already installed, please also add
@@ -34,12 +36,12 @@ autoreconf -i
 ./configure <options>
 make -j <numcpus>
 make -j <numcpus> install
-```
 
 # for example:
 # ./configure --disable-gram5 --disable-gsi-openssh --enable-udt
 # make -j 4
 # make -j 4 install
+```
 
 The files will be avaialble in
 /usr/local/globus-6/*
