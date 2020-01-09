@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.20
+Version:	13.21
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -223,6 +223,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Jan 09 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.21-1
+- Restore log transfer functionality that was accidentally removed
+
 * Thu Aug 08 2019 Frank Scheiner <scheiner@hlrs.de> - 13.20-1
 - Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients
 
