@@ -10435,6 +10435,76 @@ response_exit:
         }
     }
 
+    /* log transfer */
+    if(op->node_ndx == 0 &&
+        op->cached_res == GLOBUS_SUCCESS &&
+        globus_i_gfs_config_string("log_transfer"))
+    {
+        char *                          type;
+        globus_gfs_transfer_info_t *    info;
+        struct timeval                  end_timeval;
+
+        info = (globus_gfs_transfer_info_t *) op->info_struct;
+
+        if(op->writing)
+        {
+            if(info->list_type)
+            {
+                if(strncmp(info->list_type, "LIST:", 5) == 0)
+                {
+                    type = "LIST";
+                }
+                else if(strncmp(info->list_type, "NLST:", 5) == 0)
+                {
+                    type = "NLST";
+                }
+                else
+                {
+                    type = "MLSD";
+                }
+            }
+            else if(info->module_name || info->partial_offset != 0 ||
+                info->partial_length != -1)
+            {
+                type = "ERET";
+            }
+            else
+            {
+                type = "RETR";
+            }
+        }
+        else
+        {
+            if(info->module_name || info->partial_offset != 0 ||
+                 !info->truncate)
+            {
+                type = "ESTO";
+            }
+            else
+            {
+                type = "STOR";
+            }
+        }
+        gettimeofday(&end_timeval, NULL);
+
+        globus_i_gfs_log_transfer(
+            op->node_count,
+            op->data_handle->info.nstreams,
+            &op->start_timeval,
+            &end_timeval,
+            op->remote_ip ? op->remote_ip : "0.0.0.0",
+            op->data_handle->info.blocksize,
+            op->data_handle->info.tcp_bufsize,
+            info->pathname,
+            op->bytes_transferred,
+            226,
+            "/",
+            type,
+            op->session_handle->username,
+            retransmit_str,
+            op->session_handle->taskid);
+    }
+
     if(retransmit_str)
     {
         globus_free(retransmit_str);

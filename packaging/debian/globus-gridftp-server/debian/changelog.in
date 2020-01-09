@@ -1,3 +1,9 @@
+globus-gridftp-server (13.21-1+gct.@distro@) @distro@; urgency=medium
+
+  * Restore log transfer functionality that was accidentally removed
+
+ -- Mattias Ellert <ellert@ellert.physics.uu.se>  Thu, 09 Jan 2020 14:52:55 +0100
+
 globus-gridftp-server (13.20-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients
