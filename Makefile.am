@@ -16,9 +16,8 @@ $(GT_ALL_TARGETS_INSTALL):
 $(GT_TARGETS_CHECK):
 	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) check || exit 1
 $(GT_ALL_TARGETS_DIST):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && MAKEFLAGS= $(MAKE) $(AM_MAKEFLAGS) dist && \
-	$(MKDIR_P) package-output && \
-	cp $($@_SUBDIR)/$($@-tarball) package-output || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && MAKEFLAGS= $(MAKE) $(AM_MAKEFLAGS) dist || exit 1
+	@$(MKDIR_P) package-output && cp $($@_SUBDIR)/$($@-tarball) package-output || exit 1
 
 $(GT_ALL_STAMPS):
 	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; ( (cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all) && touch $@) || exit 1
