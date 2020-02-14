@@ -8,22 +8,22 @@ DIST_SUBDIRS = @TOP_DIST_SUBDIRS@
 
 $(GT_TARGETS_CLEAN):
 	@if [ -f $($@_stamp) ]; then \
-		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) clean || exit 1 ; \
+		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) clean ; \
 	fi
 	@rm -f $($@_stamp)
 $(GT_ALL_TARGETS_INSTALL):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) install || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) install
 $(GT_TARGETS_CHECK):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) check || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) check
 $(GT_ALL_TARGETS_DIST):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && MAKEFLAGS= $(MAKE) $(AM_MAKEFLAGS) dist || exit 1
-	@$(MKDIR_P) package-output && cp $($@_SUBDIR)/$($@-tarball) package-output || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && MAKEFLAGS= $(MAKE) $(AM_MAKEFLAGS) dist
+	@$(MKDIR_P) package-output && cp $($@_SUBDIR)/$($@-tarball) package-output
 
 $(GT_ALL_STAMPS):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; ( (cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all) && touch $@) || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; (cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all) && touch $@
 
 $(GT_ONLY):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all
 
 RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
 
@@ -46,7 +46,7 @@ RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
 
 
 $(GT_ALL_TARGETS_RPM): .rpmmacros
-	@for d in $(RPMDIRS); do mkdir -p rpmbuild/$$d; done
+	@for d in $(RPMDIRS); do mkdir -p rpmbuild/$$d || exit 1; done
 	@cp $($@_SOURCE) rpmbuild/SOURCES
 	@HOME=$$(pwd) ac_cv_host=$(host_triplet) rpmbuild --target=$(host_triplet) -ba $($@_SPECFILE)
 
@@ -67,11 +67,11 @@ $(GT_ALL_TARGETS_OSX_PKG):
 		echo "Processing $$filename"; \
 		for lib in `otool -L "$$filename" | sed 1d | grep -E "$(libdir)|ltdl" | awk '{print $$1}'`; do \
 		    echo "Rewriting $$lib"; \
-                    libname="$$(echo "$$lib" | sed -e 's|//*|/|g' -e 's|${libdir}//*||')"; \
-		    install_name_tool -change "$$lib" "@loader_path/../lib/$$libname" $$filename; \
-	       	done; \
+		    libname="$$(echo "$$lib" | sed -e 's|//*|/|g' -e 's|${libdir}//*||')"; \
+		    install_name_tool -change "$$lib" "@loader_path/../lib/$$libname" $$filename || exit 1; \
+		done; \
 		if basename $$filename | grep -vq '^lib'; then \
-		    install_name_tool -add_rpath "@loader_path/../lib" $$filename; \
+		    install_name_tool -add_rpath "@loader_path/../lib" "$$filename"; \
 		else \
 		    install_name_tool -id "$$(basename $$filename)" "$$filename"; \
 		fi; \
@@ -80,11 +80,11 @@ $(GT_ALL_TARGETS_OSX_PKG):
 	@find osx/dest/$$(basename $($@) .pkg) \( -name '*.la' -o -name '*.a' \) -a -exec rm {} +
 	@mkdir -p osx/packages
 	@pkgbuild --root $(abs_builddir)/osx/dest/$$(basename $($@) .pkg) \
-            --version $($($@)_PACKAGE_VERSION) \
+	    --version $($($@)_PACKAGE_VERSION) \
 	    --identifier org.globus.$($($@)_PACKAGE_NAME) \
-            --ownership recommended \
+	    --ownership recommended \
 	    $($($($@)_PACKAGE_NAME)_macosx_scripts) \
-            $($@)
+	    $($@)
 
 if !HAVE_LTDL
 LTDL_MAC_PKG = ltdl-@LTDL_VERSION@.pkg
@@ -103,8 +103,8 @@ rpm-pkgs: $(GT_TARGETS_RPM)
 tarballs: $(GT_ALL_TARGETS_DIST)
 
 DOC_STAMPS =
-DOC_PHONY = 
-DOC_CLEAN = 
+DOC_PHONY =
+DOC_CLEAN =
 if ENABLE_DOXYGEN
 DOC_STAMPS += doc-stamp
 DOC_CLEAN += doc-clean
@@ -122,13 +122,13 @@ endif
 install-data-local: $(DOC_STAMPS)
 	@if test -d doc/man/man3; then \
 		install -d -m 755 $(DESTDIR)$(mandir)/man3 && \
-		$(INSTALL) -m 644 doc/man/man3/[Gg][Ll][Oo][Bb][Uu][Ss]*.3 $(DESTDIR)$(mandir)/man3 || exit 1 ; \
+		$(INSTALL) -m 644 doc/man/man3/[Gg][Ll][Oo][Bb][Uu][Ss]*.3 $(DESTDIR)$(mandir)/man3 ; \
 	fi
 	@if test -d doc/html; then \
-		for dir in `(cd doc; find html -type d)`; do \
-			install -d -m 755 $(DESTDIR)$(docdir)/$$dir || exit 1 ; \
+		for dir in `cd doc; find html -type d`; do \
+			install -d -m 755 $(DESTDIR)$(docdir)/$$dir || exit 1; \
 		done ; \
-		for f in `(cd doc; find html -type f)`; do \
+		for f in `cd doc; find html -type f`; do \
 			$(INSTALL) -m 644 doc/$$f $(DESTDIR)$(docdir)/$$f || exit 1; \
 		done ; \
 	fi
@@ -160,18 +160,18 @@ check-local:
 
 libltdl-install:
 if !HAVE_LTDL
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl; $(MAKE) $(AM_MAKEFLAGS) install || exit 1
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl && $(MAKE) $(AM_MAKEFLAGS) install
 endif
 	:
 libltdl-stamp:
 if !HAVE_LTDL
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl; $(MAKE) $(AM_MAKEFLAGS) || exit 1
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl && $(MAKE) $(AM_MAKEFLAGS)
 endif
 	touch $@
 
 if !HAVE_LTDL
 libltdl-clean:
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; if [ -f libltdl/Makefile ]; then cd libltdl; $(MAKE) $(AM_MAKEFLAGS) clean || exit 1 ; fi
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; if [ -f libltdl/Makefile ]; then cd libltdl && $(MAKE) $(AM_MAKEFLAGS) clean ; fi
 	rm -f libltdl-stamp
 endif
 
@@ -179,11 +179,11 @@ endif
 # We'll preserve the output from the prep-gsissh so that
 # configuration will work without re-downloading the sources
 dist-hook:
-	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/packaging/package-output && \
-	$(INSTALL) -p $(srcdir)/prep-gsissh $(distdir) && \
-	$(INSTALL) -p $(srcdir)/packaging/package-output/* $(distdir)/packaging/package-output && \
-	(cd $(distdir); ./prep-gsissh;) && \
-	(if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi ) || exit 1
+	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/packaging/package-output
+	$(INSTALL) -p $(srcdir)/prep-gsissh $(distdir)
+	$(INSTALL) -p $(srcdir)/packaging/package-output/* $(distdir)/packaging/package-output
+	cd $(distdir) && ./prep-gsissh
+	if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi
 
 globus_gridftp_server-stamp: $(GT_ENABLED_XIO_DRIVERS)
 .PHONY: $(GT_TARGETS_ALL) $(GT_TARGETS_ONLY) $(GT_TARGETS_CLEAN) $(GT_TARGETS_INSTALL) $(GT_TARGETS_CHECK) $(GT_TARGETS_DISTCLEAN) $(GT_TARGETS_DIST) $(DOC_PHONY) $(GT_TARGETS_RPM) $(GT_TARGETS_DEB) $(GT_BUNDLES)
