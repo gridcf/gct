@@ -30,7 +30,7 @@ $(globusperl_DATA): create_protocol_constants.pl ../globus-gram-protocol-constan
 install-data-local: $(noinst_DATA)
 	$(mkinstalldirs) $(DESTDIR)$(MAN_DIR)
 	for manpage in $?; do \
-		$(INSTALL_DATA) $$manpage $(DESTDIR)$(MAN_DIR)/Globus::GRAM::`basename $$manpage`; \
+		$(INSTALL_DATA) $$manpage $(DESTDIR)$(MAN_DIR)/Globus::GRAM::`basename $$manpage` || exit 1; \
 	done
 
 all-local: $(globusperl_DATA)

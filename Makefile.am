@@ -16,12 +16,11 @@ $(GT_ALL_TARGETS_INSTALL):
 $(GT_TARGETS_CHECK):
 	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) check
 $(GT_ALL_TARGETS_DIST):
-	@$(MKDIR_P) package-output
 	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && MAKEFLAGS= $(MAKE) $(AM_MAKEFLAGS) dist
-	@cp $($@_SUBDIR)/$($@-tarball) package-output
+	@$(MKDIR_P) package-output && cp $($@_SUBDIR)/$($@-tarball) package-output
 
 $(GT_ALL_STAMPS):
-	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; ( (cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all) && touch $@) || exit 1
+	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; (cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all) && touch $@
 
 $(GT_ONLY):
 	@export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd $($@_SUBDIR) && $(MAKE) $(AM_MAKEFLAGS) all
@@ -47,7 +46,7 @@ RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
 
 
 $(GT_ALL_TARGETS_RPM): .rpmmacros
-	@for d in $(RPMDIRS); do mkdir -p rpmbuild/$$d; done
+	@for d in $(RPMDIRS); do mkdir -p rpmbuild/$$d || exit 1; done
 	@cp $($@_SOURCE) rpmbuild/SOURCES
 	@HOME=$$(pwd) ac_cv_host=$(host_triplet) rpmbuild --target=$(host_triplet) -ba $($@_SPECFILE)
 
@@ -68,11 +67,11 @@ $(GT_ALL_TARGETS_OSX_PKG):
 		echo "Processing $$filename"; \
 		for lib in `otool -L "$$filename" | sed 1d | grep -E "$(libdir)|ltdl" | awk '{print $$1}'`; do \
 		    echo "Rewriting $$lib"; \
-                    libname="$$(echo "$$lib" | sed -e 's|//*|/|g' -e 's|${libdir}//*||')"; \
-		    install_name_tool -change "$$lib" "@loader_path/../lib/$$libname" $$filename; \
-	       	done; \
+		    libname="$$(echo "$$lib" | sed -e 's|//*|/|g' -e 's|${libdir}//*||')"; \
+		    install_name_tool -change "$$lib" "@loader_path/../lib/$$libname" $$filename || exit 1; \
+		done; \
 		if basename $$filename | grep -vq '^lib'; then \
-		    install_name_tool -add_rpath "@loader_path/../lib" $$filename; \
+		    install_name_tool -add_rpath "@loader_path/../lib" "$$filename"; \
 		else \
 		    install_name_tool -id "$$(basename $$filename)" "$$filename"; \
 		fi; \
@@ -81,11 +80,11 @@ $(GT_ALL_TARGETS_OSX_PKG):
 	@find osx/dest/$$(basename $($@) .pkg) \( -name '*.la' -o -name '*.a' \) -a -exec rm {} +
 	@mkdir -p osx/packages
 	@pkgbuild --root $(abs_builddir)/osx/dest/$$(basename $($@) .pkg) \
-            --version $($($@)_PACKAGE_VERSION) \
+	    --version $($($@)_PACKAGE_VERSION) \
 	    --identifier org.globus.$($($@)_PACKAGE_NAME) \
-            --ownership recommended \
+	    --ownership recommended \
 	    $($($($@)_PACKAGE_NAME)_macosx_scripts) \
-            $($@)
+	    $($@)
 
 if !HAVE_LTDL
 LTDL_MAC_PKG = ltdl-@LTDL_VERSION@.pkg
@@ -104,8 +103,8 @@ rpm-pkgs: $(GT_TARGETS_RPM)
 tarballs: $(GT_ALL_TARGETS_DIST)
 
 DOC_STAMPS =
-DOC_PHONY = 
-DOC_CLEAN = 
+DOC_PHONY =
+DOC_CLEAN =
 if ENABLE_DOXYGEN
 DOC_STAMPS += doc-stamp
 DOC_CLEAN += doc-clean
@@ -122,15 +121,15 @@ endif
 
 install-data-local: $(DOC_STAMPS)
 	@if test -d doc/man/man3; then \
-		install -d -m 755 $(DESTDIR)$(mandir)/man3; \
+		install -d -m 755 $(DESTDIR)$(mandir)/man3 && \
 		$(INSTALL) -m 644 doc/man/man3/[Gg][Ll][Oo][Bb][Uu][Ss]*.3 $(DESTDIR)$(mandir)/man3 ; \
 	fi
 	@if test -d doc/html; then \
-		for dir in `(cd doc; find html -type d)`; do \
-			install -d -m 755 $(DESTDIR)$(docdir)/$$dir; \
+		for dir in `cd doc; find html -type d`; do \
+			install -d -m 755 $(DESTDIR)$(docdir)/$$dir || exit 1; \
 		done ; \
-		for f in `(cd doc; find html -type f)`; do \
-			$(INSTALL) -m 644 doc/$$f $(DESTDIR)$(docdir)/$$f ; \
+		for f in `cd doc; find html -type f`; do \
+			$(INSTALL) -m 644 doc/$$f $(DESTDIR)$(docdir)/$$f || exit 1; \
 		done ; \
 	fi
 
@@ -138,7 +137,7 @@ install-exec-local:
 	@for stamp in $(GT_ALL_STAMPS); do \
 	    if [ -f $$stamp ]; then \
 		stamp_pkg=`echo $$stamp | sed -e s'/-stamp//'`; \
-	        export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; $(MAKE) $(AM_MAKEFLAGS) $${stamp_pkg}-install ; \
+	        export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; $(MAKE) $(AM_MAKEFLAGS) $${stamp_pkg}-install || exit 1 ; \
 	    fi; \
 	done
 EXTRA_DIST = globus-vararg-enums-doxygen-filter.pl GLOBUS_LICENSE osx/resources/GLOBUS_LICENSE osx/resources/logo.png
@@ -155,24 +154,24 @@ check-local:
 	@for stamp in $(GT_ALL_STAMPS); do \
 	    if [ -f $$stamp ]; then \
 		stamp_pkg=`echo $$stamp | sed -e s'/-stamp//'`; \
-	        export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; $(MAKE) $(AM_MAKEFLAGS) $${stamp_pkg}-check ; \
+	        export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; $(MAKE) $(AM_MAKEFLAGS) $${stamp_pkg}-check || exit 1 ; \
 	    fi; \
 	done
 
 libltdl-install:
 if !HAVE_LTDL
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl; $(MAKE) $(AM_MAKEFLAGS) install
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl && $(MAKE) $(AM_MAKEFLAGS) install
 endif
 	:
 libltdl-stamp:
 if !HAVE_LTDL
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl; $(MAKE) $(AM_MAKEFLAGS)
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; cd libltdl && $(MAKE) $(AM_MAKEFLAGS)
 endif
 	touch $@
 
 if !HAVE_LTDL
 libltdl-clean:
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; if [ -f libltdl/Makefile ]; then cd libltdl; $(MAKE) $(AM_MAKEFLAGS) clean; fi
+	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) ; if [ -f libltdl/Makefile ]; then cd libltdl && $(MAKE) $(AM_MAKEFLAGS) clean ; fi
 	rm -f libltdl-stamp
 endif
 
@@ -183,8 +182,8 @@ dist-hook:
 	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/packaging/package-output
 	$(INSTALL) -p $(srcdir)/prep-gsissh $(distdir)
 	$(INSTALL) -p $(srcdir)/packaging/package-output/* $(distdir)/packaging/package-output
-	(cd $(distdir); ./prep-gsissh;)
-	(if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi )
+	cd $(distdir) && ./prep-gsissh
+	if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi
 
 globus_gridftp_server-stamp: $(GT_ENABLED_XIO_DRIVERS)
 .PHONY: $(GT_TARGETS_ALL) $(GT_TARGETS_ONLY) $(GT_TARGETS_CLEAN) $(GT_TARGETS_INSTALL) $(GT_TARGETS_CHECK) $(GT_TARGETS_DISTCLEAN) $(GT_TARGETS_DIST) $(DOC_PHONY) $(GT_TARGETS_RPM) $(GT_TARGETS_DEB) $(GT_BUNDLES)
