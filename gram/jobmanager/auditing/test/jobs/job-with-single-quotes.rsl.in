@@ -1,2 +1,0 @@
-&(executable = __EXE_ECHO__)
- (arguments  = "single quotes shouldn't break things")
