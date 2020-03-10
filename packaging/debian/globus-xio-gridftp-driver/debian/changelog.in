@@ -1,3 +1,9 @@
+globus-xio-gridftp-driver (3.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:58:20 +0100
+
 globus-xio-gridftp-driver (3.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

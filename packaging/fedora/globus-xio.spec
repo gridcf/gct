@@ -3,7 +3,7 @@
 Name:		globus-xio
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.2
+Version:	6.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
@@ -133,6 +133,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-1
+- Make makefiles exit sooner on errors
+
 * Thu Apr 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2-1
 - Clean up old GPT references
 

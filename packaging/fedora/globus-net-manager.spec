@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	1.4
+Version:	1.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -205,6 +205,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.5-1
+- Make makefiles exit sooner on errors
+
 * Wed Jun 05 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.4-1
 - Check python-config for --embed flag (python 3.8 compatibility)
 

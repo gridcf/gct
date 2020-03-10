@@ -1,3 +1,9 @@
+globus-gass-copy (10.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:35:33 +0100
+
 globus-gass-copy (10.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Document guc/dcpriv behaviour with servers not supporting DC encryption

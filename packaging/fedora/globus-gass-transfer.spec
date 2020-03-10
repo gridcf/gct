@@ -3,7 +3,7 @@
 Name:		globus-gass-transfer
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.1
+Version:	9.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Transfer
 
@@ -131,6 +131,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.2-1
+- Make makefiles exit sooner on errors
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.1-1
 - Doxygen fixes
 

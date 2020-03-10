@@ -2,7 +2,7 @@
 
 Name:		globus-gridmap-callout
 %global _name %(echo %{name} | tr - _)
-Version:	2.1
+Version:	2.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gridmap Callout
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.2-1
+- Make makefiles exit sooner on errors
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.1-1
 - Doxygen fixes
 

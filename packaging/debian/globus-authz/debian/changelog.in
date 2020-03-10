@@ -1,3 +1,9 @@
+globus-authz (4.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:19:17 +0100
+
 globus-authz (4.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references

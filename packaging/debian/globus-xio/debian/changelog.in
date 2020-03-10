@@ -1,3 +1,9 @@
+globus-xio (6.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 16:00:37 +0100
+
 globus-xio (6.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Clean up old GPT references

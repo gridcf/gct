@@ -1,3 +1,9 @@
+globus-openssl-module (5.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 16:14:05 +0100
+
 globus-openssl-module (5.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

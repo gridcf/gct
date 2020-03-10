@@ -1,3 +1,9 @@
+globus-gass-transfer (9.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:36:40 +0100
+
 globus-gass-transfer (9.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

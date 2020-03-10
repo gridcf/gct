@@ -3,7 +3,7 @@
 Name:		globus-gridmap-callout-error
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	3.1
+Version:	3.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gridmap Callout Errors
 
@@ -129,6 +129,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.2-1
+- Make makefiles exit sooner on errors
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
 - Doxygen fixes
 

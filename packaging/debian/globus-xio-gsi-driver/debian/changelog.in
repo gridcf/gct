@@ -1,3 +1,9 @@
+globus-xio-gsi-driver (5.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 16:00:00 +0100
+
 globus-xio-gsi-driver (5.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Update documentation links to always point to the latest documentation

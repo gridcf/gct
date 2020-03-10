@@ -3,8 +3,8 @@
 Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	9.2
-Release:	2%{?dist}
+Version:	9.3
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
 Group:		System Environment/Libraries
@@ -144,6 +144,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.3-1
+- Make makefiles exit sooner on errors
+
 * Wed Jun 19 2019 Mátyás Selmeci <matyas@cs.wisc.edu> - 9.2-2
 - Don't package /etc/grid-security/certificates
 

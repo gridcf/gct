@@ -1,3 +1,9 @@
+globus-ftp-control (9.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:33:15 +0100
+
 globus-ftp-control (9.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

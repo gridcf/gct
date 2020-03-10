@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	10.3
+Version:	10.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.4-1
+- Make makefiles exit sooner on errors
+
 * Sat Jul 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-1
 - Update additional old document references
 

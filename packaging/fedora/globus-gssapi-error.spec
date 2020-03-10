@@ -3,7 +3,7 @@
 Name:		globus-gssapi-error
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	6.1
+Version:	6.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Error Library
 
@@ -130,6 +130,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2-1
+- Make makefiles exit sooner on errors
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.1-1
 - Doxygen fixes
 

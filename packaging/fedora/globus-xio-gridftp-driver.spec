@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(echo %{name} | tr - _)
-Version:	3.2
+Version:	3.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
@@ -140,6 +140,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.3-1
+- Make makefiles exit sooner on errors
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.2-1
 - Doxygen fixes
 

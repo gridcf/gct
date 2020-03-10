@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (9.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:49:21 +0100
+
 globus-gsi-sysconfig (9.2-2+gct.@distro@) @distro@; urgency=medium
 
   * Don't package /etc/grid-security/certificates

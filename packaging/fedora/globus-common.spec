@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.6
+Version:	18.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -240,6 +240,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.7-1
+- Make makefiles exit sooner on errors
+
 * Thu Jan 09 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.6-1
 - For pure IP addresses globus-domainname should be empty
 

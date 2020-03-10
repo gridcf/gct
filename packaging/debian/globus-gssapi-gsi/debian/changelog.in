@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.13-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make makefiles exit sooner on errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:51:27 +0100
+
 globus-gssapi-gsi (14.12-1+gct.@distro@) @distro@; urgency=medium
 
   * Disallow TLS 1.0/1.1 by default again
