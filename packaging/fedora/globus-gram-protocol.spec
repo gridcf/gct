@@ -4,7 +4,7 @@ Name:		globus-gram-protocol
 %global soname 3
 %global _name %(echo %{name} | tr - _)
 Version:	13.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
 Group:		System Environment/Libraries
@@ -21,6 +21,7 @@ BuildRequires:	globus-gss-assist-devel >= 8
 BuildRequires:	doxygen
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
+BuildRequires:	perl-interpreter
 %endif
 #		Additional requirements for make check
 BuildRequires:	openssl
@@ -157,6 +158,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.3-2
+- Add BuildRequires perl-interpreter
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.3-1
 - Make makefiles exit sooner on errors
 

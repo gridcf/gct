@@ -3,7 +3,7 @@
 Name:		globus-xio-gsi-driver
 %global _name %(echo %{name} | tr - _)
 Version:	5.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GSI Driver
 
 Group:		System Environment/Libraries
@@ -19,6 +19,8 @@ BuildRequires:	globus-gssapi-error-devel >= 4
 BuildRequires:	globus-gssapi-gsi-devel >= 13
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	doxygen
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(strict)
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}
@@ -134,6 +136,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-2
+- Add BuildRequires perl-interpreter
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-1
 - Make makefiles exit sooner on errors
 

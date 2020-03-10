@@ -3,7 +3,7 @@
 Name:		globus-simple-ca
 %global _name %(echo %{name} | tr - _)
 Version:	5.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
 Group:		Applications/Internet
@@ -16,7 +16,13 @@ BuildArch:	noarch
 BuildRequires:	openssl
 #		Additional requirements for make check
 BuildRequires:	globus-common-progs >= 14
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(IPC::Open3)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(Symbol)
 BuildRequires:	perl(Test::More)
+BuildRequires:	perl(warnings)
 
 Requires:	globus-common-progs >= 14
 Requires:	globus-gsi-cert-utils-progs
@@ -110,6 +116,10 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-3
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Fri Sep 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-2
 - Check that hostname command succeeds in post install script
 

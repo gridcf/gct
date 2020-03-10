@@ -3,7 +3,7 @@
 Name:		globus-gram-job-manager-condor
 %global _name %(echo %{name} | tr - _)
 Version:	3.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Condor Job Manager Support
 
 Group:		Applications/Internet
@@ -15,6 +15,7 @@ BuildArch:	noarch
 
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
+BuildRequires:	perl-interpreter
 %endif
 
 Requires:	globus-gram-job-manager >= 13
@@ -82,6 +83,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-2
+- Add BuildRequires perl-interpreter
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
 - First Grid Community Toolkit release
 

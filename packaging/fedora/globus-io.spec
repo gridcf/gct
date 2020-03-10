@@ -4,7 +4,7 @@ Name:		globus-io
 %global soname 3
 %global _name %(echo %{name} | tr - _)
 Version:	12.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
 Group:		System Environment/Libraries
@@ -22,6 +22,11 @@ BuildRequires:	globus-xio-gsi-driver-devel >= 2
 BuildRequires:	globus-gssapi-error-devel >= 4
 #		Additional requirements for make check
 BuildRequires:	openssl
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Compare)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(POSIX)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
 
 %if %{?suse_version}%{!?suse_version:0}
@@ -116,6 +121,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.2-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Jul 30 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.2-1
 - Fix test race condition
 

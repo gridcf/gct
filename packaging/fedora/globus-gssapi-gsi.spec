@@ -4,7 +4,7 @@ Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
 Version:	14.13
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
 Group:		System Environment/Libraries
@@ -35,6 +35,10 @@ BuildRequires:	libtool-ltdl-devel
 BuildRequires:	doxygen
 #		Additional requirements for make check
 BuildRequires:	openssl
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Copy)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
 
 %if %{?suse_version}%{!?suse_version:0}
@@ -154,6 +158,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.13-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.13-1
 - Make makefiles exit sooner on errors
 

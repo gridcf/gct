@@ -3,7 +3,7 @@
 Name:		globus-gram-job-manager-fork
 %global _name %(echo %{name} | tr - _)
 Version:	3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Fork Job Manager Support
 
 Group:		Applications/Internet
@@ -19,6 +19,7 @@ BuildRequires:	globus-scheduler-event-generator-devel >= 4
 BuildRequires:	globus-gram-protocol-devel >= 11
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
+BuildRequires:	perl-interpreter
 %endif
 
 #		A requirement on globus-gram-job-manager would make sense.
@@ -172,6 +173,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/fork
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-2
+- Add BuildRequires perl-interpreter
+
 * Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
 - Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
 

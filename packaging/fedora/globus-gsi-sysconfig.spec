@@ -4,7 +4,7 @@ Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(echo %{name} | tr - _)
 Version:	9.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
 Group:		System Environment/Libraries
@@ -24,7 +24,13 @@ BuildRequires:	openssl-devel
 %endif
 BuildRequires:	doxygen
 #		Additional requirements for make check
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(Fcntl)
+BuildRequires:	perl(File::Path)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
+BuildRequires:	perl(warnings)
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -144,6 +150,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.3-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.3-1
 - Make makefiles exit sooner on errors
 

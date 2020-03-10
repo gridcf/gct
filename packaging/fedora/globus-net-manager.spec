@@ -4,7 +4,7 @@ Name:		globus-net-manager
 %global soname 0
 %global _name %(echo %{name} | tr - _)
 Version:	1.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
 Group:		System Environment/Libraries
@@ -17,6 +17,8 @@ BuildRequires:	gcc
 BuildRequires:	globus-common-devel >= 15.27
 BuildRequires:	globus-xio-devel >= 5
 BuildRequires:	doxygen
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(strict)
 %if %{?fedora}%{!?fedora:0} >= 30 || %{?rhel}%{!?rhel:0} >= 8
 BuildRequires:	python3-devel
 %else
@@ -205,6 +207,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.5-2
+- Add BuildRequires perl-interpreter
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.5-1
 - Make makefiles exit sooner on errors
 

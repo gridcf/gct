@@ -4,7 +4,7 @@ Name:		globus-scheduler-event-generator
 %global soname 0
 %global _name %(echo %{name} | tr - _)
 Version:	6.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries
@@ -28,6 +28,10 @@ BuildRequires:	doxygen
 BuildRequires:	insserv
 %endif
 #		Additional requirements for make check
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Compare)
+BuildRequires:	perl(File::Temp)
 BuildRequires:	perl(Test::More)
 
 %if %{?suse_version}%{!?suse_version:0}
@@ -235,6 +239,10 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-1
 - Remove unused TESTS.pl script
 
