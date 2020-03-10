@@ -3,7 +3,7 @@
 Name:		globus-scheduler-event-generator
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.2
+Version:	6.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
@@ -235,6 +235,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-1
+- Remove unused TESTS.pl script
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2-1
 - Make makefiles exit sooner on errors
 

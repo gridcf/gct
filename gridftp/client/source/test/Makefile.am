@@ -1,4 +1,4 @@
-EXTRA_SCRIPTS = run-tests.pl many-server.pl run-backend-tests.pl test-wrapper
+EXTRA_SCRIPTS = test-wrapper
 
 check_SCRIPTS_run = \
 	dir-test.pl \

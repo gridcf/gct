@@ -6,7 +6,6 @@ check_PROGRAMS = \
     seg-timestamp-test \
     seg-api-test
 check_SCRIPTS = \
-    TESTS.pl \
     seg-api-test.pl
 check_DATA = \
     seg_api_test_data.txt \

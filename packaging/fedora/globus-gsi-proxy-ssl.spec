@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-ssl
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	6.3
+Version:	6.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy SSL Library
 
@@ -138,6 +138,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-1
+- Remove unused TESTS.pl script
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-1
 - Make makefiles exit sooner on errors
 

@@ -3,7 +3,6 @@ Makefile
 globus_gram_protocol_test-[0-9]*
 *-test
 *-test.pl
-globus-gram-protocol-run-tests.pl
 *.lo
 *.la
 .libs
