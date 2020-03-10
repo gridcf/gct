@@ -36,10 +36,10 @@ install-data-local: $(DOC_STAMPS)
 		$(INSTALL) -m 644 doc/man/man3/[Gg][Ll][Oo][Bb][Uu][Ss]*.3 $(DESTDIR)$(mandir)/man3 ; \
 	fi
 	if test -d doc/html; then \
-		for dir in `(cd doc; find html -type d)`; do \
+		for dir in `cd doc; find html -type d`; do \
 			install -d -m 755 $(DESTDIR)$(docdir)/$$dir || exit 1; \
 		done ; \
-		for f in `(cd doc; find html -type f)`; do \
-			$(INSTALL) -m 644 doc/$$f $(DESTDIR)$(docdir)/$$f  || exit 1; \
+		for f in `cd doc; find html -type f`; do \
+			$(INSTALL) -m 644 doc/$$f $(DESTDIR)$(docdir)/$$f || exit 1; \
 		done ; \
 	fi
