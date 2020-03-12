@@ -3,7 +3,7 @@
 Name:		globus-gram-job-manager-lsf
 %global _name %(echo %{name} | tr - _)
 Version:	3.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - LSF Job Manager Support
 
 Group:		Applications/Internet
@@ -17,6 +17,7 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
+BuildRequires:	perl-interpreter
 %endif
 
 Requires:	globus-gram-job-manager >= 13
@@ -169,6 +170,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/lsf
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-2
+- Add BuildRequires perl-interpreter
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-1
 - First Grid Community Toolkit release
 

@@ -1,3 +1,9 @@
+globus-ftp-client (9.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove some unused test scripts
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 12 Mar 2020 07:30:27 +0100
+
 globus-ftp-client (9.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

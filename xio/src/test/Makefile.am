@@ -55,7 +55,7 @@ endif
 
 TESTS = $(check_SCRIPTS) $(check_PROGRAMS_NO_SCRIPT)
 TESTS_ENVIRONMENT = \
-	export XIO_TEST_OUPUT_DIR=test_output/$$$$ \
+	export XIO_TEST_OUTPUT_DIR=test_output/$$$$ \
 	       TEST_DATA_DIR=$(TEST_DATA_DIR) ;
 
 AM_CPPFLAGS = \

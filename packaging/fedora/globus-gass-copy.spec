@@ -4,7 +4,7 @@ Name:		globus-gass-copy
 %global soname 2
 %global _name %(echo %{name} | tr - _)
 Version:	10.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
 Group:		System Environment/Libraries
@@ -32,8 +32,21 @@ BuildRequires:	doxygen
 BuildRequires:	globus-gridftp-server-devel >= 7
 BuildRequires:	globus-gridftp-server-progs >= 7
 BuildRequires:	openssl
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(Cwd)
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Compare)
+BuildRequires:	perl(File::Copy)
+BuildRequires:	perl(File::Path)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Getopt::Long)
+BuildRequires:	perl(IPC::Open3)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(Symbol)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(URI)
+BuildRequires:	perl(vars)
+BuildRequires:	perl(warnings)
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -170,6 +183,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.6-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.6-1
 - Make makefiles exit sooner on errors
 

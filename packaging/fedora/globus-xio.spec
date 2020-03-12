@@ -3,8 +3,8 @@
 Name:		globus-xio
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.3
-Release:	1%{?dist}
+Version:	6.4
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
 Group:		System Environment/Libraries
@@ -16,8 +16,15 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	gcc
 BuildRequires:	globus-common-devel >= 14
 BuildRequires:	doxygen
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(strict)
 #		Additional requirements for make check
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(IPC::Open2)
+BuildRequires:	perl(lib)
+BuildRequires:	perl(POSIX)
 BuildRequires:	perl(Test::More)
+BuildRequires:	perl(warnings)
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -133,6 +140,13 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-1
+- Fix spelling
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-1
 - Make makefiles exit sooner on errors
 

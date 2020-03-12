@@ -3,7 +3,7 @@
 Name:           myproxy
 %global soname 6
 Version:        6.2.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          Applications/Internet
@@ -40,6 +40,11 @@ BuildRequires:  insserv
 BuildRequires:  globus-proxy-utils
 BuildRequires:  globus-gsi-cert-utils-progs
 BuildRequires:  openssl
+BuildRequires:  perl-interpreter
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Socket)
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:  voms-clients
 %endif
@@ -382,6 +387,10 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.6-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Sat Jul 13 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.6-1
 - Remove LICENSE.globus file
 

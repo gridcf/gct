@@ -1,5 +1,3 @@
-#!/usr/bin/env perl
-
 # 
 # Copyright 1999-2006 University of Chicago
 # 

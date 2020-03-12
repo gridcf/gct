@@ -4,7 +4,7 @@ Name:		globus-gsi-openssl-error
 %global soname 0
 %global _name %(echo %{name} | tr - _)
 Version:	4.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling
 
 Group:		System Environment/Libraries
@@ -22,6 +22,10 @@ BuildRequires:	openssl-devel
 %endif
 BuildRequires:	doxygen
 #		Additional requirements for make check
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(lib)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
 
 %if %{?suse_version}%{!?suse_version:0}
@@ -138,6 +142,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.2-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.2-1
 - Make makefiles exit sooner on errors
 

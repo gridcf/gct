@@ -1,3 +1,9 @@
+globus-common (18.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove unused doxygen filter
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 12 Mar 2020 01:50:16 +0100
+
 globus-common (18.7-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

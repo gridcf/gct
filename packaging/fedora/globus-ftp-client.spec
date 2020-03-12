@@ -3,8 +3,8 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.3
-Release:	1%{?dist}
+Version:	9.4
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
 Group:		System Environment/Libraries
@@ -32,7 +32,23 @@ BuildRequires:	doxygen
 BuildRequires:	globus-gridftp-server-devel >= 7
 BuildRequires:	globus-gridftp-server-progs >= 7
 BuildRequires:	openssl
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(Config)
+BuildRequires:	perl(Cwd)
+BuildRequires:	perl(Data::Dumper)
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Copy)
+BuildRequires:	perl(FileHandle)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Getopt::Long)
+BuildRequires:	perl(lib)
+BuildRequires:	perl(POSIX)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(Sys::Hostname)
 BuildRequires:	perl(Test::More)
+BuildRequires:	perl(vars)
 
 %if %{?suse_version}%{!?suse_version:0}
 %global mainpkg lib%{_name}%{soname}
@@ -153,6 +169,13 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-1
+- Remove some unused test scripts
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.3-1
 - Make makefiles exit sooner on errors
 

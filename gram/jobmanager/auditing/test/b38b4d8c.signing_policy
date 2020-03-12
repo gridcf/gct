@@ -1,9 +1,0 @@
-#CL entry #1|
-
-	access_id_CA      X509         '/C=US/O=Globus Alliance/CN=Globus Certificate Service'
-
-  	pos_rights        globus        CA:sign
-
-   	cond_subjects     globus    	'"/C=US/O=Globus Alliance/OU=Service/*" "/C=US/O=Globus Alliance/OU=User/*"'
-
-# end of EACL

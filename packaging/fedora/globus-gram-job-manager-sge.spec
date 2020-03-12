@@ -3,7 +3,7 @@
 Name:		globus-gram-job-manager-sge
 %global _name %(echo %{name} | tr - _)
 Version:	3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Grid Engine Job Manager Support
 
 Group:		Applications/Internet
@@ -18,6 +18,7 @@ BuildRequires:	globus-common-devel >= 14
 BuildRequires:	globus-scheduler-event-generator-devel >= 4
 %if ! %{?suse_version}%{!?suse_version:0}
 BuildRequires:	perl-generators
+BuildRequires:	perl-interpreter
 %endif
 
 Requires:	globus-gram-job-manager >= 13
@@ -176,6 +177,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/sge
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-2
+- Add BuildRequires perl-interpreter
+
 * Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
 - Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
 

@@ -3,4 +3,3 @@ debian/tmp/usr/lib/*/libglobus_common.so
 debian/tmp/usr/lib/*/libglobus_memory_debug.so
 debian/tmp/usr/lib/*/pkgconfig/globus-common.pc
 debian/tmp/usr/bin/globus-makefile-header
-debian/tmp/usr/share/globus/globus-vararg-enums-doxygen-filter.pl

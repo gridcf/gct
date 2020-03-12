@@ -3,7 +3,7 @@
 Name:		globus-gram-job-manager
 %global _name %(echo %{name} | tr - _)
 Version:	15.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet
@@ -33,6 +33,7 @@ BuildRequires:	libopenssl-devel
 BuildRequires:	openssl-devel
 %endif
 BuildRequires:	libxml2-devel
+BuildRequires:	perl-interpreter
 #		Additional requirements for make check
 BuildRequires:	globus-io-devel >= 9
 BuildRequires:	globus-gram-client-devel >= 3
@@ -47,6 +48,16 @@ BuildRequires:	globus-proxy-utils >= 5
 BuildRequires:	globus-gsi-cert-utils-progs
 BuildRequires:	globus-gram-job-manager-fork-setup-poll
 BuildRequires:	openssl
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Compare)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Globus::Core::Paths)
+BuildRequires:	perl(Globus::GRAM::Error)
+BuildRequires:	perl(IO::File)
+BuildRequires:	perl(IPC::Open2)
+BuildRequires:	perl(POSIX)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(Sys::Hostname)
 BuildRequires:	perl(Test)
 BuildRequires:	perl(Test::More)
 
@@ -158,6 +169,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.4-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Fri Feb 15 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.4-1
 - Add su option to logrotate file
 

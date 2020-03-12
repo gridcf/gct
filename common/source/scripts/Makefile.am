@@ -8,8 +8,6 @@ libexecdata_DATA = \
 	globus-sh-tools-vars.sh \
 	globus-script-initializer \
 	globus-script-initializer.$(host_cpu)-$(host_vendor)-$(host_os)
-libexec_SCRIPTS = \
-	globus-vararg-enums-doxygen-filter.pl
 
 bin_SCRIPTS = \
 	globus-hostname \
@@ -30,5 +28,4 @@ DISTCLEANFILES = globus-script-initializer.$(host_cpu)-$(host_vendor)-$(host_os)
 
 EXTRA_DIST = \
 	globus-args-parser-header \
-	globus-vararg-enums-doxygen-filter.pl \
 	Config.pm

@@ -27,7 +27,7 @@ sub run_test
     my $cmd=(shift);
     my $test_str=(shift);
     my ($errors,$rc) = ("",0);
-    my $output_dir=$ENV{'XIO_TEST_OUPUT_DIR'};
+    my $output_dir=$ENV{'XIO_TEST_OUTPUT_DIR'};
 
     # delete the output dir if it exists
     $rc = system("mkdir -p $output_dir");

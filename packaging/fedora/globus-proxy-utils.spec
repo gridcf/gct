@@ -3,7 +3,7 @@
 Name:		globus-proxy-utils
 %global _name %(echo %{name} | tr - _)
 Version:	7.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 
 Group:		Applications/Internet
@@ -30,6 +30,10 @@ BuildRequires:	openssl-devel
 %endif
 #		Additional requirements for make check
 BuildRequires:	openssl
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(IO::Handle)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
 
 %description
@@ -73,6 +77,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.1-2
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
 * Sat May 05 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.1-1
 - Increase default proxy key size to 2048 bits
 - Use 2048 bit RSA key for tests
