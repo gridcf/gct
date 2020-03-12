@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.7
+Version:	18.8
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -228,8 +228,6 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %{_libdir}/libglobus_memory_debug.so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_bindir}/globus-makefile-header
-%dir %{_datadir}/globus
-%{_datadir}/globus/globus-vararg-enums-doxygen-filter.pl
 
 %files doc
 %defattr(-,root,root,-)
@@ -240,6 +238,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.8-1
+- Remove unused doxygen filter
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.7-1
 - Make makefiles exit sooner on errors
 
