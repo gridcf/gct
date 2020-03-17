@@ -1,3 +1,9 @@
+globus-gram-client-tools (12.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Install globus-job-get-output-helper man page
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 16 Mar 2020 21:08:48 +0100
+
 globus-gram-client-tools (12.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

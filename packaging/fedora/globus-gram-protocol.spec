@@ -3,8 +3,8 @@
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	13.3
-Release:	2%{?dist}
+Version:	13.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
 Group:		System Environment/Libraries
@@ -154,10 +154,13 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %dir %{_pkgdocdir}/perl
 %dir %{_pkgdocdir}/perl/Globus
 %dir %{_pkgdocdir}/perl/Globus/GRAM
-%doc %{_pkgdocdir}/perl/Globus/GRAM/*
+%doc %{_pkgdocdir}/perl/Globus/GRAM/*.html
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 17 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.4-1
+- Fix man page section
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.3-2
 - Add BuildRequires perl-interpreter
 

@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove remnants of dropped documentation package
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 16 Mar 2020 21:28:48 +0100
+
 globus-gram-job-manager (15.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Add su option to logrotate file

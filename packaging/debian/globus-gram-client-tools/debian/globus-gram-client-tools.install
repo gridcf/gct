@@ -9,6 +9,7 @@ debian/tmp/usr/bin/globusrun
 debian/tmp/usr/share/man/man1/globus-job-cancel.1
 debian/tmp/usr/share/man/man1/globus-job-clean.1
 debian/tmp/usr/share/man/man1/globus-job-get-output.1
+debian/tmp/usr/share/man/man1/globus-job-get-output-helper.1
 debian/tmp/usr/share/man/man1/globus-job-run.1
 debian/tmp/usr/share/man/man1/globus-job-status.1
 debian/tmp/usr/share/man/man1/globus-job-submit.1

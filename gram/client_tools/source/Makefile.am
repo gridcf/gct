@@ -13,6 +13,7 @@ bin_SCRIPTS = \
 man_MANS = globus-job-cancel.1 \
                 globus-job-clean.1 \
                 globus-job-get-output.1 \
+                globus-job-get-output-helper.1 \
                 globus-job-run.1  \
                 globus-job-status.1 \
                 globus-job-submit.1 \

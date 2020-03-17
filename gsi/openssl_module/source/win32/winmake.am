@@ -1,8 +1,0 @@
-
-LibDependencies = \
-    Ws2_32.lib \
-    libeay32.lib \
-    ssleay32.lib \
-    libglobus_common_$(GLOBUS_FLAVOR_NAME).lib \
-    libglobus_proxy_ssl_$(GLOBUS_FLAVOR_NAME).lib \
-    libglobus_openssl_error_$(GLOBUS_FLAVOR_NAME).lib
