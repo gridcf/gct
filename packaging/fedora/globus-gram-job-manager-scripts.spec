@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-scripts
 %global _name %(echo %{name} | tr - _)
-Version:	7.2
-Release:	2%{?dist}
+Version:	7.3
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Job ManagerScripts
 
 Group:		Applications/Internet
@@ -17,7 +17,6 @@ BuildArch:	noarch
 BuildRequires:	perl-generators
 BuildRequires:	perl-interpreter
 %endif
-BuildRequires:	perl(Pod::Html)
 
 %if %{?suse_version}%{!?suse_version:0}
 %{perl_requires}
@@ -84,6 +83,7 @@ sed '/$libdir =/d' \
 
 %files doc
 %defattr(-,root,root,-)
+%doc %{_mandir}/man3/*
 %dir %{_pkgdocdir}
 %dir %{_pkgdocdir}/perl
 %dir %{_pkgdocdir}/perl/Globus
@@ -92,6 +92,9 @@ sed '/$libdir =/d' \
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Mar 17 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.3-1
+- Add man pages
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.2-2
 - Add BuildRequires perl-interpreter
 
