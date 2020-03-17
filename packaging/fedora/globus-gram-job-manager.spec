@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager
 %global _name %(echo %{name} | tr - _)
-Version:	15.4
-Release:	2%{?dist}
+Version:	15.5
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
 Group:		Applications/Internet
@@ -169,6 +169,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Mon Mar 16 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.5-1
+- Remove remnants of dropped documentation package
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.4-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager],[15.4],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager],[15.5],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -98,9 +98,6 @@ AM_CONDITIONAL([USE_CYGPATH_W], [test "$use_cygpath_w" = "true"])
 
 AC_PATH_PROGS([OPENSSL], [openssl])
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$OPENSSL" != "x"])
-
-AC_PATH_PROGS([DOXYGEN], doxygen)
-AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != ""])
 
 if test "X$GLOBUS_VERSION" = "X"; then
     if test -x ${GLOBUS_LOCATION-/usr}/bin/globus-version; then

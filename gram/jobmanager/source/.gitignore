@@ -19,7 +19,6 @@ globus-*-initializer
 globus_gram_job_manager-[0-9]*
 globus-gram-job-manager-print-validation
 globus-gram-job-manager
-globus_gram_job_manager_rsl.dox
 *.lo
 *.la
 .libs

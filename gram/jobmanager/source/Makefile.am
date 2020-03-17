@@ -80,19 +80,11 @@ MANUAL_SOURCE = globus-personal-gatekeeper.txt \
 # Files which we want to put in the source package
 EXTRA_DIST = dirt.sh \
 	     $(validation_DATA) \
-	     configuration.dox \
-	     globus_gram_job_manager_script_interface.dox \
-	     globus_gram_job_manager_script_tutorial.dox \
-	     globus_job_manager_rsl_validation.dox \
-	     job_execution_environment.dox \
              $(MANUAL_SOURCE) \
              $(man_MANS) \
 	     $(doc_DATA) \
-	     main.dox \
 	     dirt.sh
 
-globus_gram_job_manager_rsl.dox: globus-gram-job-manager.rvf
-	perl $(top_srcdir)/scripts/create_rsl_documentation.pl < $< > $@
 rsl.txt: globus-gram-job-manager.rvf
 	perl $(top_srcdir)/scripts/create_rsl_documentation.pl -a < $< > $@
 
@@ -105,9 +97,7 @@ install-data-hook:
 	chmod 1777 $(DESTDIR)@LOGDIR@
 	mkdir -p $(DESTDIR)$(sysconfdir)/globus/gram
 
-CLEANFILES = \
-    default_rvf.c \
-    globus_gram_job_manager_rsl.dox
+CLEANFILES = default_rvf.c
 
 if BUILD_MANPAGES
 SUFFIXES = .txt .1 .5 .8
@@ -115,7 +105,7 @@ SUFFIXES = .txt .1 .5 .8
 .txt.1 .txt.5 .txt.8:
 	$(A2X) -d manpage -f manpage $<
 
-MAINTAINERCLEANFILES = $(man_MANS)
+MAINTAINERCLEANFILES = $(man_MANS) rsl.txt
 endif
 
 distuninstallcheck:
