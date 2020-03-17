@@ -22,8 +22,7 @@ Admin_Scripts = \
 	grid-default-ca \
 	globus-update-certificate-dir
 
-EXTRA_DIST = $(MANUALS_SOURCE) $(man_MANS) \
-    replace-version.xsl
+EXTRA_DIST = $(MANUALS_SOURCE) $(man_MANS)
 
 if BUILD_MANPAGES
 SUFFIXES = .txt .1 .8
