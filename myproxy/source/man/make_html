@@ -1,5 +1,0 @@
-#!/bin/sh
-# expect man2html 3.x from <http://www.oac.uci.edu/indiv/ehood/man2html.html>
-for manpage in `ls *.?`; do
-  nroff -man $manpage | man2html -botm 0 -topm 0 > $manpage.html
-done
