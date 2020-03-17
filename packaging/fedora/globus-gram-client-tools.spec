@@ -3,7 +3,7 @@
 Name:		globus-gram-client-tools
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	12.0
+Version:	12.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
@@ -61,6 +61,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_mandir}/man1/globus-job-cancel.1*
 %doc %{_mandir}/man1/globus-job-clean.1*
 %doc %{_mandir}/man1/globus-job-get-output.1*
+%doc %{_mandir}/man1/globus-job-get-output-helper.1*
 %doc %{_mandir}/man1/globus-job-run.1*
 %doc %{_mandir}/man1/globus-job-status.1*
 %doc %{_mandir}/man1/globus-job-submit.1*
@@ -69,6 +70,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Mar 16 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.1-1
+- Install globus-job-get-output-helper man page
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.0-1
 - First Grid Community Toolkit release
 
