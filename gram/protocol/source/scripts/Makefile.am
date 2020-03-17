@@ -21,11 +21,12 @@ $(globusperl_DATA): create_protocol_constants.pl ../globus-gram-protocol-constan
 	$(RM) $(globusperl_DATA)
 	-$(PERL) $(srcdir)/create_protocol_constants.pl -perl \
 		$(srcdir)/../globus-gram-protocol-constants.sh
+
 .pm.html:
 	pod2html --noindex $< > $@
 
 .pm.3pm:
-	pod2man --section=3 $< > $@
+	pod2man --section=3pm $< > $@
 
 install-data-local: $(noinst_DATA)
 	$(mkinstalldirs) $(DESTDIR)$(MAN_DIR)
@@ -45,4 +46,4 @@ all-local: $(globusperl_DATA)
 clean-local:
 	rm -rf Globus
 
-MAINTAINERCLEANFILES = $(perldoc_DATA) $(noinst_DATA)
+MAINTAINERCLEANFILES = $(perldoc_DATA) $(noinst_DATA) $(globusperl_DATA)
