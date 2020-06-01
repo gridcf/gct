@@ -210,7 +210,7 @@ while [ "X$1" != "X" ]; do
 	toprint="$toprint -issuer_hash"
 	;;
     -issuer|-i | --issuer)
-	toprint="$toprint -issuer"
+	toprint="$toprint ISSUER"
 	;;
     -startdate|-sd|--startdate)
 	toprint="$toprint -startdate"
@@ -249,19 +249,14 @@ fi
  
 if [ "$cert_format" = pkcs12 ]; then
     echo "Credentials are in pkcs12 format, OpenSSL will prompt for p12 password"
-    cert_data="`"$openssl" pkcs12 -nokeys -clcerts -nomacver -in ${certfile}`"
+    cert_data=`"$openssl" pkcs12 -nokeys -clcerts -nomacver -in ${certfile}`
     command_stub="\"$openssl\" x509 -noout $openssl_options"
 else
+    cert_data=""
     command_stub="\"$openssl\" x509 -noout -in ${certfile} $openssl_options"
 fi
 
-
-# Will probably need this...
-if [ "$cert_format" = pkcs12 ]; then
-    subject=`echo "$cert_data" | eval ${command_stub} -subject`
-else
-    subject=`eval ${command_stub} -subject`
-fi
+subject=`echo "$cert_data" | eval ${command_stub} -subject`
 
 if test $? -ne 0 ; then
     exit 1
@@ -270,6 +265,17 @@ fi
 subject=`echo ${subject} | sed 's%^subject=\ *%%'`
 if [ "${rfc2253:-0}" != 1 ]; then
     subject=$(echo "${subject}" | sed -e 's|^|/|' -e 's|,|/|g')
+fi
+
+issuer=`echo "$cert_data" | eval ${command_stub} -issuer`
+
+if test $? -ne 0 ; then
+    exit 1
+fi
+
+issuer=`echo ${issuer} | sed 's%^issuer=\ *%%'`
+if [ "${rfc2253:-0}" != 1 ]; then
+    issuer=$(echo "${issuer}" | sed -e 's|^|/|' -e 's|,|/|g')
 fi
 
 eval set -- "$toprint"
@@ -282,6 +288,8 @@ for i in "$@"; do
 	# Do not show the proxy levels
 	echo "${subject}" | sed -e 's%/CN=proxy%%g' -e 's%/CN=limited proxy%%g'
 	;;
+    ISSUER)
+	echo "${issuer}"
+	;;
     esac
 done
-
