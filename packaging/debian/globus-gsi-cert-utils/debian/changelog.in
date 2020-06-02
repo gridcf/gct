@@ -1,3 +1,9 @@
+globus-gsi-cert-utils (10.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix format for grid-cert-info -issuer
+
+ -- Mattias Ellert <ellert@ellert.physics.uu.se>  Mon, 01 Jun 2020 21:00:36 +0200
+
 globus-gsi-cert-utils (10.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove old replace-version.xsl file
