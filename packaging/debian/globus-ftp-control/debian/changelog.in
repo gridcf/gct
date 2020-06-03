@@ -1,3 +1,9 @@
+globus-ftp-control (9.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use -nameopt sep_multiline to derive certificate subject string
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 03 Jun 2020 19:30:23 +0200
+
 globus-ftp-control (9.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

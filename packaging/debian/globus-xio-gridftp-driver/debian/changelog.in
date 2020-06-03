@@ -1,3 +1,9 @@
+globus-xio-gridftp-driver (3.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use -nameopt sep_multiline to derive certificate subject string
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 03 Jun 2020 19:32:33 +0200
+
 globus-xio-gridftp-driver (3.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

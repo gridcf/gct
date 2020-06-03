@@ -1,14 +1,20 @@
+globus-gsi-cert-utils (10.7-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use -nameopt sep_multiline to derive certificate subject string
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 03 Jun 2020 19:35:07 +0200
+
 globus-gsi-cert-utils (10.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix format for grid-cert-info -issuer
 
- -- Mattias Ellert <ellert@ellert.physics.uu.se>  Mon, 01 Jun 2020 21:00:36 +0200
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 01 Jun 2020 21:00:36 +0200
 
 globus-gsi-cert-utils (10.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove old replace-version.xsl file
 
- -- Mattias Ellert <ellert@ellert.physics.uu.se>  Tue, 17 Mar 2020 06:15:48 +0100
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 17 Mar 2020 06:15:48 +0100
 
 globus-gsi-cert-utils (10.4-1+gct.@distro@) @distro@; urgency=medium
 

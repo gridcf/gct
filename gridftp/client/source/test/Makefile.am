@@ -149,7 +149,7 @@ LOG_COMPILER = $(LIBTOOL) --mode=execute \
 	linkname="`$(OPENSSL) x509 -hash -noout -in $<`.0"; \
 	rm -f "$$linkname"; \
 	cp $< "$$linkname"; \
-        echo "$$linkname" > $@
+	echo "$$linkname" > $@
 
 .link.signing_policy:
 	linkname=`cat $<`; \
@@ -172,16 +172,16 @@ LOG_COMPILER = $(LIBTOOL) --mode=execute \
 	umask 022; $(OPENSSL) x509 -passin pass:globus -req -days 365 -in testcred.req -CA $*.cacert -CAkey $*.cakey -out $@
 
 .cert.gridmap:
-	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt rfc2253,-dn_rev | sed -e 's/subject= */\//' -e 's/,/\//g'` ; \
-        echo "\"$$subject\" `id -un`" > $@
+	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`; \
+	echo "\"$$subject\" `id -un`" > $@
 CLEANFILES = testcred.key testcred.cert testcred.req \
 	     testcred.cacert testcred.srl \
 	     testcred.cakey testcred.gridmap
 
 clean-local:
 	if [ -f testcred.link ]; then \
-            rm -f "$$(cat testcred.link)" testcred.link; \
-        fi
+	    rm -f $$(cat testcred.link) testcred.link; \
+	fi
 	if test -f testcred.signing_policy; then \
 	    rm -f $$(cat testcred.signing_policy) testcred.signing_policy; \
 	fi
@@ -192,4 +192,3 @@ EXTRA_DIST = \
 	$(check_DATA_real) \
 	$(check_SCRIPTS) \
 	$(EXTRA_SCRIPTS)
-

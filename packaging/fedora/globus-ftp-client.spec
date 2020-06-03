@@ -3,8 +3,8 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.4
-Release:	2%{?dist}
+Version:	9.5
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
 Group:		System Environment/Libraries
@@ -169,6 +169,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.5-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

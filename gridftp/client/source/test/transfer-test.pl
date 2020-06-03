@@ -257,9 +257,7 @@ if($ENV{GLOBUS_FTP_CLIENT_TEST_SUBJECT})
 }
 else
 {
-    chomp($subject = `openssl x509 -in testcred.cert -subject -noout -nameopt rfc2253,-dn_rev`);
-    $subject =~ s/^subject= */\//;
-    $subject =~ s/,/\//g;
+    $subject = `openssl x509 -in testcred.cert -subject -noout -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\\s*!/!' | tr -d '\\n'`;
 }
 
 push(@tests, "dcau_test('none', 0);");

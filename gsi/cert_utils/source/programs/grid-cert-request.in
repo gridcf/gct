@@ -196,7 +196,7 @@ set_non_default_ca()
         for cert in ${trusted_certs_dir}/*.0; do
             if test -r "${cert}" ; then
                 eval "CA${index}=${cert}"
-                TEMP_SUBJECT="$("$openssl" x509 -in ${cert} -noout -subject -nameopt rfc2253,-dn_rev | sed -e 's|^subject= *|/|' -e 's|,|/|g')"
+                TEMP_SUBJECT=`"$openssl" x509 -in ${cert} -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
                 eval "CA_SUBJECT${index}=\"${TEMP_SUBJECT}\""
                 eval "CA_HASH${index}=`"$openssl" x509 -in ${cert} -noout -hash`"
                 eval "echo \"$index)  \${CA_HASH${index}} - \${CA_SUBJECT${index}}\""
@@ -225,7 +225,7 @@ set_non_default_ca()
             echo 
             exit 1
         fi
-        TEMP_SUBJECT=`"$openssl" x509 -in ${trusted_certs_dir}/${CA_HASH}.0 -noout -subject -nameopt rfc2253,-dn_rev | sed -e 's|^subject= *|/|' -e 's|,|/|g'`
+        TEMP_SUBJECT=`"$openssl" x509 -in ${trusted_certs_dir}/${CA_HASH}.0 -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
         eval "CA_SUBJECT=\"${TEMP_SUBJECT}\""
     fi
 
@@ -789,13 +789,7 @@ create_certs () {
     #------------------------
     # Insert instructions into the request file
 
-
-    SUBJECT="$("$openssl" req -text -noout < ${REQ_OUTPUT} 2>&1 |\
-              grep 'Subject:' | awk -F: '{print $2}' |\
-              cut -c2- )"
-
-    #Convert the subject to the correct form.
-    SUBJECT=`echo "/"${SUBJECT} | sed -e 's|, |/|g'`
+    SUBJECT=`"$openssl" req -in ${REQ_OUTPUT} -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
 
     create_request_header >${REQ_HEAD}
 

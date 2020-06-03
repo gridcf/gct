@@ -1,3 +1,9 @@
+globus-simple-ca (5.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use -nameopt sep_multiline to derive certificate subject string
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 03 Jun 2020 19:48:46 +0200
+
 globus-simple-ca (5.1-2+gct.@distro@) @distro@; urgency=medium
 
   * Check that hostname command succeeds in post install script

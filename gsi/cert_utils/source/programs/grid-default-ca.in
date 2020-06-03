@@ -22,7 +22,7 @@ find_ca_dir() {
     shift
 
     for x in "$@"; do
-        if test -f "$x/$cahash.0"; then
+        if test -r "$x/$cahash.0"; then
             echo "${x}"
             return 0
         fi
@@ -50,11 +50,11 @@ show_default() {
 
     DEFAULTCAHASH="NONE"
     gsconf=""
-    if test -f "${GRID_SECURITY_DIR}/grid-security.conf"; then
+    if test -r "${GRID_SECURITY_DIR}/grid-security.conf"; then
         gsconf=${GRID_SECURITY_DIR}/grid-security.conf
-    elif test -f "/etc/grid-security/grid-security.conf"; then
+    elif test -r "/etc/grid-security/grid-security.conf"; then
         gsconf="/etc/grid-security/grid-security.conf"
-    elif test -f "${sysconfdir}/grid-security.conf"; then
+    elif test -r "${sysconfdir}/grid-security.conf"; then
         gsconf="${sysconfdir}/grid-security.conf"
     fi
 
@@ -62,8 +62,8 @@ show_default() {
     DEFAULTCAHASH=`echo "$DEFAULTCACONFFILE" | sed -e "s|.*\.\(.*\)$|\1|"`
 
     for x in "$@"; do
-        if test -f "${x}/$DEFAULTCAHASH.0"; then
-            DEFAULT_SUBJECT="$("$openssl" x509 -in ${x}/$DEFAULTCAHASH.0 -noout -subject -nameopt rfc2253,-dn_rev| sed -e "s|subject= *|/|" -e "s|,|/|g")"
+        if test -r "${x}/$DEFAULTCAHASH.0"; then
+            DEFAULT_SUBJECT=`"$openssl" x509 -in ${x}/$DEFAULTCAHASH.0 -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
             echo
             echo "The default CA is: $DEFAULT_SUBJECT"
             echo "         Location: ${x}/$DEFAULTCAHASH.0"
@@ -91,7 +91,7 @@ ca_list() {
         for cert in ${cert_hashes}; do
             if test -r "${cert}" ; then 
                 eval "CA${index}=${cert}"
-                TEMP_SUBJECT="$("$openssl" x509 -in "${cert}" -noout -subject -nameopt rfc2253,-dn_rev| sed -e "s|subject= *|/|" -e "s|,|/|g")"
+                TEMP_SUBJECT=`"$openssl" x509 -in "${cert}" -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
                 eval "CA_SUBJECT${index}=\"${TEMP_SUBJECT}\""
                 TEMP_HASH=`echo ${cert} | sed -e  "s|.*/\([^/]*\)\.0|\1|"`
                 eval "CA_HASH${index}=$TEMP_HASH"
@@ -283,7 +283,7 @@ DIRT_BRANCH_ID="@DIRT_BRANCH_ID@"
 
 short_usage="$PROGRAM_NAME [-help] [ options ...]"
 
-if ! openssl version > /dev/null 2> /dev/null; then
+if ! "$openssl" version > /dev/null 2> /dev/null; then
     echo "Unable to locate openssl binary in $bindir or PATH" 1>&2
     exit 1
 fi
@@ -351,7 +351,7 @@ else
         echo 
         exit 1
     fi
-    CA_SUBJECT="$(openssl x509 -in "${CA_CERT}" -noout -subject -nameopt rfc2253,-dn_rev| sed -e "s|subject= *|/|" -e "s|,|/|g")"
+    CA_SUBJECT=`"$openssl" x509 -in "${CA_CERT}" -noout -subject -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
 fi
 
 secconfdir=`get_security_dir ${CA_CERT_DIR}`
@@ -369,7 +369,7 @@ echo
 echo "setting the default CA to: ${CA_SUBJECT}"
 echo
 
-NEW_DEFAULT_CA_HASH=`openssl x509 -in ${CA_CERT} -noout -hash`
+NEW_DEFAULT_CA_HASH=`"$openssl" x509 -in "${CA_CERT}" -noout -hash`
 
 GRID_SECURITY_FILE=${CA_CERT_DIR}/grid-security.conf.${NEW_DEFAULT_CA_HASH}
 CA_SSL_HOST_CONFIG_FILE=${CA_CERT_DIR}/globus-host-ssl.conf.${NEW_DEFAULT_CA_HASH}

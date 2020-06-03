@@ -2,8 +2,8 @@
 
 Name:		globus-simple-ca
 %global _name %(echo %{name} | tr - _)
-Version:	5.1
-Release:	3%{?dist}
+Version:	5.2
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
 Group:		Applications/Internet
@@ -116,6 +116,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-3
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests
