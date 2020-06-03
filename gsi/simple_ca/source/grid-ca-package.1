@@ -2,12 +2,12 @@
 .\"     Title: grid-ca-package
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\"      Date: 06/03/2020
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GRID\-CA\-PACKAGE" "1" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GRID\-CA\-PACKAGE" "1" "06/03/2020" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -36,11 +36,9 @@ grid-ca-package \- Prepare a CA certificate, configuration, and policy for distr
 \fBgrid\-ca\-sign\fR [ \-help| \-h| \-usage| \-version| \-versions ]
 .SH "DESCRIPTION"
 .sp
-The \fBgrid\-ca\-sign\fR utility creates a tarball containing an RPM spec file and the files needed to use a CA with grid tools\&. It optionally will also create a GPT package for distributing a CA\&.
+The \fBgrid\-ca\-sign\fR utility creates a tarball containing an RPM spec file and the files needed to use a CA with grid tools\&.
 .sp
 By default, the \fBgrid\-ca\-sign\fR utility displays a list of installed grid CA and prompts for which CA to package\&. It then creates a tarball containing the CA certificate, signing policy, CA configuration files, and an spec script to generate a binary RPM package containing the CA\&. If the CA hash is known prior to running \fBgrid\-ca\-sign\fR, it may provided as an argument to the \fI\-ca\fR parameter to avoid prompting\&.
-.sp
-In addition to generating a spec script and tarball, \fBgrid\-ca\-sign\fR creates a GPT package if either the \fI\-g\fR or \fI\-b\fR options are used on the command\-line\&. These packages may be used to distribute a CA and configuration to systems which do not support RPM packages\&.
 .sp
 The \fBgrid\-ca\-sign\fR utility writes the package tarballs to the current working directory\&.
 .SH "OPTIONS"
@@ -67,20 +65,6 @@ Use the CA whose name matches the hash string
 \fICA\fR\&. When invoked with this option,
 \fBgrid\-ca\-sign\fR
 runs non\-interactively\&.
-.RE
-.PP
-\fB\-g\fR
-.RS 4
-Create a GPT binary package in addition to the RPM script tarball\&. This package may be installed on other systems using the
-\fBgpt\-install\fR
-program\&.
-.RE
-.PP
-\fB\-b\fR
-.RS 4
-Create a GPT binary package with GPT metadata located in the path expected by GPT 3\&.2 (used in Globus 2\&.0\&.0\-5\&.0\&.x) instead of overrides the
-\fI\-g\fR
-command\-line option\&.
 .RE
 .PP
 \fB\-r\fR

@@ -118,6 +118,7 @@ fi
 %changelog
 * Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
 - Use -nameopt sep_multiline to derive certificate subject string
+- Drop support for generating GPT package
 
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-3
 - Add BuildRequires perl-interpreter
