@@ -37,7 +37,7 @@ if ($< != 0)
 {
     $server_args = "-no-fork $server_args";
 }
-$subject = `openssl x509 -subject -noout -in \${X509_USER_CERT:-testcred.cert} -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\\s*!/!' | tr -d '\\n'`;
+$subject = `openssl x509 -subject -noout -in \${X509_USER_CERT:-testcred.cert} -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\\s*!/!' | tr -d '\\n'`;
 
 $server_pid = open(SERVER, "$server_prog $server_args|");
  

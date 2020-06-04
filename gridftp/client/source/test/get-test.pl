@@ -219,7 +219,7 @@ if($ENV{GLOBUS_FTP_CLIENT_TEST_SUBJECT})
 }
 else
 {
-    $subject = `openssl x509 -in testcred.cert -subject -noout -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\\s*!/!' | tr -d '\\n'`;
+    $subject = `openssl x509 -in testcred.cert -subject -noout -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\\s*!/!' | tr -d '\\n'`;
 }
 
 

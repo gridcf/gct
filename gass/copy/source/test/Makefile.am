@@ -69,7 +69,7 @@ check_DATA =  \
 	umask 022; $(OPENSSL) x509 -passin pass:globus -req -days 365 -in testcred.req -CA $*.cacert -CAkey $*.cakey -out $@
 
 .cert.gridmap:
-	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`; \
+	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`; \
 	echo "\"$$subject\" `id -un`" > $@
 
 if CYGPATH_W_DEFINED

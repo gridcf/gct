@@ -55,7 +55,7 @@ sub basic_func
 }
 
 plan tests => 5;
-my $identity = `openssl x509 -subject -in \${X509_USER_CERT-\$HOME/.globus/usercert.pem} -noout -nameopt sep_multiline | sed -e /^subject=/d -e 's!^\\s*!/!' | tr -d '\\n'`;
+my $identity = `openssl x509 -subject -in \${X509_USER_CERT-\$HOME/.globus/usercert.pem} -noout -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\\s*!/!' | tr -d '\\n'`;
 print "    Using test identity $identity\n";
 
 basic_func('self', 0, "$test_prog-self");

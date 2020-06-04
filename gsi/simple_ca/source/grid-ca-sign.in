@@ -262,7 +262,7 @@ if test ${openssl_result} != 0; then
         subj_tmp_output=/tmp/tmp_output.$$
         "${openssl_cmd}" req -noout -in $(construct_path ${INPUT_REQ_FILE}) \
                            -subject -nameopt sep_multiline | \
-                           sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n' \
+                           sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n' \
                            > ${subj_tmp_output} 2>&1
         res=$?
         if test $res != 0; then
@@ -280,7 +280,7 @@ if test ${openssl_result} != 0; then
             subj_tmp_output=/tmp/tmp_output.$$
             "${openssl_cmd}" x509 -noout -in $(construct_path ${p}) \
                                -subject -nameopt sep_multiline | \
-                               sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n' \
+                               sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n' \
                                > ${subj_tmp_output} 2>&1
             res=$?
             if test $res != 0; then

@@ -200,7 +200,7 @@ while [ "X$1" != "X" ]; do
         fi
         shift
         ;;
-    -all | -all)
+    -all | --all)
 	toprint="$toprint -text"
 	;;
     -subject|-s | --subject)
@@ -229,9 +229,6 @@ while [ "X$1" != "X" ]; do
     shift
 done
 
-if [ "${rfc2253:-0}" != 1 ]; then
-    openssl_options="$openssl_options -nameopt sep_multiline"
-fi
 cert_format=`certificate_format "$certfile"`
 if test "$cert_format" = ""; then
     echo "Error: Cannot locate certificate" 1>&2
@@ -239,6 +236,7 @@ if test "$cert_format" = ""; then
 fi
 
 if [ "X$toprint" = "X" ]; then
+    # If no specific information requested - print all
     toprint="-text"
 fi
 
@@ -266,8 +264,9 @@ for i in "$@"; do
 	;;
     SUBJECT)
 	if [ "${rfc2253:-0}" != 1 ]; then
-	    subject=`echo "$cert_data" | eval ${command_stub} -subject | \
-		sed -e /^subject=/d -e 's!^\s*!/!' | tr -d '\n'`
+	    subject=`echo "$cert_data" | \
+		eval ${command_stub} -subject -nameopt sep_multiline | \
+		sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`
 	else
 	    subject=`echo "$cert_data" | eval ${command_stub} -subject | \
 		sed 's/^subject= *//'`
@@ -277,8 +276,9 @@ for i in "$@"; do
 	;;
     ISSUER)
 	if [ "${rfc2253:-0}" != 1 ]; then
-	    issuer=`echo "$cert_data" | eval ${command_stub} -issuer | \
-		sed -e /^issuer=/d -e 's!^\s*!/!' | tr -d '\n'`
+	    issuer=`echo "$cert_data" | \
+		eval ${command_stub} -issuer -nameopt sep_multiline | \
+		sed -e '/^issuer=/d' -e 's!^\s*!/!' | tr -d '\n'`
 	else
 	    issuer=`echo "$cert_data" | eval ${command_stub} -issuer | \
 		sed 's/^issuer= *//'`
