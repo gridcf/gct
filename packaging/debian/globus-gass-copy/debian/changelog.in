@@ -1,3 +1,9 @@
+globus-gass-copy (10.7-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use -nameopt sep_multiline to derive certificate subject string
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 03 Jun 2020 19:20:22 +0200
+
 globus-gass-copy (10.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

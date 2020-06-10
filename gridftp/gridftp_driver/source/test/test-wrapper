@@ -38,9 +38,7 @@ my $server_args = "-no-chdir -d 0 -p $server_port $server_nosec";
 if ($< != 0) {
     $server_args = "-no-fork $server_args";
 }
-chomp($subject = `openssl x509 -in testcred.cert -subject -noout -nameopt rfc2253,-dn_rev`);
-$subject =~ s/^subject= */\//;
-$subject =~ s/,/\//g;
+$subject = `openssl x509 -in testcred.cert -subject -noout -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\\s*!/!' | tr -d '\\n'`;
 
 $server_pid = open(SERVER, "$server_prog $server_args |");
  

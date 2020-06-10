@@ -3,7 +3,7 @@
 Name:		globus-ftp-control
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	9.5
+Version:	9.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library
 
@@ -144,6 +144,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.6-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.5-1
 - Make makefiles exit sooner on errors
 

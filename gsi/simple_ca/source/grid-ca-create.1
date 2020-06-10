@@ -2,12 +2,12 @@
 .\"     Title: grid-ca-create
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\"      Date: 06/03/2020
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GRID\-CA\-CREATE" "1" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GRID\-CA\-CREATE" "1" "06/03/2020" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -128,18 +128,6 @@ to protect the CA\(cqs private key\&. This is useful for automating Simple CA, b
 Disable building a source tarball for distributing the CA\(cqs public information to other machines\&. The source tarball can be created later by using the
 \fBgrid\-ca\-package\fR
 command\&.
-.RE
-.PP
-\fB\-g\fR
-.RS 4
-Create a binary GPT package containing the new CA\(cqs public information\&. The package will be created in the current working directory\&. This package can be deployed by with the
-\fBgpt\-install\fR
-tool\&.
-.RE
-.PP
-\fB\-b\fR
-.RS 4
-Create a binary GPT package containing the new CA\(cqs public information that is backward\-compatible with GPT 3\&.2\&. Packages created in this manner will work with Globus Toolkit 2\&.0\&.0\-5\&.0\&.x\&.
 .RE
 .SH "EXAMPLES"
 .sp

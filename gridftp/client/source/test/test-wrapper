@@ -39,9 +39,7 @@ if ($< != 0)
     $server_args = "-no-fork $server_args";
 }
 
-chomp($subject = `openssl x509 -subject -noout -in \${X509_USER_CERT:-testcred.cert} -nameopt rfc2253,-dn_rev`);
-$subject =~ s/^subject= */\//;
-$subject =~ s/,/\//g;
+$subject = `openssl x509 -subject -noout -in \${X509_USER_CERT:-testcred.cert} -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\\s*!/!' | tr -d '\\n'`;
 
 print STDERR "#Subject is $subject\n";
 print STDERR "#PATH is $ENV{PATH}\n";

@@ -102,12 +102,12 @@ certificate_format()
 
     if test "$testfile" = ""; then
         :
-    elif echo "$certfile" | grep '\.p12$' > /dev/null 2>&1 ; then
+    elif echo "$testfile" | grep '\.p12$' > /dev/null 2>&1 ; then
         _format=pkcs12
-    elif echo "$certfile" | grep '\.pem$' > /dev/null 2>&1 ; then
+    elif echo "$testfile" | grep '\.pem$' > /dev/null 2>&1 ; then
         _format=x509
     elif grep -- '-----BEGIN' "$testfile" > /dev/null 2>&1 ; then
-        _format="x509"
+        _format=x509
     else
         :
     fi
@@ -186,7 +186,7 @@ while [ "X$1" != "X" ]; do
         else
             echo "No DiRT information available."
         fi
-        exit 0;
+        exit 0
         ;;
     -file| -f | --file)
         if [ -n "$2" -a -f "$2" -a -r "$2" ]; then
@@ -200,7 +200,7 @@ while [ "X$1" != "X" ]; do
         fi
         shift
         ;;
-    -all | -all)
+    -all | --all)
 	toprint="$toprint -text"
 	;;
     -subject|-s | --subject)
@@ -229,67 +229,62 @@ while [ "X$1" != "X" ]; do
     shift
 done
 
-if [ "${rfc2253:-0}" != 1 ]; then
-    openssl_options="$openssl_options -nameopt rfc2253,-dn_rev"
-fi
 cert_format=`certificate_format "$certfile"`
 if test "$cert_format" = ""; then
     echo "Error: Cannot locate certificate" 1>&2
-    exit 1;
+    exit 1
 fi
 
 if [ "X$toprint" = "X" ]; then
+    # If no specific information requested - print all
     toprint="-text"
 fi
 
-if [ ! \( -f "${certfile}" -a -r "${certfile}" \) ]; then
+if [ ! -r "${certfile}" ]; then
     echo "ERROR: Cannot read certificate file ${certfile}" >&2
     exit 1
 fi
  
 if [ "$cert_format" = pkcs12 ]; then
     echo "Credentials are in pkcs12 format, OpenSSL will prompt for p12 password"
-    cert_data=`"$openssl" pkcs12 -nokeys -clcerts -nomacver -in ${certfile}`
+    cert_data=`"$openssl" pkcs12 -nokeys -clcerts -nomacver -in "$certfile"`
     command_stub="\"$openssl\" x509 -noout $openssl_options"
 else
     cert_data=""
-    command_stub="\"$openssl\" x509 -noout -in ${certfile} $openssl_options"
+    command_stub="\"$openssl\" x509 -noout -in \"$certfile\" $openssl_options"
 fi
 
-subject=`echo "$cert_data" | eval ${command_stub} -subject`
-
-if test $? -ne 0 ; then
-    exit 1
-fi
-
-subject=`echo ${subject} | sed 's%^subject=\ *%%'`
-if [ "${rfc2253:-0}" != 1 ]; then
-    subject=$(echo "${subject}" | sed -e 's|^|/|' -e 's|,|/|g')
-fi
-
-issuer=`echo "$cert_data" | eval ${command_stub} -issuer`
-
-if test $? -ne 0 ; then
-    exit 1
-fi
-
-issuer=`echo ${issuer} | sed 's%^issuer=\ *%%'`
-if [ "${rfc2253:-0}" != 1 ]; then
-    issuer=$(echo "${issuer}" | sed -e 's|^|/|' -e 's|,|/|g')
-fi
+echo "$cert_data" | eval ${command_stub} || exit $?
 
 eval set -- "$toprint"
 for i in "$@"; do
     case "$i" in
     -*)
-	echo "$cert_data" | eval "{ ${command_stub} $i || exit $?; } | sed 's/^[a-zA-Z]*=[ ]*//'"
+	echo "$cert_data" | eval ${command_stub} $i | sed 's/^[a-zA-Z]*= *//'
 	;;
     SUBJECT)
+	if [ "${rfc2253:-0}" != 1 ]; then
+	    subject=`echo "$cert_data" | \
+		eval ${command_stub} -subject -nameopt sep_multiline | \
+		sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`
+	else
+	    subject=`echo "$cert_data" | eval ${command_stub} -subject | \
+		sed 's/^subject= *//'`
+	fi
 	# Do not show the proxy levels
 	echo "${subject}" | sed -e 's%/CN=proxy%%g' -e 's%/CN=limited proxy%%g'
 	;;
     ISSUER)
-	echo "${issuer}"
+	if [ "${rfc2253:-0}" != 1 ]; then
+	    issuer=`echo "$cert_data" | \
+		eval ${command_stub} -issuer -nameopt sep_multiline | \
+		sed -e '/^issuer=/d' -e 's!^\s*!/!' | tr -d '\n'`
+	else
+	    issuer=`echo "$cert_data" | eval ${command_stub} -issuer | \
+		sed 's/^issuer= *//'`
+	fi
+	# Do not show the proxy levels
+	echo "${issuer}" | sed -e 's%/CN=proxy%%g' -e 's%/CN=limited proxy%%g'
 	;;
     esac
 done

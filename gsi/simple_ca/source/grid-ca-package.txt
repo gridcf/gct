@@ -21,8 +21,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 The *grid-ca-sign* utility creates a tarball containing an RPM spec file and
-the files needed to use a CA with grid tools. It optionally will also
-create a GPT package for distributing a CA.
+the files needed to use a CA with grid tools.
 
 By default, the *grid-ca-sign* utility displays a list of installed grid CA and
 prompts for which CA to package. It then creates a tarball containing the CA
@@ -30,11 +29,6 @@ certificate, signing policy, CA configuration files, and an spec script to
 generate a binary RPM package containing the CA. If the CA hash is known prior
 to running *grid-ca-sign*, it may provided as an argument to the
 '-ca' parameter to avoid prompting.
-
-In addition to generating a spec script and tarball, *grid-ca-sign* creates a
-GPT package if either the '-g' or '-b' options
-are used on the command-line. These packages may be used to distribute a CA and
-configuration to systems which do not support RPM packages.
 
 The *grid-ca-sign* utility writes the package tarballs to the current working
 directory.
@@ -53,15 +47,6 @@ The full set of command-line options to *grid-ca-sign* follows:
 *-ca 'CA'*::
     Use the CA whose name matches the hash string 'CA'. When invoked with this
     option, *grid-ca-sign* runs non-interactively.
-*-g*::
-    Create a GPT binary package in addition to the RPM script tarball. This
-    package may be installed on other systems using the
-    *gpt-install* program.
-*-b*::
-    Create a GPT binary package with GPT metadata located in the path expected
-    by GPT 3.2 (used in Globus 2.0.0-5.0.x) instead of
-    +${datadir}/globus/packages+ as used in Globus 5.2.x. This option
-    overrides the '-g' command-line option.
 *-r*::
     Create a binary RPM package for the CA. This option currently only works on
     RPM-based distributions.

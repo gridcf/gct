@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	10.6
+Version:	10.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.7-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Mon Jun 01 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.6-1
 - Fix format for grid-cert-info -issuer
 

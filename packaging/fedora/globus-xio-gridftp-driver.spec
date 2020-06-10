@@ -2,8 +2,8 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(echo %{name} | tr - _)
-Version:	3.3
-Release:	2%{?dist}
+Version:	3.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
 Group:		System Environment/Libraries
@@ -152,6 +152,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.4-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.3-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

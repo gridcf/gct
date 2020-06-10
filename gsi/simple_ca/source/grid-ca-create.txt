@@ -96,16 +96,6 @@ command when creating the self-signed certificate.
     information to other machines. The source tarball can be created later by
     using the *grid-ca-package* command.
 
-*-g*::
-    Create a binary GPT package containing the new CA's public information. The
-    package will be created in the current working directory. This package can
-    be deployed by with the *gpt-install* tool.
-
-*-b*::
-    Create a binary GPT package containing the new CA's public information that
-    is backward-compatible with GPT 3.2. Packages created in this manner will
-    work with Globus Toolkit 2.0.0-5.0.x.
-
 [[grid-ca-create-EXAMPLES]]
 EXAMPLES
 --------

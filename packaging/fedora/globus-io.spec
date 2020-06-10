@@ -3,8 +3,8 @@
 Name:		globus-io
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	12.2
-Release:	2%{?dist}
+Version:	12.3
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
 Group:		System Environment/Libraries
@@ -121,6 +121,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.3-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.2-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

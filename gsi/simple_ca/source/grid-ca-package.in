@@ -61,7 +61,7 @@ ca_list() {
 
             for cert in ${cert_hashes}; do
                 if test -r "${cert}" ; then 
-                    TEMP_SUBJECT="$("$openssl" x509 -in ${cert} -noout -subject -nameopt rfc2253,-dn_rev | sed -e 's|^subject= *|/|' -e 's|,|/|g')"
+                    TEMP_SUBJECT=`"$openssl" x509 -in ${cert} -noout -subject -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`
                     TEMP_HASH="${cert##*/}"
                     TEMP_HASH="${TEMP_HASH%.0}"
 
@@ -118,7 +118,7 @@ create_source_package_tarball()
     _cadir="${2}"
     _casubject="${3}"
     _simpleca="${4}"
-    _cahash="$("$openssl" x509 -hash -noout -in "${_capath}")"
+    _cahash=`"$openssl" x509 -hash -noout -in "${_capath}"`
 
     _certdir="share/certificates"
     _srcdir="globus-simple-ca-${_cahash}"
@@ -408,116 +408,8 @@ create_debian_binary_package()
 
     rm -rf "$_pkgdir"
 }
-create_binary_gpt_package()
-{
-    _tmpdir="${TMPDIR:-/tmp}"
-    _capath="${1}"
-    _cadir="${2}"
-    _casubject="${3}"
-    _simpleca="${4}"
-    _cahash="$("$openssl" x509 -hash -noout -in "${_capath}")"
-    _certdir="share/certificates"
-    _binary_gpt_package="globus_simple_ca_${_cahash}-1.0-noflavor_data.tar.gz"
-    if [ "${backward_compatible}" = 1 ]; then
-        _gptdir="etc/gpt/packages/globus_simple_ca_${_cahash}"
-    else
-        _gptdir="share/globus/packages/globus_simple_ca_${_cahash}"
-    fi
-    _filelist="${_gptdir}/noflavor_data.filelist"
-    _metadata="${_gptdir}/pkg_data_noflavor_data.gpt"
-    _pkgdir=""
-
-    printf "Creating binary GPT package... "
-
-    while [ "$_pkgdir" = "" ]; do
-        mkdir -m 0755 "${_pkgdir:=${_tmpdir}/globus_simple_ca.$("$openssl" rand -hex 16)}"
-        rc=$?
-
-        if [ $rc != 0 ]; then
-            _pkgdir=""
-        fi
-    done
-
-    cd "${_pkgdir}"
-
-    mkdir -p "${_certdir}"
-    mkdir -p "${_gptdir}"
-
-    exec 3>&1
-    exec 1> "${_filelist}"
-
-    cp "${_capath}" "${_certdir}/${_cahash}.0"
-    echo "${_certdir}/${_cahash}.0"
-
-    if [ "${_simpleca}" -eq 0 ]; then
-        cp "${_cadir}/${_cahash}.signing_policy" "${_certdir}/"
-        echo "${_certdir}/${_cahash}.signing_policy"
-        if [ -r "${_cadir}/grid-security.conf.${_cahash}" ]; then
-            cp "${_cadir}/grid-security.conf.${_cahash}" "${_certdir}/"
-            echo "${_certdir}/grid-security.conf.${_cahash}"
-        fi
-
-        if [ -r "${_cadir}/globus-user-ssl.conf.${_cahash}" ]; then
-            cp "${_cadir}/globus-user-ssl.conf.${_cahash}" "${_certdir}/"
-            echo "${_certdir}/globus-user-ssl.conf.${_cahash}"
-        fi
-        if [ -r "${_cadir}/globus-host-ssl.conf.${_cahash}" ]; then
-            cp "${_cadir}/globus-host-ssl.conf.${_cahash}" "${_certdir}/"
-            echo "${_certdir}/globus-host-ssl.conf.${_cahash}"
-        fi
-    else
-        cp "${_cadir}/signing-policy" "${_certdir}/${_cahash}.signing_policy"
-        echo "${_certdir}/${_cahash}.signing_policy"
-
-        if [ -r "${_cadir}/grid-security.conf" ]; then
-            cp "${_cadir}/grid-security.conf" \
-                    "${_certdir}/grid-security.conf.${_cahash}"
-            echo "${_certdir}/grid-security.conf.${_cahash}"
-        fi
-
-        if [ -r "${_cadir}/globus-user-ssl.conf" ]; then
-            cp "${_cadir}/globus-user-ssl.conf" \
-                    "${_certdir}/globus-user-ssl.conf.${_cahash}"
-            echo "${_certdir}/globus-user-ssl.conf.${_cahash}"
-        fi
-        if [ -r "${_cadir}/globus-host-ssl.conf" ]; then
-            cp "${_cadir}/globus-host-ssl.conf" \
-                    "${_certdir}/globus-host-ssl.conf.${_cahash}"
-            echo "${_certdir}/globus-host-ssl.conf.${_cahash}"
-        fi
-    fi
-
-    echo "${_filelist}"
-    echo "${_metadata}"
-
-    cat <<-EOF 1> "${_metadata}"
-<?xml version="1.0"?>
-<!DOCTYPE gpt_package_metadata SYSTEM "globus_package.dtd">
-<gpt_package_metadata Format_Version="0.02" Name="globus_simple_ca_${_cahash}" >
-<Aging_Version Age="0" Major="0" Minor="6" />
-<Description >Simple CA Package for ${_casubject}</Description>
-<Functional_Group >Security</Functional_Group>
-<Version_Stability Release="Experimental" />
-<PackagingTool ToolName="GPT" ToolVersion="3.3" />
-<data_pkg >
-<Flavor ColocateLibraries="no" >noflavor</Flavor>
-</data_pkg>
-</gpt_package_metadata>
-EOF
-    
-    exec 1>&3
-    exec 3>&-
-
-    tar cf - $(cat "${_filelist}") | gzip > "${OLDPWD}/${_binary_gpt_package}"
-
-    cd "${OLDPWD}"
-    rm -rf "${_pkgdir}"
-    echo "done"
-    printf "\t${_binary_gpt_package}\n"
-}
 
 create_rpm_tarball=1
-create_gpt_package=0
 create_rpm_binary=0
 create_debian_binary=0
 
@@ -539,21 +431,12 @@ readCommandLine () {
                 cadir="$2"
                 shift 2
                 ;;
-            -g)
-                create_gpt_package=1
-                shift;
-                ;;
             -r)
                 create_rpm_binary=1
                 shift;
                 ;;
             -d)
                 create_debian_binary=1
-                shift;
-                ;;
-            -b)
-                backward_compatible=1
-                create_gpt_package=1
                 shift;
                 ;;
              -version|--version)
@@ -633,9 +516,6 @@ long_usage () {
     printhelp "-versions" "Print detailed package version for $PACKAGE"
     printhelp "-ca HASH" "Create packages for the CA with HASH as its subject
             hash [prompt for value]"
-    printhelp "-g" "Create a GPT binary package [unset]"
-    printhelp "-b" "Create a GPT binary package compatible with GPT 3.2 to be
-            used with GT 2.0.x - 5.0.x [unset]"
     printhelp "-r" "Create an RPM binary package [unset]"
     printhelp "-d" "Create an debian binary package [unset]"
 }
@@ -696,7 +576,7 @@ fi
 if [ -n "$cadir" ]; then
     CA_CERT_DIR="$cadir"
     CA_CERT="$CA_CERT_DIR/cacert.pem"
-    CA_SUBJECT="$("$openssl" x509 -in "${CA_CERT}" -noout -subject -nameopt rfc2253,-dn_rev | sed -e 's|^subject= *|/|' -e 's|,|/|g')"
+    CA_SUBJECT=`"$openssl" x509 -in "${CA_CERT}" -noout -subject -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`
     simpleca=1
 else
     found_ca=0
@@ -738,13 +618,13 @@ else
             echo 
             exit 1
         fi
-        CA_SUBJECT="$("$openssl" x509 -in ${CA_CERT} -noout -subject -nameopt rfc2253,-dn_rev | sed -e 's|^subject= *|/|' -e 's|,|/|g')"
+        CA_SUBJECT=`"$openssl" x509 -in "${CA_CERT}" -noout -subject -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`
     fi
 fi
 
 if [ "$create_rpm_tarball" -eq 1 ]; then
     create_source_package_tarball "$CA_CERT" "$CA_CERT_DIR" "$CA_SUBJECT" "${simpleca}"
-    ca_cert_hash="$("$openssl" x509 -hash -noout -in "${CA_CERT}")"
+    ca_cert_hash=`"$openssl" x509 -hash -noout -in "${CA_CERT}"`
     source_package_tarball="globus_simple_ca_${ca_cert_hash}.tar.gz"
     if [ "$create_rpm_binary" -eq 1 ]; then
         create_rpm_binary_package "$(pwd)/${source_package_tarball}" "${ca_cert_hash}"
@@ -752,9 +632,6 @@ if [ "$create_rpm_tarball" -eq 1 ]; then
     if [ "$create_debian_binary" -eq 1 ]; then
         create_debian_binary_package "$(pwd)/${source_package_tarball}" "${ca_cert_hash}"
     fi
-fi
-if [ "$create_gpt_package" -eq 1 ]; then
-    create_binary_gpt_package "$CA_CERT" "$CA_CERT_DIR" "$CA_SUBJECT" "${simpleca}"
 fi
 
 exit 0

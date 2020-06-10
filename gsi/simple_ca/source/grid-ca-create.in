@@ -736,10 +736,6 @@ EOF
     printhelp "-nobuild" "Don't create a package for distributing
             configuration files for this CA. These can be created later by
             using the grid-ca-package utility [unset]"
-    printhelp "-g" "Create a GPT binary package containing the CA and
-            configuration files [unset]"
-    printhelp "-b" "Create a GPT binary package containing the CA and
-            configuration files compatible with GPT 3.2 and GT 4 and 5 [unset]"
     printhelp "-openssl-help" "Show help text for openssl"
     printhelp "[OPENSSL-OPTIONS]" "Specify additional options to pass to the 
             openssl command.  Use with caution, some options will conflict 
@@ -754,15 +750,6 @@ readCommandLine () {
       -\?|-h|-help|-usage|--help|--usage)
          long_usage
          exit 0
-         ;;
-     -g)
-         gpt_package=1
-         shift
-         ;;
-     -b)
-         gpt_package=1
-         backward_compatible=1
-         shift
          ;;
      -bits|--bits)
         shift
@@ -920,7 +907,7 @@ fi
 cahash="$("$openssl" x509 -in "$(construct_path ${_cadir}/cacert.pem)" -noout -hash)"
 
 if [ -z "$nobuild" ]; then
-    grid-ca-package ${backward_compatible:+-b} ${gpt_package:+-g} -cadir "${GRID_CA_DIR}"
+    grid-ca-package -cadir "${GRID_CA_DIR}"
 fi
 
 exit 0

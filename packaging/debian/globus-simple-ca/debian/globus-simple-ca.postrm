@@ -7,15 +7,15 @@ gsdir=/etc/grid-security
 # deal with the hostcert, but this makes it symmetric with the postinst
 if [ "$1" = purge ]; then
     if [ -f $simplecadir/cacert.pem ]; then
-        subj="$(openssl x509 -subject -noout -in $simplecadir/cacert.pem -nameopt rfc2253,-dn_rev | \
-            sed -e 's|^subject= *|/|' -e 's|,|/|g')"
-        hash="$(openssl x509 -hash -noout -in $simplecadir/cacert.pem)"
+        subj=$(openssl x509 -subject -noout -in $simplecadir/cacert.pem -nameopt sep_multiline | \
+            sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n')
+        hash=$(openssl x509 -hash -noout -in $simplecadir/cacert.pem)
 
         # Remove host cert if signed by this CA
         hostcert="$gsdir/hostcert.pem"
         if [ -f "$hostcert" ]; then
-            hostcert_issuer="$(openssl x509 -issuer -noout -in "$hostcert" -nameopt rfc2253,-dn_rev | \
-                sed -e 's|^issuer= *|/|' -e 's|,|/|g')"
+            hostcert_issuer=$(openssl x509 -issuer -noout -in "$hostcert" -nameopt sep_multiline | \
+                sed -e '/^issuer=/d' -e 's!^\s*!/!' | tr -d '\n')
             if [ "$hostcert_issuer" = "$subj" ]; then
                 rm -f "$gsdir/hostcert.pem"
                 rm -f "$gsdir/hostcert_request.pem"

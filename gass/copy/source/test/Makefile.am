@@ -69,7 +69,7 @@ check_DATA =  \
 	umask 022; $(OPENSSL) x509 -passin pass:globus -req -days 365 -in testcred.req -CA $*.cacert -CAkey $*.cakey -out $@
 
 .cert.gridmap:
-	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt rfc2253,-dn_rev | sed -e 's/subject= */\//' -e 's/,/\//g'` ; \
+	subject=`$(OPENSSL) x509 -subject -noout -in $< -nameopt sep_multiline | sed -e '/^subject=/d' -e 's!^\s*!/!' | tr -d '\n'`; \
 	echo "\"$$subject\" `id -un`" > $@
 
 if CYGPATH_W_DEFINED
@@ -104,7 +104,7 @@ CLEANFILES = testcred.key testcred.cert testcred.req \
 	     testcred.cakey testcred.gridmap
 clean-local:
 	if [ -f testcred.link ]; then \
-	    rm -f "$$(cat testcred.link)" testcred.link; \
+	    rm -f $$(cat testcred.link) testcred.link; \
 	fi
 	if test -f testcred.signing_policy; then \
 	    rm -f $$(cat testcred.signing_policy) testcred.signing_policy; \

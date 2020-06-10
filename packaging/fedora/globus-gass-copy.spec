@@ -3,8 +3,8 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	10.6
-Release:	2%{?dist}
+Version:	10.7
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
 Group:		System Environment/Libraries
@@ -183,6 +183,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.7-1
+- Use -nameopt sep_multiline to derive certificate subject string
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.6-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests
