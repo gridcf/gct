@@ -14,7 +14,7 @@ SYNOPSIS
 --------
 *grid-mapfile-add-entry* [ -h | -help | -usage | -version | -versions ]
 
-*grid-mapfile-add-entry* -dn 'DISTINGUISHED-NAME' -ln 'LOCAL-NAME'...  [-d | -dryrun] [ -f 'MAPFILE' | -mapfile 'MAPFILE' ] [ -n ] [ -c ]
+*grid-mapfile-add-entry* -dn 'DISTINGUISHED-NAME' -ln 'LOCAL-NAME'...  [-d | -dryrun] [ -f 'MAPFILE' | -mapfile 'MAPFILE' ] [-force] [ -n ] [ -c ] 
 
 DESCRIPTION
 -----------
@@ -56,7 +56,7 @@ The full set of command-line options to *grid-mapfile-add-entry* are:
     The POSIX user name to map the distinguished name to. This name must be a
     valid username. Add multiple 'LOCAL-NAME' strings after the '-ln'
     command-line option. If any of the local names are invalid, no changes will
-    be made to the gridmap file. 
+    be made to the gridmap file (but see force option below). 
 
 *-d, -dryrun*::
     Verify local names and display diagnostics about what would be added to the
@@ -64,6 +64,9 @@ The full set of command-line options to *grid-mapfile-add-entry* are:
 
 *-mapfile 'MAPFILE', -f 'MAPFILE'*::
     Modify the gridmap file named by 'MAPFILE' instead of the default.
+
+*-force::
+    Make modifications even if user does not exist (needed for B2STAGE).
 
 *-n*::
     Don't copy the original file to 'MAPFILE'.old.
