@@ -5,12 +5,12 @@ Upstream-Contact: https://github.com/gridcf/gct/
 Files: *
 Copyright:
  1999-2016 University of Chicago
- 2018-2019 Grid Community Forum
+ 2018-2020 Grid Community Forum
 License: Apache-2.0
 
 Files: debian/*
 Copyright:
- 2008-2019 Mattias Ellert <mattias.ellert@physics.uu.se>
+ 2008-2020 Mattias Ellert <mattias.ellert@physics.uu.se>
  2010-2013 Initiative for Globus in Europe (IGE), http://www.ige-project.eu/
 License: Apache-2.0
 
