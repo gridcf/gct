@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([globus_common], [18.8], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_common], [18.9], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -148,7 +148,7 @@ if test "$use_symbol_labels" = yes; then
     AC_DEFINE(USE_SYMBOL_LABELS, 1, [Use backward-compatibility symbol labels])
 fi
 
-AM_CONDITIONAL(USES_LTO, [echo $LDFLAGS | grep -q -- -flto])
+AM_CONDITIONAL(USES_LTO, [echo $CFLAGS | grep -q -- -flto])
 
 AC_PATH_PROGS([A2X], [a2x a2x.py])
 AM_CONDITIONAL(BUILD_MANPAGES, [test x"$A2X" != x])

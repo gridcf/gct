@@ -3,8 +3,8 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.8
-Release:	2%{?dist}
+Version:	18.9
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
 Group:		System Environment/Libraries
@@ -239,6 +239,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jul 16 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.9-1
+- Check for LTO use in CFLAGS instead of LDFLAGS
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.8-2
 - Add BuildRequires perl-interpreter
 

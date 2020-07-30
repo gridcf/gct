@@ -1,3 +1,9 @@
+globus-common (18.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Check for LTO use in CFLAGS instead of LDFLAGS
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 16 Jul 2020 10:36:35 +0200
+
 globus-common (18.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove unused doxygen filter
