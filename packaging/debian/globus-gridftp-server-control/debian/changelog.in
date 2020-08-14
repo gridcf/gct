@@ -1,3 +1,9 @@
+globus-gridftp-server-control (9.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use example message from RFC 2428 for response to EPSV
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 26 Aug 2020 16:34:32 +0200
+
 globus-gridftp-server-control (9.0-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients

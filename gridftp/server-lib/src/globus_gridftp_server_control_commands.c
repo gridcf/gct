@@ -2075,7 +2075,7 @@ globus_l_gsc_cmd_pasv_cb(
             if(op->server_handle->epsv_ip)
             {
                 msg = globus_common_create_string(
-                    "%d Entering Passive Mode (|%d|%s|%d|)\r\n",
+                    "%d Entering Extended Passive Mode (|%d|%s|%d|)\r\n",
                         wrapper->reply_code,
                         *host == '[' ? 2 : 1,
                         h,
@@ -2084,7 +2084,7 @@ globus_l_gsc_cmd_pasv_cb(
             else
             {
                 msg = globus_common_create_string(
-                    "%d Entering Passive Mode (|||%d|)\r\n",
+                    "%d Entering Extended Passive Mode (|||%d|)\r\n",
                         wrapper->reply_code,                    
                         (int) port);
             }
