@@ -41,7 +41,7 @@ my $GRID_MAP_FILE = $ENV{GRIDMAP} || "${secconfdir}/grid-mapfile";
 my $dryrun = 0;
 my $force = 0;
 
-my $short_usage="$PROGRAM_NAME -dn DN -ln LN [-help] [-d] [-f mapfile FILE]";
+my $short_usage="$PROGRAM_NAME -dn DN -ln LN [-help] [-d] [-f mapfile FILE] [-force]";
 
 sub long_usage
 {
