@@ -60,6 +60,7 @@ Options:
   -mapfile FILE, -f FILE  Path of Grid map file to be used
 
   -force                  Make modifications even if user does not exist (needed for B2STAGE)
+
 EOF
 }
 
