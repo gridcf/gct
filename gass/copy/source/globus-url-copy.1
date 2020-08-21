@@ -2,12 +2,12 @@
 .\"     Title: globus-url-copy
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
-.\"      Date: 07/25/2019
+.\"      Date: 09/08/2020
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GLOBUS\-URL\-COPY" "1" "07/25/2019" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GLOBUS\-URL\-COPY" "1" "09/08/2020" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -466,6 +466,29 @@ Set the algorithm type to use for all checksum operations during the transfer\&.
 Perform a checksum on the source and destination after each file transfer and compare the two\&. If they do not match, fail the transfer\&. The default algorithm used for this checksum is MD5, but other algorithms can be specified with the
 \fB\-checksum\-alg\fR
 parameter\&.
+.RE
+.SH "ENVIRONMENT"
+.sp
+The following environment variables are recognized:
+.PP
+\fBGLOBUS_HOSTNAME\fR
+.RS 4
+Overrides client hostname communicated to the server
+.RE
+.PP
+\fBGLOBUS_DOMAIN_NAME\fR
+.RS 4
+Overrides client domainname communicated to the server
+.RE
+.PP
+\fBGLOBUS_FTP_CLIENT_DATA_IP\fR
+.RS 4
+Overwrites client IP address communicated to the server for the data connection\&. Used when the receiver is behind a NAT and should be configured to the external address of its gateway\&.
+.RE
+.PP
+\fBGLOBUS_FTP_CLIENT_SOURCE_PASV\fR
+.RS 4
+Configures sender side (source) instead of receiver side (destination) to open a data port and establishes the data connection from the receiver to the sender\&. By default the data connection is established from sender to receiver, but if the receiver is behind a NAT this doesn\(cqt work, because the receiver will communicate its own address instead of the external address of its gateway to the sender and its own address can\(cqt be reached directly from the sender\&.
 .RE
 .SH "AUTHOR"
 .sp
