@@ -382,10 +382,13 @@ GSS_CALLCONV gss_init_sec_context(
          * have any more data to send, we can send the flag
          * now. i.e. fall through without break,
          * Otherwise, we will wait for the null byte
-         * to get back in sync which we will ignore
+         * to get back in sync which we will ignore.
+         * We can't check output_token->length, since we haven't
+         * extracted the output payload yet, so look directly
+         * in context->gss_wbio.
          */
 
-        if (output_token->length != 0)
+        if (BIO_pending(context->gss_wbio) != 0)
         {
             context->gss_state=GSS_CON_ST_FLAGS;
             break;
