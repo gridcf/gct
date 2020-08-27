@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: grid-mapfile-add-entry
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 03/31/2018
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 08/21/2020
 .\"    Manual: Grid Community Toolkit Manual
 .\"    Source: Grid Community Toolkit 6
 .\"  Language: English
 .\"
-.TH "GRID\-MAPFILE\-ADD\-" "8" "03/31/2018" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
+.TH "GRID\-MAPFILE\-ADD\-" "8" "08/21/2020" "Grid Community Toolkit 6" "Grid Community Toolkit Manual"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -33,7 +33,7 @@ grid-mapfile-add-entry \- Add an entry to a gridmap file
 .sp
 \fBgrid\-mapfile\-add\-entry\fR [ \-h | \-help | \-usage | \-version | \-versions ]
 .sp
-\fBgrid\-mapfile\-add\-entry\fR \-dn \fIDISTINGUISHED\-NAME\fR \-ln \fILOCAL\-NAME\fR\&... [\-d | \-dryrun] [ \-f \fIMAPFILE\fR | \-mapfile \fIMAPFILE\fR ] [ \-n ] [ \-c ]
+\fBgrid\-mapfile\-add\-entry\fR \-dn \fIDISTINGUISHED\-NAME\fR \-ln \fILOCAL\-NAME\fR\&... [\-d | \-dryrun] [ \-f \fIMAPFILE\fR | \-mapfile \fIMAPFILE\fR ] [\-force] [ \-n ] [ \-c ]
 .SH "DESCRIPTION"
 .sp
 The \fBgrid\-mapfile\-add\-entry\fR program adds a new mapping from an X\&.509 distinguished name to a local POSIX user name to a gridmap file\&. Gridmap files are used as a simple authorization method for services such as GRAM5 or GridFTP\&.
@@ -72,7 +72,7 @@ The POSIX user name to map the distinguished name to\&. This name must be a vali
 \fILOCAL\-NAME\fR
 strings after the
 \fI\-ln\fR
-command\-line option\&. If any of the local names are invalid, no changes will be made to the gridmap file\&.
+command\-line option\&. If any of the local names are invalid, no changes will be made to the gridmap file (but see force option below)\&.
 .RE
 .PP
 \fB\-d, \-dryrun\fR
@@ -85,6 +85,11 @@ Verify local names and display diagnostics about what would be added to the grid
 Modify the gridmap file named by
 \fIMAPFILE\fR
 instead of the default\&.
+.RE
+.PP
+\fB\-force\fR
+.RS 4
+Make modifications even if user does not exist (needed for B2STAGE)\&.
 .RE
 .PP
 \fB\-n\fR
