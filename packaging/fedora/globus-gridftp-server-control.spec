@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.0
+Version:	9.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Aug 26 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.1-1
+- Use example message from RFC 2428 for response to EPSV
+
 * Thu Aug 08 2019 Frank Scheiner <scheiner@hlrs.de> - 9.0-1
 - Fix problems between dual-stack (IPv4/IPv6) servers and IPv4-only clients
 
