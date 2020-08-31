@@ -164,7 +164,7 @@ print "Verifying that Local Name(s)=($lnstring) are legitimate local accounts.\n
 
 if (not $force)
 {
- for my $name (@ln)
+  for my $name (@ln)
   {
     print "Checking ln(s)=$name\n" if ($dryrun);
 

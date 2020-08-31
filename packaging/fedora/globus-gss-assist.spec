@@ -3,8 +3,8 @@
 Name:		globus-gss-assist
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	12.3
-Release:	2%{?dist}
+Version:	12.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
 Group:		System Environment/Libraries
@@ -185,6 +185,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Aug 31 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.4-1
+- Add force option to grid-mapfile-add-entry if the users do not exist
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.3-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

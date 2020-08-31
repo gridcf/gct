@@ -1,3 +1,9 @@
+globus-gss-assist (12.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Add force option to grid-mapfile-add-entry if the users do not exist
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 31 Aug 2020 13:04:19 +0200
+
 globus-gss-assist (12.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors
