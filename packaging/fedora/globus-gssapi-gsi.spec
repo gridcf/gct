@@ -3,8 +3,8 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.13
-Release:	2%{?dist}
+Version:	14.14
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
 Group:		System Environment/Libraries
@@ -158,6 +158,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Sep 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.14-1
+- Fix output payload check in gss_init_sec_context() after SSL handshake
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.13-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests
