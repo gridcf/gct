@@ -322,6 +322,30 @@ to a server that does not support data channel encryption (e.g. dCache)!
     transfer.  The default algorithm used for this checksum is MD5, but 
     other algorithms can be specified with the *-checksum-alg* parameter.
 
+[[globus-url-copy-ENVIRONMENT]]
+ENVIRONMENT
+-----------
+The following environment variables are recognized:
+
+*GLOBUS_HOSTNAME*::
+    Overrides client hostname communicated to the server
+
+*GLOBUS_DOMAIN_NAME*::
+    Overrides client domainname communicated to the server
+
+*GLOBUS_FTP_CLIENT_DATA_IP*::
+    Overwrites client IP address communicated to the server for the data
+    connection. Used when the receiver is behind a NAT and should be configured
+    to the external address of its gateway.
+
+*GLOBUS_FTP_CLIENT_SOURCE_PASV*::
+    Configures sender side (source) instead of receiver side (destination) to
+    open a data port and establishes the data connection from the receiver to
+    the sender. By default the data connection is established from sender to
+    receiver, but if the receiver is behind a NAT this doesn't work, because
+    the receiver will communicate its own address instead of the external
+    address of its gateway to the sender and its own address can't be reached
+    directly from the sender.
 
 [[globus-url-copy-AUTHOR]]
 AUTHOR
