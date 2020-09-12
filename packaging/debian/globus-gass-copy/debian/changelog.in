@@ -1,3 +1,9 @@
+globus-gass-copy (10.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * Document environment variables in globus-url-copy manpage
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 12 Sep 2020 13:27:09 +0200
+
 globus-gass-copy (10.7-1+gct.@distro@) @distro@; urgency=medium
 
   * Use -nameopt sep_multiline to derive certificate subject string
