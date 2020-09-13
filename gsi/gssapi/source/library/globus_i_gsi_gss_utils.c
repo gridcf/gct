@@ -2330,10 +2330,7 @@ globus_i_gsi_gssapi_init_ssl_context(
     if (globus_i_gsi_gssapi_min_tls_protocol == 0)
         globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
     if (globus_i_gsi_gssapi_max_tls_protocol == 0)
-        /* The GSI GSSAPI currently does not work with TLS 1.3
-           Use TLS1_2_VERSION instead of TLS_MAX_VERSION as the maximum TLS
-           protocol version until it has been ported */
-        globus_i_gsi_gssapi_max_tls_protocol = TLS1_2_VERSION;
+        globus_i_gsi_gssapi_max_tls_protocol = TLS_MAX_VERSION;
     GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
         3, (globus_i_gsi_gssapi_debug_fstream,
         "MIN_TLS_PROTOCOL: %x\n", globus_i_gsi_gssapi_min_tls_protocol));
