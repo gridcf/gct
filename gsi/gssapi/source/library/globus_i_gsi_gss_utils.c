@@ -634,6 +634,9 @@ globus_i_gsi_gss_create_and_fill_context(
      */
     if (!(context->req_flags & GSS_C_CONF_FLAG))
     {
+        /* SSL_set_cipher_list() sets the cipher list for TLS v1.2 and earlier
+           SSL_set_ciphersuites() would set the cipher suites for TLS v1.3,
+           but there are no NULL ciphers available in TLS v1.3 */
         if(!SSL_set_cipher_list(context->gss_ssl,
                                 "eNULL:ALL:!COMPLEMENTOFDEFAULT"))
         {

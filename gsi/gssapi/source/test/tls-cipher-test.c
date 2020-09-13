@@ -203,6 +203,12 @@ main(int argc, char *argv[])
         TEST_CASE_INITIALIZER("unencrypted", false),
         TEST_CASE_INITIALIZER("encrypted", true),
     };
+
+    /* There is no NULL cipher in TLS v1.3, so make sure TLS v1.2 or earlier
+       is used for this test */
+    globus_libc_setenv(
+        "GLOBUS_GSSAPI_MAX_TLS_PROTOCOL", "TLS1_2_VERSION", 1);
+
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
     printf("1..%zu\n", num_test_cases);
 
