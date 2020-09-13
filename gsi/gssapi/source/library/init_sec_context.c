@@ -32,7 +32,7 @@
  * @brief Init Sec Context
  * @ingroup globus_gsi_gssapi
  */
-OM_uint32 
+OM_uint32
 GSS_CALLCONV gss_init_sec_context(
     OM_uint32 *                         minor_status,
     const gss_cred_id_t                 initiator_cred_handle,
@@ -46,7 +46,7 @@ GSS_CALLCONV gss_init_sec_context(
     gss_OID *                           actual_mech_type,
     gss_buffer_t                        output_token,
     OM_uint32 *                         ret_flags,
-    OM_uint32 *                         time_rec) 
+    OM_uint32 *                         time_rec)
 {
     gss_ctx_id_desc *                   context = NULL;
     OM_uint32                           major_status = GSS_S_COMPLETE;
@@ -68,7 +68,7 @@ GSS_CALLCONV gss_init_sec_context(
     /* module activation if not already done by calling
      * globus_module_activate
      */
-    
+
     globus_thread_once(
         &once_control,
         globus_l_gsi_gssapi_activate_once);
@@ -116,12 +116,12 @@ GSS_CALLCONV gss_init_sec_context(
         goto error_exit;
     }
 
-    
+
     if ((context == (gss_ctx_id_t) GSS_C_NO_CONTEXT) ||
         !(context->ctx_flags & GSS_I_CTX_INITIALIZED))
     {
         GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-            2, (globus_i_gsi_gssapi_debug_fstream, 
+            2, (globus_i_gsi_gssapi_debug_fstream,
                 "Creating context w/ %s.\n",
                 (initiator_cred_handle == GSS_C_NO_CREDENTIAL) ?
                 "GSS_C_NO_CREDENTIAL" :
@@ -133,14 +133,14 @@ GSS_CALLCONV gss_init_sec_context(
             {
                 actual_mech = (gss_OID) gss_mech_globus_gssapi_openssl;
                 GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                    2, (globus_i_gsi_gssapi_debug_fstream, 
+                    2, (globus_i_gsi_gssapi_debug_fstream,
                         "init_sec_context: no mech_type requested; using OLD MECH OID\n"));
             }
             else
             {
                 actual_mech = (gss_OID) gss_mech_globus_gssapi_openssl_micv2;
                 GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                    2, (globus_i_gsi_gssapi_debug_fstream, 
+                    2, (globus_i_gsi_gssapi_debug_fstream,
                         "init_sec_context: no mech_type requested; using MICV2 MECH OID\n"));
             }
         }
@@ -149,7 +149,7 @@ GSS_CALLCONV gss_init_sec_context(
         {
             actual_mech = (gss_OID) gss_mech_globus_gssapi_openssl;
                 GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                    2, (globus_i_gsi_gssapi_debug_fstream, 
+                    2, (globus_i_gsi_gssapi_debug_fstream,
                         "init_sec_context: OLD MECH OID requested\n"));
         }
 #       endif
@@ -158,7 +158,7 @@ GSS_CALLCONV gss_init_sec_context(
         {
             actual_mech = (const gss_OID) gss_mech_globus_gssapi_openssl_micv2;
                 GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                    2, (globus_i_gsi_gssapi_debug_fstream, 
+                    2, (globus_i_gsi_gssapi_debug_fstream,
                         "init_sec_context: MICV2 MECH OID requested\n"));
         }
 #       endif
@@ -171,8 +171,8 @@ GSS_CALLCONV gss_init_sec_context(
             major_status = GSS_S_FAILURE;
             goto exit;
         }
-    
-        major_status = 
+
+        major_status =
             globus_i_gsi_gss_create_and_fill_context(&local_minor_status,
                                                      &context,
                                                      actual_mech,
@@ -205,11 +205,11 @@ GSS_CALLCONV gss_init_sec_context(
         /* first time there is no input token, but after that
          * there will always be one
          */
-    	major_status = globus_i_gsi_gss_put_token(&local_minor_status,
-                                                  context, 
-                                                  NULL, 
+        major_status = globus_i_gsi_gss_put_token(&local_minor_status,
+                                                  context,
+                                                  NULL,
                                                   input_token);
-    	if (GSS_ERROR(major_status))
+        if (GSS_ERROR(major_status))
         {
             GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
                 minor_status, local_minor_status,
@@ -221,12 +221,12 @@ GSS_CALLCONV gss_init_sec_context(
     switch (context->gss_state)
     {
     case(GSS_CON_ST_HANDSHAKE):
-        
+
         /* do the handshake work */
-        
+
         major_status = globus_i_gsi_gss_handshake(&local_minor_status,
                                                   context);
-        
+
         if (major_status == GSS_S_CONTINUE_NEEDED)
         {
             break;
@@ -266,13 +266,13 @@ GSS_CALLCONV gss_init_sec_context(
             goto error_exit;
         }
 
-        /* 
-         * Need to check if the server is using a limited proxy. 
-         * And if that is acceptable here. 
-         * Caller tells us if it is not acceptable to 
-         * use a limited proxy. 
+        /*
+         * Need to check if the server is using a limited proxy.
+         * And if that is acceptable here.
+         * Caller tells us if it is not acceptable to
+         * use a limited proxy.
          */
-        if ((context->req_flags & 
+        if ((context->req_flags &
              GSS_C_GLOBUS_DONT_ACCEPT_LIMITED_PROXY_FLAG)
             && GLOBUS_GSI_CERT_UTILS_IS_LIMITED_PROXY(cert_type))
         {
@@ -288,7 +288,7 @@ GSS_CALLCONV gss_init_sec_context(
         /* this is the mutual authentication test */
         if (target_name != NULL)
         {
-            major_status = 
+            major_status =
                 gss_compare_name(&local_minor_status,
                                  context->peer_cred_handle->globusid,
                                  target_name,
@@ -305,7 +305,7 @@ GSS_CALLCONV gss_init_sec_context(
             {
                 char *                  expected_name;
                 char *                  actual_name;
-                    
+
                 if(g_OID_equal(((gss_name_desc*)  target_name)->name_oid,
                                GSS_C_NT_HOSTBASED_SERVICE))
                 {
@@ -320,23 +320,23 @@ GSS_CALLCONV gss_init_sec_context(
                             ? "@" : "",
                          target_name->host_name
                             ? target_name->host_name : "unknown",
-                         context->peer_cred_handle->globusid->service_name 
+                         context->peer_cred_handle->globusid->service_name
                             ? context->peer_cred_handle->globusid->service_name
                             : "",
-                         context->peer_cred_handle->globusid->service_name 
+                         context->peer_cred_handle->globusid->service_name
                             ? "@" : "",
-                         context->peer_cred_handle->globusid->host_name 
-                            ?  context->peer_cred_handle->globusid->host_name 
+                         context->peer_cred_handle->globusid->host_name
+                            ?  context->peer_cred_handle->globusid->host_name
                             : "unknown"));
                 }
                 else
-                { 
+                {
                     expected_name =
                         ((gss_name_desc*)  target_name)->x509n_oneline;
-                    actual_name = 
+                    actual_name =
                         ((gss_name_desc*)
                          context->peer_cred_handle->globusid)->x509n_oneline;
-                    
+
                     GLOBUS_GSI_GSSAPI_ERROR_RESULT(
                         minor_status,
                         GLOBUS_GSI_GSSAPI_ERROR_AUTHZ_DENIED,
@@ -350,9 +350,9 @@ GSS_CALLCONV gss_init_sec_context(
                 break;
             }
         }
-    
+
         context->ret_flags |= GSS_C_MUTUAL_FLAG;
-        context->ret_flags |= GSS_C_PROT_READY_FLAG; 
+        context->ret_flags |= GSS_C_PROT_READY_FLAG;
         context->ret_flags |= GSS_C_INTEG_FLAG
             | GSS_C_REPLAY_FLAG
             | GSS_C_SEQUENCE_FLAG
@@ -366,7 +366,7 @@ GSS_CALLCONV gss_init_sec_context(
         context->ret_flags |= GSS_C_TRANS_FLAG;
 #       endif
 
-        /* 
+        /*
          * IF we are talking to a real SSL server,
          * we don't want to do delegation, so we are done
          */
@@ -376,7 +376,7 @@ GSS_CALLCONV gss_init_sec_context(
             context->gss_state = GSS_CON_ST_DONE;
             break;
         }
-            
+
         /*
          * If we have completed the handshake, but don't
          * have any more data to send, we can send the flag
@@ -397,24 +397,24 @@ GSS_CALLCONV gss_init_sec_context(
     case(GSS_CON_ST_FLAGS):
 
         if (input_token->length > 0)
-        {   
+        {
             BIO_read(context->gss_sslbio, cbuf, 1);
         }
 
         /* send D if we want delegation, 0 otherwise */
-        
+
         if (context->req_flags & GSS_C_DELEG_FLAG)
         {
-            BIO_write(context->gss_sslbio, "D", 1); 
+            BIO_write(context->gss_sslbio, "D", 1);
             context->gss_state = GSS_CON_ST_REQ;
         }
         else
         {
             BIO_write(context->gss_sslbio, "0", 1);
             context->gss_state = GSS_CON_ST_DONE;
-        } 
+        }
         break;
-            
+
     case(GSS_CON_ST_REQ):
 
         local_result = globus_gsi_proxy_inquire_req(
@@ -429,11 +429,11 @@ GSS_CALLCONV gss_init_sec_context(
             context->gss_state = GSS_CON_ST_DONE;
             goto error_exit;
         }
-        
+
         local_result = globus_gsi_cred_get_cert_type(
             context->cred_handle->cred_handle,
             &cert_type);
-        
+
         if(local_result != GLOBUS_SUCCESS)
         {
             GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -443,7 +443,7 @@ GSS_CALLCONV gss_init_sec_context(
             context->gss_state = GSS_CON_ST_DONE;
             goto error_exit;
         }
-        
+
         local_result =
             globus_gsi_proxy_handle_set_type(
                 context->proxy_handle,
@@ -461,7 +461,7 @@ GSS_CALLCONV gss_init_sec_context(
             goto exit;
         }
 
-        
+
         local_result = globus_gsi_proxy_sign_req(
             context->proxy_handle,
             context->cred_handle->cred_handle,
@@ -478,14 +478,14 @@ GSS_CALLCONV gss_init_sec_context(
 
         context->gss_state = GSS_CON_ST_DONE;
         break;
-            
+
     case(GSS_CON_ST_CERT): ;
     case(GSS_CON_ST_DONE): ;
     } /* end of switch for gss_con_st */
 
     local_major_status = globus_i_gsi_gss_get_token(&local_minor_status,
-                                                    context, 
-                                                    NULL, 
+                                                    context,
+                                                    NULL,
                                                     output_token);
 
     if(GSS_ERROR(local_major_status))
@@ -512,7 +512,7 @@ GSS_CALLCONV gss_init_sec_context(
     {
         time_t                          lifetime;
         time_t                          current_time;
-        
+
         major_status = globus_i_gsi_gss_get_context_goodtill(
             &local_minor_status,
             context,
@@ -536,7 +536,7 @@ GSS_CALLCONV gss_init_sec_context(
             *time_rec = (OM_uint32) (lifetime - current_time);
         }
     }
-       
+
     if (ret_flags != NULL)
     {
         *ret_flags = context->ret_flags;
@@ -546,20 +546,20 @@ GSS_CALLCONV gss_init_sec_context(
         2, (globus_i_gsi_gssapi_debug_fstream,
             "init_sec_context:major_status:%08x"
             ":gss_state:%d req_flags=%08x:ret_flags=%08x\n",
-            (unsigned int) major_status, 
+            (unsigned int) major_status,
             context->gss_state,
-            (unsigned int) req_flags, 
+            (unsigned int) req_flags,
             (unsigned int) context->ret_flags));
 
     goto exit;
 
  error_exit:
 
-    gss_delete_sec_context(&local_minor_status, 
+    gss_delete_sec_context(&local_minor_status,
                            (gss_ctx_id_t *) &context,
                            output_token->length == 0 ? output_token : GSS_C_NO_BUFFER);
     *context_handle_P = (gss_ctx_id_t) context;
- 
+
  exit:
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;

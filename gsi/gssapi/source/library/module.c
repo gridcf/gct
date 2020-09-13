@@ -96,7 +96,7 @@ globus_bool_t                           globus_i_accept_backward_compatible_mic 
 /**
  * Module descriptor static initializer.
  */
-globus_module_descriptor_t		globus_i_gsi_gssapi_module =
+globus_module_descriptor_t              globus_i_gsi_gssapi_module =
 {
     "globus_gsi_gssapi",
     globus_l_gsi_gssapi_activate,
@@ -116,7 +116,7 @@ globus_thread_once_t                once_control = GLOBUS_THREAD_ONCE_INIT;
 globus_mutex_t                      globus_i_gssapi_activate_mutex;
 globus_bool_t                       globus_i_gssapi_active = GLOBUS_FALSE;
 
-static 
+static
 int
 globus_l_gsi_gssapi_read_config(char **gsi_conf_datap)
 {
@@ -361,12 +361,12 @@ globus_l_gsi_gssapi_activate(void)
     {
         goto parse_conf_data_fail;
     }
-    
+
     tmp_string = globus_module_getenv("GLOBUS_GSSAPI_DEBUG_LEVEL");
     if(tmp_string != GLOBUS_NULL)
     {
         globus_i_gsi_gssapi_debug_level = atoi(tmp_string);
-    
+
         if(globus_i_gsi_gssapi_debug_level < 0)
         {
             globus_i_gsi_gssapi_debug_level = 0;
@@ -517,7 +517,7 @@ globus_l_gsi_gssapi_activate(void)
         char buffer[buflen];
         struct passwd pwd = {0};
         struct passwd *res = NULL;
-        
+
         rc = getpwnam_r(tmp_string, &pwd, buffer, (size_t) buflen, &res);
 
         if (rc == 0)

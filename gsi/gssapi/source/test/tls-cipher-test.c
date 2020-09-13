@@ -31,7 +31,7 @@ struct test_case
  * @brief Test case for cipher checking
  * @details
  *     In this test case, establish a security context and check that
- *     the cipher used does not contain "NULL" if encrypted is true, 
+ *     the cipher used does not contain "NULL" if encrypted is true,
  *     and does contain "NULL" if encrypted is false
  */
 bool

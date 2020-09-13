@@ -66,7 +66,7 @@ globus_l_gsi_gss_alpn_select_callback(
  * @defgroup globus_i_gsi_gss_utils Globus GSSAPI Internals
  * @brief Globus GSSAPI Internals
  *
- * The globus_i_gsi_gss_utils code is used by the other 
+ * The globus_i_gsi_gss_utils code is used by the other
  * gss api code to perform internal functions such as
  * initializing objects and performing the SSL handshake
  */
@@ -89,7 +89,7 @@ globus_l_gsi_gss_alpn_select_callback(
  * @retval GSS_S_COMPLETE Success
  * @retval GSS_F_FAILURE Failed to copy
  */
-OM_uint32 
+OM_uint32
 globus_i_gsi_gss_copy_name_to_name(
     OM_uint32 *                         minor_status,
     gss_name_desc **                    output,
@@ -100,7 +100,7 @@ globus_i_gsi_gss_copy_name_to_name(
     X509_NAME *                         x509n = NULL;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
-    
+
     output_name = calloc(1, sizeof(gss_name_desc));
 
     if (output_name == NULL)
@@ -111,7 +111,7 @@ globus_i_gsi_gss_copy_name_to_name(
     }
 
     output_name->name_oid = input->name_oid;
-    
+
     if(input->x509n != NULL)
     {
         x509n = X509_NAME_dup(input->x509n);
@@ -151,7 +151,7 @@ globus_i_gsi_gss_copy_name_to_name(
             goto exit;
         }
     }
-    
+
     if (input->user_name != NULL)
     {
         output_name->user_name = globus_libc_strdup(input->user_name);
@@ -213,7 +213,7 @@ globus_i_gsi_gss_copy_name_to_name(
 
  exit:
 
-    GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;    
+    GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
 }
 
@@ -222,20 +222,20 @@ globus_i_gsi_gss_copy_name_to_name(
  * @ingroup globus_i_gsi_gss_utils
  * @details
  *
- * Called by the GSSAPI functions @ref gss_init_sec_context 
- * and @ref gss_accept_sec_context to 
+ * Called by the GSSAPI functions @ref gss_init_sec_context
+ * and @ref gss_accept_sec_context to
  * setup the initial context. This includes establishing the
  * SSL session control blocks.
  *
  * @param minor_status
- *        A mechanism specific status code.  This is cast from a 
+ *        A mechanism specific status code.  This is cast from a
  *        globus_result_t which will either be GLOBUS_SUCCESS or
  *        a globus error object ID.  If not GLOBUS_SUCCESS, the
  *        globus_error_t object can be retrieved by doing:
  *        globus_error_get((globus_result_t)*minor_status)
- * 
+ *
  * @param context_handle_P
- *        
+ *
  * @param cred_handle
  * @param cred_usage
  * @param req_flags
@@ -266,7 +266,7 @@ globus_i_gsi_gss_create_and_fill_context(
     /* initialize the context handle */
     if(*context_handle_P == GSS_C_NO_CONTEXT)
     {
-        context = (gss_ctx_id_desc*) 
+        context = (gss_ctx_id_desc*)
             malloc(sizeof(gss_ctx_id_desc));
         if (context == NULL)
         {
@@ -274,7 +274,7 @@ globus_i_gsi_gss_create_and_fill_context(
             major_status = GSS_S_FAILURE;
             goto exit;
         }
-        
+
         memset(context, 0, sizeof(gss_ctx_id_desc));
         *context_handle_P = context;
         context->ctx_flags = 0;
@@ -284,7 +284,7 @@ globus_i_gsi_gss_create_and_fill_context(
     {
         context = *context_handle_P;
     }
-    
+
     context->req_flags = req_flags;
     context->gss_state = GSS_CON_ST_HANDSHAKE;
     context->delegation_state = GSS_DELEGATION_START;
@@ -308,13 +308,13 @@ globus_i_gsi_gss_create_and_fill_context(
         major_status = GSS_S_FAILURE;
         goto free_context;
     }
-    
+
     local_result = globus_gsi_cred_handle_init(
         &context->peer_cred_handle->cred_handle, NULL);
     if(local_result != GLOBUS_SUCCESS)
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
-            minor_status, local_result, 
+            minor_status, local_result,
             GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL);
         major_status = GSS_S_FAILURE;
         goto free_peer_cred;
@@ -344,7 +344,7 @@ globus_i_gsi_gss_create_and_fill_context(
             goto free_proxy_handle;
         }
     }
-    
+
     /* if the extension_oids are set, then we set them in the callback data */
     if(context->extension_oids)
     {
@@ -360,27 +360,27 @@ globus_i_gsi_gss_create_and_fill_context(
             goto exit;
         }
     }
-    
+
     /* get the local credential */
     if (cred_handle == GSS_C_NO_CREDENTIAL || (req_flags & GSS_C_ANON_FLAG))
     {
         if(req_flags & GSS_C_ANON_FLAG)
         {
             major_status = globus_i_gsi_gss_create_anonymous_cred(
-                &local_minor_status, 
-                (gss_cred_id_t *) &context->cred_handle, 
+                &local_minor_status,
+                (gss_cred_id_t *) &context->cred_handle,
                 cred_usage);
         }
         else
         {
             major_status = gss_acquire_cred(
-                &local_minor_status, 
-                GSS_C_NO_NAME, 
+                &local_minor_status,
+                GSS_C_NO_NAME,
                 GSS_C_INDEFINITE,
-                GSS_C_NO_OID_SET, 
-                cred_usage, 
-                (gss_cred_id_t *) &context->cred_handle, 
-                NULL, 
+                GSS_C_NO_OID_SET,
+                cred_usage,
+                (gss_cred_id_t *) &context->cred_handle,
+                NULL,
                 NULL);
 
             /* OK if that failed, if we are using SNI */
@@ -412,7 +412,7 @@ globus_i_gsi_gss_create_and_fill_context(
                 }
             }
         }
-        
+
         if (GSS_ERROR(major_status))
         {
             GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -474,7 +474,7 @@ globus_i_gsi_gss_create_and_fill_context(
 #endif
 
     /* set the cert_dir in the callback data */
-    local_result = 
+    local_result =
         GLOBUS_GSI_SYSCONFIG_GET_CERT_DIR(&certdir);
     if(local_result != GLOBUS_SUCCESS)
     {
@@ -488,7 +488,7 @@ globus_i_gsi_gss_create_and_fill_context(
     if (certdir)
     {
         local_result = globus_gsi_callback_set_cert_dir(
-            context->callback_data, 
+            context->callback_data,
             certdir);
         if(local_result != GLOBUS_SUCCESS)
         {
@@ -502,7 +502,7 @@ globus_i_gsi_gss_create_and_fill_context(
     else
     {
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-            minor_status, 
+            minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
             (_GGSL("The cert_dir parameter in "
              "the credential handle needs to bet set")));
@@ -512,7 +512,7 @@ globus_i_gsi_gss_create_and_fill_context(
 
     free(certdir);
     certdir = NULL;
-    
+
     if(req_flags & GSS_C_GLOBUS_ALLOW_MISSING_SIGNING_POLICY)
     {
         local_result = globus_gsi_callback_set_allow_missing_signing_policy(
@@ -526,8 +526,8 @@ globus_i_gsi_gss_create_and_fill_context(
             major_status = GSS_S_FAILURE;
             goto exit;
         }
-    }    
-    
+    }
+
     #if (OPENSSL_VERSION_NUMBER >= 0x009080dfL)
     {
         /*
@@ -554,7 +554,7 @@ globus_i_gsi_gss_create_and_fill_context(
     if (context->gss_ssl == NULL)
     {
         GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
-            minor_status, 
+            minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_WITH_GSS_CONTEXT,
             (_GGSL("Couldn't create SSL object for handshake")));
         major_status = GSS_S_FAILURE;
@@ -591,8 +591,8 @@ globus_i_gsi_gss_create_and_fill_context(
         major_status = GSS_S_FAILURE;
         goto free_cert_dir;
     }
-    
-    if(!SSL_set_ex_data(context->gss_ssl, 
+
+    if(!SSL_set_ex_data(context->gss_ssl,
                         cb_index,
                         (char *) &context->callback_data))
     {
@@ -609,13 +609,13 @@ globus_i_gsi_gss_create_and_fill_context(
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
     /* 1.1.0 does ecdh and auto curve selection by default */
 
-  #if defined(SSL_CTRL_SET_ECDH_AUTO) 
+  #if defined(SSL_CTRL_SET_ECDH_AUTO)
     /* auto curve selection can be enabled in 1.0.2 (backported to 1.0.1-el7) */
     SSL_set_ecdh_auto(context->gss_ssl, 1);
 
   #elif defined(NID_secp384r1)
     /* otherwise choose a specific curve. P-384 is best available in el6 */
-    { 
+    {
         EC_KEY *ecdh = EC_KEY_new_by_curve_name(NID_secp384r1);
         if (ecdh)
         {
@@ -624,7 +624,7 @@ globus_i_gsi_gss_create_and_fill_context(
         }
     }
   #endif
-    /* set single use.  should be the default with auto */ 
+    /* set single use.  should be the default with auto */
     SSL_set_options(context->gss_ssl, SSL_OP_SINGLE_ECDH_USE);
 #endif
 
@@ -642,7 +642,7 @@ globus_i_gsi_gss_create_and_fill_context(
                 GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
                 (_GGSL("Couldn't set the cipher cert order in the SSL object")));
             major_status = GSS_S_FAILURE;
-            goto free_cert_dir;   
+            goto free_cert_dir;
         }
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
         /* Security level 0 is needed to use eNULL ciphers */
@@ -658,11 +658,11 @@ globus_i_gsi_gss_create_and_fill_context(
                 GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
                 (_GGSL("Couldn't set the cipher list in the SSL object")));
             major_status = GSS_S_FAILURE;
-            goto free_cert_dir;   
+            goto free_cert_dir;
         }
-        
+
     }
-    
+
     if (cred_usage == GSS_C_ACCEPT && globus_i_gsi_gssapi_server_cipher_order)
     {
         SSL_set_options(context->gss_ssl, SSL_OP_CIPHER_SERVER_PREFERENCE);
@@ -673,7 +673,7 @@ globus_i_gsi_gss_create_and_fill_context(
     GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
         3, (globus_i_gsi_gssapi_debug_fstream,
             "SSL_set_app_data to callback data %p\n", context->callback_data));
-    
+
     if ((context->gss_rbio = BIO_new(BIO_s_mem())) == NULL)
     {
         GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
@@ -711,22 +711,22 @@ globus_i_gsi_gss_create_and_fill_context(
     {
         SSL_set_accept_state(context->gss_ssl);
     }
-    
+
     SSL_set_bio(context->gss_ssl,
                 context->gss_rbio,
                 context->gss_wbio);
-    
-    BIO_set_ssl(context->gss_sslbio, 
-                context->gss_ssl, 
+
+    BIO_set_ssl(context->gss_sslbio,
+                context->gss_ssl,
                 BIO_NOCLOSE);
-    
+
     /* DEBUG BLOCK */
     if (globus_i_gsi_gssapi_debug_level >= 2)
     {
         char buff[256];
         int i;
         STACK_OF(SSL_CIPHER) *sk;
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(
             2, "Ciphers available:\n");
         sk=SSL_get_ciphers(context->gss_ssl);
@@ -744,7 +744,7 @@ globus_i_gsi_gss_create_and_fill_context(
         major_status = gss_create_empty_oid_set(
             &local_minor_status,
             (gss_OID_set *) &context->extension_oids);
-        
+
         if(GSS_ERROR(major_status))
         {
             GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -753,7 +753,7 @@ globus_i_gsi_gss_create_and_fill_context(
             goto exit;
         }
     }
-    
+
     goto exit;
 
  free_wbio:
@@ -773,13 +773,13 @@ globus_i_gsi_gss_create_and_fill_context(
     }
 
  free_cert_dir:
-    
+
     free(certdir);
     certdir = NULL;
 
     if(context->cred_handle && context->cred_obtained)
     {
-        gss_release_cred(&local_minor_status, 
+        gss_release_cred(&local_minor_status,
                          (gss_cred_id_t *) &context->cred_handle);
         context->cred_handle = NULL;
     }
@@ -792,7 +792,7 @@ globus_i_gsi_gss_create_and_fill_context(
     }
 
  free_proxy_handle:
-    
+
     if(context->proxy_handle != NULL)
     {
         globus_gsi_proxy_handle_destroy(context->proxy_handle);
@@ -832,7 +832,7 @@ globus_i_gsi_gss_create_and_fill_context(
  * @details
  * Called by init_sec_context and accept_sec_context.
  * An input token is placed in the SSL read BIO
- * 
+ *
  * @param minor_status
  * @param context_handle
  * @param bio
@@ -859,7 +859,7 @@ globus_i_gsi_gss_put_token(
             minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
             (_GGSL("The input token is NULL (GSS_C_NO_BUFFER)\n")));
-        goto exit;        
+        goto exit;
     }
 
     if(bio)
@@ -886,16 +886,16 @@ globus_i_gsi_gss_put_token(
                     "input token: length = %lu\n"
                     "              value  = \n",
                     (unsigned long) input_token->length);
-        
-            debug_bio = BIO_new_fp(globus_i_gsi_gssapi_debug_fstream, 
+
+            debug_bio = BIO_new_fp(globus_i_gsi_gssapi_debug_fstream,
                                    BIO_NOCLOSE);
-            BIO_dump(debug_bio, 
+            BIO_dump(debug_bio,
                      input_token->value,
                      input_token->length);
             BIO_free(debug_bio);
         }
     }
-    else 
+    else
     {
         GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
             3, (globus_i_gsi_gssapi_debug_fstream,
@@ -906,7 +906,7 @@ globus_i_gsi_gss_put_token(
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
             minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
-            (_GGSL("The input token has an invalid length of: %lu\n"), 
+            (_GGSL("The input token has an invalid length of: %lu\n"),
              (unsigned long) input_token->length));
         goto exit;
     }
@@ -927,7 +927,7 @@ globus_i_gsi_gss_put_token(
  * @param context_handle
  * @param bio
  * @param output_token
- * 
+ *
  * @return
  */
 OM_uint32
@@ -952,7 +952,7 @@ globus_i_gsi_gss_get_token(
     {
         write_bio = context_handle->gss_wbio;
     }
-    
+
     /* make out token */
     output_token->length = BIO_pending(write_bio);
     if (output_token->length > 0)
@@ -970,8 +970,8 @@ globus_i_gsi_gss_get_token(
         }
 
         while(len < output_token->length)
-        { 
-            
+        {
+
             rc = BIO_read(write_bio,
                           ((char *) output_token->value) + len,
                           output_token->length - len);
@@ -982,13 +982,13 @@ globus_i_gsi_gss_get_token(
             else
             {
                 GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
-                    minor_status, 
+                    minor_status,
                     GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
                     (_GGSL("Error reading token from BIO: %d\n"), rc));
                 major_status = GSS_S_FAILURE;
                 goto exit;
             }
-        }            
+        }
 
         if(GLOBUS_I_GSI_GSSAPI_DEBUG(3))
         {
@@ -997,10 +997,10 @@ globus_i_gsi_gss_get_token(
                     "output token: length = %lu\n"
                     "              value  = \n",
                     (unsigned long) output_token->length);
-        
-            debug_bio = BIO_new_fp(globus_i_gsi_gssapi_debug_fstream, 
+
+            debug_bio = BIO_new_fp(globus_i_gsi_gssapi_debug_fstream,
                                    BIO_NOCLOSE);
-            BIO_dump(debug_bio, 
+            BIO_dump(debug_bio,
                      output_token->value,
                      output_token->length);
             BIO_free(debug_bio);
@@ -1023,16 +1023,16 @@ exit:
  * Do the SSL handshake
  *
  * Called by init_sec_context and accept_sec_context.
- * the BIO_handshake is done again which causes the SSL 
+ * the BIO_handshake is done again which causes the SSL
  * session to start or continue its handshake process,
- * and when it waits return. 
+ * and when it waits return.
  *
  * @param minor_status
  * @param context_handle
  *
- * @return 
+ * @return
  */
-OM_uint32    
+OM_uint32
 globus_i_gsi_gss_handshake(
     OM_uint32 *                         minor_status,
     gss_ctx_id_desc *                   context_handle)
@@ -1041,7 +1041,7 @@ globus_i_gsi_gss_handshake(
     globus_result_t                     local_result = GLOBUS_SUCCESS;
     OM_uint32                           major_status = GSS_S_COMPLETE;
     int rc;
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
     ERR_clear_error();
@@ -1052,11 +1052,11 @@ globus_i_gsi_gss_handshake(
      */
     rc = BIO_do_handshake(context_handle->gss_sslbio);
     if (rc <= 0) {
-        if (!BIO_should_retry(context_handle->gss_sslbio) || 
+        if (!BIO_should_retry(context_handle->gss_sslbio) ||
             !BIO_should_read(context_handle->gss_sslbio)) {
-            
+
             /* problem! */
-            
+
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
                 2, (globus_i_gsi_gssapi_debug_fstream,
@@ -1073,12 +1073,12 @@ globus_i_gsi_gss_handshake(
                     SSL_get_error(context_handle->gss_ssl, rc)));
 
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                2, (globus_i_gsi_gssapi_debug_fstream, 
+                2, (globus_i_gsi_gssapi_debug_fstream,
                     "shutdown=%d\n",
                     SSL_get_shutdown(context_handle->gss_ssl)));
 
             /* checks for ssl alert 42 */
-            if (ERR_peek_error() == 
+            if (ERR_peek_error() ==
                 ERR_PACK(ERR_LIB_SSL,SSL_F_SSL3_READ_BYTES,
                          SSL_R_SSLV3_ALERT_BAD_CERTIFICATE))
             {
@@ -1110,13 +1110,13 @@ globus_i_gsi_gss_handshake(
             GLOBUS_GSI_GSSAPI_ERROR_WITH_CALLBACK_DATA);
         goto exit;
     }
-    
+
     if(result != GLOBUS_SUCCESS && GSS_ERROR(major_status))
     {
         result = globus_i_gsi_gssapi_error_join_chains_result(
             (globus_result_t) *minor_status,
             result);
-        
+
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
             minor_status, result,
             GLOBUS_GSI_GSSAPI_ERROR_REMOTE_CERT_VERIFY_FAILED);
@@ -1235,14 +1235,14 @@ globus_i_gsi_gss_handshake(
              * Set  GSS_C_CONF_FLAG if cipher uses encryption
              * which is at least 56 bit. SSL defines a number
              * of different levels, we need to map to a single GSS
-             * flag. See the s3_lib.c for list of ciphers. 
-             * This could be changed to SSL_MEDIUM or SSL_HIGH 
-             * if a site wants higher protection. 
+             * flag. See the s3_lib.c for list of ciphers.
+             * This could be changed to SSL_MEDIUM or SSL_HIGH
+             * if a site wants higher protection.
              */
 
-            
+
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
-            if ((current_cipher->algo_strength & SSL_STRONG_MASK) >= SSL_LOW) 
+            if ((current_cipher->algo_strength & SSL_STRONG_MASK) >= SSL_LOW)
             {
                 context_handle->ret_flags |= GSS_C_CONF_FLAG;
             }
@@ -1281,7 +1281,7 @@ globus_i_gsi_gss_handshake(
             }
 
         }
-        else 
+        else
         {
             major_status = GSS_S_CONTINUE_NEEDED;
         }
@@ -1298,8 +1298,8 @@ globus_i_gsi_gss_handshake(
  * @details
  * Called after the handshake has completed successfully,
  * and gets the subject name, so it can be returned to the
- * call of the GSSAPI init_sec_context or accept_sec_context. 
- * 
+ * call of the GSSAPI init_sec_context or accept_sec_context.
+ *
  * @param minor_status
  * @param context_handle
  * @param cred_usage
@@ -1310,7 +1310,7 @@ OM_uint32
 globus_i_gsi_gss_retrieve_peer(
     OM_uint32 *                         minor_status,
     gss_ctx_id_desc *                   context_handle,
-    const gss_cred_usage_t              cred_usage) 
+    const gss_cred_usage_t              cred_usage)
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
     globus_result_t                     local_result = GLOBUS_SUCCESS;
@@ -1318,9 +1318,9 @@ globus_i_gsi_gss_retrieve_peer(
     X509 *                              peer_cert = NULL;
     X509 *                              identity_cert = NULL;
     STACK_OF(X509) *                    peer_cert_chain = NULL;
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
-    
+
     *minor_status = GLOBUS_SUCCESS;
 
     if (SSL_get_session(context_handle->gss_ssl) != NULL)
@@ -1343,7 +1343,7 @@ globus_i_gsi_gss_retrieve_peer(
     else
     {
         local_result = globus_gsi_cred_set_cert(
-            context_handle->peer_cred_handle->cred_handle, 
+            context_handle->peer_cred_handle->cred_handle,
             peer_cert);
 
         if(local_result != GLOBUS_SUCCESS)
@@ -1358,7 +1358,7 @@ globus_i_gsi_gss_retrieve_peer(
         local_result = globus_gsi_callback_get_cert_chain(
             context_handle->callback_data,
             &peer_cert_chain);
-        
+
         if(local_result != GLOBUS_SUCCESS)
         {
             GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1368,7 +1368,7 @@ globus_i_gsi_gss_retrieve_peer(
             peer_cert_chain = NULL;
             goto exit;
         }
-        
+
         local_result = globus_gsi_cert_utils_get_identity_cert(
             peer_cert_chain,
             &identity_cert);
@@ -1391,9 +1391,9 @@ globus_i_gsi_gss_retrieve_peer(
                 &context_handle->peer_cred_handle->globusid);
 
         X509_free(sk_X509_shift(peer_cert_chain));
-        
+
         local_result = globus_gsi_cred_set_cert_chain(
-            context_handle->peer_cred_handle->cred_handle, 
+            context_handle->peer_cred_handle->cred_handle,
             peer_cert_chain);
 
         if(local_result != GLOBUS_SUCCESS)
@@ -1404,12 +1404,12 @@ globus_i_gsi_gss_retrieve_peer(
             major_status = GSS_S_FAILURE;
             goto exit;
         }
-            
+
         /* debug statement */
-        { 
+        {
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-                2, (globus_i_gsi_gssapi_debug_fstream, 
-                    "X509 subject after proxy : %s\n", 
+                2, (globus_i_gsi_gssapi_debug_fstream,
+                    "X509 subject after proxy : %s\n",
                     context_handle->peer_cred_handle->globusid->x509n_oneline));
         }
     }
@@ -1417,7 +1417,7 @@ globus_i_gsi_gss_retrieve_peer(
  exit:
 
     if(peer_cert_chain)
-    { 
+    {
         sk_X509_pop_free(peer_cert_chain, X509_free);
     }
     if (peer_cert != NULL)
@@ -1456,9 +1456,9 @@ globus_i_gsi_gss_create_anonymous_cred(
     *minor_status = (OM_uint32) GLOBUS_SUCCESS;
 
     *output_cred_handle = GSS_C_NO_CREDENTIAL;
-    
+
     newcred = (gss_cred_id_desc*) calloc(1, sizeof(gss_cred_id_desc));
-    
+
     if (newcred == NULL)
     {
         GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
@@ -1507,12 +1507,12 @@ globus_i_gsi_gss_create_anonymous_cred(
         major_status = GSS_S_FAILURE;
         goto free_cred;
     }
-   
+
     *output_cred_handle = newcred;
-    
+
     major_status = GSS_S_COMPLETE;
     goto exit;
-    
+
  free_cred:
 
     if(newcred)
@@ -1571,10 +1571,10 @@ globus_i_gsi_gss_cred_read_bio(
 
     major_status = globus_i_gsi_gss_create_cred(&local_minor_status,
                                                 cred_usage,
-                                                cred_id_handle, 
+                                                cred_id_handle,
                                                 &local_cred_handle,
                                                 GLOBUS_FALSE);
-    
+
     if(GSS_ERROR(major_status))
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1590,7 +1590,7 @@ globus_i_gsi_gss_cred_read_bio(
     {
         globus_gsi_cred_handle_destroy(local_cred_handle);
     }
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
 }
@@ -1600,7 +1600,7 @@ globus_i_gsi_gss_cred_read(
     OM_uint32 *                         minor_status,
     const gss_cred_usage_t              cred_usage,
     gss_cred_id_t *                     cred_handle,
-    const X509_NAME *                   desired_subject) 
+    const X509_NAME *                   desired_subject)
 {
     globus_result_t                     local_result = GLOBUS_SUCCESS;
     globus_gsi_cred_handle_t            local_cred_handle;
@@ -1622,7 +1622,7 @@ globus_i_gsi_gss_cred_read(
     }
 
 
-    local_result = globus_gsi_cred_read(local_cred_handle, 
+    local_result = globus_gsi_cred_read(local_cred_handle,
                                         (X509_NAME *) desired_subject);
     if(local_result != GLOBUS_SUCCESS)
     {
@@ -1635,7 +1635,7 @@ globus_i_gsi_gss_cred_read(
 
     major_status = globus_i_gsi_gss_create_cred(&local_minor_status,
                                                 cred_usage,
-                                                cred_handle, 
+                                                cred_handle,
                                                 &local_cred_handle,
                                                 GLOBUS_FALSE);
     if(GSS_ERROR(major_status))
@@ -1646,7 +1646,7 @@ globus_i_gsi_gss_cred_read(
         major_status = GSS_S_FAILURE;
         goto exit;
     }
-    
+
  exit:
 
     if(local_cred_handle != NULL)
@@ -1672,7 +1672,7 @@ globus_i_gsi_gss_cred_read(
  *
  * @return
  */
-OM_uint32 
+OM_uint32
 globus_i_gsi_gss_create_cred(
     OM_uint32 *                         minor_status,
     const gss_cred_usage_t              cred_usage,
@@ -1680,7 +1680,7 @@ globus_i_gsi_gss_create_cred(
     globus_gsi_cred_handle_t *          cred_handle,
     globus_bool_t                       sni_context)
 {
-    gss_cred_id_desc **                 output_cred_handle = 
+    gss_cred_id_desc **                 output_cred_handle =
         (gss_cred_id_desc **) output_cred_handle_P;
     OM_uint32                           major_status = GSS_S_NO_CRED;
     OM_uint32                           local_minor_status;
@@ -1691,9 +1691,9 @@ globus_i_gsi_gss_create_cred(
     X509 *                              identity_cert;
     STACK_OF(X509) *                    cert_chain = NULL;
     globus_bool_t                       free_identity_cert = GLOBUS_FALSE;
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
-    
+
     *output_cred_handle = NULL;
 
     newcred = (gss_cred_id_desc*) calloc(1, sizeof(gss_cred_id_desc));
@@ -1713,7 +1713,7 @@ globus_i_gsi_gss_create_cred(
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
             minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_WITH_GSI_CREDENTIAL,
-            (_GGSL("NULL credential handle passed to function: %s"), 
+            (_GGSL("NULL credential handle passed to function: %s"),
              __func__));
         goto error_exit;
     }
@@ -1740,9 +1740,9 @@ globus_i_gsi_gss_create_cred(
         goto skip_for_sni;
     }
     local_result = globus_gsi_cred_get_cert_type(
-        newcred->cred_handle, 
+        newcred->cred_handle,
         &cert_type);
-    
+
     if (local_result != GLOBUS_SUCCESS)
     {
         GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
@@ -1752,11 +1752,11 @@ globus_i_gsi_gss_create_cred(
         goto error_exit;
     }
 
-    if(GLOBUS_GSI_CERT_UTILS_IS_PROXY(cert_type) && 
+    if(GLOBUS_GSI_CERT_UTILS_IS_PROXY(cert_type) &&
         !(cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_INDEPENDENT_PROXY))
     {
         local_result = globus_gsi_cred_get_cert_chain(
-            newcred->cred_handle, 
+            newcred->cred_handle,
             &cert_chain);
         if (local_result != GLOBUS_SUCCESS)
         {
@@ -1783,7 +1783,7 @@ globus_i_gsi_gss_create_cred(
     else
     {
         local_result = globus_gsi_cred_get_cert(
-            newcred->cred_handle, 
+            newcred->cred_handle,
             &identity_cert);
         if (local_result != GLOBUS_SUCCESS)
         {
@@ -1811,8 +1811,8 @@ globus_i_gsi_gss_create_cred(
         major_status = GSS_S_FAILURE;
         goto error_exit;
     }
-            
-    
+
+
 skip_for_sni:
     *output_cred_handle = newcred;
 
@@ -1876,12 +1876,12 @@ globus_i_gsi_gss_SSL_write_bio(
         }
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\n");
     }
-    
+
     BIO_write(bp, (char *) ssl_handle->s3->client_random, SSL3_RANDOM_SIZE);
     BIO_write(bp, (char *) ssl_handle->s3->server_random, SSL3_RANDOM_SIZE);
-    
+
     ssl_handle->method->ssl3_enc->setup_key_block(ssl_handle);
-    
+
     /* DEBUG BLOCK */
     if (globus_i_gsi_gssapi_debug_level >= 2)
     {
@@ -1896,7 +1896,7 @@ globus_i_gsi_gss_SSL_write_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X",ssl_handle->s3->tmp.key_block[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nwrite_sequence=");
         for (index = 0; index < 8; ++index)
         {
@@ -1904,7 +1904,7 @@ globus_i_gsi_gss_SSL_write_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X", ssl_handle->s3->write_sequence[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nread_sequence =");
         for (index = 0; index < 8; ++index)
         {
@@ -1912,7 +1912,7 @@ globus_i_gsi_gss_SSL_write_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X", ssl_handle->s3->read_sequence[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nwrite_iv=");
         for (index = 0; index < EVP_MAX_IV_LENGTH; ++index)
         {
@@ -1920,7 +1920,7 @@ globus_i_gsi_gss_SSL_write_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X", ssl_handle->enc_write_ctx->iv[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nread_iv=");
         for (index = 0; index < EVP_MAX_IV_LENGTH; index++)
         {
@@ -1930,7 +1930,7 @@ globus_i_gsi_gss_SSL_write_bio(
         }
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\n");
     }
-    
+
     L2N(ssl_handle->s3->tmp.key_block_length, intbuffer);
 
     BIO_write(bp, (char *) intbuffer, 4);
@@ -1946,7 +1946,7 @@ globus_i_gsi_gss_SSL_write_bio(
     BIO_write(bp, (char *) ssl_handle->s3->read_sequence, 8);
     BIO_write(bp, (char *) ssl_handle->enc_write_ctx->iv, EVP_MAX_IV_LENGTH);
     BIO_write(bp, (char *) ssl_handle->enc_read_ctx->iv, EVP_MAX_IV_LENGTH);
-    
+
     ssl3_cleanup_key_block(ssl_handle);
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
@@ -1998,7 +1998,7 @@ globus_i_gsi_gss_SSL_read_bio(
                     "%02X", ssl_handle->s3->client_random[index]));
         }
 
-        GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nserver_random ="); 
+        GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nserver_random =");
         for (index = 0; index < SSL3_RANDOM_SIZE; index++)
         {
             GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
@@ -2011,7 +2011,7 @@ globus_i_gsi_gss_SSL_read_bio(
     ssl_handle->shutdown = 0;
 
     ssl_handle->s3->tmp.new_cipher = ssl_handle->session->cipher;
-        
+
     /* read the tmp.key_block */
     if (BIO_pending(bp) < 4)
     {
@@ -2024,7 +2024,7 @@ globus_i_gsi_gss_SSL_read_bio(
     }
 
     /* get length */
-    BIO_read(bp, (char *) int_buffer, 4); 
+    BIO_read(bp, (char *) int_buffer, 4);
     N2L(int_buffer, length);
 
     if (length > 0)
@@ -2060,7 +2060,7 @@ globus_i_gsi_gss_SSL_read_bio(
 
     while(len < length)
     {
-        rc = BIO_read(bp,  
+        rc = BIO_read(bp,
                       (char *) ssl_handle->s3->tmp.key_block + len,
                       ssl_handle->s3->tmp.key_block_length - len);
         if(rc > 0)
@@ -2112,7 +2112,7 @@ globus_i_gsi_gss_SSL_read_bio(
         major_status = GSS_S_FAILURE;
         goto free_key_block;
     }
-    
+
     ssl_result = ssl_handle->method->ssl3_enc->change_cipher_state(
         ssl_handle,
         (!ssl_handle->server)?SSL3_CHANGE_CIPHER_CLIENT_WRITE:SSL3_CHANGE_CIPHER_SERVER_WRITE);
@@ -2147,8 +2147,8 @@ globus_i_gsi_gss_SSL_read_bio(
 
     ssl_result = ssl_handle->method->ssl3_enc->change_cipher_state(
         ssl_handle,
-        (!ssl_handle->server)?SSL3_CHANGE_CIPHER_CLIENT_READ:SSL3_CHANGE_CIPHER_SERVER_READ); 
-    
+        (!ssl_handle->server)?SSL3_CHANGE_CIPHER_CLIENT_READ:SSL3_CHANGE_CIPHER_SERVER_READ);
+
     if (!ssl_result)
     {
         GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
@@ -2164,8 +2164,8 @@ globus_i_gsi_gss_SSL_read_bio(
     ssl_handle->state = SSL_ST_OK;
 
     /* will free the one we read */
-    ssl3_cleanup_key_block(ssl_handle); 
-    
+    ssl3_cleanup_key_block(ssl_handle);
+
     length = BIO_pending(bp);
     if (length != 8 + 8 + EVP_MAX_IV_LENGTH + EVP_MAX_IV_LENGTH)
     {
@@ -2176,12 +2176,12 @@ globus_i_gsi_gss_SSL_read_bio(
             (_GGSL("Error reading SSL data from BIO")));
         goto free_key_block;
     }
-    
+
     BIO_read(bp, (char*) ssl_handle->s3->write_sequence, 8);
     BIO_read(bp, (char*) ssl_handle->s3->read_sequence,  8);
     BIO_read(bp, (char*) ssl_handle->enc_write_ctx->iv,  EVP_MAX_IV_LENGTH);
     BIO_read(bp, (char*) ssl_handle->enc_read_ctx->iv,   EVP_MAX_IV_LENGTH);
-    
+
     /* DEBUG BLOCK */
     if (globus_i_gsi_gssapi_debug_level >= 2)
     {
@@ -2201,7 +2201,7 @@ globus_i_gsi_gss_SSL_read_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X", ssl_handle->s3->read_sequence[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nwrite_iv=");
         for (index = 0; index < EVP_MAX_IV_LENGTH; index++)
         {
@@ -2209,7 +2209,7 @@ globus_i_gsi_gss_SSL_read_bio(
                 2, (globus_i_gsi_gssapi_debug_fstream,
                     "%02X", ssl_handle->enc_write_ctx->iv[index]));
         }
-        
+
         GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(2, "\nread_iv=");
         for (index = 0; index < EVP_MAX_IV_LENGTH; index++)
         {
@@ -2255,7 +2255,7 @@ globus_i_gsi_gss_SSL_read_bio(
  *        The credential handle containing the SSL_CTX to be initialized
  * @param anon_ctx
  *        Specify the SSL context as anonymous (1) or not (0).  An anonymous
- *        SSL_CTX does not have the cert or key set. 
+ *        SSL_CTX does not have the cert or key set.
  *
  * @return
  *        GSS_S_COMPLETE if initiating the SSL_CTX was successful
@@ -2282,7 +2282,7 @@ globus_i_gsi_gssapi_init_ssl_context(
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
     cred_handle = (gss_cred_id_desc *) credential;
-    
+
     if(cred_handle == NULL)
     {
         major_status = GSS_S_FAILURE;
@@ -2306,7 +2306,7 @@ globus_i_gsi_gssapi_init_ssl_context(
         sk_SSL_COMP_zero(comp_methods);
     }
 #endif
-   /* openssl 1.1.0 adds a new method of setting this, deprecates old */ 
+   /* openssl 1.1.0 adds a new method of setting this, deprecates old */
     #if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     cred_handle->ssl_context = SSL_CTX_new(TLS_method());
     #else
@@ -2364,7 +2364,7 @@ globus_i_gsi_gssapi_init_ssl_context(
             SSL_CTX_set_options(cred_handle->ssl_context,SSL_OP_NO_TLSv1_2);
     }
     #endif
-            
+
     SSL_CTX_set_cert_verify_callback(cred_handle->ssl_context,
                                      globus_gsi_callback_X509_verify_cert,
                                      NULL);
@@ -2372,7 +2372,7 @@ globus_i_gsi_gssapi_init_ssl_context(
     SSL_CTX_sess_set_cache_size(cred_handle->ssl_context, 5);
 
     local_result = GLOBUS_GSI_SYSCONFIG_GET_CERT_DIR(&ca_cert_dir);
-    
+
     if(local_result != GLOBUS_SUCCESS)
     {
         ca_cert_dir = NULL;
@@ -2395,8 +2395,8 @@ globus_i_gsi_gssapi_init_ssl_context(
         goto exit;
     }
 
-    /* Set the verify callback to test our proxy 
-     * policies. 
+    /* Set the verify callback to test our proxy
+     * policies.
      */
     SSL_CTX_set_verify(cred_handle->ssl_context, SSL_VERIFY_PEER,
                        globus_gsi_callback_handshake_callback);
@@ -2415,18 +2415,18 @@ globus_i_gsi_gssapi_init_ssl_context(
     /*
      * post OpenSSL-0.9.8, existence of this call creates problem when
      * the server (for eg. GridFTP server) is run as a user and thus the
-     * cert presented is proxy cert. As the OpenSSL code does not 
+     * cert presented is proxy cert. As the OpenSSL code does not
      * recognize Globus legacy proxies, we need to explicitly set the
      * proxy flag in the cert and we do it only when our callback is
      * called by OpenSSL with the critical extension error, so this call
      * is removed for post OpenSSL-0.9.8.
      */
-     
+
     #if (OPENSSL_VERSION_NUMBER < 0x0090707fL)
     X509_STORE_set_flags(SSL_CTX_get_cert_store(cred_handle->ssl_context),
                          X509_V_FLAG_IGNORE_CRITICAL);
     #endif
-    
+
     if(anon_ctx != GLOBUS_I_GSI_GSS_ANON_CONTEXT)
     {
         if (!sni_context)
@@ -2452,7 +2452,7 @@ globus_i_gsi_gssapi_init_ssl_context(
                 goto exit;
             }
 
-            if(!SSL_CTX_use_certificate(cred_handle->ssl_context, 
+            if(!SSL_CTX_use_certificate(cred_handle->ssl_context,
                                         client_cert))
             {
                 GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
@@ -2495,7 +2495,7 @@ globus_i_gsi_gssapi_init_ssl_context(
                 major_status = GSS_S_FAILURE;
                 goto exit;
             }
-                
+
             local_result = globus_gsi_cred_get_cert_chain(cred_handle->cred_handle,
                                                           &client_cert_chain);
             if(local_result != GLOBUS_SUCCESS)
@@ -2555,7 +2555,7 @@ globus_i_gsi_gssapi_init_ssl_context(
 
             B_mem = BIO_new(BIO_s_mem());
             BIO_puts(B_mem, extra_pem);
-            
+
             while((extra_x509 = PEM_read_bio_X509(B_mem, NULL, 0, NULL)) != NULL)
             {
                 if(!X509_STORE_add_cert(
@@ -2594,7 +2594,7 @@ globus_i_gsi_gssapi_init_ssl_context(
     {
         X509_free(client_cert);
     }
-    
+
     if(client_key)
     {
         EVP_PKEY_free(client_key);
@@ -2676,7 +2676,7 @@ globus_i_gsi_gss_get_context_goodtill(
  * @brief Verify Extensions Callback
  * @ingroup globus_i_gsi_gss_utils
  * @details
- * Verify Extensions Callback 
+ * Verify Extensions Callback
  *
  * @param callback_data
  * @param extension
@@ -2695,7 +2695,7 @@ int globus_i_gsi_gss_verify_extensions_callback(
     gss_OID_desc                        oid;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
-    
+
     local_result = globus_gsi_callback_get_extension_oids(
         callback_data,
         (void **) (void *) &extension_oids);
@@ -2711,7 +2711,7 @@ int globus_i_gsi_gss_verify_extensions_callback(
         return_val = 0;
         goto exit;
     }
-    
+
     extension_obj = X509_EXTENSION_get_object(extension);
 
     for(index = 0; index < extension_oids->count; index++)
@@ -2832,7 +2832,7 @@ free_service_name_out:
             name->service_name = NULL;
         }
     }
-    
+
 out:
     return major_status;
 }
@@ -2855,7 +2855,7 @@ globus_l_gsi_gss_servername_callback(
     EVP_PKEY                           *client_key = NULL;
     STACK_OF(X509)                     *client_cert_chain = NULL;
     globus_gsi_cert_utils_cert_type_t   cert_type;
-    
+
     servername = SSL_get_servername(s, TLSEXT_NAMETYPE_host_name);
     if(GLOBUS_I_GSI_GSSAPI_DEBUG(3))
     {
@@ -2974,7 +2974,7 @@ use_any:
     }
 
     if (!SSL_CTX_use_certificate(
-                context->cred_handle->ssl_context, 
+                context->cred_handle->ssl_context,
                 client_cert))
     {
         GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
@@ -3017,7 +3017,7 @@ use_any:
         major_status = GSS_S_FAILURE;
         goto exit;
     }
-        
+
     local_result = globus_gsi_cred_get_cert_chain(
             context->cred_handle->cred_handle,
             &client_cert_chain);
