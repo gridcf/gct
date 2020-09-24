@@ -35,22 +35,36 @@ jobs:
       env:
         - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
 
-    - stage: deploy
+    - &run_deployment
+        stage: deploy
+        env:
+          - IMAGE=centos:centos7 TASK=srpms
+        sudo: required
+        skip_cleanup: true
+        services:
+          - docker
+
+        before_install:
+          - sudo apt-get update
+          - sleep 5
+          - sudo docker pull ${IMAGE}
+
+        script:
+        - travis-ci/setup_tasks.sh
+      
+      #PPC64LE
+    - <<: *run_tests
       env:
-        - IMAGE=centos:centos7 TASK=srpms
-      sudo: required
-      skip_cleanup: true
-      services:
-        - docker
+        - IMAGE=centos:centos7 TASK=tests COMPONENTS=udt,myproxy,ssh
+      arch: ppc64le
+    - <<: *run_tests
+      env:
+        - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
+      arch: ppc64le
+    - <<: *run_deployment
+      arch: ppc64le
 
-      before_install:
-        - sudo apt-get update
-        - sleep 5
-        - sudo docker pull ${IMAGE}
-
-      script:
-      - travis-ci/setup_tasks.sh
-      deploy:
+      deploy: 
         - provider: releases
           on:
             tags: true
@@ -71,6 +85,11 @@ jobs:
             repo: gridcf/gct
           skip_cleanup: true
           script: bash travis-ci/upload_source_tarballs.sh gridcf
-
-
+        - provider: script
+          on:
+            tags: true
+            all_branches: false
+            repo: gridcf/gct
+          skip_cleanup: true
+          script: bash travis-ci/upload_source_tarballs.sh gridcf
 # vim:ft=yaml:sw=2:sts=2:et
