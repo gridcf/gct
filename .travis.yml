@@ -14,7 +14,6 @@ jobs:
         - IMAGE=centos:centos6 TASK=tests COMPONENTS=udt,myproxy,ssh
       stage: test
       sudo: required
-        - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
       services:
         - docker
 
