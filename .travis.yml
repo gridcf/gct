@@ -26,9 +26,6 @@ jobs:
       - travis-ci/setup_tasks.sh
     - <<: *run_tests
       env:
-        - IMAGE=centos:centos6 TASK=tests COMPONENTS=gram5
-    - <<: *run_tests
-      env:
         - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
 
     - stage: deploy
