@@ -11,7 +11,7 @@ jobs:
     - &run_tests
       # Template; subsequent uses modify 'env'
       env:
-        - IMAGE=centos:centos6 TASK=tests COMPONENTS=udt,myproxy,ssh
+        - IMAGE=centos:centos7 TASK=tests COMPONENTS=udt,myproxy,ssh
       stage: test
       sudo: required
       services:
@@ -24,9 +24,6 @@ jobs:
 
       script:
       - travis-ci/setup_tasks.sh
-    - <<: *run_tests
-      env:
-        - IMAGE=centos:centos7 TASK=tests COMPONENTS=udt,myproxy,ssh
     - <<: *run_tests
       env:
         - IMAGE=centos:centos6 TASK=tests COMPONENTS=gram5
