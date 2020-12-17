@@ -3,8 +3,8 @@
 Name:		globus-scheduler-event-generator
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.3
-Release:	2%{?dist}
+Version:	6.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
 Group:		System Environment/Libraries
@@ -239,6 +239,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Dec 17 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-1
+- Keep admin script in sync with init script
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.3-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

@@ -1,3 +1,9 @@
+globus-scheduler-event-generator (6.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Keep admin script in sync with init script
+
+ -- Mattias Ellert <ellert@localhost>  Thu, 17 Dec 2020 09:59:20 +0100
+
 globus-scheduler-event-generator (6.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove unused TESTS.pl script
