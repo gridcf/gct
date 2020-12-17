@@ -28,8 +28,7 @@ GLOBUS_SEG_CONFIG=${GLOBUS_SEG_CONFIG:-@SEG_CONFIGDIR@/@SEG_CONFIGFILE@}
 test -f "${GLOBUS_SEG_CONFIG}" && . "${GLOBUS_SEG_CONFIG}"
 
 # Keep in sync with init script
-GLOBUS_SEG_PIDDIR="${GLOBUS_SEG_PIDDIR:-${localstatedir}/run/}"
-GLOBUS_SEG_PIDFMT="${GLOBUS_SEG_PIDDIR}/globus-scheduler-event-generator-%s.pid"
+GLOBUS_SEG_PIDFMT="${GLOBUS_SEG_PIDFMT:-${localstatedir}/run/globus-scheduler-event-generator-%s.pid}"
 GLOBUS_SEG_LRM_DIR="${GLOBUS_SEG_LRM_DIR:-${sysconfdir}/globus/scheduler-event-generator}"
 
 enable=""
