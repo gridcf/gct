@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.7
+Version:        6.2.8
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Thu Mar 04 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.8-1
+- Update default run directory from /var/run to /run
+
 * Thu Mar 04 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.7-1
 - Exit with error if voms-proxy-init fails
 

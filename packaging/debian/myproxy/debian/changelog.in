@@ -1,3 +1,9 @@
+myproxy (6.2.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * Update default run directory from /var/run to /run
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 04 Mar 2021 07:59:54 +0100
+
 myproxy (6.2.7-1+gct.@distro@) @distro@; urgency=medium
 
   * Exit with error if voms-proxy-init fails

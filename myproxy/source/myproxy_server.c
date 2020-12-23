@@ -320,7 +320,7 @@ main(int argc, char *argv[])
         /* no exit() allowed before become_daemon_step3() call */
 
        if (getuid() == 0 && !server_context->pidfile) {
-           server_context->pidfile = "/var/run/myproxy.pid";
+           server_context->pidfile = "/run/myproxy.pid";
        }
        if (server_context->pidfile) {
            /* It'd be nice to call pidfile_open() before forking the

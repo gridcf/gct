@@ -30,7 +30,7 @@ X509_USER_CERT=/etc/grid-security/myproxy/hostcert.pem
 X509_USER_KEY=/etc/grid-security/myproxy/hostkey.pem
 export X509_USER_CERT
 export X509_USER_KEY
-PIDFILE=/var/run/myproxy.pid
+PIDFILE=/run/myproxy.pid
 
 # Override defaults here.
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
