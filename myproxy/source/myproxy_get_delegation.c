@@ -203,9 +203,10 @@ main(int argc, char *argv[])
 
     if (outputfile) {
         if (voms && (! has_voms_extension(outputfile)) ) {
-            if (voms_proxy_init() < 0) { /* should an error be fatal? */
-                fprintf(stderr, "Warning: Failed to add VOMS attributes.\n");
+            if (voms_proxy_init() != 0) {
+                fprintf(stderr, "Failed to add VOMS attributes.\n");
                 verror_print_error(stderr);
+                goto cleanup;
             }
         }
 
