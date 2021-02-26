@@ -1,9 +1,84 @@
-This is MyProxy v6.1.
+This is MyProxy v6.2.
 This version should be protocol compatible with all versions since v0.2.
 Binary compatibility of the C API is not guaranteed between releases.
 
 Version History
 ---------------
+v6.2.6
+- Remove LICENSE.globus file
+- Add BuildRequires perl-interpreter
+- Add additional perl dependencies for tests
+
+v6.2.5
+- Drop obsolete configure option --with-gpt
+- Drop obsolete configure option --with-flavor
+- Drop globus_automake_pre and globus_automake_post
+- Clean up old GPT references
+- Install myproxy-get-trustroots man page
+
+v6.2.4
+- Remove usage statistics collection support
+
+v6.2.3
+- remove macro overquoting
+
+v6.2.2
+- Use 2048 bit CA key for myproxy tests
+
+v6.2.1
+- Fix -Werror=format-security errors
+
+v6.2.0
+- First Grid Community Toolkit release
+- Remove support for openssl101e (RHEL5 is EOL)
+- Disable usage statistics reporting by default
+- Fix option parsing bug
+
+v6.1.28
+- Fix OpenSSL 1.1.0-related typo
+
+v6.1.27
+- Remove legacy SSLv3 support
+
+v6.1.26
+- Fix error check
+
+v6.1.25
+- Don't call ERR_GET_REASON twice #89
+
+v6.1.24
+- Fix crash in myproxy_bootstrap_trust() with OpenSSL 1.1.0c
+
+v6.1.23
+- Fixes for OpenSSL 1.1.0
+
+v6.1.22
+- Check for openssl 101e for epel5
+
+v6.1.21
+- Do not overwrite configuration flags
+
+v6.1.20
+- Updates for el.5 with openssl101e
+
+v6.1.19
+- update myproxy debug/error msgs for accepted_peer_names type change
+
+v6.1.18
+- Spelling
+
+v6.1.17
+- Handle error returns from OCSP_parse_url
+
+v6.1.16
+- Handle invalid proxy_req type
+
+v6.1.15
+- GT-616: Myproxy uses resolved IP address when importing names
+
+v6.1.14
+- improve rfc2818 name comparison handling
+
 v6.1.13
 - Fixed 2 instances of underallocation of memory.
 
