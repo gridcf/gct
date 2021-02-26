@@ -203,9 +203,10 @@ main(int argc, char *argv[])
 
     if (outputfile) {
         if (voms && (! has_voms_extension(outputfile)) ) {
-            if (voms_proxy_init() < 0) { /* should an error be fatal? */
-                fprintf(stderr, "Warning: Failed to add VOMS attributes.\n");
+            if (voms_proxy_init() != 0) {
+                fprintf(stderr, "Failed to add VOMS attributes.\n");
                 verror_print_error(stderr);
+                goto cleanup;
             }
         }
 
@@ -386,7 +387,8 @@ init_arguments(int argc,
 int
 voms_proxy_init()
 {
-    int i, hours, minutes, cred_lifetime, rc;
+    int i, hours, minutes, cred_lifetime, wstatus;
+    int rc = 0;
     time_t cred_expiration;
     const char *argv[40];
     char bits[11], vomslife[14];
@@ -503,10 +505,15 @@ voms_proxy_init()
         fprintf(stderr, "failed to run %s: %s\n", command, strerror(errno));
         exit(1);
     }
-    if (waitpid(childpid,&rc,0) == -1) {
+    if (waitpid(childpid,&wstatus,0) == -1) {
         verror_put_string("wait() failed for voms-proxy-init child");
         verror_put_errno(errno);
         return -1;
+    } else {
+        if (WIFEXITED(wstatus) == 1)
+            rc = WEXITSTATUS(wstatus);
+        if (WIFSIGNALED(wstatus) == 1)
+            rc = 128 + WTERMSIG(wstatus);
     }
 
     return rc;
