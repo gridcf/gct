@@ -28,12 +28,12 @@ extern gss_OID gss_nt_service_name;
 
 /**
  * @ingroup globus_gss_assist_context
- * Initialize a GSSAPI security connection. Used by the client.  
+ * Initialize a GSSAPI security connection. Used by the client.
  * The context_handle is returned, and there is one for each
  * connection.  This routine will take cake of the looping
  * and token processing, using the supplied get_token and
- * send_token routines. 
- * 
+ * send_token routines.
+ *
  * @param minor_status
  *        GSSAPI return code.  The new minor_status is a globus_result_t
  *        cast to an OM_uint32.  If the call was successful, the minor
@@ -44,30 +44,30 @@ extern gss_OID gss_nt_service_name;
  * @param cred_handle
  *        the cred handle obtained by acquire_cred.
  * @param context_handle
- *        pointer to returned context. 
+ *        pointer to returned context.
  * @param target_name_char
  *        char string representation of the
- *        server to be contacted. 
+ *        server to be contacted.
  * @param req_flags
  *        request flags, such as GSS_C_DELEG_FLAG for delegation
- *        and the GSS_C_MUTUAL_FLAG for mutual authentication. 
+ *        and the GSS_C_MUTUAL_FLAG for mutual authentication.
  * @param ret_flags
  *        Pointer to which services are available after
- *        the connection is established. Maybe NULL if not wanted. 
+ *        the connection is established. Maybe NULL if not wanted.
  *
  * The following are particular to this assist routine:
  *
  * @param token_status
- *        the assist routine's get/send token status 
- * @param gss_assist_get_token 
+ *        the assist routine's get/send token status
+ * @param gss_assist_get_token
  *        function pointer for getting the token
  * @param gss_assist_get_context
- *        first argument passed to the 
+ *        first argument passed to the
  *        gss_assist_get_token function
  * @param gss_assist_send_token
  *        function pointer for setting the token
  * @param gss_assist_send_context
- *        first argument passed to the 
+ *        first argument passed to the
  *        gss_assist_set_token function pointer
  *
  * @return
@@ -82,7 +82,7 @@ globus_gss_assist_init_sec_context(
     OM_uint32                           req_flags,
     OM_uint32 *                         ret_flags,
     int *                               token_status,
-    int                                 (*gss_assist_get_token)(void *, void **, size_t *), 
+    int                                 (*gss_assist_get_token)(void *, void **, size_t *),
     void *                              gss_assist_get_context,
     int                                 (*gss_assist_send_token)(void *, void *, size_t),
     void *                              gss_assist_send_context)
@@ -100,7 +100,7 @@ globus_gss_assist_init_sec_context(
     gss_OID                             mech_type = GSS_C_NO_OID;
     OM_uint32                           time_req = 0;
     OM_uint32                           time_rec = 0;
-    gss_channel_bindings_t              input_chan_bindings = 
+    gss_channel_bindings_t              input_chan_bindings =
         GSS_C_NO_CHANNEL_BINDINGS;
     gss_OID *                           actual_mech_type = NULL;
     gss_buffer_desc                     tmp_buffer_desc = GSS_C_EMPTY_BUFFER;
@@ -109,12 +109,12 @@ globus_gss_assist_init_sec_context(
     static char *                       _function_name_ =
         "globus_gss_assist_init_sec_context";
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_ENTER;
-    
+
     /*
      * should not set context_handle to NULL since it may have been
      * allocated by a call to set_sec_context_option
      */
-    
+
     /*    *context_handle = GSS_C_NO_CONTEXT; */
     if(ret_flags)
     {
@@ -136,19 +136,19 @@ globus_gss_assist_init_sec_context(
         {
             tmp_buffer->value = target_name_char;
             tmp_buffer->length = strlen(target_name_char);
-          
-            /* 
+
+            /*
              * A gss_nt_service_name is of the form service@FQDN
-             * At least the Globus GSSAPI, and the Kerberos GSSAPI 
-             * use the same form. We will check for 
+             * At least the Globus GSSAPI, and the Kerberos GSSAPI
+             * use the same form. We will check for
              * two special forms here: host@FQDN and ftp@FQDN
              * This could be another parameter to the gss_assist
-             * instead. 
+             * instead.
              */
 
-            if (strchr(target_name_char,'@') && 
+            if (strchr(target_name_char,'@') &&
                 !strstr(target_name_char,"CN="))
-            { 
+            {
                 target_name_type = gss_nt_service_name;
             }
 
@@ -156,7 +156,7 @@ globus_gss_assist_init_sec_context(
                                            tmp_buffer,
                                            target_name_type,
                                            &target_name);
-        }        
+        }
     }
     else
     {
@@ -175,9 +175,9 @@ globus_gss_assist_init_sec_context(
             GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
                 4, (globus_i_gsi_gss_assist_debug_fstream,
                     _GASL("req_flags: %8.8x  input_token length: %u\n"),
-                    (unsigned int) req_flags, 
+                    (unsigned int) req_flags,
                     input_token->length));
-            
+
             major_status = gss_init_sec_context(&minor_status1,
                                                 cred_handle,
                                                 context_handle,
@@ -196,8 +196,8 @@ globus_gss_assist_init_sec_context(
                 4, (globus_i_gsi_gss_assist_debug_fstream,
                     _GASL("major:%8.8x  minor:%8.8x  ret_flags: %8.8x\n "
                     "output_token length: %u  context_handle: %p\n"),
-                    (unsigned int) major_status, 
-                    (unsigned int) minor_status1, 
+                    (unsigned int) major_status,
+                    (unsigned int) minor_status1,
                     (unsigned int) ((ret_flags) ? *ret_flags : -1),
                     output_token->length,
                     *context_handle));
@@ -211,11 +211,11 @@ globus_gss_assist_init_sec_context(
             if (output_token->length != 0)
             {
                 if ((*token_status = gss_assist_send_token(
-                         gss_assist_send_context, 
-                         output_token->value,
-                         output_token->length)) != 0)
+                    gss_assist_send_context,
+                    output_token->value,
+                    output_token->length)) != 0)
                 {
-                    major_status = 
+                    major_status =
                         GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_WRITE;
                 }
 
@@ -233,15 +233,15 @@ globus_gss_assist_init_sec_context(
                 }
                 break;
             }
-            
+
             if (major_status & GSS_S_CONTINUE_NEEDED)
             {
-                if ((*token_status =  gss_assist_get_token(
-                         gss_assist_get_context,
-                         &input_token->value,
-                         &input_token->length)) != 0)
+                if ((*token_status = gss_assist_get_token(
+                    gss_assist_get_context,
+                    &input_token->value,
+                    &input_token->length)) != 0)
                 {
-                    major_status = 
+                    major_status =
                         GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_READ;
                     break;
                 }
@@ -297,16 +297,16 @@ globus_gss_assist_init_sec_context(
  * @param cred_handle
  *        the cred handle obtained by acquire_cred.
  * @param context_handle
- *        pointer to returned context. 
+ *        pointer to returned context.
  * @param target_name_char
  *        char string representation of the
- *        server to be contacted. 
+ *        server to be contacted.
  * @param req_flags
  *        request flags, such as GSS_C_DELEG_FLAG for delegation
- *        and the GSS_C_MUTUAL_FLAG for mutual authentication. 
+ *        and the GSS_C_MUTUAL_FLAG for mutual authentication.
  * @param ret_flags
  *        Pointer to which services are available after
- *        the connection is established. Maybe NULL if not wanted. 
+ *        the connection is established. Maybe NULL if not wanted.
  * @param input_buffer
  *        pointer to a buffer received from peer. Should
  *        be NULL on first call.
@@ -329,7 +329,7 @@ globus_gss_assist_init_sec_context(
  *
  *        GSS_S_CONTINUE_NEEDED when *output_bufferp should be sent to the
  *        peer and a new input_buffer read and this function called again.
- *     
+ *
  *        Other gss errors on failure.
  */
 OM_uint32
@@ -357,11 +357,11 @@ globus_gss_assist_init_sec_context_async(
     gss_OID                             mech_type = GSS_C_NO_OID;
     OM_uint32                           time_req = 0;
     OM_uint32                           time_rec = 0;
-    gss_channel_bindings_t              input_chan_bindings = 
+    gss_channel_bindings_t              input_chan_bindings =
         GSS_C_NO_CHANNEL_BINDINGS;
     gss_OID *                           actual_mech_type = NULL;
     gss_buffer_desc                     tmp_buffer_desc = GSS_C_EMPTY_BUFFER;
-    gss_buffer_t                        tmp_buffer      = &tmp_buffer_desc;
+    gss_buffer_t                        tmp_buffer = &tmp_buffer_desc;
     globus_result_t                     result = GLOBUS_SUCCESS;
     static char *                       _function_name_ =
         "globus_gss_assist_init_sec_context_async";
@@ -404,21 +404,21 @@ globus_gss_assist_init_sec_context_async(
             tmp_buffer->value = target_name_char;
             tmp_buffer->length = strlen(target_name_char);
 
-            /* 
+            /*
              * A gss_nt_service_name is of the form service@FQDN
-             * At least the Globus gssapi, and the Kerberos gssapi 
-             * use the same form. We will check for 
+             * At least the Globus gssapi, and the Kerberos gssapi
+             * use the same form. We will check for
              * two special forms here: host@FQDN and ftp@FQDN
              * This could be another parameter to the gss_assist
-             * instead. 
+             * instead.
              */
-          
+
             if (strchr(target_name_char, '@') &&
                 !strstr(target_name_char, "CN="))
-            { 
+            {
                 target_name_type = gss_nt_service_name;
             }
-          
+
             major_status = gss_import_name(&minor_status1,
                                            tmp_buffer,
                                            target_name_type,
@@ -461,10 +461,10 @@ globus_gss_assist_init_sec_context_async(
             4, (globus_i_gsi_gss_assist_debug_fstream,
                 _GASL("major: %8.8x minor: %8.8x ret_flags: %8.8x\n"
                 "output_token length: %u context_handle: %p\n"),
-                (unsigned int) major_status, 
-                (unsigned int) minor_status1, 
+                (unsigned int) major_status,
+                (unsigned int) minor_status1,
                 (unsigned int) ((ret_flags) ? *ret_flags : -1),
-                output_token->length, 
+                output_token->length,
                 *context_handle));
 
         if (output_token->length != 0)
@@ -474,7 +474,7 @@ globus_gss_assist_init_sec_context_async(
             /* These will now be freed by the caller */
         }
         else
-        {    
+        {
             *output_bufferp = NULL;
             *output_buffer_lenp = 0;
         }
