@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 /**
- * @file globus_test_tap.h
+ * @file
  * @brief Test Anything Protocol implementation
  */
 
