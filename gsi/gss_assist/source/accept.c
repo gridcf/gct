@@ -146,7 +146,8 @@ globus_gss_assist_accept_sec_context(
 
         GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
             3, (globus_i_gsi_gss_assist_debug_fstream,
-                _GASL("gss_assist_accept_sec_context(1):inlen:%u\n"),
+                _GASL("gss_assist_accept_sec_context(1):\n "
+                "input_token length: %u\n"),
                 input_token->length));
 
         major_status = gss_accept_sec_context(
@@ -164,9 +165,9 @@ globus_gss_assist_accept_sec_context(
 
         GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
             3, (globus_i_gsi_gss_assist_debug_fstream,
-                _GASL("gss_assist_accept_sec_context(2)"
-                "maj:%8.8x:min:%8.8x:ret:%8.8x "
-                "outlen:%u:context:%p\n"),
+                _GASL("gss_assist_accept_sec_context(2):\n "
+                "major:%8.8x  minor:%8.8x  ret_flags: %8.8x\n "
+                "output_token length: %u  context_handle: %p\n"),
                 (unsigned int) major_status,
                 (unsigned int) minor_status1,
                 (unsigned int) ((ret_flags) ? *ret_flags : -1),
@@ -383,7 +384,8 @@ globus_gss_assist_accept_sec_context_async(
 
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
         3, (globus_i_gsi_gss_assist_debug_fstream,
-            _GASL("gss_assist_accept_sec_context_async(1):inlen:%u\n"),
+            _GASL("gss_assist_accept_sec_context_async(1):\n "
+            "input_token length: %u\n"),
             input_token->length));
 
     major_status = gss_accept_sec_context(&minor_status1,
@@ -400,8 +402,9 @@ globus_gss_assist_accept_sec_context_async(
 
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
         3, (globus_i_gsi_gss_assist_debug_fstream,
-            _GASL("gss_assist_accept_sec_context_async(2)"
-            "maj:%8.8x:min:%8.8x:ret:%8.8x outlen:%u:context:%p\n"),
+            _GASL("gss_assist_accept_sec_context_async(2):\n "
+            "major: %8.8x minor: %8.8x ret_flags: %8.8x\n "
+            "output_token length: %u context_handle: %p\n"),
             (unsigned int) major_status,
             (unsigned int) minor_status1,
             (unsigned int) ((ret_flags) ? *ret_flags : -1),

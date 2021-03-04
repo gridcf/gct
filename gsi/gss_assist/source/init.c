@@ -174,7 +174,8 @@ globus_gss_assist_init_sec_context(
         {
             GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
                 4, (globus_i_gsi_gss_assist_debug_fstream,
-                    _GASL("req_flags: %8.8x  input_token length: %u\n"),
+                    _GASL("gss_assist_init_sec_context(1):\n "
+                    "req_flags: %8.8x  input_token length: %u\n"),
                     (unsigned int) req_flags,
                     input_token->length));
 
@@ -194,7 +195,8 @@ globus_gss_assist_init_sec_context(
 
             GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
                 4, (globus_i_gsi_gss_assist_debug_fstream,
-                    _GASL("major:%8.8x  minor:%8.8x  ret_flags: %8.8x\n "
+                    _GASL("gss_assist_init_sec_context(2):\n "
+                    "major:%8.8x  minor:%8.8x  ret_flags: %8.8x\n "
                     "output_token length: %u  context_handle: %p\n"),
                     (unsigned int) major_status,
                     (unsigned int) minor_status1,
@@ -440,7 +442,8 @@ globus_gss_assist_init_sec_context_async(
     {
         GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
             4, (globus_i_gsi_gss_assist_debug_fstream,
-                _GASL("req_flags: %8.8x  input_token length: %u\n"),
+                _GASL("gss_assist_init_sec_context_async(1):\n "
+                "req_flags: %8.8x  input_token length: %u\n"),
                 (unsigned int) req_flags,
                 input_token->length));
 
@@ -459,7 +462,8 @@ globus_gss_assist_init_sec_context_async(
                                             &time_rec);
         GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
             4, (globus_i_gsi_gss_assist_debug_fstream,
-                _GASL("major: %8.8x minor: %8.8x ret_flags: %8.8x\n"
+                _GASL("gss_assist_init_sec_context_async(2):\n "
+                "major: %8.8x minor: %8.8x ret_flags: %8.8x\n "
                 "output_token length: %u context_handle: %p\n"),
                 (unsigned int) major_status,
                 (unsigned int) minor_status1,
