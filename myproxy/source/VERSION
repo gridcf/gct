@@ -4,6 +4,9 @@ Binary compatibility of the C API is not guaranteed between releases.
 
 Version History
 ---------------
+v6.2.7
+- Exit with error if voms-proxy-init fails
+
 v6.2.6
 - Remove LICENSE.globus file
 - Add BuildRequires perl-interpreter

@@ -8,7 +8,7 @@ Upstream-Contact:
 Files: *
 Copyright:
  2000-2018 The Board of Trustees of the University of Illinois.
- 2018-2019 Grid Community Forum
+ 2018-2021 Grid Community Forum
  All rights reserved.
 License: NCSA
  Permission is hereby granted, free of charge, to any person obtaining
@@ -146,7 +146,7 @@ License: BSD-2-clause
 
 Files: debian/*
 Copyright:
- 2011-2019 Mattias Ellert <mattias.ellert@physics.uu.se>
+ 2011-2021 Mattias Ellert <mattias.ellert@physics.uu.se>
 License: Apache-2.0
 
 License: Apache-2.0

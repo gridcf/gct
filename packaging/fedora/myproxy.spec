@@ -2,8 +2,8 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.6
-Release:        2%{?dist}
+Version:        6.2.7
+Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          Applications/Internet
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Thu Mar 04 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.7-1
+- Exit with error if voms-proxy-init fails
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.6-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests
