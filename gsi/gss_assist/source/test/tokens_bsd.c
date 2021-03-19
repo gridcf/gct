@@ -181,7 +181,9 @@ token_bsd_get(
         if (!cp)
         {
             return_value = GLOBUS_GSS_ASSIST_TOKEN_ERR_MALLOC;
+            goto exit;
         }
+
         if ((bytesread = recv(sock, cp, size, 0)) != size)
         {
             GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(

@@ -203,7 +203,9 @@ globus_gss_assist_token_get_fd(
         if (!cp)
         {
             return_value = GLOBUS_GSS_ASSIST_TOKEN_ERR_MALLOC;
+            goto exit;
         }
+
         if ((bytesread = fread(cp, 1, size, fd)) != size)
         {
             GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
