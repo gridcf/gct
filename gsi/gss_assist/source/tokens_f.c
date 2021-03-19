@@ -89,8 +89,8 @@ globus_gss_assist_token_get_fd(
      */
 
     if (((int_buf[0] >= 20) && (int_buf[0] <= 26)
-        && (((int_buf[1] == 3)
-             || (int_buf[1] == 2 && int_buf[2] == 0))))
+         && ((int_buf[1] == 3)
+             || (int_buf[1] == 2 && int_buf[2] == 0)))
         || ((int_buf[0] & 0x80) && int_buf[2] == 1))
     {
         /* looks like a SSL token read rest of length */
