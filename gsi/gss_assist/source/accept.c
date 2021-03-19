@@ -269,7 +269,7 @@ globus_gss_assist_accept_sec_context(
  * @brief Accept a Security Context Without Blocking
  * @ingroup globus_gss_assist_context
  * @details
- * This is a asynchronous version of the
+ * This is an asynchronous version of the
  * globus_gss_assist_accept_sec_context() function. Instead of looping
  * itself it passes in and out the read and written buffers and
  * the calling application is responsible for doing the I/O directly.
@@ -298,7 +298,7 @@ globus_gss_assist_accept_sec_context(
  *        length of the buffer input_buffer.
  * @param output_bufferp
  *        pointer to a pointer which will be filled in
- *        with a pointer to a allocated block of memory. If
+ *        with a pointer to an allocated block of memory. If
  *        non-NULL the contents of this block should be written
  *        to the peer where they will be fed into the
  *        globus_gss_assist_init_sec_context_async() function.

@@ -282,7 +282,7 @@ globus_gss_assist_init_sec_context(
 
 /**
  * @ingroup globus_gss_assist_context
- * This is a asynchronous version of the
+ * This is an asynchronous version of the
  * globus_gss_assist_init_sec_context() function. Instead of looping
  * itself it passes in and out the read and written buffers and
  * the calling application is responsible for doing the I/O directly.
@@ -315,10 +315,10 @@ globus_gss_assist_init_sec_context(
  *        be zero on first call.
  * @param output_bufferp
  *        pointer to a pointer which will be filled in
- *        with a pointer to a allocated block of memory. If
+ *        with a pointer to an allocated block of memory. If
  *        non-NULL the contents of this block should be written
  *        to the peer where they will be fed into the
- *        gss_assist_init_sec_context_async() function.
+ *        globus_gss_assist_accept_sec_context_async() function.
  * @param output_buffer_lenp
  *        pointer to an integer which will be filled
  *        in with the length of the allocated output buffer

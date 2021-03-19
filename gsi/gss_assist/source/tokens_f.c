@@ -80,12 +80,13 @@ globus_gss_assist_token_get_fd(
             int_buf[0], int_buf[1], int_buf[2], int_buf[3]));
 
     /*
-     * check if the length is missing, and we are receiving
-     * a SSL token directly.
-     * SSLv3 will start with a flag byte in the twenties
-     * followed by major version 3 minor version 0
-     * Will also accept a SSLv2 hello 2 0
-     * or a TLS  3 1
+     * Check if we are receiving an SSL/TLS token directly.
+     * SSL/TLS tokens will start with a flag byte in the twenties
+     * followed by major version and minor version:
+     * SSLv2 (2,0), SSLv3 (3,0), TLSv1.0 (3,1), TLSv1.1 (3,2), TLSv1.2 (3,3)
+     * TLSv1.3 also uses (3,3) for compatibility reasons.
+     * Also check for an SSLv2 backward-compatible hello token:
+     * (high bit set in byte 0, byte 2 is 1).
      */
 
     if (((int_buf[0] >= 20) && (int_buf[0] <= 26)
@@ -93,7 +94,7 @@ globus_gss_assist_token_get_fd(
              || (int_buf[1] == 2 && int_buf[2] == 0)))
         || ((int_buf[0] & 0x80) && int_buf[2] == 1))
     {
-        /* looks like a SSL token read rest of length */
+        /* Looks like an SSL token - read rest of length */
 
         if (fread(&int_buf[4], 1, 1, fd) != 1)
         {
@@ -111,10 +112,10 @@ globus_gss_assist_token_get_fd(
 
         if ((int_buf[0] & 0x80) && int_buf[2] == 1)
         {
-            /* looks like a sslv2 hello
-             * length is of following bytes in header.
-             * we read in 5, 2 length and 3 extra,
-             * so only need next dsize - 3
+            /* Looks like an SSLv2 backward-compatible hello token.
+             * Length is the following 2 bytes in header.
+             * We read in 5 bytes, 2 length bytes and 3 extra,
+             * so we only need the next (dsize - 3) bytes.
              */
             dsize = ( (((unsigned int) (int_buf[0] & 0x7f)) << 8)
                     |  ((unsigned int) int_buf[1]) ) - 3;
@@ -128,7 +129,7 @@ globus_gss_assist_token_get_fd(
         /* If we are using the Globus GSSAPI, with
          * international version, we may be using the
          * "26" type, where the length is really the hash
-         * length, and there is a hash, 8 byte seq andi
+         * length, and there is a hash, 8 byte seq and
          * 4 byte data length following. We need to get
          * these as well.
          */
@@ -268,7 +269,7 @@ globus_gss_assist_token_send_fd(
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_EXIT;
     return return_value;
 }
-/* globus_gss_assist_token_send_fd */
+/* globus_gss_assist_token_send_fd() */
 
 /**
  * @brief Send token to a FILE *
