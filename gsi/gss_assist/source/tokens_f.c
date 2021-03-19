@@ -115,8 +115,8 @@ globus_gss_assist_token_get_fd(
              * we read in 5, 2 length and 3 extra,
              * so only need next dsize - 3
              */
-            dsize = ( ((unsigned int) int_buf[0] & 0x7f) << 8
-                    |  (unsigned int) int_buf[1] ) - 3;
+            dsize = ( (((unsigned int) (int_buf[0] & 0x7f)) << 8)
+                    |  ((unsigned int) int_buf[1]) ) - 3;
         } else {
             dsize = ( (((unsigned int) int_buf[3]) << 8)
                     |  ((unsigned int) int_buf[4]) );
@@ -190,7 +190,7 @@ globus_gss_assist_token_get_fd(
                | (((unsigned int) int_buf[2]) << 8)
                |  ((unsigned int) int_buf[3]) );
 
-        if (size > 1 << 24 || size < 0)  /* size may be garbage */
+        if (size > (1 << 24) || size < 0)  /* size may be garbage */
         {
             return_value = GLOBUS_GSS_ASSIST_TOKEN_ERR_BAD_SIZE;
             goto exit;
