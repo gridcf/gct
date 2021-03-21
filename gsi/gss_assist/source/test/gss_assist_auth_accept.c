@@ -143,45 +143,6 @@ int main(int argc, char * argv[])
                 " for initiator: %s\n", __LINE__, init_name);
     }
 
-    /*
-    
-    major_status = globus_gss_assist_get_unwrap(
-        &minor_status,
-        accept_context,
-        &recv_buffer,
-        &buffer_length,
-        &token_status,
-        globus_gss_assist_token_get_fd,
-        (void *) (infd),
-        stdout);
-    if(GSS_ERROR(major_status))
-    {
-        fprintf(stdout, "ACCEPTOR ERROR\n");
-        globus_gss_assist_display_status(
-            stdout,
-            "ACCEPTOR: Couldn't get encrypted message from initiator\n",
-            major_status,
-            minor_status,
-            token_status);
-        fprintf(stdout, "ACCEPTOR ERROR FINISHED\n");
-        exit(1);
-    }
-
-    print_buffer = malloc(buffer_length + 1);
-    globus_libc_snprintf(print_buffer, buffer_length + 1, "%s", recv_buffer);
-
-    if(verbose_env)
-    {
-        fprintf(stdout,
-                "ACCEPTOR: "__FILE__":%d"
-                ": received: %s\n", __LINE__, print_buffer);
-    }
-
-    free(print_buffer);
-    free(recv_buffer);
-
-    */
-    
     major_status = globus_gss_assist_get_unwrap(
         &minor_status,
         accept_context,
