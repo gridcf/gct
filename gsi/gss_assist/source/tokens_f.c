@@ -109,7 +109,8 @@ globus_gss_assist_token_get_fd(
                 _GASL("reading SSL token %.2x%.2x%.2x%.2x%.2x\n"),
                 int_buf[0], int_buf[1], int_buf[2], int_buf[3], int_buf[4]));
 
-        if ((int_buf[0] & 0x80)) {
+        if ((int_buf[0] & 0x80) && int_buf[2] == 1)
+        {
             /* looks like a sslv2 hello
              * length is of following bytes in header.
              * we read in 5, 2 length and 3 extra,
@@ -117,7 +118,9 @@ globus_gss_assist_token_get_fd(
              */
             dsize = ( (((unsigned int) (int_buf[0] & 0x7f)) << 8)
                     |  ((unsigned int) int_buf[1]) ) - 3;
-        } else {
+        }
+        else
+        {
             dsize = ( (((unsigned int) int_buf[3]) << 8)
                     |  ((unsigned int) int_buf[4]) );
         }
