@@ -56,7 +56,6 @@ static
 int
 globus_l_gsi_gss_assist_activate(void)
 {
-    int                                 result;
     char *                              tmp_string;
     static char *                       _function_name_ =
         "globus_l_gsi_gss_assist_activate";
@@ -77,7 +76,6 @@ globus_l_gsi_gss_assist_activate(void)
         globus_i_gsi_gss_assist_debug_fstream = fopen(tmp_string, "w");
         if(globus_i_gsi_gss_assist_debug_fstream == NULL)
         {
-            result = GLOBUS_FAILURE;
             goto exit;
         }
     }

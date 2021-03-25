@@ -23,6 +23,7 @@
 
 #include "globus_common.h"
 #include "globus_i_gss_assist.h"
+#include "tokens_bsd.h"
 
 int
 token_bsd_get(

@@ -53,8 +53,6 @@ globus_gss_assist_read_vhost_cred_dir(
     size_t                             *output_credentials_array_size)
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
-    void                               *credential_buffer = NULL;
-    size_t                              credential_buffer_len = 0;
     gss_cred_id_t                      *credential_array = NULL;
     size_t                              credential_array_count = 0;
     size_t                              credential_array_size = 0;
@@ -166,10 +164,6 @@ globus_gss_assist_read_vhost_cred_dir(
             0,
             NULL);
 
-        free(credential_buffer);
-        credential_buffer = NULL;
-        credential_buffer_len = 0;
-
         if (major_status != GSS_S_COMPLETE)
         {
             goto import_cred_fail;
@@ -183,12 +177,6 @@ skip_entry:
     {
 import_cred_fail:
 realloc_credential_fail:
-no_data:
-read_file_fail:
-        free(credential_buffer);
-        credential_buffer = NULL;
-        credential_buffer_len = 0;
-
         for (size_t i = 0; i < credential_array_count; i++)
         {
             gss_release_cred(
