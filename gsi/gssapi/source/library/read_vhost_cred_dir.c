@@ -15,7 +15,7 @@
  */
 
 /**
- * @file read_vhost_cred_dir.c
+ * @file
  * @brief Read all credentials in a directory
  */
 
