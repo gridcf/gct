@@ -147,7 +147,7 @@ globus_gss_assist_token_send_fd(
 
 extern int
 globus_gss_assist_token_send_fd_ex(
-    void *                              arg,
+    void *                              exp,
     void *                              buf,
     size_t                              size);
 
@@ -211,6 +211,12 @@ globus_gss_assist_acquire_cred_ext(
  * provided by @ref globus_gss_assist_tokens or user-supplied functions
  * to communicate security tokens over the context, looping over continue
  * results from the GSSAPI as needed.
+ */
+
+/*
+ * globus_gss_assist_accept_sec_context - takes care of looping
+ * over multiple tokens using the get and send tokens
+ * routines
  */
 extern OM_uint32
 globus_gss_assist_accept_sec_context(

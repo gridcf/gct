@@ -227,7 +227,6 @@ token_bsd_send(
 }
 /* token_bsd_send() */
 
-
 int
 token_bsd_send_ex(
     void *                              exp,
@@ -241,7 +240,7 @@ token_bsd_send_ex(
     globus_gss_assist_ex *              ex;
 
     static char *                       _function_name_ =
-        "globus_gss_assist_token_send_fd_ex";
+        "token_bsd_send_ex";
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_ENTER;
 
     ex = (globus_gss_assist_ex *) exp;
