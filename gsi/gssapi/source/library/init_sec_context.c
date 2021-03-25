@@ -54,6 +54,8 @@ GSS_CALLCONV gss_init_sec_context(
     OM_uint32                           local_major_status;
     globus_result_t                     local_result;
     int                                 rc;
+    unsigned char *                     tbuf = NULL;
+    size_t                              tlen = 0;
     char                                cbuf[1];
     gss_OID                             actual_mech = GSS_C_NO_OID;
     globus_gsi_cert_utils_cert_type_t   cert_type;
@@ -367,6 +369,19 @@ GSS_CALLCONV gss_init_sec_context(
 #       endif
 
         /*
+         * TLS v1.3 sends 2 session tokens after the handshake is completed.
+         * We need to recieve them before continuing with the GSI proxy.
+         */
+
+#       if defined(TLS1_3_VERSION)
+        if (SSL_version(context->gss_ssl) >= TLS1_3_VERSION)
+        {
+            context->gss_state = GSS_CON_ST_TOKEN1;
+            break;
+        }
+#       endif
+
+        /*
          * IF we are talking to a real SSL server,
          * we don't want to do delegation, so we are done
          */
@@ -394,13 +409,70 @@ GSS_CALLCONV gss_init_sec_context(
             break;
         }
 
+        goto flags;
+
+    case(GSS_CON_ST_TOKEN1):
+
+        tbuf = input_token->value;
+        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
+
+        if (input_token->length == tlen + 5)
+        {
+            context->gss_state=GSS_CON_ST_TOKEN2;
+            break;
+        }
+
+        if (input_token->length < tlen + 10)
+        {
+            major_status = GSS_S_UNAUTHORIZED;
+            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                minor_status,
+                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
+                (_GGSL("Failed identifying TLS session token 1")));
+            context->gss_state = GSS_CON_ST_DONE;
+            break;
+        }
+
+        tbuf = &tbuf[tlen + 5];
+
+    case(GSS_CON_ST_TOKEN2):
+
+        if (tbuf == NULL)
+        {
+            tbuf = input_token->value;
+        }
+        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
+
+        if (input_token->value + input_token->length != tbuf + tlen + 5)
+        {
+            major_status = GSS_S_UNAUTHORIZED;
+            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                minor_status,
+                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
+                (_GGSL("Failed identifying TLS session token 2")));
+            context->gss_state = GSS_CON_ST_DONE;
+            break;
+        }
+
+        /*
+         * IF we are talking to a real SSL server,
+         * we don't want to do delegation, so we are done
+         */
+
+        if (context->req_flags & GSS_C_GLOBUS_SSL_COMPATIBLE)
+        {
+            context->gss_state = GSS_CON_ST_DONE;
+            break;
+        }
+
     case(GSS_CON_ST_FLAGS):
 
-        if (input_token->length > 0)
+        if (tbuf == NULL && input_token->length > 0)
         {
             BIO_read(context->gss_sslbio, cbuf, 1);
         }
 
+    flags:
         /* send D if we want delegation, 0 otherwise */
 
         if (context->req_flags & GSS_C_DELEG_FLAG)

@@ -97,6 +97,8 @@ typedef enum {
  */
 typedef enum {
     GSS_CON_ST_HANDSHAKE = 0,
+    GSS_CON_ST_TOKEN1,
+    GSS_CON_ST_TOKEN2,
     GSS_CON_ST_FLAGS,
     GSS_CON_ST_REQ,
     GSS_CON_ST_CERT,
