@@ -184,7 +184,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     &local_minor_status,
                     &(gss_buffer_desc)
                     {
-                        .value = data,
+                        .value = (char*) data,
                         .length = len
                     },
                     data_set);
@@ -203,7 +203,6 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     else if (g_OID_equal(desired_object, gss_ext_tls_version_oid))
     {
         const char *tls_version = NULL;
-        unsigned int len = 0;
 
         tls_version = SSL_get_version(context_handle->gss_ssl);
         if (tls_version != NULL)
@@ -212,7 +211,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                 &local_minor_status,
                 &(gss_buffer_desc)
                 {
-                    .value = tls_version,
+                    .value = (char*) tls_version,
                     .length = strlen(tls_version) + 1,
                 },
                 data_set);
@@ -228,7 +227,6 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     }
     else if (g_OID_equal(desired_object, gss_ext_tls_cipher_oid))
     {
-        unsigned int len = 0;
         const SSL_CIPHER *      current_cipher = NULL;
         const char *cipher_name = NULL;
 
@@ -241,7 +239,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                 &local_minor_status,
                 &(gss_buffer_desc)
                 {
-                    .value = cipher_name,
+                    .value = (char*) cipher_name,
                     .length = strlen(cipher_name) + 1,
                 },
                 data_set);

@@ -103,10 +103,8 @@ globus_gsi_gssapi_test_release_credential(
     gss_cred_id_t *                     credential)
 {
     OM_uint32                           minor_status;
-    OM_uint32                           major_status = GSS_S_COMPLETE;
 
-    major_status = gss_release_cred(&minor_status,
-                                    credential);
+    gss_release_cred(&minor_status, credential);
 }
 
 globus_bool_t

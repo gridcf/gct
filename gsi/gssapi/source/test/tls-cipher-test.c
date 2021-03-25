@@ -44,7 +44,6 @@ cipher_test(bool encrypted)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
 
@@ -195,8 +194,6 @@ fail:
 int
 main(int argc, char *argv[])
 {
-    OM_uint32                           major_status;
-    OM_uint32                           minor_status;
     int                                 failed = 0;
     struct test_case                    test_cases[] =
     {

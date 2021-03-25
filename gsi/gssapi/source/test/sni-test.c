@@ -890,7 +890,7 @@ init_sni_inquire_servername(void)
         major_status = gss_inquire_sec_context_by_oid(
                 &minor_status,
                 accept_context,
-                &gss_ext_server_name_oid_desc,
+                gss_ext_server_name_oid,
                 &data_set);
         if (major_status != GSS_S_COMPLETE)
         {

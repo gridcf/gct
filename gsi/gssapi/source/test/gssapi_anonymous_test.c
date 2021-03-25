@@ -40,9 +40,6 @@ int main()
     gss_name_t                          source_name;
     gss_ctx_id_t                        init_context;
     gss_ctx_id_t                        accept_context;
-    gss_ctx_id_t                        del_init_context;
-    gss_ctx_id_t                        del_accept_context;
-    gss_cred_id_t                       delegated_cred;
     gss_cred_id_t                       cred_handle;
     int                                 rc = EXIT_SUCCESS;
 
@@ -53,9 +50,6 @@ int main()
     token_ptr = GSS_C_NO_BUFFER;
     init_context = GSS_C_NO_CONTEXT;
     accept_context = GSS_C_NO_CONTEXT;
-    del_init_context = GSS_C_NO_CONTEXT;
-    del_accept_context = GSS_C_NO_CONTEXT;
-    delegated_cred = GSS_C_NO_CREDENTIAL;
     accept_maj_stat = GSS_S_CONTINUE_NEEDED;
     req_flags = GSS_C_ANON_FLAG|GSS_C_CONF_FLAG;
     ret_flags = 0;

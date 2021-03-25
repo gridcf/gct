@@ -261,7 +261,7 @@ GSS_CALLCONV gss_accept_delegation(
                         OBJ_obj2nid(peer_cert->sig_alg->algorithm));
 #else
                 {
-                    X509_ALGOR *algor = X509_get0_tbs_sigalg(peer_cert);
+                    const X509_ALGOR *algor = X509_get0_tbs_sigalg(peer_cert);
                     peer_digest = EVP_get_digestbynid(
                             OBJ_obj2nid(algor->algorithm));
 

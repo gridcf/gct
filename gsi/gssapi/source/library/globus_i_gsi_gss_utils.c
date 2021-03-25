@@ -438,8 +438,6 @@ globus_i_gsi_gss_create_and_fill_context(
         if (context->sni_credentials == NULL
             && getenv("X509_VHOST_CRED_DIR") != NULL)
         {
-            size_t                      sni_creds_len = 0;
-
             major_status = globus_i_gss_read_vhost_cred_dir(
                 minor_status,
                 NULL,
@@ -1609,7 +1607,6 @@ globus_i_gsi_gss_cred_read(
     globus_gsi_cred_handle_t            local_cred_handle;
     OM_uint32                           local_minor_status;
     OM_uint32                           major_status = GSS_S_COMPLETE;
-    int                                 rc = 0;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
 
@@ -2854,12 +2851,10 @@ globus_l_gsi_gss_servername_callback(
     X509                               *client_cert = NULL;
     EVP_PKEY                           *client_key = NULL;
     STACK_OF(X509)                     *client_cert_chain = NULL;
-    globus_gsi_cert_utils_cert_type_t   cert_type;
 
     servername = SSL_get_servername(s, TLSEXT_NAMETYPE_host_name);
     if(GLOBUS_I_GSI_GSSAPI_DEBUG(3))
     {
-        BIO *                       debug_bio;
         fprintf(globus_i_gsi_gssapi_debug_fstream,
                 "SNI callback: servername = %s\n",
                 (servername != NULL) ? servername : "NULL");
