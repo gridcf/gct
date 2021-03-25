@@ -11,9 +11,9 @@ Type=forking
 User=myproxy
 Environment=X509_USER_CERT=/etc/grid-security/myproxy/hostcert.pem
 Environment=X509_USER_KEY=/etc/grid-security/myproxy/hostkey.pem
-ExecStart=/usr/sbin/myproxy-server --pidfile /var/run/myproxy-server/myproxy.pid
+ExecStart=/usr/sbin/myproxy-server --pidfile /run/myproxy-server/myproxy.pid
 ExecReload=/bin/kill -HUP $MAINPID
-PIDFile=/var/run/myproxy-server/myproxy.pid
+PIDFile=/run/myproxy-server/myproxy.pid
 
 [Install]
 WantedBy=multi-user.target

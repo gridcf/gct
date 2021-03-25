@@ -4,6 +4,9 @@ Binary compatibility of the C API is not guaranteed between releases.
 
 Version History
 ---------------
+v6.2.8
+- Update default run directory from /var/run to /run
+
 v6.2.7
 - Exit with error if voms-proxy-init fails
 
