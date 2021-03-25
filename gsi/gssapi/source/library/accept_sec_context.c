@@ -57,7 +57,7 @@ GSS_CALLCONV gss_accept_sec_context(
     gss_buffer_t                        output_token,
     OM_uint32 *                         ret_flags,
     OM_uint32 *                         time_rec,
-    gss_cred_id_t *                     delegated_cred_handle_P) 
+    gss_cred_id_t *                     delegated_cred_handle_P)
 {
     gss_ctx_id_desc *                   context = NULL;
     globus_gsi_cred_handle_t            delegated_cred = NULL;
@@ -91,11 +91,11 @@ GSS_CALLCONV gss_accept_sec_context(
     }
 
     context = *context_handle_P;
-    
+
     /* module activation if not already done by calling
      * globus_module_activate
      */
-    
+
     globus_thread_once(
         &once_control,
         globus_l_gsi_gssapi_activate_once);
@@ -106,7 +106,7 @@ GSS_CALLCONV gss_accept_sec_context(
         globus_module_activate(GLOBUS_GSI_GSSAPI_MODULE);
     }
     globus_mutex_unlock(&globus_i_gssapi_activate_mutex);
-    
+
     if (context == (gss_ctx_id_t) GSS_C_NO_CONTEXT ||
         !(context->ctx_flags & GSS_I_CTX_INITIALIZED))
     {
@@ -123,7 +123,7 @@ GSS_CALLCONV gss_accept_sec_context(
         }
 
         GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-            2, (globus_i_gsi_gssapi_debug_fstream, 
+            2, (globus_i_gsi_gssapi_debug_fstream,
                 "accept_sec_context:OID from cred:%s\n",
                 (actual_mech == GSS_C_NO_OID)? "GSS_C_NO_OID":
                 ((g_OID_equal(actual_mech, (gss_OID) gss_mech_globus_gssapi_openssl))?
@@ -161,7 +161,7 @@ GSS_CALLCONV gss_accept_sec_context(
             /* accept does not have req_flags, we need one */
             *ret_flags = 0 ;
         }
-        
+
         if (delegated_cred_handle_P != NULL)
         {
             *delegated_cred_handle_P = GSS_C_NO_CREDENTIAL;
@@ -182,22 +182,22 @@ GSS_CALLCONV gss_accept_sec_context(
     switch (context->gss_state)
     {
         case(GSS_CON_ST_HANDSHAKE):
-            
-            major_status = globus_i_gsi_gss_handshake(&local_minor_status, 
+
+            major_status = globus_i_gsi_gss_handshake(&local_minor_status,
                                                       context);
-            
+
             if (major_status == GSS_S_CONTINUE_NEEDED)
             {
                 break;
-            }   
-            
+            }
+
             if (GSS_ERROR(major_status))
             {
                 GLOBUS_GSI_GSSAPI_ERROR_CHAIN_RESULT(
                     minor_status, local_minor_status,
                     GLOBUS_GSI_GSSAPI_ERROR_HANDSHAKE);
                 context->gss_state = GSS_CON_ST_DONE;
-                break; 
+                break;
             }
 
             major_status = globus_i_gsi_gss_retrieve_peer(&local_minor_status,
@@ -217,12 +217,12 @@ GSS_CALLCONV gss_accept_sec_context(
             {
                 context->ret_flags |= GSS_C_ANON_FLAG;
             }
-            
+
             if (src_name_P != NULL)
             {
                 major_status = globus_i_gsi_gss_copy_name_to_name(
                     &local_minor_status,
-                    (gss_name_desc **)src_name_P, 
+                    (gss_name_desc **)src_name_P,
                     context->peer_cred_handle->globusid);
 
                 if(GSS_ERROR(major_status))
@@ -240,7 +240,7 @@ GSS_CALLCONV gss_accept_sec_context(
                         = GSS_C_NT_ANONYMOUS;
                 }
             }
-                        
+
             local_result = globus_gsi_callback_get_cert_type(
                 context->callback_data,
                 &cert_type);
@@ -259,11 +259,11 @@ GSS_CALLCONV gss_accept_sec_context(
             {
                 context->ret_flags |= GSS_C_GLOBUS_RECEIVED_LIMITED_PROXY_FLAG;
                 /*
-                 * Are we willing to accept authentication 
-                 * from a limited proxy? 
+                 * Are we willing to accept authentication
+                 * from a limited proxy?
                  * Globus gatekeepers will say no
                  */
-                if (context->req_flags & 
+                if (context->req_flags &
                     GSS_C_GLOBUS_DONT_ACCEPT_LIMITED_PROXY_FLAG)
                 {
                     major_status = GSS_S_UNAUTHORIZED;
@@ -274,19 +274,19 @@ GSS_CALLCONV gss_accept_sec_context(
                     context->gss_state = GSS_CON_ST_DONE;
                     break;
                 }
-                                
+
             }
 
             context->ret_flags |= GSS_C_MUTUAL_FLAG;
             context->ret_flags |= GSS_C_PROT_READY_FLAG;
-            context->ret_flags |= GSS_C_INTEG_FLAG  
+            context->ret_flags |= GSS_C_INTEG_FLAG
                                |  GSS_C_REPLAY_FLAG
                                |  GSS_C_SEQUENCE_FLAG;
 
 #           if LINK_WITH_INTERNAL_OPENSSL_API
             context->ret_flags |=  GSS_C_TRANS_FLAG;
 #           endif
-            /* 
+            /*
              * IF we are talking to a real SSL client,
              * we don't want to do delegation, so we are done
              */
@@ -295,8 +295,8 @@ GSS_CALLCONV gss_accept_sec_context(
                 context->gss_state = GSS_CON_ST_DONE;
                 break;
             }
-        
-            /* 
+
+            /*
              * To keep the gss exchange going, if we received
              * the last token but don't have a token to send
              * we need to send a null So peek at what we might send
@@ -309,7 +309,7 @@ GSS_CALLCONV gss_accept_sec_context(
             break;
 
         case(GSS_CON_ST_FLAGS):
-        
+
             readlen = BIO_read(context->gss_sslbio, dbuf, 1);
             if (readlen != 1)
             {
@@ -331,35 +331,35 @@ GSS_CALLCONV gss_accept_sec_context(
                 major_status = GSS_S_FAILURE;
                 break;
             }
-            
-            /* 
+
+            /*
              * proxy_handle gets initialized in
              * globus_i_gsi_gss_create_and_fill_context (called in the beginning
-             * of this routine. As the key_bits value of peer_credentials is 
+             * of this routine. As the key_bits value of peer_credentials is
              * not available before the globus_i_gsi_gss_create_and_fill_context
              * call is made, it is destroyed and initialized here again with
              * appropriate attribute (with the key_bits set to peer's value).
-             * This fixes bug 3794 (delegated credential generates 512 bit keys 
-             * irrespective of the key strength of the peer credential), 
+             * This fixes bug 3794 (delegated credential generates 512 bit keys
+             * irrespective of the key strength of the peer credential),
              * Couldn't remove the proxy_handle initialization in
-             * globus_i_gsi_gss_create_and_fill_context because the removal 
-             * caused an error 'NULL proxy handle passed to function: 
-             * globus_gsi_proxy_inquire_req' in the delegation tests in 
-             * gssapi/test. Also, the key_bits attr on the proxy_handle can not 
+             * globus_i_gsi_gss_create_and_fill_context because the removal
+             * caused an error 'NULL proxy handle passed to function:
+             * globus_gsi_proxy_inquire_req' in the delegation tests in
+             * gssapi/test. Also, the key_bits attr on the proxy_handle can not
              * be set by globus_gsi_proxy_handle_attrs_set_keybits(context->
              * proxy_handle->attrs, key_bits) as context->proxy_handle->attrs is
-             * private and can not be accessed directly. context->proxy_handle 
+             * private and can not be accessed directly. context->proxy_handle
              * is used here and in 'case(GSS_CON_ST_CERT):'. The control will go
              * to 'case(GSS_CON_ST_CERT):' only if the proxy is created
-             * successfully here. So it makes sense to initialize the proxy 
-             * here. 
+             * successfully here. So it makes sense to initialize the proxy
+             * here.
              */
-             
+
             if (*dbuf == 'D')
             {
                 globus_gsi_proxy_handle_attrs_t     proxy_handle_attrs;
                 int                                 key_bits;
-                
+
                 local_result = globus_gsi_cred_get_key_bits(
                         context->peer_cred_handle->cred_handle, &key_bits);
                 if(local_result != GLOBUS_SUCCESS)
@@ -381,7 +381,7 @@ GSS_CALLCONV gss_accept_sec_context(
                     context->gss_state = GSS_CON_ST_DONE;
                     major_status = GSS_S_FAILURE;
                     break;
-                }            
+                }
                 local_result = globus_gsi_proxy_handle_attrs_set_keybits(
                                                 proxy_handle_attrs, key_bits);
                 if(local_result != GLOBUS_SUCCESS)
@@ -412,7 +412,7 @@ GSS_CALLCONV gss_accept_sec_context(
                         OBJ_obj2nid(peer_cert->sig_alg->algorithm));
 #else
                 {
-                    X509_ALGOR *algor = X509_get0_tbs_sigalg(peer_cert);
+                    const X509_ALGOR *algor = X509_get0_tbs_sigalg(peer_cert);
                     peer_digest = EVP_get_digestbynid(
                             OBJ_obj2nid(algor->algorithm));
 
@@ -456,7 +456,7 @@ GSS_CALLCONV gss_accept_sec_context(
                     context->gss_state = GSS_CON_ST_DONE;
                     major_status = GSS_S_FAILURE;
                     break;
-                } 
+                }
                 local_result = globus_gsi_proxy_create_req(
                                 context->proxy_handle, context->gss_sslbio);
                 if(local_result != GLOBUS_SUCCESS)
@@ -467,7 +467,7 @@ GSS_CALLCONV gss_accept_sec_context(
                     context->gss_state = GSS_CON_ST_DONE;
                     major_status = GSS_S_FAILURE;
                     break;
-                }                    
+                }
                 context->gss_state = GSS_CON_ST_CERT;
             }
             else if(*dbuf != '0')
@@ -520,7 +520,7 @@ GSS_CALLCONV gss_accept_sec_context(
                 cert_chain);
 
             sk_X509_pop_free(cert_chain, X509_free);
-            
+
             if(local_result != GLOBUS_SUCCESS)
             {
                 globus_gsi_cred_handle_destroy(delegated_cred);
@@ -549,7 +549,7 @@ GSS_CALLCONV gss_accept_sec_context(
                     context->gss_state = GSS_CON_ST_DONE;
                     major_status = GSS_S_FAILURE;
                     break;
-                }            
+                }
             }
             else
             {
@@ -566,7 +566,7 @@ GSS_CALLCONV gss_accept_sec_context(
             }
 
             context->ret_flags |= GSS_C_DELEG_FLAG;
-            
+
             context->gss_state = GSS_CON_ST_DONE;
 
         default:
@@ -580,7 +580,7 @@ GSS_CALLCONV gss_accept_sec_context(
      * side.
      */
     local_major_status = globus_i_gsi_gss_get_token(
-        &local_minor_status, 
+        &local_minor_status,
         context, NULL, output_token);
 
     if(GSS_ERROR(local_major_status))
@@ -605,7 +605,7 @@ GSS_CALLCONV gss_accept_sec_context(
     {
         time_t                          lifetime;
         time_t                          current_time;
-        
+
         major_status = globus_i_gsi_gss_get_context_goodtill(
             &local_minor_status,
             context,
@@ -636,11 +636,11 @@ GSS_CALLCONV gss_accept_sec_context(
     }
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_FPRINTF(
-        2, (globus_i_gsi_gssapi_debug_fstream, 
+        2, (globus_i_gsi_gssapi_debug_fstream,
             "accept_sec_context:major_status:%08x"
             ":gss_state:%d:ret_flags=%08x\n",
-            (unsigned int) major_status, 
-            context->gss_state, 
+            (unsigned int) major_status,
+            context->gss_state,
             (unsigned int) context->ret_flags));
 
  exit:

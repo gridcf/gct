@@ -163,6 +163,7 @@ main(int argc, char *argv[])
     argc -= optind;
     argv += optind;
 
+#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     {
         char *                          backward_compatible_mic = NULL;
         char *                          accept_backward_compatible_mic = NULL;
@@ -172,7 +173,7 @@ main(int argc, char *argv[])
 
         accept_backward_compatible_mic = getenv(
                 "GLOBUS_GSSAPI_ACCEPT_BACKWARD_COMPATIBLE_MIC");
-#if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
+
         if (backward_compatible_mic != NULL
             && (strcmp(backward_compatible_mic, "true") == 0))
         {
@@ -185,8 +186,8 @@ main(int argc, char *argv[])
             failed = 77;
             goto skip;
         }
-#endif
     }
+#endif
 
     num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
 

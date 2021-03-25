@@ -1,3 +1,9 @@
+globus-gss-assist (12.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Minor bug fixes and code maintenance
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 25 Mar 2021 15:41:33 +0100
+
 globus-gss-assist (12.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Add force option to grid-mapfile-add-entry if the users do not exist

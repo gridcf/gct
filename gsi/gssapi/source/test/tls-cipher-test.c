@@ -31,7 +31,7 @@ struct test_case
  * @brief Test case for cipher checking
  * @details
  *     In this test case, establish a security context and check that
- *     the cipher used does not contain "NULL" if encrypted is true, 
+ *     the cipher used does not contain "NULL" if encrypted is true,
  *     and does contain "NULL" if encrypted is false
  */
 bool
@@ -44,7 +44,6 @@ cipher_test(bool encrypted)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
 
@@ -195,14 +194,18 @@ fail:
 int
 main(int argc, char *argv[])
 {
-    OM_uint32                           major_status;
-    OM_uint32                           minor_status;
     int                                 failed = 0;
     struct test_case                    test_cases[] =
     {
         TEST_CASE_INITIALIZER("unencrypted", false),
         TEST_CASE_INITIALIZER("encrypted", true),
     };
+
+    /* There is no NULL cipher in TLS v1.3, so make sure TLS v1.2 or earlier
+       is used for this test */
+    globus_libc_setenv(
+        "GLOBUS_GSSAPI_MAX_TLS_PROTOCOL", "TLS1_2_VERSION", 1);
+
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
     printf("1..%zu\n", num_test_cases);
 

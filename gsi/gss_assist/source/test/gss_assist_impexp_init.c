@@ -96,9 +96,9 @@ int main(int argc, char * argv[])
         &ret_flags,
         &token_status,
         token_bsd_get,
-        (void *) (sock),
+        (void *) (intptr_t) sock,
         token_bsd_send,
-        (void *) (sock));
+        (void *) (intptr_t) sock);
     if(GSS_ERROR(major_status))
     {
         globus_gss_assist_display_status(
@@ -244,7 +244,7 @@ int main(int argc, char * argv[])
         sizeof(INIT_MESSAGE),
         &token_status,
         token_bsd_send,
-        (void *) (sock),
+        (void *) (intptr_t) sock,
         stdout);
     if(GSS_ERROR(major_status))
     {
@@ -264,7 +264,7 @@ int main(int argc, char * argv[])
         &buffer_length,
         &token_status,
         token_bsd_get,
-        (void *) (sock),
+        (void *) (intptr_t) sock,
         stdout);
     if(GSS_ERROR(major_status))
     {
@@ -299,7 +299,7 @@ int main(int argc, char * argv[])
         sizeof(INIT_MESSAGE),
         &token_status,
         token_bsd_send,
-        (void *) (sock),
+        (void *) (intptr_t) sock,
         stdout);
     if(GSS_ERROR(major_status))
     {
@@ -319,7 +319,7 @@ int main(int argc, char * argv[])
         &buffer_length,
         &token_status,
         token_bsd_get,
-        (void *) (sock),
+        (void *) (intptr_t) sock,
         stdout);
     if(GSS_ERROR(major_status))
     {

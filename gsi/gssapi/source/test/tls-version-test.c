@@ -16,6 +16,7 @@
 
 #include "gssapi_test_utils.h"
 #include <stdbool.h>
+#include "openssl/ssl.h"
 
 static gss_OID_desc tls_version_oid_desc =
      {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x0b"};
@@ -45,7 +46,6 @@ tls_test(const char *expected)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
 
@@ -184,20 +184,26 @@ fail:
 /* tls_test() */
 
 #define TEST_CASE_INITIALIZER(m, e) {e, m, m, e}
+
+#if TLS_MAX_VERSION == TLS1_2_VERSION
+#define TLSMAX "TLSv1.2"
+#else
+#define TLSMAX "TLSv1.3"
+#endif
+
 int
 main(int argc, char *argv[])
 {
-    OM_uint32                           major_status;
-    OM_uint32                           minor_status;
     int                                 failed = 0;
     struct test_case                    test_cases[] =
     {
         TEST_CASE_INITIALIZER("TLS1_VERSION_DEPRECATED", "TLSv1"),
         TEST_CASE_INITIALIZER("TLS1_1_VERSION_DEPRECATED", "TLSv1.1"),
         TEST_CASE_INITIALIZER("TLS1_2_VERSION", "TLSv1.2"),
-        TEST_CASE_INITIALIZER("TLS1_VERSION", "TLSv1.2"),
-        TEST_CASE_INITIALIZER("TLS1_1_VERSION", "TLSv1.2"),
-        TEST_CASE_INITIALIZER("FOOBAR", "TLSv1.2"),
+        TEST_CASE_INITIALIZER("TLS1_3_VERSION", TLSMAX),
+        TEST_CASE_INITIALIZER("TLS1_VERSION", TLSMAX),
+        TEST_CASE_INITIALIZER("TLS1_1_VERSION", TLSMAX),
+        TEST_CASE_INITIALIZER("FOOBAR", TLSMAX),
     };
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
     printf("1..%zu\n", num_test_cases);

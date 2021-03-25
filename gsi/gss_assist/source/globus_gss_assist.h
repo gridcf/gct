@@ -21,7 +21,7 @@
  * @file globus_gss_assist.h
  * @brief GSS Assist Header
  */
- 
+
 #include "gssapi.h"
 
 #include <stdio.h>
@@ -73,11 +73,11 @@ extern "C" {
  * This function returns GLOBUS_SUCCESS if Globus GSI GSS Assist was
  * successfully initialized, and you are therefore allowed to
  * call GSS Assist functions.  Otherwise, an error code is returned,
- * and GSS Assist functions should not be subsequently called.  
+ * and GSS Assist functions should not be subsequently called.
  * This function may be called multiple times.
  *
  * To deactivate Globus GSS Assist, the following function must be called:
- * 
+ *
  * @code
      globus_module_deactivate(GLOBUS_GSI_GSS_ASSIST_MODULE)
   @endcode
@@ -97,15 +97,15 @@ extern
 globus_module_descriptor_t              globus_i_gsi_gss_assist_module;
 
 #define _GASL(s) globus_common_i18n_get_string( \
-		    GLOBUS_GSI_GSS_ASSIST_MODULE, \
-		    s)
+                    GLOBUS_GSI_GSS_ASSIST_MODULE, \
+                    s)
 #include "globus_gss_assist_constants.h"
 
 
-#define GLOBUS_GSS_ASSIST_TOKEN_ERR_MALLOC		1
-#define GLOBUS_GSS_ASSIST_TOKEN_ERR_BAD_SIZE	        2
-#define GLOBUS_GSS_ASSIST_TOKEN_EOF			3
-#define GLOBUS_GSS_ASSIST_TOKEN_NOT_FOUND		4
+#define GLOBUS_GSS_ASSIST_TOKEN_ERR_MALLOC              1
+#define GLOBUS_GSS_ASSIST_TOKEN_ERR_BAD_SIZE            2
+#define GLOBUS_GSS_ASSIST_TOKEN_EOF                     3
+#define GLOBUS_GSS_ASSIST_TOKEN_NOT_FOUND               4
 
 /* for kerberos v5.1.0.5 compatibility we need this */
 #ifndef GSS_C_NO_NAME
@@ -119,8 +119,8 @@ globus_module_descriptor_t              globus_i_gsi_gss_assist_module;
 
 typedef struct globus_gss_assist_ex_st
 {
-	void * arg;
-	int    flags;
+    void * arg;
+    int    flags;
 } globus_gss_assist_ex;
 
 /**
@@ -135,26 +135,26 @@ typedef struct globus_gss_assist_ex_st
  */
 extern int
 globus_gss_assist_token_get_fd(
-    void *                              arg, 
-    void **                             bufp, 
+    void *                              arg,
+    void **                             bufp,
     size_t *                            sizep);
 
 extern int
 globus_gss_assist_token_send_fd(
-    void *                              arg, 
-    void *                              buf, 
+    void *                              arg,
+    void *                              buf,
     size_t                              size);
 
 extern int
 globus_gss_assist_token_send_fd_ex(
-    void *                              arg, 
-    void *                              buf, 
+    void *                              exp,
+    void *                              buf,
     size_t                              size);
 
 extern int
 globus_gss_assist_token_send_fd_without_length(
-    void *                              arg, 
-    void *                              buf, 
+    void *                              arg,
+    void *                              buf,
     size_t                              size);
 
 /**
@@ -168,7 +168,7 @@ globus_gss_assist_token_send_fd_without_length(
  */
 extern OM_uint32
 globus_gss_assist_acquire_cred(
-    OM_uint32 *,             /*  minor_status */
+    OM_uint32 *,             /* minor_status */
     gss_cred_usage_t,        /* cred_usage */
     gss_cred_id_t *          /* output_cred_handle */);
 
@@ -182,7 +182,7 @@ globus_gss_assist_read_vhost_cred_dir(
 
 extern OM_uint32
 globus_gss_assist_acquire_cred_dir(
-    OM_uint32 *,             /*  minor_status */
+    OM_uint32 *,             /* minor_status */
     gss_cred_usage_t,        /* cred_usage */
     gss_cred_id_t **         /* output_cred_handle */,
     size_t);
@@ -212,6 +212,12 @@ globus_gss_assist_acquire_cred_ext(
  * to communicate security tokens over the context, looping over continue
  * results from the GSSAPI as needed.
  */
+
+/*
+ * globus_gss_assist_accept_sec_context - takes care of looping
+ * over multiple tokens using the get and send tokens
+ * routines
+ */
 extern OM_uint32
 globus_gss_assist_accept_sec_context(
     OM_uint32 *,                        /* minor_status */
@@ -219,7 +225,7 @@ globus_gss_assist_accept_sec_context(
     const gss_cred_id_t,                /* acceptor_cred_handle */
     char **,                            /* src_name as char ** */
     OM_uint32 *,                        /* ret_flags */
-    int *,				/* user_to_user_flag */
+    int *,                              /* user_to_user_flag */
     int *,                              /* token_status */
     gss_cred_id_t *,                    /* delegated_cred_handle */
     int (* get_token)(void *, void **, size_t *),
@@ -233,16 +239,16 @@ globus_gss_assist_accept_sec_context(
  */
 extern OM_uint32
 globus_gss_assist_accept_sec_context_async(
-    OM_uint32 *			        minor_status,
-    gss_ctx_id_t *			context_handle,
-    const gss_cred_id_t		        cred_handle,
-    char **			        src_name_char,
-    OM_uint32 *			        ret_flags,
-    int *				user_to_user_flag,
-    void *				input_buffer,
-    size_t				input_buffer_len,
-    void **			        output_bufferp,
-    size_t *			        output_buffer_lenp,
+    OM_uint32 *                         minor_status,
+    gss_ctx_id_t *                      context_handle,
+    const gss_cred_id_t                 cred_handle,
+    char **                             src_name_char,
+    OM_uint32 *                         ret_flags,
+    int *                               user_to_user_flag,
+    void *                              input_buffer,
+    size_t                              input_buffer_len,
+    void **                             output_bufferp,
+    size_t *                            output_buffer_lenp,
     gss_cred_id_t *                     delegated_cred_handle);
 
 /*
@@ -270,16 +276,16 @@ globus_gss_assist_init_sec_context(
  */
 extern OM_uint32
 globus_gss_assist_init_sec_context_async(
-    OM_uint32 *			        minor_status,
-    const gss_cred_id_t		        cred_handle,
-    gss_ctx_id_t *			context_handle,
-    char *				target_name_char,
-    OM_uint32 			        req_flags,
-    OM_uint32 *			        ret_flags,
-    void *				input_buffer,
-    size_t				input_buffer_len,
-    void **			        output_bufferp,
-    size_t *			        output_buffer_lenp);
+    OM_uint32 *                         minor_status,
+    const gss_cred_id_t                 cred_handle,
+    gss_ctx_id_t *                      context_handle,
+    char *                              target_name_char,
+    OM_uint32                           req_flags,
+    OM_uint32 *                         ret_flags,
+    void *                              input_buffer,
+    size_t                              input_buffer_len,
+    void **                             output_bufferp,
+    size_t *                            output_buffer_lenp);
 
 /**
  * @defgroup globus_gss_assist_display GSSAPI Result Status Strings
@@ -293,7 +299,7 @@ globus_gss_assist_init_sec_context_async(
 extern OM_uint32
 globus_gss_assist_display_status(
     FILE *,                             /* where to print */
-    char *,				/* comment */
+    char *,                             /* comment */
     OM_uint32,                          /* major_status */
     OM_uint32,                          /* minor_status */
     int                                 /* token_status */);
@@ -301,13 +307,13 @@ globus_gss_assist_display_status(
 extern OM_uint32
 globus_gss_assist_display_status_str(
     char **,                            /* string returned with newlines */
-    char *,				/* comment */
+    char *,                             /* comment */
     OM_uint32,                          /* major_status */
     OM_uint32,                          /* minor_status */
     int                                 /* token_status */);
 
 /*
- * globus_gss_assist_wrap_send - used to wrap a 
+ * globus_gss_assist_wrap_send - used to wrap a
  * simple message and send it
  */
 extern OM_uint32
@@ -382,10 +388,10 @@ globus_gss_assist_authorization_host_name(
  * Functions in this group are used to authorize a GSSAPI credential to
  * perform some action on the local machine. In addition to checking whether
  * a credential is authorized, it can also be mapped to a local user name.
- */  
+ */
 extern int
 globus_gss_assist_gridmap(
-    char *                              globusidp, 
+    char *                              globusidp,
     char **                             useridp);
 
 extern int

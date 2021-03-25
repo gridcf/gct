@@ -76,14 +76,16 @@ GSS_CALLCONV gss_get_mic(
  
     gss_ctx_id_desc *                   context = context_handle; 
     unsigned char *                     mac_sec;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     unsigned char *                     seq;
+    int                                 index;
+#endif
     unsigned char *                     token_value;
     EVP_MD_CTX *                        md_ctx = NULL;
     const EVP_MD *                      hash = NULL;
     const EVP_CIPHER *                  evp_cipher = NULL;
     unsigned int                        md_size;
     int                                 npad;
-    int                                 index;
     unsigned char *                     message_digest;
     OM_uint32                           major_status = GSS_S_COMPLETE;
     globus_result_t                     local_result;
@@ -183,6 +185,7 @@ GSS_CALLCONV gss_get_mic(
         message_token->length = GSS_SSL_MESSAGE_DIGEST_PADDING + md_size;
         token_value = message_token->value;
         
+        #if OPENSSL_VERSION_NUMBER < 0x10100000L
         if (g_OID_equal(context->mech, gss_mech_globus_gssapi_openssl))
         {
             for (index = 0; index < GSS_SSL3_WRITE_SEQUENCE_SIZE; ++index)
@@ -196,6 +199,7 @@ GSS_CALLCONV gss_get_mic(
             }
         }
         else
+        #endif
         {
             #if OPENSSL_VERSION_NUMBER >= 0x10000100L
                 U642N(context_handle->mac_write_sequence, token_value);

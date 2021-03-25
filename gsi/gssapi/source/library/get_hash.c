@@ -77,7 +77,7 @@ globus_i_gss_get_hash(
         #endif
     #else
     {
-        SSL_CIPHER *                    ssl_cipher = NULL;
+        const SSL_CIPHER *              ssl_cipher = NULL;
 
         ssl_cipher = SSL_get_current_cipher(context->gss_ssl);
         hash_nid = SSL_CIPHER_get_digest_nid(ssl_cipher);

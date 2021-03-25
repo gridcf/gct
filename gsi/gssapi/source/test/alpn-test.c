@@ -26,10 +26,6 @@ gss_name_t                              names;
 #define GSS_ALPN \
     &(gss_OID_desc) {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x03\x05"}
 
-static gss_OID_desc gss_ext_server_name_oid_desc =
-     {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x09"}; 
-static gss_OID_desc * gss_ext_server_name_oid =
-                &gss_ext_server_name_oid_desc;
 struct test_case
 {
     bool                              (*func)(void);
@@ -53,7 +49,6 @@ init_no_client_alpn(void)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     unsigned char                       server_alpn[] =
     {
@@ -216,7 +211,6 @@ init_no_server_alpn(void)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
     unsigned char                       client_alpn[] =
@@ -392,7 +386,6 @@ init_alpn1(void)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
     unsigned char                       server_alpn[] =
@@ -617,7 +610,6 @@ init_alpn_secondary_match(void)
     gss_buffer_desc                     init_generated_token = {0};
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
-    int                                 name_equal = false;
     OM_uint32                           ignore_minor_status = 0;
     const char                         *why = "";
     unsigned char                       server_alpn[] =
@@ -1034,8 +1026,6 @@ main(int argc, char *argv[])
     };
     char                               *default_cert = getenv("X509_USER_CERT");
     char                               *default_key = getenv("X509_USER_KEY");
-    char                                certname[strlen("X509_USER_CERT") + 2];
-    char                                keyname[strlen("X509_USER_KEY") + 2];
     char                               *certfile = NULL;
     char                               *keyfile = NULL;
     gss_ctx_id_t                        check_context = GSS_C_NO_CONTEXT;

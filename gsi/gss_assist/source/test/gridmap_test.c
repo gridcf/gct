@@ -716,7 +716,7 @@ int
 long_line_test(void)
 {
     int                                 i;
-    int                                 failed;
+    int                                 failed = 0;
     int                                 rc;
     char                                localname[7];
     char *                              gridmap;
@@ -764,7 +764,6 @@ setenv_failed:
 int
 blank_line_test(void)
 {
-    int                                 i;
     int                                 failed = 0;
     int                                 rc;
     char *                              gridmap;

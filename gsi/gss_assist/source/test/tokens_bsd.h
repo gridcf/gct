@@ -24,19 +24,19 @@
 
 int
 token_bsd_get(
-    void *                              arg, 
-    void **                             bufp, 
+    void *                              arg,
+    void **                             bufp,
     size_t *                            sizep);
 
 int
 token_bsd_send(
-    void *                              arg,  
-    void *                              buf, 
+    void *                              arg,
+    void *                              buf,
     size_t                              size);
 
 
 int
 token_bsd_send_ex(
-    void *                              exp,  
-    void *                              buf, 
+    void *                              exp,
+    void *                              buf,
     size_t                              size);

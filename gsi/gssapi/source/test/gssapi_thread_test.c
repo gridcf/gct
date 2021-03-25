@@ -140,7 +140,6 @@ server_func(
     struct thread_arg *                 thread_args = arg;
     gss_ctx_id_t                        context = GSS_C_NO_CONTEXT;
     OM_uint32                           major_status, minor_status, ms;
-    int                                 token = 0;
     
     globus_mutex_lock(&thread_args->mutex);
     do
@@ -213,7 +212,6 @@ client_func(
     
     for (int i = 0; i < ITERATIONS && !failed; i++)
     {
-        int token = 0;
         globus_mutex_lock(&thread_args->mutex);
         thread_args->init_done = GLOBUS_FALSE;
         thread_args->init_token = (gss_buffer_desc) {0};

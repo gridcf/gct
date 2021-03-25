@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
             break;
         }
         printf("Entry %zd:\n%.*s\n", i,
-            (int) credential.length, credential.value);
+            (int) credential.length, (char*) credential.value);
         gss_release_buffer(
                 &minor_status,
                 &credential);

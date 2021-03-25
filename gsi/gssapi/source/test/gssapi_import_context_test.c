@@ -33,14 +33,10 @@ int main()
     gss_buffer_desc *                   token_ptr;
     gss_buffer_desc                     init_buffer;
     gss_buffer_desc                     accept_buffer;
-    gss_OID				name_type;
     gss_OID                             mech_type;
     gss_name_t                          source_name;
-    gss_ctx_id_t  			init_context;
-    gss_ctx_id_t  			accept_context;
-    gss_ctx_id_t  			del_init_context;
-    gss_ctx_id_t  			del_accept_context;
-    gss_cred_id_t                       delegated_cred;
+    gss_ctx_id_t                        init_context;
+    gss_ctx_id_t                        accept_context;
     int                                 rc = 0;
 
     printf("1..1\n");
@@ -50,10 +46,6 @@ int main()
     token_ptr = GSS_C_NO_BUFFER;
     init_context = GSS_C_NO_CONTEXT;
     accept_context = GSS_C_NO_CONTEXT;
-    del_init_context = GSS_C_NO_CONTEXT;
-    del_accept_context = GSS_C_NO_CONTEXT;
-    name_type = GSS_C_NT_USER_NAME;
-    delegated_cred = GSS_C_NO_CREDENTIAL;
     accept_maj_stat = GSS_S_CONTINUE_NEEDED;
     init_ret_flags = 0;
     accept_ret_flags = 0;

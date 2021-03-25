@@ -57,17 +57,23 @@ FILE *                                  globus_i_gsi_gssapi_debug_fstream;
 /**
  * @brief Minimum TLS protocol version
  * @details
- * Choose the minimum TLS protocol version to support. One of TLS1_VERSION,
- * TLS1_1_VERSION, TLS1_2_VERSION or 0 for lowest (TLS1_VERSION). SSLv3
- * and below disallowed.
+ * Choose the minimum TLS protocol version to support. One of TLS1_3_VERSION,
+ * TLS1_2_VERSION, TLS1_1_VERSION_DEPRECATED, TLS1_VERSION_DEPRECATED,
+ * or 0 for the default.
+ * The option TLS1_3_VERSION requires OpenSSL 1.1.1 or later to be valid.
+ * As of August 2018, TLSv1.2 is the default minimum TLS protocol version.
+ * Invalid values will use the default.
  */
 int                               globus_i_gsi_gssapi_min_tls_protocol;
 
 /**
  * @brief Maximum TLS protocol version
  * @details
- * Choose the maximum TLS protocol version to support. One of TLS1_VERSION,
- * TLS1_1_VERSION, TLS1_2_VERSION or 0 for highest. SSLv3 and below disallowed.
+ * Choose the maximum TLS protocol version to support. One of TLS1_3_VERSION,
+ * TLS1_2_VERSION, TLS1_1_VERSION_DEPRECATED, TLS1_VERSION_DEPRECATED,
+ * or 0 for the highest supported version.
+ * The option TLS1_3_VERSION requires OpenSSL 1.1.1 or later to be valid.
+ * Invalid values will use the highest supported version.
  */
 int                               globus_i_gsi_gssapi_max_tls_protocol;
 
@@ -96,7 +102,7 @@ globus_bool_t                           globus_i_accept_backward_compatible_mic 
 /**
  * Module descriptor static initializer.
  */
-globus_module_descriptor_t		globus_i_gsi_gssapi_module =
+globus_module_descriptor_t              globus_i_gsi_gssapi_module =
 {
     "globus_gsi_gssapi",
     globus_l_gsi_gssapi_activate,
@@ -116,7 +122,7 @@ globus_thread_once_t                once_control = GLOBUS_THREAD_ONCE_INIT;
 globus_mutex_t                      globus_i_gssapi_activate_mutex;
 globus_bool_t                       globus_i_gssapi_active = GLOBUS_FALSE;
 
-static 
+static
 int
 globus_l_gsi_gssapi_read_config(char **gsi_conf_datap)
 {
@@ -257,6 +263,7 @@ globus_l_gsi_gssapi_parse_config(
         "GLOBUS_GSSAPI_CIPHERS",
         "GLOBUS_GSSAPI_SERVER_CIPHER_ORDER",
         "GLOBUS_GSSAPI_BACKWARD_COMPATIBLE_MIC",
+        "GLOBUS_GSSAPI_ACCEPT_BACKWARD_COMPATIBLE_MIC",
         "GLOBUS_GSSAPI_VHOST_CRED_OWNER",
         NULL
     };
@@ -361,12 +368,12 @@ globus_l_gsi_gssapi_activate(void)
     {
         goto parse_conf_data_fail;
     }
-    
+
     tmp_string = globus_module_getenv("GLOBUS_GSSAPI_DEBUG_LEVEL");
     if(tmp_string != GLOBUS_NULL)
     {
         globus_i_gsi_gssapi_debug_level = atoi(tmp_string);
-    
+
         if(globus_i_gsi_gssapi_debug_level < 0)
         {
             globus_i_gsi_gssapi_debug_level = 0;
@@ -437,6 +444,12 @@ globus_l_gsi_gssapi_activate(void)
         {
             globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
         }
+#ifdef TLS1_3_VERSION
+        else if (strcmp(tmp_string, "TLS1_3_VERSION") == 0)
+        {
+            globus_i_gsi_gssapi_min_tls_protocol = TLS1_3_VERSION;
+        }
+#endif
         else if (strcmp(tmp_string, "0") == 0)
         {
             globus_i_gsi_gssapi_min_tls_protocol = 0;
@@ -446,14 +459,14 @@ globus_l_gsi_gssapi_activate(void)
             GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(
                 1,
                 (_GGSL("Unknown GLOBUS_GSSAPI_MIN_TLS_PROTOCOL value: %s;"
-                       "defaulting to TLS1_2_VERSION\n"),
+                       "defaulting to 0 (lowest recommended - TLS v1.2)\n"),
                         tmp_string));
-            globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
+            globus_i_gsi_gssapi_min_tls_protocol = 0;
         }
     }
     else
     {
-        globus_i_gsi_gssapi_min_tls_protocol = TLS1_2_VERSION;
+        globus_i_gsi_gssapi_min_tls_protocol = 0;
     }
 
     tmp_string = globus_module_getenv("GLOBUS_GSSAPI_MAX_TLS_PROTOCOL");
@@ -471,6 +484,12 @@ globus_l_gsi_gssapi_activate(void)
         {
             globus_i_gsi_gssapi_max_tls_protocol = TLS1_2_VERSION;
         }
+#ifdef TLS1_3_VERSION
+        else if (strcmp(tmp_string, "TLS1_3_VERSION") == 0)
+        {
+            globus_i_gsi_gssapi_max_tls_protocol = TLS1_3_VERSION;
+        }
+#endif
         else if (strcmp(tmp_string, "0") == 0)
         {
             globus_i_gsi_gssapi_max_tls_protocol = 0;
@@ -479,7 +498,7 @@ globus_l_gsi_gssapi_activate(void)
         {
             GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT(
                 1,
-                (_GGSL("Unknown GLOBUS_GSSAPI_MIN_TLS_PROTOCOL value: %s;"
+                (_GGSL("Unknown GLOBUS_GSSAPI_MAX_TLS_PROTOCOL value: %s;"
                        "defaulting to 0 (highest)\n"),
                         tmp_string));
             globus_i_gsi_gssapi_max_tls_protocol = 0;
@@ -517,7 +536,7 @@ globus_l_gsi_gssapi_activate(void)
         char buffer[buflen];
         struct passwd pwd = {0};
         struct passwd *res = NULL;
-        
+
         rc = getpwnam_r(tmp_string, &pwd, buffer, (size_t) buflen, &res);
 
         if (rc == 0)
