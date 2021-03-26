@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.9
+Version:	18.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -239,6 +239,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 26 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.10-1
+- Doxygen fix
+
 * Thu Jul 16 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.9-1
 - Check for LTO use in CFLAGS instead of LDFLAGS
 

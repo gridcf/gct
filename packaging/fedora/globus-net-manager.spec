@@ -4,7 +4,7 @@ Name:		globus-net-manager
 %global soname 0
 %global _name %(echo %{name} | tr - _)
 Version:	1.5
-Release:	2%{?dist}
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
 Group:		System Environment/Libraries
@@ -207,6 +207,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 26 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.5-1
+- Doxygen fix
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.5-2
 - Add BuildRequires perl-interpreter
 

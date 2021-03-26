@@ -1,5 +1,11 @@
 globus-net-manager (1.5-1+gct.@distro@) @distro@; urgency=medium
 
+  * Doxygen fix
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 26 Mar 2021 09:02:49 +0100
+
+globus-net-manager (1.5-1+gct.@distro@) @distro@; urgency=medium
+
   * Make makefiles exit sooner on errors
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 10 Mar 2020 15:53:24 +0100
