@@ -1,4 +1,4 @@
-globus-net-manager (1.5-1+gct.@distro@) @distro@; urgency=medium
+globus-net-manager (1.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fix
 
