@@ -424,7 +424,7 @@ struct _NiceSocket
  * and set in the @sock_dup out parameter.
  */
 int ice_get_negotiated_sock(struct icedata *ice_data, int *sock_dup) {
-#if defined(HAVE_NICESOCKET) || !defined(HAVE_NICE_AGENT_GET_SELECTED_SOCKET)
+#ifndef HAVE_NICE_AGENT_GET_SELECTED_SOCKET
     NiceSocket *nice_socket;
 #endif
     int fd;
@@ -560,7 +560,9 @@ static void cb_new_selected_pair(NiceAgent *agent, guint stream_id,
     if (local && remote) {
         ice_data->bind_addr = nice_address_dup(&local->base_addr);
         ice_data->remote_addr = nice_address_dup(&remote->addr);
+#ifndef HAVE_NICE_AGENT_GET_SELECTED_SOCKET
         ice_data->sockptr = local->sockptr;
+#endif
 
         ice_data->selected_pair_done = TRUE;
     }
@@ -780,7 +782,7 @@ static int dup_socket(int sock) {
         return -1;
 
     new_sock = WSASocket(
-	FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO,
+        FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO,
         &protInfo, 0, WSA_FLAG_OVERLAPPED);
     if (new_sock == INVALID_SOCKET)
         return -1;

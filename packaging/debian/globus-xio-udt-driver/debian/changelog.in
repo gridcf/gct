@@ -1,3 +1,9 @@
+globus-xio-udt-driver (2.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Compatiility with libnice 0.1.18
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 30 Mar 2021 20:15:51 +0200
+
 globus-xio-udt-driver (2.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
