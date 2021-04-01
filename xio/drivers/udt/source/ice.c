@@ -101,7 +101,6 @@ int ice_init(struct icedata *ice_data,
 #ifdef NICE_AGENT_GATHER_CANDIDATES_RETURNS_GBOOLEAN
     gboolean ok;
 #endif
-    NiceAddress localaddr;
 
     if (!lib_initialized)
         return ICE_FAILURE;
@@ -220,7 +219,6 @@ int ice_get_local_data(struct icedata *ice_data, char *out, size_t outsize) {
     gchar *local_password = NULL;
     char *p = out;
     int written;
-    unsigned int j;
     GSList *cand=NULL, *item=NULL;
     NiceCandidate *c;
 
@@ -311,7 +309,9 @@ int ice_negotiate(struct icedata *ice_data, int argc, char *rdata[]) {
 
     /* First args are ufrag and password. */
     strncpy(ufrag, rdata[0], sizeof(ufrag));
+    ufrag[sizeof(ufrag) - 1] = '\0';
     strncpy(password, rdata[1], sizeof(password));
+    password[sizeof(password) - 1] = '\0';
 
     g_debug("remote: ufrag='%s' password='%s'", ufrag, password);
 
@@ -424,7 +424,7 @@ struct _NiceSocket
  * and set in the @sock_dup out parameter.
  */
 int ice_get_negotiated_sock(struct icedata *ice_data, int *sock_dup) {
-#if defined(HAVE_NICESOCKET) || !defined(HAVE_NICE_AGENT_GET_SELECTED_SOCKET)
+#ifndef HAVE_NICE_AGENT_GET_SELECTED_SOCKET
     NiceSocket *nice_socket;
 #endif
     int fd;
@@ -511,7 +511,6 @@ static void *thread_mainloop(void *data) {
 
 static void cb_candidate_gathering_done(NiceAgent *agent, guint stream_id,
                                         gpointer data) {
-    int rval;
     struct icedata *ice_data = (struct icedata *)data;
 
     g_debug("SIGNAL: candidate gathering done");
@@ -544,8 +543,7 @@ static void cb_component_state_changed(NiceAgent *agent, guint stream_id,
 static void cb_new_selected_pair(NiceAgent *agent, guint stream_id,
                                  guint component_id, gchar *lfoundation,
                                  gchar *rfoundation, gpointer data) {
-    gboolean ok;
-    GSList *lcands, *rcands, *item;
+    GSList *lcands, *rcands;
     NiceCandidate *local, *remote;
     struct icedata *ice_data = (struct icedata *)data;
 
@@ -560,7 +558,9 @@ static void cb_new_selected_pair(NiceAgent *agent, guint stream_id,
     if (local && remote) {
         ice_data->bind_addr = nice_address_dup(&local->base_addr);
         ice_data->remote_addr = nice_address_dup(&remote->addr);
+#ifndef HAVE_NICE_AGENT_GET_SELECTED_SOCKET
         ice_data->sockptr = local->sockptr;
+#endif
 
         ice_data->selected_pair_done = TRUE;
     }
@@ -614,7 +614,7 @@ static int snprint_cand(char *out, size_t outlen,
 
 static NiceCandidate *parse_candidate(char *scand, guint stream_id) {
     char foundation[33], ipaddr[46], type[7];
-    int cnt, port, result = ICE_FAILURE;
+    int cnt, port;
     unsigned int prio;
     gboolean ok;
     NiceCandidate *rval = NULL, *out = NULL;
@@ -780,7 +780,7 @@ static int dup_socket(int sock) {
         return -1;
 
     new_sock = WSASocket(
-	FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO,
+        FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO,
         &protInfo, 0, WSA_FLAG_OVERLAPPED);
     if (new_sock == INVALID_SOCKET)
         return -1;
