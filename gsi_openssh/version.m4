@@ -1,1 +1,1 @@
-m4_define([gsissh_version], [7.5p1c])
+m4_define([gsissh_version], [8.6p1c])
