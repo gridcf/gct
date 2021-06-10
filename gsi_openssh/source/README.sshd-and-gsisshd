@@ -1,0 +1,12 @@
+The regular sshd daemon and the gsi enabled gsisshd daemon can not
+both listen for connections on the same port.
+
+You can either deactivate the regular sshd before starting gsisshd or
+change the configuration of gsisshd to use a different port than the
+standard ssh port number 22. Common choices for an alternative port
+number are 23, 222 or 2222.
+
+If you configure gsisshd to only accept gsi connections and not accept
+other types of connections that require the existence of the ssh host
+keys, you can turn off the generation of these keys in
+/etc/sysconfig/gsisshd.

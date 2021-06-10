@@ -1,0 +1,12 @@
+The ssh-keycat retrieves the content of the ~/.ssh/authorized_keys
+of an user in any environment. This includes environments with
+polyinstantiation of home directories and SELinux MLS policy enabled.
+
+To use ssh-keycat, set these options in /etc/ssh/sshd_config file:
+        AuthorizedKeysCommand /usr/libexec/openssh/ssh-keycat
+        AuthorizedKeysCommandUser root
+
+Do not forget to enable public key authentication:
+        PubkeyAuthentication yes
+
+
