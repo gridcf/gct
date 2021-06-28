@@ -104,6 +104,9 @@ ASN1_METHOD * PROXYPOLICY_asn1_meth();
 #endif
 
 PROXYPOLICY * PROXYPOLICY_dup(
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+    const
+#endif
     PROXYPOLICY *                       policy);
 
 int PROXYPOLICY_cmp(
