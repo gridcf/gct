@@ -18,6 +18,8 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([ssh.c])
 AC_LANG([C])
 
+LT_INIT
+
 AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC([cc gcc])
 
@@ -96,7 +98,7 @@ dnl Since autoconf doesn't support it very well,  we no longer allow users to
 dnl override LD, however keeping the hook here for now in case there's a use
 dnl use case we overlooked and someone needs to re-enable it.  Unless a good
 dnl reason is found we'll be removing this in future.
-LD="$CC"
+LD="\$(LIBTOOL) --mode=link $CC"
 AC_SUBST([LD])
 
 AC_C_INLINE
@@ -4622,10 +4624,13 @@ AC_ARG_WITH([selinux],
 			  LIBS="$LIBS -lselinux"
 			],
 			AC_MSG_ERROR([SELinux support requires libselinux library]))
+		SSHLIBS="$SSHLIBS $LIBSELINUX"
+		SSHDLIBS="$SSHDLIBS $LIBSELINUX"
 		AC_CHECK_FUNCS([getseuserbyname get_default_context_with_level])
 		LIBS="$save_LIBS $LIBSELINUX"
 	fi ]
 )
+AC_SUBST([SSHLIBS])
 AC_SUBST([SSHDLIBS])
 AC_SUBST([KEYCATLIBS])
 
@@ -4767,6 +4772,7 @@ AC_SUBST([K5LIBS])
 
 # Check whether the user wants GSI (Globus) support
 gsi="no"
+program_prefix=""
 AC_ARG_WITH(gsi,
 	[  --with-gsi              Enable Globus GSI authentication support],
 	[
@@ -4789,15 +4795,22 @@ if test "x$gsi" != "xno" ; then
 
 	AC_PATH_TOOL([PKGCONFIG], [pkg-config], [no])
 	if test "x$PKGCONFIG" != "xno"; then
-		LIBS="$LIBS `$PKGCONFIG --libs globus-gss-assist globus-gssapi-gsi globus-common`"
-		CPPFLAGS="$CPPFLAGS `$PKGCONFIG --cflags globus-gss-assist globus-gssapi-gsi globus-common`"
+		GLOBUS_PKG_LIBS="`$PKGCONFIG --libs globus-gss-assist globus-gssapi-gsi globus-common`"
+		GLOBUS_PKG_CFLAGS="`$PKGCONFIG --cflags globus-gss-assist globus-gssapi-gsi globus-common`"
 	fi
+
+	GLOBUS_CFLAGS="$GLOBUS_CFLAGS $GLOBUS_PKG_CFLAGS"
+	GLOBUS_LIBS="$GLOBUS_LIBS $GLOBUS_PKG_LIBS"
 
 	AC_DEFINE(GSSAPI)
 	AC_DEFINE(HAVE_GSSAPI_H)
+	AC_SUBST(program_prefix, "gsi")
 
 	AC_CHECK_FUNCS(globus_gss_assist_map_and_authorize)
 fi
+
+AC_SUBST(GLOBUS_CFLAGS)
+AC_SUBST(GLOBUS_LIBS)
 
 # Check whether user wants systemd support
 SYSTEMD_MSG="no"
@@ -5654,8 +5667,14 @@ echo "    Compiler flags: ${CFLAGS}"
 echo "Preprocessor flags: ${CPPFLAGS}"
 echo "      Linker flags: ${LDFLAGS}"
 echo "         Libraries: ${LIBS}"
+if test ! -z "${GLOBUS_LIBS}"; then
+echo "         +for GSI: ${GLOBUS_LIBS}"
+fi
 if test ! -z "${SSHDLIBS}"; then
 echo "         +for sshd: ${SSHDLIBS}"
+fi
+if test ! -z "${SSHLIBS}"; then
+echo "          +for ssh: ${SSHLIBS}"
 fi
 if test ! -z "${KEYCATLIBS}"; then
 echo "   +for ssh-keycat: ${KEYCATLIBS}"
