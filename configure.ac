@@ -128,9 +128,8 @@ $1-osx-pkg = osx/packages/$1-]pkgver[.pkg
 $1-osx-pkg: \$($1-osx-pkg)
 ])
     m4_append([GT_PKGCONFIG_DIRS_MACRO], ${ac_pwd}/[$2], [:])
-    ifelse([$1], [gsi-openssh], [], [
-        ifelse([$1], [gridftp_hdfs], [], [
-            m4_append([GT_SUBDIRS_MACRO], [$2], [ ])])])dnl
+    ifelse([$1], [gridftp_hdfs], [], [
+            m4_append([GT_SUBDIRS_MACRO], [$2], [ ])])dnl
     ifelse([$1], [gsi_openssh], [], [
         m4_append([GT_TARGETS_CHECK_MACRO], [$1]-check, [ ])])dnl
     m4_append_uniq([GT_BUNDLES_MACRO],[$4], [ ])dnl
@@ -620,11 +619,6 @@ AC_CONFIG_FILES([osx/distribution.xml])
 AC_CONFIG_FILES([osx/scripts/globus_common/postinstall], [chmod a+x osx/scripts/globus_common/postinstall])
 
 AC_CONFIG_SUBDIRS(GT_SUBDIRS_MACRO)
-if test "${gsi_openssh_can_recurse}" = yes; then
-    if test x"$gsi_openssh_enabled" = x"yes"; then
-        AC_CONFIG_SUBDIRS(gsi_openssh/source)
-    fi
-fi
 
 if test x"$gridftp_hdfs_enabled" = x"yes"; then
     AC_CONFIG_SUBDIRS(gridftp/hdfs)
