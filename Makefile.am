@@ -175,12 +175,7 @@ libltdl-clean:
 	rm -f libltdl-stamp
 endif
 
-# GSI-OpenSSH doesn't have a working "dist" makefile rule.
-# We'll preserve the output from the prep-gsissh so that
-# configuration will work without re-downloading the sources
 dist-hook:
-	$(MKDIR_P) $(distdir)/gsi_openssh $(distdir)/packaging/package-output
-	$(INSTALL) -p $(srcdir)/packaging/package-output/* $(distdir)/packaging/package-output
 	if [ ! -d $(distdir)/gridftp/hdfs ]; then cp -pPR $(srcdir)/gridftp/hdfs $(distdir)/gridftp/hdfs; fi
 
 globus_gridftp_server-stamp: $(GT_ENABLED_XIO_DRIVERS)
