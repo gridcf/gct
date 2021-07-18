@@ -1,3 +1,9 @@
+globus-gssapi-gsi (14.16-1+gct.@distro@) @distro@; urgency=medium
+
+  * Compatibility with the dcache server implementation
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 18 Jul 2021 07:54:38 +0200
+
 globus-gssapi-gsi (14.15-1+gct.@distro@) @distro@; urgency=medium
 
   * Compatibility with TLS v1.3

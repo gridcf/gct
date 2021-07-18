@@ -202,11 +202,8 @@ GSS_CALLCONV gss_init_sec_context(
             *ret_flags = 0 ;
         }
     }
-    else
+    else if (input_token->length > 0)
     {
-        /* first time there is no input token, but after that
-         * there will always be one
-         */
         major_status = globus_i_gsi_gss_put_token(&local_minor_status,
                                                   context,
                                                   NULL,
@@ -413,45 +410,51 @@ GSS_CALLCONV gss_init_sec_context(
 
     case(GSS_CON_ST_TOKEN1):
 
-        tbuf = input_token->value;
-        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
-
-        if (input_token->length == tlen + 5)
+        if (input_token->length > 0)
         {
-            context->gss_state=GSS_CON_ST_TOKEN2;
-            break;
-        }
+            tbuf = input_token->value;
+            tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
 
-        if (input_token->length < tlen + 10)
-        {
-            major_status = GSS_S_UNAUTHORIZED;
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
-                (_GGSL("Failed identifying TLS session token 1")));
-            context->gss_state = GSS_CON_ST_DONE;
-            break;
-        }
+            if (input_token->length == tlen + 5)
+            {
+                context->gss_state=GSS_CON_ST_TOKEN2;
+                break;
+            }
 
-        tbuf = &tbuf[tlen + 5];
+            if (input_token->length < tlen + 10)
+            {
+                major_status = GSS_S_UNAUTHORIZED;
+                GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
+                    (_GGSL("Failed identifying TLS session token 1")));
+                context->gss_state = GSS_CON_ST_DONE;
+                break;
+            }
+
+            tbuf = &tbuf[tlen + 5];
+        }
 
     case(GSS_CON_ST_TOKEN2):
 
-        if (tbuf == NULL)
+        if (input_token->length > 0)
         {
-            tbuf = input_token->value;
-        }
-        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
+            if (tbuf == NULL)
+            {
+                tbuf = input_token->value;
+            }
+            tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
 
-        if (input_token->value + input_token->length != tbuf + tlen + 5)
-        {
-            major_status = GSS_S_UNAUTHORIZED;
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
-                (_GGSL("Failed identifying TLS session token 2")));
-            context->gss_state = GSS_CON_ST_DONE;
-            break;
+            if (input_token->value + input_token->length != tbuf + tlen + 5)
+            {
+                major_status = GSS_S_UNAUTHORIZED;
+                GLOBUS_GSI_GSSAPI_ERROR_RESULT(
+                    minor_status,
+                    GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
+                    (_GGSL("Failed identifying TLS session token 2")));
+                context->gss_state = GSS_CON_ST_DONE;
+                break;
+            }
         }
 
         /*
