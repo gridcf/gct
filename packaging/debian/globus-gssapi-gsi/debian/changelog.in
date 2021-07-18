@@ -1,6 +1,7 @@
 globus-gssapi-gsi (14.16-1+gct.@distro@) @distro@; urgency=medium
 
   * Compatibility with the dcache server implementation
+  * Minimize session ticket size since we don't use them
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 18 Jul 2021 07:54:38 +0200
 

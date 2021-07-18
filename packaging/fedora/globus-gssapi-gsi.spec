@@ -160,6 +160,7 @@ make %{?_smp_mflags} check VERBOSE=1
 %changelog
 * Sun Jul 18 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.16-1
 - Compatibility with the dcache server implementation
+- Minimize session ticket size since we don't use them
 
 * Thu Mar 25 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.15-1
 - Compatibility with TLS v1.3
