@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.15
+Version:	14.16
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -158,6 +158,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Jul 18 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.16-1
+- Compatibility with the dcache server implementation
+- Minimize session ticket size since we don't use them
+
 * Thu Mar 25 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.15-1
 - Compatibility with TLS v1.3
 
