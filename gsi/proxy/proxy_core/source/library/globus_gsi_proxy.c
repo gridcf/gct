@@ -136,7 +136,14 @@ globus_l_gsi_proxy_activate(void)
         CRYPTO_malloc_debug_init();
         CRYPTO_dbg_set_options(V_CRYPTO_MDEBUG_ALL);
 #endif
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
+/* From CRYPTO_mem_ctrl.3ossl man page: The memory-leak checking has been
+ * deprecated in OpenSSL 3.0 in favor of clang's memory and leak sanitizer.
+ * Alternatively, openssl needs to be configured using
+ *  ./Configure enable-crypto-mdebug
+ */
         CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
+#endif
     }
 
     result = globus_module_activate(GLOBUS_OPENSSL_MODULE);
