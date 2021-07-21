@@ -3,8 +3,8 @@
 Name:		globus-gsi-proxy-ssl
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	6.4
-Release:	2%{?dist}
+Version:	6.5
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy SSL Library
 
 Group:		System Environment/Libraries
@@ -142,6 +142,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Jul 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.5-1
+- Fixes for OpenSSL-3.0.0-beta1
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

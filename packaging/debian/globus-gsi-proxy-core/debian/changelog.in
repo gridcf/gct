@@ -1,3 +1,9 @@
+globus-gsi-proxy-core (9.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fixes for OpenSSL-3.0.0-beta1
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Jul 2021 01:41:35 +0200
+
 globus-gsi-proxy-core (9.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

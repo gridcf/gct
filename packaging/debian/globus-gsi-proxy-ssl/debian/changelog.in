@@ -1,3 +1,9 @@
+globus-gsi-proxy-ssl (6.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fixes for OpenSSL-3.0.0-beta1
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 21 Jul 2021 01:40:09 +0200
+
 globus-gsi-proxy-ssl (6.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove unused TESTS.pl script
