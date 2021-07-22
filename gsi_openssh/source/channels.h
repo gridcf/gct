@@ -63,6 +63,16 @@
 
 #define CHANNEL_CANCEL_PORT_STATIC	-1
 
+/* nonblocking flags for channel_new */
+#define CHANNEL_NONBLOCK_LEAVE	0 /* don't modify non-blocking state */
+#define CHANNEL_NONBLOCK_SET	1 /* set non-blocking state */
+#define CHANNEL_NONBLOCK_STDIO	2 /* set non-blocking and restore on close */
+
+/* c->restore_block mask flags */
+#define CHANNEL_RESTORE_RFD	0x01
+#define CHANNEL_RESTORE_WFD	0x02
+#define CHANNEL_RESTORE_EFD	0x04
+
 /* TCP forwarding */
 #define FORWARD_DENY		0
 #define FORWARD_REMOTE		(1)
@@ -139,6 +149,7 @@ struct Channel {
 				 * to a matching pre-select handler.
 				 * this way post-select handlers are not
 				 * accidentally called if a FD gets reused */
+	int	restore_block;	/* fd mask to restore blocking status */
 	struct sshbuf *input;	/* data read from socket, to be sent over
 				 * encrypted connection */
 	struct sshbuf *output;	/* data received over encrypted connection for
@@ -190,14 +201,7 @@ struct Channel {
 	void			*mux_ctx;
 	int			mux_pause;
 	int			mux_downstream_id;
-
-	/* whether non-blocking is set to descriptors */
-	int 			nonblock;
 };
-
-#define NEED_RESTORE_STDIN_NONBLOCK  1
-#define NEED_RESTORE_STDOUT_NONBLOCK 2
-#define NEED_RESTORE_STDERR_NONBLOCK 4
 
 #define CHAN_EXTENDED_IGNORE		0
 #define CHAN_EXTENDED_READ		1
@@ -275,7 +279,7 @@ void	 channel_register_filter(struct ssh *, int, channel_infilter_fn *,
 void	 channel_register_status_confirm(struct ssh *, int,
 	    channel_confirm_cb *, channel_confirm_abandon_cb *, void *);
 void	 channel_cancel_cleanup(struct ssh *, int);
-int	 channel_close_fd(struct ssh *, int *, int);
+int	 channel_close_fd(struct ssh *, Channel *, int *);
 void	 channel_send_window_changes(struct ssh *);
 
 /* mux proxy support */
@@ -322,7 +326,7 @@ Channel	*channel_connect_to_port(struct ssh *, const char *, u_short,
 	    char *, char *, int *, const char **);
 Channel *channel_connect_to_path(struct ssh *, const char *, char *, char *);
 Channel	*channel_connect_stdio_fwd(struct ssh *, const char*,
-	    u_short, int, int);
+	    u_short, int, int, int);
 Channel	*channel_connect_by_listen_address(struct ssh *, const char *,
 	    u_short, char *, char *);
 Channel	*channel_connect_by_listen_path(struct ssh *, const char *,
