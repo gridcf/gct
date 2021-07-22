@@ -391,7 +391,7 @@ distprep: catman-do depend-check
 	-rm -rf autom4te.cache .depend.bak
 
 distdir=gsi-openssh-8.6p1c
-distsubdirs=$(srcdir)/openbsd-compat $(srcdir)/contrib $(srcdir)/regress
+distsubdirs=$(srcdir)/openbsd-compat $(srcdir)/contrib $(srcdir)/regress $(srcdir)/m4
 
 distdir:
 	rm -rf "$(distdir)"
