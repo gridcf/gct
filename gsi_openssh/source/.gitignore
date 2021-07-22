@@ -1,3 +1,7 @@
+!Makefile.in
+!config.guess
+!config.sub
+!install-sh
 Makefile
 buildpkg.sh
 config.h
