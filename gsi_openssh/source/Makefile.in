@@ -403,7 +403,7 @@ distdir:
             if [ -d "$(srcdir)/$$f" ]; then \
                 mkdir -p "$(distdir)/$$f"; \
             else \
-                cp "$(srcdir)/$${f}" "$(distdir)/$${f}"; \
+                cp -p "$(srcdir)/$${f}" "$(distdir)/$${f}"; \
             fi; \
         done
 	if [ -f $(distdir)/Makefile ]; then \
