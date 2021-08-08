@@ -80,6 +80,7 @@
 #include <openssl/crypto.h>
 #include "openbsd-compat/openssl-compat.h"
 #include "openbsd-compat/sys-queue.h"
+#include "fips_mode_replacement.h"
 
 #include "xmalloc.h"
 #include "ssh.h"

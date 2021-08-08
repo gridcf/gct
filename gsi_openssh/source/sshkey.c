@@ -36,6 +36,7 @@
 #include <openssl/pem.h>
 #include <openssl/crypto.h>
 #endif
+#include "fips_mode_replacement.h"
 
 #include "crypto_api.h"
 

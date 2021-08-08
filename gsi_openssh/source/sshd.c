@@ -81,6 +81,7 @@
 #include <openssl/crypto.h>
 #include "openbsd-compat/openssl-compat.h"
 #endif
+#include "fips_mode_replacement.h"
 
 #ifdef HAVE_SECUREWARE
 #include <sys/security.h>

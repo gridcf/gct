@@ -44,6 +44,7 @@
 #include "ssherr.h"
 
 #include "openbsd-compat/openssl-compat.h"
+#include "fips_mode_replacement.h"
 
 static const char *moduli_filename;
 
