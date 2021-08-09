@@ -30,7 +30,8 @@ yum clean all
 packages=(gcc gcc-c++ make autoconf automake libtool \
           libtool-ltdl-devel openssl openssl-devel git \
           'perl(Test)' 'perl(Test::More)' 'perl(File::Spec)' \
-          'perl(URI)' file sudo bison patch curl)
+          'perl(URI)' file sudo bison patch curl \
+          pam pam-devel libedit libedit-devel)
 
 if [[ $TASK == tests ]]; then
     set +e
@@ -56,6 +57,8 @@ elif [[ $TASK == *rpms ]]; then
     packages+=(redhat-lsb-core)
     # for myproxy-oauth
     packages+=(m2crypto mod_ssl mod_wsgi pyOpenSSL python-crypto)
+    # for gsi-openssh
+    packages+=(pam libedit libedit-devel)
 fi
 
 
