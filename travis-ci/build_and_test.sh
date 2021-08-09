@@ -10,7 +10,6 @@ cd "$root"
 
 args=(--prefix="$root" --enable-silent-rules)
 if [[ $COMPONENTS != *ssh* ]]; then
-    rm -f prep-gsissh
     args+=(--disable-gsi-openssh)
 fi
 if [[ $COMPONENTS == *gram5* ]]; then

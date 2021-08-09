@@ -53,6 +53,16 @@ rsa_hash_alg_ident(int hash_alg)
 	return NULL;
 }
 
+#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+static int RSA_bits(const RSA *r);
+
+static int
+RSA_bits(const RSA *r)
+{
+    return BN_num_bits(r->n);
+}
+#endif
+
 /*
  * Returns the hash algorithm ID for a given algorithm identifier as used
  * inside the signature blob,
