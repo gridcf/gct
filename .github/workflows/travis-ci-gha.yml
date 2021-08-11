@@ -23,10 +23,3 @@ jobs:
           TASK: tests 
           COMPONENTS: udt,myproxy,ssh
         run: travis-ci/setup_tasks.sh
-        
-      - name: setup tasks 2
-        env:
-          IMAGE: centos:centos7 
-          TASK: tests 
-          COMPONENTS: gram5
-        run: travis-ci/setup_tasks.sh
