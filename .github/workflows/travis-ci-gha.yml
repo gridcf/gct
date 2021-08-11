@@ -24,3 +24,9 @@ jobs:
           TASK: ${{ matrix.task }} 
           COMPONENTS: ${{ matrix.components }} 
         run: travis-ci/setup_tasks.sh
+        
+      - name: setup tasks with srpms
+        env:
+          IMAGE: centos:centos7
+          TASK: srpms
+        run: travis-ci/setup_tasks.sh
