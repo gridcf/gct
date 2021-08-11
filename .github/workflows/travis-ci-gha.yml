@@ -10,6 +10,10 @@ on:
 jobs:
   run-scripts:
     runs-on: ubuntu-latest
+    env:
+        IMAGE: centos:centos7 
+        TASK: tests 
+        COMPONENTS: udt,myproxy,ssh
     steps:
       - uses: actions/checkout@v2
     
