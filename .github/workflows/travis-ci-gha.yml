@@ -1,0 +1,28 @@
+name: Run Travis CI
+
+on:
+  push:
+  pull_request:
+#     tags:
+#       - v[0-9]+.[0-9]+.[0-9]+
+#       - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
+      
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: setup tasks
+        env:
+          IMAGE: centos:centos7 
+          TASK: tests 
+          COMPONENTS: udt,myproxy,ssh
+        run: travis-ci/setup_tasks.sh
+        
+      - name: setup tasks 2
+        env:
+          IMAGE: centos:centos7 
+          TASK: tests 
+          COMPONENTS: gram5
+        run: travis-ci/setup_tasks.sh
