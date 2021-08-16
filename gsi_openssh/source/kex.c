@@ -44,6 +44,7 @@
 # include <openssl/kdf.h>
 # endif
 #endif
+#include "fips_mode_replacement.h"
 
 #include "ssh.h"
 #include "ssh2.h"

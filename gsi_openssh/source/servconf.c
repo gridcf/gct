@@ -72,6 +72,7 @@
 #include "digest.h"
 #include "sshbuf.h"
 #include "ssh-gss.h"
+#include "fips_mode_replacement.h"
 
 static void add_listen_addr(ServerOptions *, const char *,
     const char *, int);

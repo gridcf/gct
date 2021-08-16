@@ -69,6 +69,7 @@
 #include "digest.h"
 #include "sshbuf.h"
 #include "ssh-gss.h"
+#include "fips_mode_replacement.h"
 
 /* Format of the configuration file:
 

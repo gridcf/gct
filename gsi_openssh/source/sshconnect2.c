@@ -46,6 +46,7 @@
 #endif
 
 #include <openssl/crypto.h>
+#include "fips_mode_replacement.h"
 
 #include "openbsd-compat/sys-queue.h"
 

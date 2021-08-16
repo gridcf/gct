@@ -23,6 +23,7 @@
 #include <openssl/pem.h>
 #include "openbsd-compat/openssl-compat.h"
 #endif
+#include "fips_mode_replacement.h"
 
 #ifdef HAVE_STDINT_H
 # include <stdint.h>
