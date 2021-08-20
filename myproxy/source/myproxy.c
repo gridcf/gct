@@ -2740,7 +2740,7 @@ myproxy_request_add_voname(myproxy_request_t *client_request,
         }
     } else {
         if (my_append(&(client_request->voname), "\n", voname, NULL) < 0) {
-            verror_put_string("my_append faild");
+            verror_put_string("my_append failed");
             goto error;
         }
     }
@@ -2775,7 +2775,7 @@ myproxy_request_add_vomses(myproxy_request_t *client_request,
         }
     } else {
         if (my_append(&(client_request->vomses), "\n", vomses, NULL) < 0) {
-            verror_put_string("my_append faild");
+            verror_put_string("my_append failed");
             goto error;
         }
     }
@@ -3145,7 +3145,7 @@ encode_response(const myproxy_proto_response_type_t	response_value)
       default:
 	/* Should never get here */
 	string = NULL;
-	verror_put_string("Internal error: Bad reponse type (%d)",
+	verror_put_string("Internal error: Bad response type (%d)",
 			  response_value);
 	break;
     }
