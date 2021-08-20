@@ -1,6 +1,7 @@
 myproxy (6.2.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Use -l (--listen) flag when starting myproxy-server in test scripts
+  * Typo fixes
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 02:10:01 +0200
 

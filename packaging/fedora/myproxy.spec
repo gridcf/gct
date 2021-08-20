@@ -389,6 +389,7 @@ fi
 %changelog
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.9-1
 - Use -l (--listen) flag when starting myproxy-server in test scripts
+- Typo fixes
 
 * Thu Mar 04 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.8-1
 - Update default run directory from /var/run to /run

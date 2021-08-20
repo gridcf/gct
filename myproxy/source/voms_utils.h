@@ -28,8 +28,8 @@ char **get_vomses(const char *path);
  * has_voms_extension()
  *
  * Returns 1 if specified file has VOMS extension.
- * Returns 0 if specified file has not VOMS extension.
- * Returns -1 if error was occured.
+ * Returns 0 if specified file has no VOMS extension.
+ * Returns -1 if error occurred.
  */
 int has_voms_extension(const char *certfilepath);
 

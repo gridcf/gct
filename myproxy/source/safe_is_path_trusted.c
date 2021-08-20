@@ -449,7 +449,7 @@ static void destroy_dir_stack(dir_stack* stack)
  *	path
  *		path to push on the stack.  A copy is made.
  * returns
- *	0  on sucess
+ *	0  on success
  *	<0 on error (if the stack if contains MAX_SYMLINK_DEPTH directories
  *		errno = ELOOP for detecting symbolic link loops
  */
@@ -493,7 +493,7 @@ static int push_path_on_stack(dir_stack* stack, const char* path)
  *	path
  *		pointer to a pointer to store the next component
  * returns
- *	0  on sucess
+ *	0  on success
  *	<0 on stack empty
  */
 static int get_next_component(dir_stack* stack, const char **path)
