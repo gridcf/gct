@@ -1,3 +1,9 @@
+globus-gss-assist (12.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:23:35 +0200
+
 globus-gss-assist (12.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Minor bug fixes and code maintenance

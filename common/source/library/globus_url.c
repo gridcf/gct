@@ -2118,9 +2118,9 @@ globusl_url_isscheme_special(char x)
  *        the scheme.
  *
  * @retval GLOBUS_SUCCESS
- *         The URL scheme was recogized, and scheme_type has been updated.
+ *         The URL scheme was recognized, and scheme_type has been updated.
  * @retval GLOBUS_URL_ERROR_BAD_SCHEME
- *         The URL scheme was not recogized.
+ *         The URL scheme was not recognized.
  */
 int
 globus_url_get_scheme(const char *url_string, globus_url_scheme_t *scheme_type)

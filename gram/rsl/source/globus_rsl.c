@@ -290,7 +290,7 @@ globus_rsl_is_relation_lessthan (globus_rsl_t *ast)
  * The globus_rsl_is_relation_attribute_equal() function tests whether
  * the the RSL pointed to by the @a ast parameter is a relation with
  * the attribute name which matches the string pointed to by the
- * @a attribute parameter. This attribute name comparision is
+ * @a attribute parameter. This attribute name comparison is
  * case-insensitive.
  *
  * @param ast
@@ -2670,7 +2670,7 @@ globus_rsl_print_recursive (globus_rsl_t *ast_node)
     else
     {
         printf("\n  RELATION\n");
-        printf("    attibute name = %s\n", 
+        printf("    attribute name = %s\n",
             ast_node->req.relation.attribute_name);
         printf("    operator = %s\n", 
                 globus_rsl_get_operator(ast_node->req.boolean.my_operator));

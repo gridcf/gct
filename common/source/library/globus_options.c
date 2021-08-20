@@ -292,7 +292,7 @@ globus_options_command_line_process(
 
                     if(func_argc > table->table[j].arg_count)
                     {
-                        /* intialized the in/out to the max */
+                        /* initialized the in/out to the max */
                         used = table->table[j].arg_count;
 
                         res = table->table[j].func(

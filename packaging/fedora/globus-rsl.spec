@@ -3,7 +3,7 @@
 Name:		globus-rsl
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	11.2
+Version:	11.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Resource Specification Language Library
 
@@ -142,6 +142,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.3-1
+- Typo fixes
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.2-1
 - Make makefiles exit sooner on errors
 

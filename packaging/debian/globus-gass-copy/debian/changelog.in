@@ -1,3 +1,9 @@
+globus-gass-copy (10.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:31:03 +0200
+
 globus-gass-copy (10.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix segmentation fault with ~

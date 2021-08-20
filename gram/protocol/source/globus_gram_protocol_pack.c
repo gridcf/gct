@@ -1640,7 +1640,7 @@ null_param:
  *     parameters are undefined.
  *
  * @retval GLOBUS_SUCCESS
- *     Sucess
+ *     Success
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_NULL_PARAMETER
  *     Null parameter
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_HTTP_UNPACK_FAILED
@@ -1747,7 +1747,7 @@ bad_param:
  *     value pointed to by the @a extensions parameters is undefined.
  *
  * @retval GLOBUS_SUCCESS
- *     Sucess
+ *     Success
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_HTTP_UNPACK_FAILED
  *     Unpack failed
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED

@@ -364,7 +364,7 @@ globus_xio_contact_copy(
             __FILE__,                                                       \
             _xio_name,                                                      \
             __LINE__,                                                       \
-            _XIOSL("An error occured parsing the string: %s"), arg))
+            _XIOSL("An error occurred parsing the string: %s"), arg))
 
 
 #define GlobusIXIOUtilCopyNIovec(iov, iovc, siov, siovc, bytes)             \

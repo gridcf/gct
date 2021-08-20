@@ -9841,7 +9841,7 @@ globus_l_gfs_data_begin_cb(
                         globus_gfs_log_message(
                             GLOBUS_GFS_LOG_WARN,
                             "RECV buffer size may not be properly set.  "
-                            "Requested size = %d, actualy size = %d\n",
+                            "Requested size = %d, actual size = %d\n",
                             op->data_handle->info.tcp_bufsize, rcvbuf);
                     }
                     op->data_handle->info.tcp_bufsize = rcvbuf;
@@ -9854,7 +9854,7 @@ globus_l_gfs_data_begin_cb(
                         globus_gfs_log_message(
                             GLOBUS_GFS_LOG_WARN,
                             "SEND buffer size may not be properly set.  "
-                            "Requested size = %d, actualy size = %d\n",
+                            "Requested size = %d, actual size = %d\n",
                             op->data_handle->info.tcp_bufsize, sndbuf);
                     }
                     op->data_handle->info.tcp_bufsize = sndbuf;
@@ -10593,8 +10593,8 @@ response_exit:
     }
     globus_l_gfs_data_reset_watchdog(op->session_handle, NULL);
     
-    /* remove the refrence for this callback.  It is posible the before
-        aquireing this lock the completing state occured and we are
+    /* remove the reference for this callback.  It is possible that before
+        acquiring this lock the completing state occurred and we are
         ready to finish */
     globus_mutex_lock(&op->session_handle->mutex);
     {
@@ -12514,7 +12514,7 @@ globus_gridftp_server_begin_transfer(
     }
 
     /* at this point events can happen that change the state before
-        the lock is aquired */
+        the lock is acquired */
 
     globus_mutex_lock(&op->session_handle->mutex);
     {

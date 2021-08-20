@@ -418,20 +418,20 @@ globus_callback_space_register_periodic(
 /**
  * @brief Unregister a callback
  * @ingroup globus_callback_api
- * 
+ *
  * @details
- * This function will cancel a callback and free the resources 
- * associcated with the callback handle.  If the callback was able to be 
- * canceled immediately (or if it has already run), GLOBUS_SUCCESS is returned 
+ * This function will cancel a callback and free the resources
+ * associated with the callback handle.  If the callback was able to be
+ * canceled immediately (or if it has already run), GLOBUS_SUCCESS is returned
  * and it is guaranteed that there are no running instances of the callback.
  *
  * If the callback is currently running (or unstoppably about to be run), then
  * the callback is prevented from being requeued, but, the 'official' cancel
- * is deferred until the last running instance of the callback returns. If you 
- * need to know when the callback is guaranteed to have been canceled, pass an 
+ * is deferred until the last running instance of the callback returns. If you
+ * need to know when the callback is guaranteed to have been canceled, pass an
  * unregister callback.
  *
- * If you would like to know if you unregistered a callback before it ran, 
+ * If you would like to know if you unregistered a callback before it ran,
  * pass storage for a boolean 'active'.  This will be GLOBUS_TRUE if callback
  * was running.  GLOBUS_FALSE otherwise.
  *
@@ -749,8 +749,8 @@ typedef enum
  *        with globus_callback_space_destroy()
  *
  * @param attr
- *        a space attr descibing desired behaviors.  If GLOBUS_NULL, 
- *        the default behavior of GLOBUS_CALLBACK_SPACE_BEHAVIOR_SINGLE 
+ *        a space attr describing desired behaviors.  If GLOBUS_NULL,
+ *        the default behavior of GLOBUS_CALLBACK_SPACE_BEHAVIOR_SINGLE
  *        is assumed.  This attr is copied into the space, so it is acceptable
  *        to destroy the attr as soon as it is no longer needed
  *
@@ -824,7 +824,7 @@ globus_callback_space_destroy(
  * associated with this attr is GLOBUS_CALLBACK_SPACE_BEHAVIOR_SINGLE
  *
  * @param attr
- *        storage for the intialized attr.  Must be destroyed with
+ *        storage for the initialized attr.  Must be destroyed with
  *        globus_callback_space_attr_destroy()
  *
  * @return
@@ -1028,7 +1028,7 @@ globus_callback_space_register_signal_handler(
  *        - GLOBUS_CALLBACK_ERROR_INVALID_ARGUMENT
  *          if this signal was registered with persist == false, then
  *          there is a race between a signal actually being caught and
- *          therefor automatically unregistered and the attempt to manually
+ *          therefore automatically unregistered and the attempt to manually
  *          unregister it.  If that race occurs, you will receive this error
  *          just as you would for any signal not registered.
  *        - GLOBUS_SUCCESS otherwise

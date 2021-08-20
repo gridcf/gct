@@ -119,11 +119,11 @@ extern "C" {
 typedef enum
 {
     /**
-     * Indicates that an error occured in reading data
+     * Indicates that an error occurred in reading data
      */
     GLOBUS_XIO_ORDERING_ERROR_READ,
     /**
-     * Indicates an error occured in canceling an operation
+     * Indicates an error occurred in canceling an operation
      */
     GLOBUS_XIO_ORDERING_ERROR_CANCEL
 

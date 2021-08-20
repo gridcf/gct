@@ -643,7 +643,7 @@ globus_l_xio_server_close_kickout(
     globus_mutex_lock(&xio_server->mutex);
     {
         xio_server->state = GLOBUS_XIO_SERVER_STATE_CLOSED;
-        /* dec refrence count then free.  this makes sure we don't
+        /* dec reference count then free.  this makes sure we don't
            free while in a user callback */
         GlobusIXIOServerDec(destroy_server, xio_server);
     }

@@ -87,7 +87,7 @@ For each job the \fBglobus\-fork\-starter\fR processes, it replies by writing a 
 .sp
 For a successful job start, the first field of the reply is the literal 101, the second field is the tag from the input, and the third field is a comma\-separated list of SEG job identifiers which consist the concatenation of a UUID and a process id\&. The \fBglobus\-fork\-starter\fR program will write state changes to the SEG log using these job identifiers\&.
 .sp
-For a failure, the first field of the reply is the literal 102, the second field is the tag from the input, the third field is the integer representation of a GRAM erorr code, and the fourth field is an string explaining the error\&.
+For a failure, the first field of the reply is the literal 102, the second field is the tag from the input, the third field is the integer representation of a GRAM error code, and the fourth field is an string explaining the error\&.
 .SH "ENVIRONMENT"
 .sp
 The following variables affect the execution of \fBglobus\-fork\-starter\fR

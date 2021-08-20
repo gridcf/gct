@@ -273,7 +273,7 @@ typedef enum globus_gridftp_server_control_event_type_e
  *  authentication callback type
  *  ---------------------------
  *
- *  This funciton is called to tell the user a client is
+ *  This function is called to tell the user a client is
  *  trying to authenticate with the creditails supplied as parameters.
  *  The user can decided whether or not to accept the user and then call
  *  globus_gridftp_server_control_finished_auth() with the appropriate values.

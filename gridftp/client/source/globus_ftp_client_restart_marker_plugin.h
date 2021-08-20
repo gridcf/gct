@@ -80,7 +80,7 @@ globus_module_descriptor_t globus_i_ftp_client_restart_marker_plugin_module;
  *        dest of the transfer (GLOBUS_NULL if 'get')
  *
  * @param user_saved_marker
- *        pointer to an unitialized restart marker
+ *        pointer to an initialized restart marker
  *
  * @return
  *        - GLOBUS_TRUE to indicate that the plugin should use
@@ -120,7 +120,7 @@ typedef globus_bool_t
  *        this is the user_arg passed to the init func
  *
  * @param marker
- *        the restart marker that has been received.  Thsi marker is owned
+ *        the restart marker that has been received.  This marker is owned
  *        by the caller.  The user must use the copy method to keep it.
  *        Note: this restart marker currently contains all ranges received
  *          as of yet.  Should I instead only pass a marker with the

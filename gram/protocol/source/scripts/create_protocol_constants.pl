@@ -59,7 +59,7 @@ EOF
 =pod
 
 The Globus::GRAM::Error module methods return an object consisting
-of an integer erorr code, and (optionally) a string explaining the
+of an integer error code, and (optionally) a string explaining the
 error. 
 
 =head2 Methods

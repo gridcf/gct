@@ -75,7 +75,7 @@ globus_i_rw_mutex_wait(
         globus_cond_wait(&waiter->cond, &rw_lock->mutex);
     }
 
-    /* aquired lock, put waiter structure in idle list for reuse */
+    /* acquired lock, put waiter structure in idle list for reuse */
     waiter->pnext = rw_lock->idle;
     rw_lock->idle = waiter;
 

@@ -142,7 +142,7 @@ globus_gass_transfer_request_set_user_pointer(
  * This function queries a request to determine the status of the request.
  * This function should be called after EOF has been reached, or after
  * the initial get, put, or append has returned or had it's callback function
- * called to determine if it is possible to procede, or whether the file
+ * called to determine if it is possible to proceed, or whether the file
  * transfer was successfully processed.
  *
  * @param request

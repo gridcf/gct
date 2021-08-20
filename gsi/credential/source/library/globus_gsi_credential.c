@@ -184,7 +184,7 @@ globus_l_gsi_cred_subject_cmp(
  *        credential read in is the first match based on the system
  *        configuration (paths and environment variables)
  * @return
- *        GLOBUS_SUCCESS if no errors occured, otherwise, an error object
+ *        GLOBUS_SUCCESS if no errors occurred, otherwise, an error object
  *        identifier is returned.
  *
  * @see globus_gsi_cred_read_proxy()

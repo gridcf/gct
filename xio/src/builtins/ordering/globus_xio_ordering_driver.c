@@ -1396,9 +1396,9 @@ globus_l_xio_ordering_close(
     }
     GlobusXIOOrderingDebugPrintf(GLOBUS_L_XIO_ORDERING_DEBUG_TRACE,
 		    ("outside if\n"));
-    /* 
-     * outstanding ops wont be present in buffer_q but will be in 
-     * driver_op_list 
+    /*
+     * outstanding ops won't be present in buffer_q but will be in
+     * driver_op_list
      */
     if (!globus_list_empty(handle->driver_op_list) && 
 		    (handle->outstanding_read_count > 0))

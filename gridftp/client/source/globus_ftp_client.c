@@ -253,7 +253,7 @@ globus_i_ftp_client_handle_is_active(
  * specified handle to the active handle list, so that deactivation
  * will not wait for it any more.
  *
- * This funciton also wakes up the deactivation function if it is
+ * This function also wakes up the deactivation function if it is
  * waiting for this handle's callbacks to terminate.
  *
  * @param handle
@@ -308,7 +308,7 @@ globus_i_ftp_client_control_is_active(
  * specified handle to the active handle list, so that deactivation
  * will not wait for it any more.
  *
- * This funciton also wakes up the deactivation function if it is
+ * This function also wakes up the deactivation function if it is
  * waiting for this handle's callbacks to terminate.
  *
  * @param handle

@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-sge
 %global _name %(echo %{name} | tr - _)
-Version:	3.1
-Release:	2%{?dist}
+Version:	3.2
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Grid Engine Job Manager Support
 
 Group:		Applications/Internet
@@ -177,6 +177,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/sge
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.2-1
+- Typo fixes
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-2
 - Add BuildRequires perl-interpreter
 

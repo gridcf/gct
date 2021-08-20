@@ -1853,7 +1853,7 @@ globus_l_gsc_cmd_rest(
             if(sc != 2)
             {
                 globus_gsc_959_finished_command(
-                    op, _FSMSL("501 bad paremeter.\r\n"));
+                    op, _FSMSL("501 bad parameter.\r\n"));
                 globus_range_list_destroy(range_list);
                 return;
             }

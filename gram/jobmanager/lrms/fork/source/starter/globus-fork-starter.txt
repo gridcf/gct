@@ -80,7 +80,7 @@ SEG log using these job identifiers.
 
 For a failure, the first field of the reply is the literal
 +102+, the second field is the tag from the input, the
-third field is the integer representation of a GRAM erorr code, and the
+third field is the integer representation of a GRAM error code, and the
 fourth field is an string explaining the error.
 
 ENVIRONMENT

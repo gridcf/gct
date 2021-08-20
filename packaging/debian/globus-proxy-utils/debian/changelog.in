@@ -1,3 +1,9 @@
+globus-proxy-utils (7.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:25:12 +0200
+
 globus-proxy-utils (7.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Increase default proxy key size to 2048 bits

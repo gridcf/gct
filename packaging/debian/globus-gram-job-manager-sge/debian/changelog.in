@@ -1,3 +1,9 @@
+globus-gram-job-manager-sge (3.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:39:58 +0200
+
 globus-gram-job-manager-sge (3.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS

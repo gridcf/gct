@@ -79,7 +79,7 @@ globus_fatal(char *msg, ...)
 
 #if defined(TARGET_ARCH_LINUX)
 
-/* this isnt guaranteed to work since globus_l_callback_main_thread can be set 
+/* this isn't guaranteed to work since globus_l_callback_main_thread can be set
  * from a thread... hopefully not
  */
 pid_t globus_l_callback_main_thread;

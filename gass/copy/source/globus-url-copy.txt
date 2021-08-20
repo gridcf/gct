@@ -45,7 +45,7 @@ OPTIONS
 
 *-f FILENAME*::
     Read a list of URL pairs from filename.  Each line should contain
-    sourceURL destURL. Enclose URLs with spaces in double qoutes (").
+    sourceURL destURL. Enclose URLs with spaces in double quotes (").
     Blank lines and lines beginning with # will be ignored.
 
 *-cd, -create-dest*::

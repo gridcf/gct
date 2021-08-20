@@ -53,7 +53,7 @@
  *        error stream to print to
  * 
  * @return
- *        GSS_S_COMPLETE on sucess
+ *        GSS_S_COMPLETE on success
  *        Other gss errors on failure.  
  */
 OM_uint32

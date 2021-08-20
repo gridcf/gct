@@ -3884,7 +3884,7 @@ globus_ftp_client_partial_put(
  * This function differs from the globus_ftp_client_put() function by allowing
  * the user to invoke server-side data processing algorithms.  GridFTP servers
  * may support algorithms for data reduction or other customized data storage
- * requirements. There is no client-side verification done on the alogirhtm
+ * requirements. There is no client-side verification done on the algorithm
  * string provided by the user. if the server does not understand the requested
  * algorithm, the transfer will fail.
  *
@@ -4217,7 +4217,7 @@ abort:
  * @param source_url
  *	  The URL to transfer. The URL may be an ftp or gsiftp URL.
  * @param source_attr
- *	  Attributes for the souce URL.
+ *	  Attributes for the source URL.
  * @param dest_url
  *        The destination URL for the transfer. The URL may be an ftp
  *        or gsiftp URL.
@@ -4285,7 +4285,7 @@ globus_ftp_client_third_party_transfer(
  * @param source_url
  *	  The URL to transfer. The URL may be an ftp or gsiftp URL.
  * @param source_attr
- *	  Attributes for the souce URL.
+ *	  Attributes for the source URL.
  * @param dest_url
  *        The destination URL for the transfer. The URL may be an ftp
  *        or gsiftp URL.
@@ -4431,10 +4431,10 @@ error_param:
  * status of the transfer.
  *
  * This function differes from the globus_ftp_client_third_party_transfer()
- * funciton by allowing the user to invoke server-side data processing
+ * function by allowing the user to invoke server-side data processing
  * algorithms.  GridFTP servers may support algorithms for data reduction or
  * other customized data storage requirements. There is no client-side
- * verification done on the alogirhtm string provided by the user. if the
+ * verification done on the algorithm string provided by the user. if the
  * server does not understand * the requested algorithm, the transfer will
  * fail.
  *
@@ -4443,7 +4443,7 @@ error_param:
  * @param source_url
  *	  The URL to transfer. The URL may be an ftp or gsiftp URL.
  * @param source_attr
- *	  Attributes for the souce URL.
+ *	  Attributes for the source URL.
  * @param eret_alg_str
  * @param dest_url
  *        The destination URL for the transfer. The URL may be an ftp

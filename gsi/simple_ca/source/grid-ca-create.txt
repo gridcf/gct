@@ -55,7 +55,7 @@ command when creating the self-signed certificate.
     includes more details.
 
 *-force*::
-    Overwite existing CA in the destination directory if one exists.
+    Overwrite existing CA in the destination directory if one exists.
 
 *-bits BITS*::
     Create a CA certificate with a BITS long RSA key [4096]

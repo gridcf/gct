@@ -2,7 +2,7 @@
 
 Name:		globus-simple-ca
 %global _name %(echo %{name} | tr - _)
-Version:	5.2
+Version:	5.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
@@ -116,6 +116,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-1
+- Typo fixes
+
 * Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
 - Use -nameopt sep_multiline to derive certificate subject string
 - Drop support for generating GPT package

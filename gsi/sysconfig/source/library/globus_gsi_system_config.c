@@ -3929,7 +3929,7 @@ globus_gsi_sysconfig_get_username_unix(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_PW_ENTRY,
-            (_GSSL("Error occured for uid: %d"),geteuid()));        
+            (_GSSL("Error occurred for uid: %d"),geteuid()));
         goto exit;
     }
 
@@ -3938,8 +3938,8 @@ globus_gsi_sysconfig_get_username_unix(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_PW_ENTRY,
-            (_GSSL("Error occured for uid: %d"),geteuid()));        
-        goto exit;        
+            (_GSSL("Error occurred for uid: %d"),geteuid()));
+        goto exit;
     }
 
     *username = malloc(strlen(pwd_result->pw_name) + 1);
@@ -4256,7 +4256,7 @@ globus_gsi_sysconfig_get_current_working_dir_unix(
  * @param home_dir
  *        The home directory of the current user
  * @return
- *        GLOBUS_SUCCESS if no error occured, otherwise
+ *        GLOBUS_SUCCESS if no error occurred, otherwise
  *        an error object is returned.
  */
 globus_result_t
@@ -4303,7 +4303,7 @@ globus_gsi_sysconfig_get_home_dir_unix(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_PW_ENTRY,
-            (_GSSL("Error occured for uid: %d"),geteuid()));        
+            (_GSSL("Error occurred for uid: %d"),geteuid()));
         goto exit;
     }
 
@@ -4312,8 +4312,8 @@ globus_gsi_sysconfig_get_home_dir_unix(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_PW_ENTRY,
-            (_GSSL("Error occured for uid: %d"),geteuid()));        
-        goto exit;        
+            (_GSSL("Error occurred for uid: %d"),geteuid()));
+        goto exit;
     }
 
     temp_home_dir = malloc(strlen(pwd_result->pw_dir) + 1);

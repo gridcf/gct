@@ -85,7 +85,7 @@
  * @ref globus_xio_register_write() to send a message back to the sender.
  * 
  * Also, if the handle is not connected, the waitforbytes should probably be
- * 1 to guarantee that only one packet is received and the sender contact isnt
+ * 1 to guarantee that only one packet is received and the sender contact isn't
  * overwritten by multiple packets from different senders.
  * 
  * @ref globus_xio_register_write() semantics:
@@ -497,7 +497,7 @@ typedef enum
    /** GlobusVarArgEnum(attr)
      * Join a multicast group.
      * @ingroup globus_xio_udp_driver_cntls
-     * Specifiy a multicast group to join.  All packets received will be
+     * Specify a multicast group to join.  All packets received will be
      * to the specified multicast address.  Do not use
      * @ref GLOBUS_XIO_UDP_CONNECT, @ref GLOBUS_XIO_UDP_SET_PORT, or
      * pass a contact string on the open. Consider using 

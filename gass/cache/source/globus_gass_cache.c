@@ -5814,7 +5814,7 @@ globus_gass_cache_delete_start(globus_gass_cache_t       cache_handle,
  * globus_gass_cache_delete_start(). The cache
  * file should be locked by the corresponding url/tag, or an error is
  * returned. If it is locked by the corresponding url/tag, then the normal
- * operation occur, whithout blocking (remove one instance from the tag
+ * operation occur, without blocking (remove one instance from the tag
  * update the timestamp and unlock the cache).
  *
  * If is_locked==GLOBUS_FALSE, eventually wait the cache is not locked any

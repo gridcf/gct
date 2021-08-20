@@ -1,3 +1,9 @@
+globus-gass-transfer (9.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:33:26 +0200
+
 globus-gass-transfer (9.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

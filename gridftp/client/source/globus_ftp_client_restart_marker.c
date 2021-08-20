@@ -433,7 +433,7 @@ globus_ftp_client_restart_marker_set_offset(
  * Get total bytes accounted for in restart marker
  * @ingroup globus_ftp_client_restart_marker
  *
- * This funtion will return the sum of all bytes accounted for in
+ * This function will return the sum of all bytes accounted for in
  * a restart marker.  If this restart marker contains a stream offset
  * then this value is the same as the offset (not the ascii offset)
  * that it was set with.  If it is a range list, it a sum of all the
@@ -699,7 +699,7 @@ globus_ftp_client_restart_marker_to_string(
  * ranges.
  *
  * @param marker
- *        The restart marker to be unitialized.
+ *        The restart marker to be initialized.
  * @param marker_string
  *        The string containing a textual representation of a restart marker.
  * @see globus_ftp_client_restart_marker

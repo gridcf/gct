@@ -41,7 +41,7 @@ consist of:
 
 *--delete*::
     Delete audit records from the database right after inserting them. This is
-    used in tests to avoid filling the databse with test records.
+    used in tests to avoid filling the database with test records.
 
 *--audit-directory 'AUDITDIR'*::
     Look for audit records in 'AUDITDIR', instead of looking in the directory

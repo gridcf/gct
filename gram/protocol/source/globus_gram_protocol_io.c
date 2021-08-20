@@ -800,7 +800,7 @@ globus_gram_protocol_reply(
  * @param callback
  *     A pointer to a function to call when the delegation handshake has
  *     completed or failed. This function will be passed the value of
- *     @a arg as well as the handle and delegated credential or erorr
+ *     @a arg as well as the handle and delegated credential or error
  *     that occurred processing the delegation messages.
  * @param arg
  *     A pointer to application-specific data which will be passed to the
@@ -883,7 +883,7 @@ globus_gram_protocol_accept_delegation(
  *     Upon success, @a #globus_gram_protocol_get_sec_context() returns
  *     GLOBUS_SUCCESS and modifies the @a context parameter to point to the
  *     security context associated with the @a handle parameter. If an error
- *     occurs, an interger error code is returned and the value of the 
+ *     occurs, an integer error code is returned and the value of the
  *     @a context parameter is undefined.
  *
  * @retval GLOBUS_SUCCESS

@@ -3,7 +3,7 @@
 Name:		globus-gass-cache
 %global soname 5
 %global _name %(echo %{name} | tr - _)
-Version:	10.2
+Version:	10.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Cache
 
@@ -133,6 +133,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.3-1
+- Typo fixes
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.2-1
 - Make makefiles exit sooner on errors
 
