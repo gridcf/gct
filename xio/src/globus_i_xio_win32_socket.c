@@ -25,7 +25,7 @@ typedef struct globus_l_xio_win32_socket_s
     long                                eventselect;
     /* ready_events is used only for select() functionality
      * note, select functionality is flawed due to winsock close notification
-     * bug.  It is possible that a read wont be signaled on a short lived
+     * bug.  It is possible that a read won't be signaled on a short lived
      * connection.  To minimize the chance of being bit by this bug,
      * initialize ready_events with a read event
      */

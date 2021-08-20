@@ -542,7 +542,7 @@ error:
  * @ingroup globus_ftp_client_handle
  *
  * The user pointer is provided to all the user of the FTP client
- * library to assocate a pointer to any application-specific data to
+ * library to associate a pointer to any application-specific data to
  * an FTP client handle. This pointer is never internally used by the
  * client library.
  *

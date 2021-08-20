@@ -2,8 +2,8 @@
 
 Name:		globus-xio-gsi-driver
 %global _name %(echo %{name} | tr - _)
-Version:	5.3
-Release:	2%{?dist}
+Version:	5.4
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GSI Driver
 
 Group:		System Environment/Libraries
@@ -136,6 +136,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.4-1
+- Typo fixes
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-2
 - Add BuildRequires perl-interpreter
 

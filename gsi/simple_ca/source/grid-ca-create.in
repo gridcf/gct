@@ -714,7 +714,7 @@ ${short_usage}
 EOF
     printhelp "-help, -?, -h, -usage" "shows this help message"
     printhelp "-verbose" "Show verbose output [unset]"
-    printhelp "-force" "Overwite existing CA if one exists [unset]"
+    printhelp "-force" "Overwrite existing CA if one exists [unset]"
     printhelp "-noint" "Run in non-interactive mode. This will choose
             defaults for parameters or those specified on the command line
             without prompting. This option also implies -force. [unset]"

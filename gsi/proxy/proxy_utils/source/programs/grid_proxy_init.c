@@ -539,7 +539,7 @@ main(
         if(tmp_user_cert_filename &&
            tmp_user_cert_filename == tmp_user_key_filename)
         {
-            /* supposed to be a pkcs12 formated credential */
+            /* supposed to be a pkcs12 formatted credential */
             user_cert_filename = user_key_filename
                                = tmp_user_key_filename;
         }

@@ -328,7 +328,7 @@ nonboolean:
  * This function modifies the @a rsl parameter, adding a new relation of the
  * form:
  * @a attribute = ( @a value )
- * This funtion assumes that the specified attribute is not present in the
+ * This function assumes that the specified attribute is not present in the
  * RSL when called. Unlike the globus_rsl library, this function copies the
  * @a attribute and @a value strings as needed to keep it so the RSL can
  * be freed by calling globus_rsl_free_recursive().

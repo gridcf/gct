@@ -719,7 +719,7 @@ be wrapped according to RFC 2228 Appendix I using the contexts established on
 each data channel.  Tokens transferred over the data channels when either PROT
 or DCAU is used are not framed in any way when using GSI. (When implementing
 this specification with other GSSAPI mechanisms, a 4 byte, big endian, binary
-token length should procede all tokens).
+token length should proceed all tokens).
 
 If the DCAU mode or the PROT mode is changed between file transfers when
 caching data channels in extended block mode, all open data channels must be

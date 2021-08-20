@@ -3,7 +3,7 @@
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	13.4
+Version:	13.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
@@ -158,6 +158,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.5-1
+- Typo fixes
+
 * Tue Mar 17 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.4-1
 - Fix man page section
 

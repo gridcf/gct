@@ -386,7 +386,7 @@ follows:
 </pre>
 
 If a successful (200) reply is sent in response to this message, then the
-client will procede with a GSI delegation handshake. The tokens in this
+client will proceed with a GSI delegation handshake. The tokens in this
 handshake will be framed with a 4 byte big-endian token length header. The
 framed tokens will then be wrapped using the
 GLOBUS_IO_SECURE_CHANNEL_MODE_SSL_WRAP wrapping mode. The job manager will

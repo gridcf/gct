@@ -1,3 +1,9 @@
+globus-simple-ca (5.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:27:11 +0200
+
 globus-simple-ca (5.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Use -nameopt sep_multiline to derive certificate subject string

@@ -60,7 +60,7 @@ typedef struct timeval  globus_reltime_t;
     (Abstime).tv_sec += Sec;                              \
 }
 /**
- *  Seperates abstime structure into its components,sec and usec.
+ *  Separates abstime structure into its components, sec and usec.
  */
 #define  GlobusTimeAbstimeGet(Abstime, Sec, USec)         \
 {                                                         \

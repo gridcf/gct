@@ -79,7 +79,7 @@ typedef void (*globus_ftp_client_throughput_plugin_begin_cb_t)(
     const char *                                    dest_url);
 
 /**
- * Stripe performace throughput callback
+ * Stripe performance throughput callback
  * @ingroup globus_ftp_client_throughput_plugin
  *
  * This callback will be called with every performance callback that is
@@ -116,7 +116,7 @@ typedef void (*globus_ftp_client_throughput_plugin_stripe_cb_t)(
     float                                           avg_throughput);
 
 /**
- * Total performace throughput callback
+ * Total performance throughput callback
  * @ingroup globus_ftp_client_throughput_plugin
  *
  * This callback will be called with every performance callback that is

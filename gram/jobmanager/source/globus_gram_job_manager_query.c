@@ -1061,7 +1061,7 @@ globus_l_gram_job_manager_signal(
                     args,
                     globus_i_gram_job_manager_state_strings[
                             request->jobmanager_state],
-                    "Unneccessary two-phase commit signal",
+                    "Unnecessary two-phase commit signal",
                     -rc,
                     globus_gram_protocol_error_string(rc));
             break;
@@ -1091,7 +1091,7 @@ globus_l_gram_job_manager_signal(
                     args,
                     globus_i_gram_job_manager_state_strings[
                             request->jobmanager_state],
-                    "Unneccessary two-phase commit signal",
+                    "Unnecessary two-phase commit signal",
                     -rc,
                     globus_gram_protocol_error_string(rc));
             break;

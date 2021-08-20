@@ -32,7 +32,7 @@
  *
  * The plugin will log the following Event Types with its coressponding info
  *
- * TransferPerfTotal : This event type will be sent everytime a throughput
+ * TransferPerfTotal : This event type will be sent every time a throughput
  *      plugin total callback is received.
  *
  * - URL.SOURCE   &lt;string&gt;  Source url of transfer
@@ -41,7 +41,7 @@
  * - BW.CURRENT   &lt;float&gt;   Current (instantaneous) bandwidth
  * - BW.AVG       &lt;float&gt;   Average (instantaneous) bandwidth
  *
- * TransferPerfStripe  : This event type will be sent everytime a throughput
+ * TransferPerfStripe  : This event type will be sent every time a throughput
  *      plugin stripe callback is received.
  *
  * - URL.SOURCE   &lt;string&gt;  Source url of transfer
@@ -51,13 +51,13 @@
  * - BW.CURRENT   &lt;float&gt;   Current (instantaneous) bandwidth on this stripe
  * - BW.AVG       &lt;float&gt;   Average (instantaneous) bandwidth on this stripe
  *
- * TransferBegin  : This event type will be sent everytime a throughput
+ * TransferBegin  : This event type will be sent every time a throughput
  *      plugin begin callback is received.
  *
  * - URL.SOURCE   &lt;string&gt;  Source url of transfer
  * - URL.DEST     &lt;string&gt;  Dest url of transfer
  *
- * TransferEnd  : This event type will be sent everytime a throughput
+ * TransferEnd  : This event type will be sent every time a throughput
  *      plugin complete callback is received.
  *
  * - SUCCESS      &lt;bool&gt;    Completion status

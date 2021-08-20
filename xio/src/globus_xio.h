@@ -84,7 +84,7 @@ extern "C" {
  *  A server is initialized and bound to a protocol stack and set
  *  of attributes with the function globus_xio_server_create().  Once
  *  a server is created many "connections" can be accepted.  Each connection
- *  will result in an intialized handle which can later be opened.
+ *  will result in an initialized handle which can later be opened.
  *
  *  \code
   

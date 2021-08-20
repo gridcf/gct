@@ -1,3 +1,9 @@
+globus-gridftp-server (13.22-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:05:14 +0200
+
 globus-gridftp-server (13.21-1+gct.@distro@) @distro@; urgency=medium
 
   * Restore log transfer functionality that was accidentally removed

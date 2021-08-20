@@ -1,3 +1,9 @@
+globus-gridftp-server-control (9.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:01:37 +0200
+
 globus-gridftp-server-control (9.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Use example message from RFC 2428 for response to EPSV

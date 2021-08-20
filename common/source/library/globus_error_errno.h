@@ -32,7 +32,7 @@
  * preserving all features (e.g. memory management, chaining) of the
  * current error handling framework. The functions in this API are
  * auxiliary to the function in the Globus Generic Error API in the
- * sense that they provide a wraper for representing system errors in
+ * sense that they provide a wrapper for representing system errors in
  * terms of a globus_error_t.
  *
  * Any program that uses Globus Errno Error functions must include

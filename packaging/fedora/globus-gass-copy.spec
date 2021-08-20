@@ -3,7 +3,7 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	10.9
+Version:	10.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
@@ -183,6 +183,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.10-1
+- Typo fixes
+
 * Tue Jun 22 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.9-1
 - Fix segmentation fault with ~
 

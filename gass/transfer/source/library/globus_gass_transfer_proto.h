@@ -234,7 +234,7 @@ typedef void
  * globus_gass_transfer_create_listener().
  *
  * @param listener
- *        The listener handle to assocate with the new @a proto
+ *        The listener handle to associate with the new @a proto
  *        created by the protocol module.
  * @param attr
  *        A protocol-specific attribute set, created by calling the
@@ -300,7 +300,7 @@ typedef void
  * It is called when a client requests a new request attribute set
  * be created for a URL scheme handled by a protocol module.
  * The function implementation must create a new request attribute
- * usuable by the protocol.
+ * usable by the protocol.
  *
  * The returned attribute must be a 
  * globus object which inherits from one of the base attributes defined

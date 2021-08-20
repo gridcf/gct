@@ -2758,7 +2758,7 @@ error_auth_destroy:
  *  @param handle
  *         The control connection to send the response across.
  *  @param respspec
- *         A formated string representing the users response.
+ *         A formatted string representing the users response.
  *  @param callback
  *         The user callback that will be called when the response has
  *         been sent.

@@ -1,3 +1,9 @@
+globus-xio-gsi-driver (5.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 10:38:24 +0200
+
 globus-xio-gsi-driver (5.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

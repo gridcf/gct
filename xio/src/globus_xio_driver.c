@@ -1603,7 +1603,7 @@ globus_i_xio_driver_handle_cntl(
 
     if(context == NULL)
     {
-        res = GlobusXIOErrorParameter("conext");
+        res = GlobusXIOErrorParameter("context");
         goto err;
     }
 
@@ -2260,7 +2260,7 @@ globus_xio_operation_unblock_timeout(
     op->block_timeout = GLOBUS_FALSE;
 }
 
-/* note, this is called from win32 threads, therefor, it can never use
+/* note, this is called from win32 threads, therefore, it can never use
  * globus mutex calls
  */
 void

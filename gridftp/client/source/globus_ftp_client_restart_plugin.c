@@ -1015,7 +1015,7 @@ l_ticker_cb(
 
     d = (globus_l_ftp_client_restart_plugin_t *) user_arg;
 
-    /* no reason to do anything here if the transfer isnt running */
+    /* no reason to do anything here if the transfer isn't running */
     if(!d->xfer_running || d->abort_pending)
     {
         return;

@@ -1056,7 +1056,7 @@ globus_l_xio_gsi_write_token_cb(
     {
         result = GlobusXIOErrorWrapFailedWithMessage(result,
             "The GSI XIO driver failed to establish a secure connection.  %s",
-            "The failure occured during a handshake write.");
+            "The failure occurred during a handshake write.");
         goto error_pass_close;
     }
     
@@ -1097,7 +1097,7 @@ globus_l_xio_gsi_write_token_cb(
         {
             result = GlobusXIOErrorWrapFailedWithMessage(result,
                 "The GSI XIO driver failed to establish a secure connection. %s",
-                "The failure occured while posting a handshake read.");
+                "The failure occurred while posting a handshake read.");
             goto error_pass_close;
         }
     }
@@ -1159,7 +1159,7 @@ globus_l_xio_gsi_read_token_cb(
     {
         result = GlobusXIOErrorWrapFailedWithMessage(result,
             "The GSI XIO driver failed to establish a secure connection. %s",
-            "The failure occured during a handshake read.");
+            "The failure occurred during a handshake read.");
         if(globus_xio_error_is_eof(result) == GLOBUS_TRUE)
         {
             handle->eof = GLOBUS_TRUE;
@@ -1256,7 +1256,7 @@ globus_l_xio_gsi_read_token_cb(
                     {
                         result = GlobusXIOErrorWrapFailedWithMessage(result,
                 "The GSI XIO driver failed to establish a secure connection. %s",
-                "The failure occured while posting a handshake read.");
+                "The failure occurred while posting a handshake read.");
                         goto error_pass_close;
                     }
                     GlobusXIOGSIDebugInternalExit();
@@ -1653,7 +1653,7 @@ globus_l_xio_gsi_read_token_cb(
         {
             result = GlobusXIOErrorWrapFailedWithMessage(result,
                "The GSI XIO driver failed to establish a secure connection. %s",
-               "The failure occured while posting a handshake read.");
+               "The failure occurred while posting a handshake read.");
             goto error_pass_close;
         }
     }

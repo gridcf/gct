@@ -1,3 +1,9 @@
+globus-common (18.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:24:07 +0200
+
 globus-common (18.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fix

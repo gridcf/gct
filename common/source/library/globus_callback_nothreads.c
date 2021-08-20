@@ -947,7 +947,7 @@ globus_callback_adjust_period_nothreads(
         callback_info->is_periodic = GLOBUS_FALSE;
 
         /* may or may not be in queue depending on if its not running or its
-         * been restarted.  if its not in queue, no problem... it wont get
+         * been restarted.  if its not in queue, no problem... it won't get
          * queued again
          */
         if(callback_info->in_queue)
@@ -1541,7 +1541,7 @@ globus_callback_space_poll_nothreads(
             }
             else
             {
-                /* wont be any ready before our time is up */
+                /* won't be any ready before our time is up */
                 done = GLOBUS_TRUE;
             }
             

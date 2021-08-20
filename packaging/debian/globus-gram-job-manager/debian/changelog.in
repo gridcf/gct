@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:41:43 +0200
+
 globus-gram-job-manager (15.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove remnants of dropped documentation package

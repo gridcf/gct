@@ -16,7 +16,7 @@
 
 /**
  * @file globus_release.h
- * @brief Relase Information
+ * @brief Release Information
  */
 
 #ifndef GLOBUS_RELEASE_H

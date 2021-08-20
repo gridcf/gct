@@ -3,8 +3,8 @@
 Name:		globus-xio
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.4
-Release:	2%{?dist}
+Version:	6.5
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
 Group:		System Environment/Libraries
@@ -140,6 +140,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.5-1
+- Typo fixes
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.4-2
 - Add BuildRequires perl-interpreter
 - Add additional perl dependencies for tests

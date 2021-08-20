@@ -1697,7 +1697,7 @@ globus_l_gram_job_manager_set_restart_state(
         {
             /* These failure types can be (possibly) remedied in the restart
              * RSL changing stdout or stderr destinations, so these will
-             * be non-fatal. We'll clear the job status and procede.
+             * be non-fatal. We'll clear the job status and proceed.
              */
             request->failure_code = GLOBUS_SUCCESS;
             globus_gram_job_manager_request_set_status(
@@ -1717,7 +1717,7 @@ globus_l_gram_job_manager_set_restart_state(
         {
             /* These failure types can be (possibly) remedied in the restart
              * RSL changing stdin, staging, or executable destinations, so
-             * these will be non-fatal. We'll clear the job status and procede.
+             * these will be non-fatal. We'll clear the job status and proceed.
              */
             request->failure_code = GLOBUS_SUCCESS;
             globus_gram_job_manager_request_set_status(
@@ -2258,7 +2258,7 @@ globus_gram_job_manager_state_machine_register(
      * list, the state machine will be registered for this job automatically,
      * with another new reference. So, we'll check if
      * (request->poll_timer == GLOBUS_NULL_HANDLE) below. If that is true,
-     * then it wasn't in that list and we can procede as we always had done;
+     * then it wasn't in that list and we can proceed as we always had done;
      * otherwise, we'll need to remove the reference we just added.
      * 
      * See also globus_l_gram_process_pending_restarts() for the other case

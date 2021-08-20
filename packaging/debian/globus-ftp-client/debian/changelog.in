@@ -1,3 +1,9 @@
+globus-ftp-client (9.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Typo fixes
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 20 Aug 2021 09:51:53 +0200
+
 globus-ftp-client (9.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Use -nameopt sep_multiline to derive certificate subject string

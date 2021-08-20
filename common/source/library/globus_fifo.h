@@ -52,7 +52,7 @@ typedef struct globus_fifo_s *                          globus_fifo_t;
  * @brief Initialize the fifo structure.
  *
  *  This function initializes the fifo data structure.  The structure
- *  must be initalized before it can be used with any other function.
+ *  must be initialized before it can be used with any other function.
  */
 extern int
 globus_fifo_init(
@@ -95,7 +95,7 @@ globus_fifo_empty(
 
 /**
  *  @ingroup globus_fifo
- *  This function returns a interger representing the number
+ *  This function returns a integer representing the number
  *  of elements in the queue.
  */
 extern int 

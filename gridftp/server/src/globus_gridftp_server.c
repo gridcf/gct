@@ -141,10 +141,10 @@ globus_l_gfs_bad_signal_handler(
 
     /*
     globus_gfs_log_message(
-        GLOBUS_GFS_LOG_ERR, 
-        _GSSL("an unexpected signal occured: %d\n"), 
+        GLOBUS_GFS_LOG_ERR,
+        _GSSL("an unexpected signal occurred: %d\n"),
         signum);
-    */    
+    */
     if(!globus_l_gfs_exit)
     {
         signal(signum, SIG_DFL);

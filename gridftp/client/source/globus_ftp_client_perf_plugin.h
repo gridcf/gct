@@ -97,7 +97,7 @@ typedef void (*globus_ftp_client_perf_plugin_begin_cb_t)(
  *
  * This callback is called for all types of transfers except a third
  * party in which extended block mode is not used (because 112 perf markers
- * wont be sent in that case). For extended mode 'put' and '3pt', actual 112
+ * won't be sent in that case). For extended mode 'put' and '3pt', actual 112
  * perf markers will be used and the frequency of this callback is dependent
  * upon the frequency those messages are received. For 'put' in which
  * extended block mode is not enabled and 'get' transfers, the information in

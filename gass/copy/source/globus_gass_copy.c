@@ -366,7 +366,7 @@ globus_gass_copy_handle_init(
  * @details
  * Destroy a  gass_copy_handle, which was initialized using
  * globus_gass_copy_handle_init(), that will no longer be used for doing
- * transfers.  Once the handle is detroyed, no further transfers should be
+ * transfers.  Once the handle is destroyed, no further transfers should be
  * associated with it.
  *
  * @param handle
@@ -3807,7 +3807,7 @@ globus_l_gass_copy_ftp_read_callback(
 	state->source.n_pending, nbytes, offset, eof);
 #endif
 
-    if(error == GLOBUS_SUCCESS) /* no error occured */
+    if(error == GLOBUS_SUCCESS) /* no error occurred */
     {
 	last_data = eof;
 	if(eof)
@@ -4188,7 +4188,7 @@ typedef struct
  *        Unused handle to globus_gass_copy_handle_t
  * @param error
  *        Indicates an error from globus_gass_copy_cksm_async(), will be NULL if 
- *        no error occured.
+ *        no error occurred.
  *
  * @return
  *         This function does not directly return a value, however it does 
@@ -4676,7 +4676,7 @@ globus_l_gass_copy_ftp_write_callback(
 	nbytes, offset, eof);
 #endif
 
-    if(error == GLOBUS_SUCCESS) /* no error occured */
+    if(error == GLOBUS_SUCCESS) /* no error occurred */
     {
 	if(eof)
 	{
