@@ -267,7 +267,8 @@ if ($startserver) {
     $SERVERPIDFILE = "$tmpdir/myproxy-test.serverpid.$$";
     $SERVERPORTFILE = "$tmpdir/myproxy-test.serverport.$$";
     $servercmd = "$myproxy_server -s $serverdir -c $serverconf";
-    $servercmd .= " -p 0 -P $SERVERPIDFILE -z $SERVERPORTFILE";
+    $servercmd .= " -l $ENV{'MYPROXY_SERVER'} -p 0";
+    $servercmd .= " -P $SERVERPIDFILE -z $SERVERPORTFILE";
     if (defined($valgrind)) {
         $valgrindlog = File::Temp::tempnam($tmpdir, "valgrind.log.");
         $valgrindlogopt = " --log-file=$valgrindlog ";

@@ -259,7 +259,8 @@ chmod(0700, $sl1dir) ||
 $sl1pidfile = "$tmpdir/myproxy-test.serverpid.sl1.$$";
 $sl1portfile = "$tmpdir/myproxy-test.serverport.sl1.$$";
 $servercmd = "$myproxy_server -s $sl1dir -c $slconf";
-$servercmd .= " -p 0 -P $sl1pidfile -z $sl1portfile";
+$servercmd .= " -l $ENV{'MYPROXY_SERVER'} -p 0";
+$servercmd .= " -P $sl1pidfile -z $sl1portfile";
 &debug("running '$servercmd'");
 `$servercmd`;
 sleep(2);			# give server a chance to startup
