@@ -21,9 +21,7 @@ echo "$hostsig" > ~/.ssh/known_hosts
 cat > ~/.ssh/config <<__END__
 Host $upload_server
 User gctuploader
-IdentityFile $keyfile
 PubkeyAuthentication yes
-IdentitiesOnly yes
 __END__
 
 (
