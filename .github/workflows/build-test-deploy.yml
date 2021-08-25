@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         image: ['centos:centos7']
-        task: ['tests']
         components: ['udt,myproxy,ssh', 'gram5']
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +20,7 @@ jobs:
       - name: build/test on ${{ matrix.image }} with ${{ matrix.components }}
         env:
           IMAGE: ${{ matrix.image }} 
-          TASK: ${{ matrix.task }} 
+          TASK: tests
           COMPONENTS: ${{ matrix.components }} 
         run: travis-ci/setup_tasks.sh
         
