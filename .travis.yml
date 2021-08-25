@@ -5,6 +5,12 @@
 
 # Also, the following gram tests failed for all fedora versions:
 #   nonblocking-register-test.pl, register-callback-test.pl, register-test.pl
+arch:
+  # Disabled for now
+  #- amd64
+  # Handled via partner queue, uncharged
+  - ppc64le
+  #- arm64
 jobs:
   include:
 
@@ -31,6 +37,11 @@ jobs:
     - stage: deploy
       env:
         - IMAGE=centos:centos7 TASK=srpms
+      # Only deploy from a single arch, select one and remove comment at front
+      # when multiple arches are enabled above
+      #arch: amd64
+      #arch: ppc64le
+      #arch: arm64
       sudo: required
       skip_cleanup: true
       services:
