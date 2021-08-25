@@ -1,4 +1,4 @@
-name: Run Travis CI
+name: Build/Test/Deploy
 
 on:
   push:
@@ -18,14 +18,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
     
-      - name: setup tasks
+      - name: build/test on ${{ matrix.image }} with ${{ matrix.components }}
         env:
           IMAGE: ${{ matrix.image }} 
           TASK: ${{ matrix.task }} 
           COMPONENTS: ${{ matrix.components }} 
         run: travis-ci/setup_tasks.sh
         
-      - name: setup tasks with srpms
+      - name: build source tarballs and srpms
         env:
           IMAGE: centos:centos7
           TASK: srpms
