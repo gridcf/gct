@@ -2,10 +2,10 @@ name: Build/Test/Deploy
 
 on:
   push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
   pull_request:
-#     tags:
-#       - v[0-9]+.[0-9]+.[0-9]+
-#       - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
       
 jobs:
   run-scripts:
@@ -31,7 +31,7 @@ jobs:
         run: travis-ci/setup_tasks.sh
       
       # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
-      - name: Establish ssh
+      - name: Establish ssh and upload source tarballs
         if: contains(github.ref , 'refs/tags/')
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
