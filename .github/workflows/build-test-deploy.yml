@@ -1,0 +1,43 @@
+name: Build/Test/Deploy
+
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+.[0-9]+
+  pull_request:
+      
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ['centos:centos7']
+        components: ['udt,myproxy,ssh', 'gram5']
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: build/test on ${{ matrix.image }} with ${{ matrix.components }}
+        env:
+          IMAGE: ${{ matrix.image }} 
+          TASK: tests
+          COMPONENTS: ${{ matrix.components }} 
+        run: travis-ci/setup_tasks.sh
+        
+      - name: build source tarballs and srpms
+        env:
+          IMAGE: centos:centos7
+          TASK: srpms
+        run: travis-ci/setup_tasks.sh
+      
+      # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
+      - name: Establish ssh and upload source tarballs
+        if: contains(github.ref , 'refs/tags/')
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
+          ssh-add - <<< "${{ secrets.ID_GCTUPLOADER }}"
+          travis-ci/upload_source_tarballs.sh ${{ github.repository_owner }}
