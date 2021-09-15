@@ -1,8 +1,15 @@
+globus-gsi-openssl-error (4.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Function names are (null) in OpenSSL 3.0 - adapt expected test
+    output
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 15 Sep 2021 14:29:08 +0200
+
 globus-gsi-openssl-error (4.3-1+gct.@distro@) @distro@; urgency=medium
 
   * More OpenSSL3.0 fixes, for 3.0-beta2
 
- -- Frank Scheiner <scheiner@hlrs.de> Thu, 12 Aug 2021 16:28:40 +0200
+ -- Frank Scheiner <scheiner@hlrs.de>  Thu, 12 Aug 2021 16:28:40 +0200
 
 globus-gsi-openssl-error (4.2-1+gct.@distro@) @distro@; urgency=medium
 

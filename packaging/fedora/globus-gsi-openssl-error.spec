@@ -3,7 +3,7 @@
 Name:		globus-gsi-openssl-error
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	4.3
+Version:	4.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus OpenSSL Error Handling
 
@@ -142,6 +142,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Sep 15 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.4-1
+- Function names are (null) in OpenSSL 3.0 - adapt expected test output
+
 * Thu Aug 12 2021 Frank Scheiner <scheiner@hlrs.de> - 4.3-1
 - More OpenSSL3.0 fixes, for 3.0-beta2
 

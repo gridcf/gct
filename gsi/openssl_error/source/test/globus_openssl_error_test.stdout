@@ -1,4 +1,4 @@
 globus_openssl_error_test: Test Error: blah:\d+
-OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: asn1 encoding routines, function i2d_RSA_PUBKEY: decode error
-OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: BIO routines, function BIO_write: broken pipe
-OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: asn1 encoding routines, function (X509_NAME_(EX_)?NEW|x509_name_(ex_)?new): too long
+OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: asn1 encoding routines, function (i2d_RSA_PUBKEY|\(null\)): decode error
+OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: BIO routines, function (BIO_write|\(null\)): broken pipe
+OpenSSL Error: \S*globus_openssl_error_test.c:\d+: in library: asn1 encoding routines, function (X509_NAME_(EX_)?NEW|x509_name_(ex_)?new|\(null\)): too long
