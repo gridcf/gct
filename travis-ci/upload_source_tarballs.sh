@@ -7,8 +7,6 @@ set -eux
 
 repo_owner=$1
 
-keyfile=$(pwd -P)/travis-ci/id_gctuploader
-
 # also hosts repo.gridcf.org; can't use repo.gridcf.org directly because
 # CloudFlare apparently doesn't properly handle SSH
 upload_server=hcc-osg-repo.unl.edu
@@ -23,16 +21,6 @@ Host $upload_server
 User gctuploader
 PubkeyAuthentication yes
 __END__
-
-(
-    umask 077
-    mkdir -p ~/.ssh
-    openssl aes-256-cbc \
-        -K $encrypted_677f6546cb93_key \
-        -iv $encrypted_677f6546cb93_iv \
-        -in "$keyfile.enc.$repo_owner" -out "$keyfile" \
-        -d
-)
 
 root=$(git rev-parse --show-toplevel)
 cd "$root"
