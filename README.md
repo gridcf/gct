@@ -1,7 +1,7 @@
 Grid Community Toolkit
 ======================
 
-[![Build Status](https://api.travis-ci.com/gridcf/gct.svg?branch=master)](https://travis-ci.com/gridcf/gct)
+[![Build Status](https://api.travis-ci.com/gridcf/gct.svg?branch=master)](https://travis-ci.com/github/gridcf/gct)
 
 This is the official git repository for the Grid Community Toolkit (GCT). Find the documentation on https://gridcf.org/gct-docs/.
 
