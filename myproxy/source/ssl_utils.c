@@ -740,8 +740,8 @@ ssl_private_key_load_from_file(SSL_CREDENTIALS	*creds,
 	goto error;
     }
 
-    if (PEM_read_PrivateKey(key_file, &(key), (pass_phrase_prompt) ? 
-			    NULL : my_pass_phrase_callback, NULL) == NULL)
+    if ((key = PEM_read_PrivateKey(key_file, NULL, (pass_phrase_prompt) ?
+	    PEM_NO_CALLBACK : PEM_CALLBACK(my_pass_phrase_callback))) == NULL)
     {
 	unsigned long error, reason;
 	
@@ -749,11 +749,8 @@ ssl_private_key_load_from_file(SSL_CREDENTIALS	*creds,
 	reason = ERR_GET_REASON(error);
 
 	/* If this is a bad password, return a better error message */
-	if (reason == EVP_R_BAD_DECRYPT
-#ifdef EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-	    || reason == EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-#endif
-	    )
+	if (reason == EVP_R_BAD_DECRYPT ||
+	    reason == PEM_R_BAD_PASSWORD_READ)
 	{
 	    verror_put_string("Bad password");
 	}
@@ -865,18 +862,18 @@ ssl_private_key_is_encrypted(const char	*path)
     _ssl_pass_phrase = NULL;
     ERR_clear_error();
 
-    if (PEM_read_PrivateKey(key_file, &(key), my_pass_phrase_callback,
-			    NULL) == NULL) {
+    if ((key = PEM_read_PrivateKey(key_file, NULL,
+		PEM_CALLBACK(my_pass_phrase_callback))) == NULL)
+    {
 	unsigned long error, reason;
 	
 	error = ERR_peek_error();
 	reason = ERR_GET_REASON(error);
-	if (reason == EVP_R_BAD_DECRYPT
-	    || reason == PEM_R_BAD_PASSWORD_READ
-#ifdef EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-	    || reason == EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-#endif
-	    ) {
+	if (error == 0 ||
+	    reason == EVP_R_BAD_DECRYPT ||
+	    reason == PEM_R_BAD_PASSWORD_READ ||
+	    reason == PEM_R_NOT_PROC_TYPE)
+	{
 	    return_status = 1;		/* key is encrypted */
 	    goto cleanup;
 	} else {
@@ -940,8 +937,8 @@ ssl_proxy_from_pem(SSL_CREDENTIALS		*creds,
     }
 
     /* Read proxy private key */
-    if (PEM_read_bio_PrivateKey(bio, &(key),
-				PEM_CALLBACK(my_pass_phrase_callback)) == NULL)
+    if ((key = PEM_read_bio_PrivateKey(bio, NULL,
+		PEM_CALLBACK(my_pass_phrase_callback))) == NULL)
     {
 	unsigned long error, reason;
 	
@@ -949,11 +946,8 @@ ssl_proxy_from_pem(SSL_CREDENTIALS		*creds,
 	reason = ERR_GET_REASON(error);
 
 	/* If this is a bad password, return a better error message */
-	if (reason == EVP_R_BAD_DECRYPT
-#ifdef EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-	    || reason == EVP_R_NO_SIGN_FUNCTION_CONFIGURED
-#endif
-	    )
+	if (reason == EVP_R_BAD_DECRYPT ||
+	    reason == PEM_R_BAD_PASSWORD_READ)
 	{
 	    verror_put_string("Bad password");
 	}

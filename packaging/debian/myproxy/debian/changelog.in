@@ -1,3 +1,9 @@
+myproxy (6.2.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * OpenSSL 3.0 compatibility
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 03 Dec 2021 22:14:17 +0100
+
 myproxy (6.2.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Use -l (--listen) flag when starting myproxy-server in test scripts

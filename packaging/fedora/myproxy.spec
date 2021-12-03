@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.9
+Version:        6.2.10
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Fri Dec 03 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.10-1
+- OpenSSL 3.0 compatibility
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.9-1
 - Use -l (--listen) flag when starting myproxy-server in test scripts
 - Typo fixes
