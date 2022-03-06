@@ -3,7 +3,7 @@
 Name:		globus-gram-protocol
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	13.5
+Version:	13.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Protocol Library
 
@@ -158,6 +158,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.6-1
+- Use sha256 hash when generating test certificates
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.5-1
 - Typo fixes
 

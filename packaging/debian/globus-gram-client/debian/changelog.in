@@ -1,3 +1,9 @@
+globus-gram-client (14.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 hash when generating test certificates
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 14:16:17 +0100
+
 globus-gram-client (14.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Make makefiles exit sooner on errors

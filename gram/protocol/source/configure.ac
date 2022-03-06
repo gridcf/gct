@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_protocol],[13.5],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_protocol],[13.6],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])

@@ -3,7 +3,7 @@
 Name:		globus-io
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	12.3
+Version:	12.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - uniform I/O interface
 
@@ -121,6 +121,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.4-1
+- Use sha256 hash when generating test certificates
+
 * Wed Jun 03 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.3-1
 - Use -nameopt sep_multiline to derive certificate subject string
 

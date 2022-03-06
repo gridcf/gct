@@ -1,3 +1,11 @@
+globus-gssapi-gsi (14.18-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 hash when generating test certificates
+  * Don't test TLS 1.0 and 1.1 when using openssl 3.0.1 or later
+  * Remove duplicate variables in test environment
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 14:30:33 +0100
+
 globus-gssapi-gsi (14.17-1+gct.@distro@) @distro@; urgency=medium
 
   * Fixes for OpenSSL-3.0.0-beta1
