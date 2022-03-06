@@ -2,7 +2,7 @@
 
 Name:		globus-simple-ca
 %global _name %(echo %{name} | tr - _)
-Version:	5.3
+Version:	5.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Simple CA Utility
 
@@ -116,6 +116,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.4-1
+- Use sha256 when signing request
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-1
 - Typo fixes
 

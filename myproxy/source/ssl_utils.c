@@ -2062,7 +2062,7 @@ ssl_sign(unsigned char *data, int length,
       return SSL_ERROR;
    }
 
-   EVP_SignInit(ctx, EVP_sha1());
+   EVP_SignInit(ctx, EVP_sha256());
    EVP_SignUpdate(ctx, (void *)data, length);
    if (EVP_SignFinal(ctx, *signature, (unsigned int *)signature_len,
 		     creds->private_key) != 1) {
@@ -2085,7 +2085,7 @@ ssl_verify(unsigned char *data, int length,
    EVP_MD_CTX *ctx = EVP_MD_CTX_create();
    EVP_PKEY *pubkey = NULL;
 
-   EVP_VerifyInit(ctx, EVP_sha1());
+   EVP_VerifyInit(ctx, EVP_sha256());
    EVP_VerifyUpdate(ctx, (void*) data, length);
    pubkey = X509_get_pubkey(creds->certificate);
    if (EVP_VerifyFinal(ctx, signature, signature_len, pubkey) != 1 ) {

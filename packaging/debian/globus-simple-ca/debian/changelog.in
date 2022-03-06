@@ -1,3 +1,9 @@
+globus-simple-ca (5.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 when signing request
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 17:22:49 +0100
+
 globus-simple-ca (5.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes

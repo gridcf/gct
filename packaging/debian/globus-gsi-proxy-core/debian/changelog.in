@@ -1,3 +1,9 @@
+globus-gsi-proxy-core (9.7-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 when signing request
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 16:42:52 +0100
+
 globus-gsi-proxy-core (9.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Fixes for OpenSSL-3.0.0-beta1
