@@ -297,7 +297,7 @@ int myproxy_ocsp_verify(X509 *cert, X509 *issuer) {
 
   /* sign the request */
   if (sign_cert && sign_key &&
-      !OCSP_request_sign(req, sign_cert, sign_key, EVP_sha1(), 0, 0)) {
+      !OCSP_request_sign(req, sign_cert, sign_key, EVP_sha256(), 0, 0)) {
     result = MYPROXY_OCSPRESULT_ERROR_SIGNFAILURE;
     goto end;
   }

@@ -1,3 +1,9 @@
+globus-gridftp-server (13.23-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 hash when generating test certificates
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 14:38:01 +0100
+
 globus-gridftp-server (13.22-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes

@@ -1,3 +1,9 @@
+globus-gass-copy (10.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use sha256 hash when generating test certificates
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 06 Mar 2022 14:14:46 +0100
+
 globus-gass-copy (10.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes

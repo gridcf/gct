@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.6
+Version:	9.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -143,6 +143,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.7-1
+- Use sha256 when signing request
+
 * Tue Jul 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.6-1
 - Fixes for OpenSSL-3.0.0-beta1
 

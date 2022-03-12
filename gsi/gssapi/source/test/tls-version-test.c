@@ -197,8 +197,10 @@ main(int argc, char *argv[])
     int                                 failed = 0;
     struct test_case                    test_cases[] =
     {
+#if OPENSSL_VERSION_NUMBER < 0x30000010L
         TEST_CASE_INITIALIZER("TLS1_VERSION_DEPRECATED", "TLSv1"),
         TEST_CASE_INITIALIZER("TLS1_1_VERSION_DEPRECATED", "TLSv1.1"),
+#endif
         TEST_CASE_INITIALIZER("TLS1_2_VERSION", "TLSv1.2"),
         TEST_CASE_INITIALIZER("TLS1_3_VERSION", TLSMAX),
         TEST_CASE_INITIALIZER("TLS1_VERSION", TLSMAX),

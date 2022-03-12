@@ -2,7 +2,7 @@
 
 Name:		globus-proxy-utils
 %global _name %(echo %{name} | tr - _)
-Version:	7.2
+Version:	7.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 
@@ -77,6 +77,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.3-1
+- Use sha256 hash when generating test certificates
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.2-1
 - Typo fixes
 

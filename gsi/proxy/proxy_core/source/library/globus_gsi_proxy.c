@@ -597,7 +597,7 @@ globus_gsi_proxy_create_req(
     if (!X509_REQ_sign(handle->req, handle->proxy_key,
             handle->attrs->signing_algorithm
             ? handle->attrs->signing_algorithm
-            : EVP_sha1()))
+            : EVP_sha256()))
     {
         GLOBUS_GSI_PROXY_OPENSSL_ERROR_RESULT(
             result,

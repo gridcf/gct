@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.17
+Version:	14.18
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -158,6 +158,11 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.18-1
+- Use sha256 hash when generating test certificates
+- Don't test TLS 1.0 and 1.1 when using openssl 3.0.1 or later
+- Remove duplicate variables in test environment
+
 * Tue Jul 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.17-1
 - Fixes for OpenSSL-3.0.0-beta1
 
