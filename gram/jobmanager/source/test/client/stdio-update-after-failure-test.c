@@ -294,10 +294,6 @@ int main(int argc, char *argv[])
             &ignore_failure_code);
     fprintf(stderr, "commit request result %d\n", rc);
 
-commit_end_failed:
-incorrect_size_error:
-still_streaming_check_failed2:
-still_streaming_check_failed:
 unexpected_job_state:
 commit_request_failed:
     if (monitor.job_contact != NULL)

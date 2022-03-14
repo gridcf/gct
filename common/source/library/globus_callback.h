@@ -301,9 +301,6 @@ typedef struct globus_l_callback_space_attr_s * globus_callback_space_attr_t;
  * @param user_arg
  *        The user argument registered with this callback
  *
- * @return
- *        - void
- * 
  * @see globus_callback_space_register_oneshot()
  * @see globus_callback_space_register_periodic()
  * @see globus_thread_blocking_space_will_block()
@@ -576,9 +573,6 @@ globus_callback_adjust_period(
  *        The callback space to poll.  Note: regardless of what space is passed
  *        here, the 'global' space is also always polled.
  *
- * @return
- *        - void
- * 
  * @see globus_callback_spaces
  * @see globus_condattr_setspace()
  */

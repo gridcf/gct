@@ -181,7 +181,7 @@ globus_l_ftp_base64_encode(
 {
     int                                 i;
     int                                 j;
-    unsigned char                       c;
+    unsigned char                       c = 0;
 
     for (i=0,j=0; i < in_len; i++)
     {

@@ -1041,6 +1041,7 @@ globus_l_gram_job_manager_remove_reference_locked(
     int                                 rc = GLOBUS_SUCCESS;
 
     strncpy(gramid, key, sizeof(gramid));
+    gramid[sizeof(gramid) - 1] = '\0';
     ref = globus_hashtable_lookup(&manager->request_hash, (void *) key);
     if (ref)
     {
@@ -1246,7 +1247,7 @@ globus_gram_job_manager_register_job_id(
     globus_bool_t                       prelocked)
 {
     int                                 rc = GLOBUS_SUCCESS;
-    globus_gram_job_id_ref_t *          ref;
+    globus_gram_job_id_ref_t *          ref = NULL;
     globus_gram_job_id_ref_t *          old_ref;
     globus_list_t                       *subjobs = NULL, *tmp_list;
     char *                              subjob_id;
@@ -1478,7 +1479,7 @@ globus_gram_job_manager_register_job_id(
             request->job_contact_path,
             0);
 
-    if (rc != GLOBUS_SUCCESS)
+    if (ref && rc != GLOBUS_SUCCESS)
     {
 hash_insert_failed:
         free(ref->job_contact_path);

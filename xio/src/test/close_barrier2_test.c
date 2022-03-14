@@ -142,7 +142,6 @@ close_barrier2_main(
     globus_xio_stack_t                      stack;
     globus_xio_handle_t                     handle;
     globus_result_t                         res;
-    globus_abstime_t                        end_time;
     globus_xio_attr_t                       attr;
 
     globus_l_close_called = GLOBUS_FALSE;

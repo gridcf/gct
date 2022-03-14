@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
     globus_ftp_client_handleattr_t		handle_attr;
     char *					src = NULL;
     char *					dst = NULL;
-    int                                         mode;
+    int                                         mode = 0;
     extern char *                               optarg;
     extern int                                  optind;
     int                                         c;

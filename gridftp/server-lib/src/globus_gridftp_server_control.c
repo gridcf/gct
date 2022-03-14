@@ -1974,7 +1974,7 @@ globus_l_gsc_flush_reads(
     globus_i_gsc_server_handle_t *      server_handle,
     const char *                        reply_msg)
 {
-    globus_result_t                     res;
+    globus_result_t                     res = GLOBUS_SUCCESS;
     globus_result_t                     tmp_res;
     globus_i_gsc_op_t *                 op;
     GlobusGridFTPServerName(globus_l_gsc_flush_reads);
@@ -4685,7 +4685,7 @@ globus_i_gsc_authenticate(
                     op->server_handle->subject,
                     buffer.length + 1,
                     "%s",
-                    buffer.value);
+                    (char *)buffer.value);
             }
             gss_release_buffer(&minor_stat, &buffer);
         }

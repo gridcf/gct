@@ -264,31 +264,25 @@ globus_l_gfs_ipc_closed(
     void *                              user_arg,
     globus_result_t                     result)
 {
-    globus_xio_handle_t                 xio_handle;
     globus_gfs_embed_handle_t           handle;
+    GlobusGFSName(globus_l_gfs_ipc_closed);
+    GlobusGFSDebugEnter();
 
     if(result != GLOBUS_SUCCESS)
     {
         /* XXX TODO log and error */
     }
 
-    xio_handle = (globus_xio_handle_t) user_arg;
-    globus_mutex_unlock(&handle->mutex);
+    handle = (globus_gfs_embed_handle_t) user_arg;
+
+    globus_mutex_lock(&handle->mutex);
     {
-        result = globus_xio_register_close(
-            xio_handle,
-            NULL,
-            globus_l_gfs_close_cb,
-            handle);
+        globus_i_gfs_connection_closed(handle);
     }
     globus_mutex_unlock(&handle->mutex);
 
-    if(result != GLOBUS_SUCCESS)
-    {
-        globus_l_gfs_close_cb(xio_handle, result, handle);
-    }
+    GlobusGFSDebugExit();
 }
-
 
 static
 void
@@ -380,7 +374,7 @@ globus_l_gfs_new_server_cb(
                 &globus_gfs_ipc_default_iface,
                 system_handle,
                 globus_l_gfs_ipc_closed,
-                xio_handle);
+                handle);
         }
         else
         {        

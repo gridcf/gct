@@ -514,7 +514,7 @@ globus_xio_handle_create(
  *         GLOBUS_XIO_OPERATION_READ
  *         GLOBUS_XIO_OPERATION_WRITE
  *
- *  @param arg
+ *  @param user_arg
  *         A user arg threaded through to the callback.
  */
 

@@ -1568,7 +1568,7 @@ gfs_l_gfork_backend_xio_open_cb(
     memcpy(&buffer[GF_DYN_AT_ONCE_NDX], &converted_32, sizeof(uint32_t));
     converted_32 = htonl(g_total_cons);
     memcpy(&buffer[GF_DYN_TOTAL_NDX], &converted_32, sizeof(uint32_t));
-    strncpy((char *)&buffer[GF_DYN_CS_NDX], g_be_cs, GF_DYN_CS_LEN);
+    strncpy((char *)&buffer[GF_DYN_CS_NDX], g_be_cs, GF_DYN_CS_LEN - 1);
 
     result = globus_xio_register_write(
         handle,
@@ -2041,7 +2041,7 @@ gfs_l_gfork_opts_mem_size(
     int *                               out_parms_used)
 {
     globus_result_t                     result;
-    globus_off_t                        val;
+    globus_off_t                        val = 0;
 
     result = gfs_l_gfork_opts_kmgint(opt[0], &val);
     if(result != GLOBUS_SUCCESS)

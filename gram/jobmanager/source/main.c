@@ -906,6 +906,7 @@ globus_l_gram_process_pending_restarts(
         key = globus_list_first(manager->pending_restarts);
         globus_assert(key != NULL);
         strncpy(gramid, key, sizeof(gramid));
+        gramid[sizeof(gramid) - 1] = '\0';
 
         GlobusGramJobManagerUnlock(manager);
 

@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.11
+Version:        6.2.12
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.12-1
+- Fix some compiler warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.11-1
 - Use sha256 when signing request
 

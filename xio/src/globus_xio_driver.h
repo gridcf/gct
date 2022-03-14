@@ -402,7 +402,7 @@ typedef globus_result_t
  */
 typedef globus_result_t
 (*globus_xio_driver_attr_cntl_t)(
-    void *                              attr,
+    void *                              driver_attr,
     int                                 cmd,
     va_list                             ap);
 
@@ -474,9 +474,6 @@ globus_xio_driver_pass_server_init(
  *
  *  When this function is called the driver should free up all resources
  *  associated with a server.
- *
- *  @param server
- *         The server that the driver should clean up.
  *
  *  @param driver_server
  *         The reference to the internal server that is being declared
@@ -808,7 +805,7 @@ globus_xio_driver_merge_handle(
  */
 typedef globus_result_t
 (*globus_xio_driver_close_t)(
-    void *                              driver_handle,
+    void *                              driver_specific_handle,
     void *                              driver_attr,
     globus_xio_operation_t              op);
 
@@ -865,7 +862,7 @@ globus_xio_driver_finished_close(
  *  a handle.  The driver author shall implement all code needed to for
  *  there driver to complete a read operations.
  *
- *  @param driver_handle
+ *  @param driver_specific_handle
  *          The driver handle from which data should be read.
  *
  *  @param iovec
@@ -1015,7 +1012,7 @@ globus_xio_driver_eof_received(
  *  a handle.  The driver author shall implement all code needed to for
  *  there driver to complete write operations.
  *
- *  @param driver_handle
+ *  @param driver_specific_handle
  *          The driver handle to which data should be written.
  *
  *  @param iovec

@@ -69,7 +69,7 @@ static globus_xio_handle_t              globus_l_seg_output_handle;
 static globus_xio_handle_t              globus_l_seg_input_handle;
 static globus_xio_stack_t               globus_l_seg_file_stack;
 static globus_xio_driver_t              globus_l_seg_file_driver;
-static char                             globus_l_seg_input_buffer[1];
+static globus_byte_t                    globus_l_seg_input_buffer[1];
 static time_t                           globus_l_seg_timestamp;
 static globus_fifo_t                    globus_l_seg_buffers;
 static globus_bool_t                    globus_l_seg_write_registered;
@@ -390,7 +390,7 @@ globus_l_stdout_scheduler_event(
     ...)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    char *                              buf;
+    globus_byte_t *                     buf;
     va_list                             ap;
     int                                 length;
 
@@ -421,7 +421,7 @@ globus_l_stdout_scheduler_event(
     }
 
     va_start(ap, format);
-    vsprintf(buf, format, ap);
+    vsprintf((char *)buf, format, ap);
     va_end(ap);
 
     globus_mutex_lock(&globus_l_seg_mutex);

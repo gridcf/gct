@@ -243,7 +243,7 @@ server_test(
     http_test_info_t *			info,
     int					timer)
 {
-    int                                 rc;
+    int                                 rc = 0;
     globus_result_t                     result;
     http_test_server_t                  test_server;
 

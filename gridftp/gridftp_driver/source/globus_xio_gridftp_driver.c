@@ -737,7 +737,7 @@ globus_l_xio_gridftp_process_pending_ops(
 {
     globus_i_xio_gridftp_requestor_t *  requestor;
     globus_result_t                     result;
-    globus_i_xio_gridftp_error_info_t * error_info;
+    globus_i_xio_gridftp_error_info_t * error_info = NULL;
     globus_bool_t                       reading;
     GlobusXIOName(globus_l_xio_gridftp_process_pending_ops);
 
@@ -817,7 +817,7 @@ globus_l_xio_gridftp_process_pending_ops(
          * reporting. I use the error information stored in the error_list
          * for reporting it to the user.
          */
-        result = error_info->result;
+        result = error_info ? error_info->result : GLOBUS_FAILURE;
         goto error;
     }
     GlobusXIOGridftpDebugExit();
@@ -1044,10 +1044,10 @@ globus_l_xio_gridftp_write_cb(
 {
     globus_i_xio_gridftp_requestor_t *  requestor;
     globus_l_xio_gridftp_handle_t *     handle;
-    globus_xio_operation_t              requestor_op;
+    globus_xio_operation_t              requestor_op = NULL;
     globus_list_t *                     error_list = NULL;
-    globus_off_t                        requestor_offset;
-    globus_size_t                       requestor_length;
+    globus_off_t                        requestor_offset = 0;
+    globus_size_t                       requestor_length = 0;
     globus_result_t                     requestor_result = GLOBUS_SUCCESS;
     globus_result_t                     result;
     globus_bool_t                       finish = GLOBUS_TRUE;

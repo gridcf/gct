@@ -327,7 +327,7 @@ outstanding_io_response_callback(
 
     if(ftp_response->code == 227)
     {
-        pasv_to_host_port(ftp_response->response_buffer, &addr);
+        pasv_to_host_port((char *)ftp_response->response_buffer, &addr);
         result = globus_ftp_control_local_port(handle, &addr);
         if(result != GLOBUS_SUCCESS)
         {

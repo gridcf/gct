@@ -40,6 +40,7 @@ CVS Information:
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <grp.h>
 #include <pwd.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -403,8 +404,10 @@ globus_gatekeeper_util_trans_to_user(struct passwd * pw,
 		if (myuid == pw->pw_uid)
 			return 0;   /* already running as the user */
 		else
+		{
 			*errmsg = strdup("Can not run as another user");
 			return 1;   /* can't run as another user */
+		}
 	}
 
 	/*
@@ -425,29 +428,28 @@ globus_gatekeeper_util_trans_to_user(struct passwd * pw,
 #	elif defined(TARGET_ARCH_SOLARIS) || \
 		 defined(TARGET_ARCH_BSD) || \
 		 defined(TARGET_ARCH_CYGWIN)
-    {
+	{
 		if (setuid(pw->pw_uid) != 0)
 		{
-		    *errmsg = strdup("cannot setuid");
+			*errmsg = strdup("cannot setuid");
 			return -3;
 		}
-    }
+	}
 #	else
-    {
+	{
 		if (seteuid(0) != 0)
 		{
-		    *errmsg = strdup("cannot seteuid");
+			*errmsg = strdup("cannot seteuid");
 			return -4;
 		}
 	
 		if (setreuid(pw->pw_uid, pw->pw_uid) != 0)
 		{
-		    *errmsg = strdup("cannot setreuid");
+			*errmsg = strdup("cannot setreuid");
 			return -5;
 		}
-    }
+	}
 #	endif
 
 	return 0;
-
 }

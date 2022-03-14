@@ -43,12 +43,10 @@ int fifo_test(void)
     globus_fifo_t                           currentFifo;
     globus_fifo_t                          *newFifoPtr;
     globus_fifo_t                           relocatedFifo;
-    int                                     rc;
     int                                     numOfItems;
-    int                                    *middleItem;
+    int                                    *middleItem = NULL;
     int                                     middleIndex;
     int                                    *copyData;
-    int                                     errorsOccurred = 0;
 
     printf("1..42\n");
     numOfItems = 8;
@@ -103,7 +101,7 @@ int fifo_test(void)
     /* remove an item in the middle */
     ok((data = (int *)globus_fifo_remove(&currentFifo, middleItem)) != NULL,
         "remove_middle_item");
-    ok(data && (*data == *middleItem), "middle_value_check");
+    ok(data && middleItem && (*data == *middleItem), "middle_value_check");
 
     /* remove an item at the beginning */
     ok((data = globus_fifo_dequeue(&currentFifo)) != NULL, "fifo_dequeue");

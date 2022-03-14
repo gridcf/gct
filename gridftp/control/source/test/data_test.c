@@ -1147,8 +1147,6 @@ connect_read_big_buffer_callback(
 
     globus_mutex_lock(&test_info->monitor->mutex);
     {
-        char                             sys_cmd[1024];
-
         copy_file(g_test_file, test_info->fname);
 
         test_info->fout = fopen(test_info->fname, "rb+");
@@ -1262,8 +1260,6 @@ data_read_big_buffer_callback(
         }
         else
         {
-            char                              sys_cmd[512];
-
             verbose_printf(3, "eof big buffer callback\n");
             /* write out the entire buffer */
             
@@ -1417,8 +1413,6 @@ data_read_callback(
 
         if(eof)
         {
-            char                              sys_cmd[512];
-
             verbose_printf(3, "closing the out stream\n");
             fclose(test_info->fout);
 
@@ -1558,9 +1552,7 @@ connect_write_zero_eof_callback(
     int                                        nbyte;
     globus_byte_t *                            buf;
     globus_bool_t                              eof = GLOBUS_FALSE;
-    globus_bool_t                              done = GLOBUS_FALSE;
     globus_result_t                            res;
-    int                                        ctr;
 
     test_info = (data_test_info_t *)callback_arg;
 

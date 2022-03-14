@@ -736,7 +736,7 @@ globus_l_gfs_base64_decode(
 {
     int                                 i;
     int                                 j;
-    int                                 D;
+    int                                 D = 0;
     char *                              p;
     GlobusGFSName(globus_l_gfs_base64_decode);
     GlobusGFSDebugEnter();
@@ -1127,11 +1127,10 @@ globus_l_gfs_data_post_transfer_event_cb(
 
     switch(data_handle->state)
     {
-        /* occurs if the next transfer comand happens before this function
-            is called to switch out of the TE_VALID state
+        /* occurs if the next transfer command happens before this function
+            is called to switch out of the TE_VALID state */
         case GLOBUS_L_GFS_DATA_HANDLE_INUSE:
             break;
-*/
 
         case GLOBUS_L_GFS_DATA_HANDLE_TE_PRE_CLOSED:
             /* cant free until destroy cb, put in full closed state */
@@ -1161,7 +1160,7 @@ globus_l_gfs_data_post_transfer_event_cb(
         case GLOBUS_L_GFS_DATA_HANDLE_VALID:
             break;
 
-                /* havent even gotten a close, how did this happen? */
+        /* haven't even gotten a close, how did this happen? */
         case GLOBUS_L_GFS_DATA_HANDLE_CLOSED:
         case GLOBUS_L_GFS_DATA_HANDLE_CLOSED_AND_DESTROYED:
             /* these shouldnt be possible */
@@ -1319,7 +1318,9 @@ globus_i_gfs_get_full_path(
     int                                     cwd_len;
     int                                     sc;
     char *                                  slash = "/";
+#ifdef WIN32
     char *                                  tmp_path;
+#endif
     char *                                  norm_path;
     GlobusGFSName(globus_i_gfs_get_full_path);
     GlobusGFSDebugEnter();
@@ -1482,7 +1483,7 @@ globus_i_gfs_data_check_path(
     char                                path[MAXPATHLEN];
     globus_list_t *                     list;
     globus_result_t                     result = GLOBUS_SUCCESS;
-    globus_l_gfs_alias_ent_t *          alias_ent;
+    globus_l_gfs_alias_ent_t *          alias_ent = GLOBUS_NULL;
     char *                              true_path = GLOBUS_NULL;
     char *                              start_path;
     int                                 in_path_len;
@@ -1730,7 +1731,7 @@ globus_i_gfs_data_check_path(
                 
                 if(!rp_list && ret_path)
                 {
-                    if(alias_ent->realpath)
+                    if(alias_ent && alias_ent->realpath)
                     {
                         strncpy(path, alias_ent->realpath, alias_ent->realpath_len);
                         strcpy(path + alias_ent->realpath_len, 
@@ -2489,58 +2490,6 @@ globus_l_gfs_authorize_cb(
     GlobusGFSDebugExit();
 }
 
-static
-globus_result_t
-globus_l_gfs_data_decode_passed_cred(
-    char *                              encoded_cred,
-    gss_cred_id_t *                     out_cred)
-{
-    OM_uint32                           major_status; 
-    OM_uint32                           minor_status;
-    gss_buffer_desc                     buf; 
-    gss_cred_id_t                       cred;
-    globus_result_t                     res;
-    GlobusGFSName(globus_l_gfs_data_decode_passed_cred);
-    GlobusGFSDebugEnter();
-    
-    buf.value = globus_libc_strdup(encoded_cred);
-    
-    res = globus_l_gfs_base64_decode(
-        (globus_byte_t *) encoded_cred, buf.value, &buf.length);
-    if(res != GLOBUS_SUCCESS)
-    {
-        globus_free(buf.value);
-        res = GlobusGFSErrorGeneric(
-            "Invalid base64 input for credential.");
-    }
-    else
-    {                            
-        major_status = gss_import_cred(
-            &minor_status,
-            &cred,
-            GSS_C_NO_OID,
-            0,
-            &buf,
-            0,
-            NULL);
-        globus_free(buf.value);
-        if(major_status != GSS_S_COMPLETE)
-        {
-            res = GlobusGFSErrorWrapFailed(
-                "Credential import", minor_status);
-        }
-        else
-        {            
-            *out_cred = cred;
-        }
-    }
-
-    GlobusGFSDebugExit();
-
-    return res;
-}
-
-
 /*
  *  this is called when writing.  if file exists it is a write
  *  request, if it does not exists it is a create request
@@ -2913,14 +2862,12 @@ globus_l_gfs_data_auth_init_cb(
     globus_bool_t                       destroy_session = GLOBUS_FALSE;
     globus_bool_t                       destroy_op = GLOBUS_FALSE;
     globus_l_gfs_data_operation_t *     op;
-    globus_gfs_session_info_t *         session_info;
     globus_gfs_finished_info_t          finished_info;
     globus_bool_t                       ready = GLOBUS_FALSE;
     GlobusGFSName(globus_l_gfs_data_auth_init_cb);
     GlobusGFSDebugEnter();
 
     op = (globus_l_gfs_data_operation_t *) user_arg;
-    session_info = (globus_gfs_session_info_t *) op->info_struct;
 
     memset(&finished_info, '\0', sizeof(globus_gfs_finished_info_t));
     if(result != GLOBUS_SUCCESS)
@@ -5069,7 +5016,7 @@ globus_l_gfs_base64_encode(
 {
     int                                 i;
     int                                 j;
-    unsigned char                       c;
+    unsigned char                       c = 0;
     for (i=0,j=0; i < in_len; i++)
     {
         switch (i%3)
@@ -5154,9 +5101,7 @@ void
 globus_i_gfs_data_init()
 {
     char *                              restrict_path;
-    int                                 rc;
     globus_result_t                     result;
-    char *                              driver;
     GlobusGFSName(globus_i_gfs_data_init);
     GlobusGFSDebugEnter();
 
@@ -5514,11 +5459,11 @@ globus_l_gfs_data_stat_kickout(
     reply.id = bounce_info->op->id;
     reply.result = bounce_info->error ?
         globus_error_put(bounce_info->error) : GLOBUS_SUCCESS;
-    reply.info.stat.stat_array =  bounce_info->stat_array;
-    reply.info.stat.stat_count =  bounce_info->stat_count;
-    reply.info.stat.uid = bounce_info->op->session_handle->uid;
+    reply.info.stat.stat_array = bounce_info->stat_array;
+    reply.info.stat.stat_count = bounce_info->stat_count;
+    reply.info.stat.uid = (int)bounce_info->op->session_handle->uid;
     reply.info.stat.gid_count = bounce_info->op->session_handle->gid_count;
-    reply.info.stat.gid_array = bounce_info->op->session_handle->gid_array;
+    reply.info.stat.gid_array = (int *)bounce_info->op->session_handle->gid_array;
 
     /* pull response code from error */
     if(bounce_info->final_stat && reply.result != GLOBUS_SUCCESS && 
@@ -5596,7 +5541,7 @@ globus_l_gfs_data_approve_popen(
     char *                              end;
     char *                              ptr;
     char *                              alias;
-    char *                              prog;
+    char *                              prog = NULL;
     char *                              tmp;
     char *                              out = NULL;
     globus_bool_t                       found;
@@ -5752,7 +5697,7 @@ globus_l_gfs_data_load_stack(
     char *                              default_stack,
     globus_bool_t                       subst_io_drivers)
 {
-    char *                              parsed_driver_string;
+    char *                              parsed_driver_string = NULL;
     char *                              driver_string;
     globus_result_t                     result = GLOBUS_SUCCESS;
     GlobusGFSName(globus_l_gfs_data_load_stack);
@@ -5835,7 +5780,7 @@ globus_i_gfs_data_request_command(
 {
     globus_result_t                     res;
     int                                 rc;
-    globus_gfs_acl_action_t             action;
+    globus_gfs_acl_action_t             action = GFS_ACL_ACTION_INIT;
     globus_bool_t                       call = GLOBUS_TRUE;
     globus_l_gfs_data_operation_t *     op;
     globus_result_t                     result;
@@ -7621,7 +7566,6 @@ globus_i_gfs_data_request_handle_destroy(
     globus_result_t                     result;
     globus_l_gfs_data_session_t *       session_handle;
     globus_l_gfs_data_handle_t *        data_handle;
-    int                                 old_state_dbg;
     GlobusGFSName(globus_i_gfs_data_request_handle_destroy);
     GlobusGFSDebugEnter();
 
@@ -7643,7 +7587,6 @@ globus_i_gfs_data_request_handle_destroy(
 
         data_handle->destroy_requested = GLOBUS_TRUE;
 
-        old_state_dbg = data_handle->state;
         session_arg = session_handle->session_arg;
         switch(data_handle->state)
         {
@@ -7783,7 +7726,11 @@ globus_l_gfs_data_hybrid_session_start_cb(
     {
         hybrid_op = op->hybrid_op;
     }
-    
+    else
+    {
+        return;
+    }
+
     if(op->type == GLOBUS_L_GFS_DATA_INFO_TYPE_PASSIVE)
     {
         if(reply->result != GLOBUS_SUCCESS)
@@ -7855,12 +7802,8 @@ globus_l_gfs_data_hybrid_session_start_cb(
                 hybrid_op->user_arg);
         }
     }
-    if(hybrid_op)
-    {
-        globus_l_gfs_data_operation_destroy(hybrid_op);
-    }
 
-
+    globus_l_gfs_data_operation_destroy(hybrid_op);
 }
 
 static
@@ -8710,9 +8653,9 @@ globus_i_gfs_data_request_recv(
     return;
 
 error_module:
+    globus_gridftp_server_finished_transfer(op, result);
 error_op:
 error_handle:
-    globus_gridftp_server_finished_transfer(op, result);
     GlobusGFSDebugExitWithError();
 }
 
@@ -8901,9 +8844,9 @@ globus_i_gfs_data_request_send(
     return;
 
 error_module:
+    globus_gridftp_server_finished_transfer(op, result);
 error_op:
 error_handle:
-    globus_gridftp_server_finished_transfer(op, result);
     GlobusGFSDebugExitWithError();
 }
 
@@ -9056,7 +8999,7 @@ globus_l_gfs_data_list_stat_cb(
     globus_size_t                       buffer_len;
     globus_l_gfs_data_stat_bounce_t *   bounce_info;
     globus_gfs_stat_info_t *            stat_info;
-    globus_result_t                     result;
+    globus_result_t                     result = GLOBUS_SUCCESS;
     globus_gfs_stat_t *                 stat_array;
     globus_gfs_stat_t                   stat_temp;
     int                                 stat_count;
@@ -9735,7 +9678,6 @@ globus_l_gfs_data_begin_cb(
     globus_gfs_event_info_t        event_reply;
     globus_gfs_event_info_t             event_info;
     globus_l_gfs_data_operation_t *     op;
-    globus_l_gfs_data_handle_state_t    last_state;
     void *                              remote_data_arg = NULL;
     GlobusGFSName(globus_l_gfs_data_begin_cb);
     GlobusGFSDebugEnter();
@@ -9744,7 +9686,6 @@ globus_l_gfs_data_begin_cb(
 
     globus_mutex_lock(&op->session_handle->mutex);
     {
-        last_state = op->state;
         switch(op->state)
         {
             case GLOBUS_L_GFS_DATA_CONNECTING:
@@ -11915,7 +11856,6 @@ globus_l_gfs_finished_command_kickout(
     globus_bool_t                       destroy_op = GLOBUS_FALSE;
     void *                              remote_data_arg = NULL;
     globus_l_gfs_data_operation_t *     op;
-    globus_result_t                     result;
     globus_l_gfs_data_cmd_bounce_t *    bounce;
 
     bounce = (globus_l_gfs_data_cmd_bounce_t *) user_arg;
@@ -12304,7 +12244,6 @@ globus_gridftp_server_finished_stat(
     int                                 i;
     char *                              base_path;
     globus_gfs_stat_info_t *            stat_info;
-    int                                 code;
     GlobusGFSName(globus_gridftp_server_finished_stat);
     GlobusGFSDebugEnter();
 
@@ -13465,7 +13404,6 @@ globus_gridftp_server_set_checksum_support(
     globus_gfs_operation_t              op,
     const char *                        cksm_str)
 {
-    globus_result_t                     result;
     GlobusGFSName(globus_gridftp_server_set_checksum_support);
     GlobusGFSDebugEnter();
 
@@ -14764,7 +14702,7 @@ globus_i_gfs_http_data_parse_request(
     char *                              d_req = NULL;
     globus_size_t                       req_len;
     char *                              line;
-    char *                              next_line;
+    char *                              next_line = NULL;
     char *                              ptr;
     char *                              enc_path;
     char *                              enc_url;

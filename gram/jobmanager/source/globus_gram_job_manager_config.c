@@ -61,7 +61,6 @@ globus_gram_job_manager_config_init(
 {
     int                                 i;
     int                                 rc = 0;
-    char *                              tmp;
     char                                hostname[MAXHOSTNAMELEN];
     struct utsname                      utsname;
     char *                              conf_path = NULL;

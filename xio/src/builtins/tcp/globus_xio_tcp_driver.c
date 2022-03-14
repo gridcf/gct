@@ -1378,7 +1378,7 @@ globus_l_xio_tcp_create_listener(
     globus_addrinfo_t *                 save_addrinfo;
     globus_addrinfo_t *                 addrinfo;
     globus_addrinfo_t                   addrinfo_hints;
-    char                                portbuf[10];
+    char                                portbuf[12];
     char *                              port;
     globus_xio_system_socket_t          fd;
     globus_bool_t                       try_again = GLOBUS_FALSE;

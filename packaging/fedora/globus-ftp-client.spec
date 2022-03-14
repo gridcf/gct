@@ -3,7 +3,7 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.7
+Version:	9.8
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
@@ -169,6 +169,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.8-1
+- Fix some compiler and doxygen warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.7-1
 - Use sha256 hash when generating test certificates
 

@@ -182,8 +182,6 @@ read_command_cb(
     globus_object_t *                        error,
     union globus_ftp_control_command_u *     command)
 {
-    globus_bool_t                            queue_empty;
-
     if(error != GLOBUS_NULL)
     {
         globus_mutex_lock(&g_server_monitor.mutex);

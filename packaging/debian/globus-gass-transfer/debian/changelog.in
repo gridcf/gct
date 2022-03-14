@@ -1,3 +1,9 @@
+globus-gass-transfer (9.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler and doxygen warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 09 Mar 2022 20:37:44 +0100
+
 globus-gass-transfer (9.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes

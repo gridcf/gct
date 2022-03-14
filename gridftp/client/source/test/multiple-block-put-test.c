@@ -64,8 +64,8 @@ data_cb(
     globus_result_t				result;
     static int					once = 0;
     if(eof || err) {
-    printf("Data callback: %d bytes, %s %s\n", length, eof?"eof":"not eof",
-	    err?"error":"no error");
+	printf("Data callback: %zd bytes, %s %s\n", length,
+	       eof ? "eof" : "not eof", err ? "error" : "no error");
     }
     /*fwrite(buffer, 1, length, stdout);*/
     if(!eof && !once)

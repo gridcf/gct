@@ -32,7 +32,7 @@ extern
 globus_result_t
 globus_scheduler_event_generator_stdout_handler(
     void *                              arg,
-    globus_scheduler_event_t *          event);
+    const globus_scheduler_event_t *    event);
 
 #ifdef __cplusplus
 }

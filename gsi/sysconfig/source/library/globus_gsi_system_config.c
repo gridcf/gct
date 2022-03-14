@@ -1664,8 +1664,8 @@ globus_gsi_sysconfig_get_cert_dir_win32(
              "found in any of the following locations: \n"
              "1) env. var. X509_CERT_DIR\n"
              "2) $HOME/.globus/certificates\n"
-             "3) /etc/grid-security/certificates"
-             "\n4) $GLOBUS_LOCATION/share/certificates\n")));
+             "3) /etc/grid-security/certificates\n"
+             "4) $GLOBUS_LOCATION/share/certificates\n")));
 
         goto done;
     }
@@ -5037,8 +5037,8 @@ globus_gsi_sysconfig_get_cert_dir_unix(
              "found in any of the following locations: \n"
              "1) env. var. X509_CERT_DIR\n"
              "2) $HOME/.globus/certificates\n"
-             "3) /etc/grid-security/certificates"
-             "\n4) $GLOBUS_LOCATION/share/certificates\n")));
+             "3) /etc/grid-security/certificates\n"
+             "4) $GLOBUS_LOCATION/share/certificates\n")));
 
         goto done;
     }

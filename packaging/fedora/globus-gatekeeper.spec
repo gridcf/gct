@@ -2,7 +2,7 @@
 
 Name:		globus-gatekeeper
 %global _name %(echo %{name} | tr - _)
-Version:	11.3
+Version:	11.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gatekeeper
 
@@ -129,6 +129,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.4-1
+- Fix some compiler warnings
+
 * Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.3-1
 - Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
 

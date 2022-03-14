@@ -188,7 +188,6 @@ adjust_period_set_infinity_callback(
 int
 main(int argc, char *argv[])
 {
-    int                                 tests_passed = 0;
     int                                 ctr;
 
     for (ctr = 0; ctr < argc; ctr++)
@@ -809,7 +808,6 @@ cancel_test()
 void
 verbose_printf(int level, char *s,...)
 {
-    char                                tmp[1023];
     va_list                             ap;
 
 

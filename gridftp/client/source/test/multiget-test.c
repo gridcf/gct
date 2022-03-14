@@ -42,7 +42,7 @@ done_cb(
 	globus_object_t *			err)
 {
     char * tmpstr;
-    int iterations_left;
+    long iterations_left;
 
     if(err)
     {
@@ -88,9 +88,8 @@ globus_ftp_client_handleattr_t		handle_attr;
 int main(int argc, char *argv[])
 {
     globus_ftp_client_handle_t *		handles;
-    globus_result_t				result;
     int						num_handles = 0;
-    int						num_iterations = 0;
+    long					num_iterations = 0;
     char *					dst;
     int						i;
     globus_bool_t				caching = GLOBUS_FALSE;
@@ -105,7 +104,7 @@ int main(int argc, char *argv[])
 	}
 	if(strcmp(argv[i], "-I") == 0 && i + 1 < argc)
 	{
-	    num_iterations = atoi(argv[i+1]);
+	    num_iterations = atol(argv[i+1]);
 
 	    test_remove_arg(&argc, argv, &i, 1);
 	}
@@ -176,7 +175,7 @@ static void
 register_get(globus_ftp_client_handle_t *	handle)
 {
     globus_byte_t *				buffer;
-    int						iterations_left;
+    long					iterations_left;
     globus_result_t				result;
 
     globus_ftp_client_handle_get_user_pointer(handle,

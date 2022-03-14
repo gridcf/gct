@@ -1546,7 +1546,7 @@ globus_thread_self(void)
  * @param thread2
  *     Thread identifier to compare.
  * @retval GLOBUS_TRUE thread1 and thread2 refer to the same thread.
- * @retval GLOBUS_TRUE thread1 and thread2 do not refer to the same thread.
+ * @retval GLOBUS_FALSE thread1 and thread2 do not refer to the same thread.
  */
 globus_bool_t
 globus_thread_equal(

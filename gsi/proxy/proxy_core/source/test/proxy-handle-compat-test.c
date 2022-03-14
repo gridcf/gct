@@ -29,44 +29,6 @@ struct test_case
 static int test_policy_nid;
 
 #define TEST_CASE_INITIALIZER(c) { #c, c }
-#if OPENSSL_VERSION_NUMBER < 0x10000000L
-#define GENERAL_NAME_set0_value(gn, t, dns) \
-    do \
-    { \
-        GENERAL_NAME *g = (gn); \
-        g->type = (t); \
-        g->d.dNSName = (dns);\
-    } \
-    while (0)
-#endif
-
-#define DEFINE_ASN1_CMP_OF(type, i2d) \
-    static int \
-    type##_cmp(type *A, type *B) \
-    { \
-        int res = 1; \
-        int alen = i2d(A, NULL); \
-        int blen = i2d(B, NULL); \
-        if (alen != blen) \
-        { \
-            res = 0; \
-        } \
-        else \
-        { \
-            unsigned char ader[alen]; \
-            unsigned char bder[blen]; \
-            unsigned char *aderptr = ader; \
-            unsigned char *bderptr = bder; \
-            i2d(A, &aderptr); \
-            i2d(B, &bderptr); \
-            res = !memcmp(ader, bder, alen); \
-        } \
-        return res; \
-    }
-
-DEFINE_ASN1_CMP_OF(X509_REQ, i2d_X509_REQ)
-DEFINE_ASN1_CMP_OF(X509_EXTENSION, i2d_X509_EXTENSION)
-
 
 static
 bool
@@ -74,7 +36,6 @@ proxy_handle_set_proxy_cert_info_compat_null_test(void)
 {
     bool                                ok = true;
     globus_result_t                     result = GLOBUS_SUCCESS;
-    globus_gsi_proxy_handle_t           handle = NULL;
 
     result = globus_gsi_proxy_handle_set_proxy_cert_info(NULL, NULL);
     if (result == GLOBUS_SUCCESS)

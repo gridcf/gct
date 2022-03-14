@@ -2044,7 +2044,7 @@ globus_l_gass_transfer_http_authorization_callback(
     gss_ctx_id_t  				context_handle)
 {
     globus_gass_transfer_http_listener_proto_t *proto;
-    int						rc;
+    int						rc = GLOBUS_FALSE;
     MYNAME(globus_l_gass_transfer_http_authorization_callback);
 
     debug_printf(3, (_GTSL("Entering %s()\n"),myname));

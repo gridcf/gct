@@ -219,7 +219,6 @@ static
 bool
 test_error_multiline(void)
 {
-    globus_result_t                     result = GLOBUS_SUCCESS;
     globus_object_t                    *err = NULL;
     char                               *msg = NULL;
     char                               *ftp_str = NULL;

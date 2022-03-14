@@ -114,12 +114,6 @@ globus_l_gram_make_job_dir(
     char **                             job_directory);
 
 static
-int
-globus_l_gram_check_position(
-    globus_gram_jobmanager_request_t *  request,
-    globus_rsl_t *                      position_rsl);
-
-static
 void
 globus_l_gram_event_destroy(void *datum);
 
@@ -3947,77 +3941,6 @@ out:
     return rc;
 }
 /* globus_l_gram_make_job_dir() */
-
-/**
- * Check that all stdout_position or stderr_values are 0
- *
- * @retval GLOBUS_SUCCESS
- *     Success
- * @retval GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_STDOUT_POSITION
- *     Invalid stdout_position
- * @retval GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_STDERR_POSITION
- *     Invalid stderr_position
- */
-static
-int
-globus_l_gram_check_position(
-    globus_gram_jobmanager_request_t *  request,
-    globus_rsl_t *                      position_rsl)
-{
-    int                                 rc = GLOBUS_SUCCESS;
-    globus_rsl_value_t *                value_seq;
-    globus_list_t *                     values;
-    const char *                        value_string;
-    long                                longval;
-    char                                charval;
-
-    value_seq = globus_rsl_relation_get_value_sequence(position_rsl);
-
-    if (value_seq == NULL)
-    {
-        rc = GLOBUS_GRAM_PROTOCOL_ERROR_BAD_RSL;
-        goto non_sequence;
-    }
-
-    values = globus_rsl_value_sequence_get_value_list(value_seq);
-    while (!globus_list_empty(values))
-    {
-        value_string = globus_rsl_value_literal_get_string(
-                globus_list_first(values));
-        values = globus_list_rest(values);
-        if (value_string == NULL)
-        {
-            rc = GLOBUS_GRAM_PROTOCOL_ERROR_BAD_RSL;
-            goto non_literal;
-        }
-
-        errno = 0;
-        if (scanf("%ld%c", &longval, &charval) != 1)
-        {
-            rc = GLOBUS_GRAM_PROTOCOL_ERROR_BAD_RSL;
-            goto non_zero;
-        }
-
-    }
-non_zero:
-non_literal:
-non_sequence:
-    if (rc != GLOBUS_SUCCESS)
-    {
-        if (strcmp(
-                    globus_rsl_relation_get_attribute(position_rsl),
-                    "stdoutposition") == 0)
-        {
-            rc = GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_STDOUT_POSITION;
-        }
-        else
-        {
-            rc = GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_STDERR_POSITION;
-        }
-    }
-    return rc;
-}
-/* globus_l_gram_check_position() */
 
 static
 void

@@ -114,14 +114,7 @@ globus_l_alphabetize_list(
     }
     else if ((!e1->short_opt) && (!e2->short_opt))
     {
-        if (globus_libc_strncasecmp(e1->short_opt, e2->short_opt, strlen(e1->short_opt)) <= 0)
-        {
-            return GLOBUS_TRUE;
-        }
-        else
-        {
-            return GLOBUS_FALSE;
-        }
+        return GLOBUS_TRUE;
     }
     else if (globus_libc_strncasecmp(e1->short_opt, e2->short_opt, strlen(e1->short_opt)) <= 0)
     {

@@ -140,7 +140,6 @@ gpftpd_auth_callback(
     globus_result_t                          res;
     char *                                   username;
     globus_bool_t                            accepted;
-    char *                                   tmp_ptr;
 
     if(error)
     {

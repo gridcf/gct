@@ -179,8 +179,6 @@ globus_error_gssapi_get_major_status(
  *        The error object for which to set the major status
  * @param major_status
  *        The major status
- * @return
- *        void
  */
 void
 globus_error_gssapi_set_major_status(

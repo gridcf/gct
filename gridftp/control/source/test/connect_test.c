@@ -174,7 +174,6 @@ authenticate_clear(
     {
         .command = CMD_CONNECT,
     };
-    globus_ftp_control_auth_info_t      auth_info = {0};
     globus_xio_attr_t                   attr = NULL;
     globus_reltime_t                    timeout = {0};
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -243,7 +242,6 @@ authenticate_clear(
     globus_mutex_unlock(&test_client.mutex);
 
 connect_fail:
-use_tls_fail:
 auth_info_init_fail:
 xio_attr_cntl_fail:
 xio_attr_get_fail:
@@ -268,7 +266,6 @@ authenticate_gssapi(
     {
         .command = CMD_CONNECT,
     };
-    globus_ftp_control_auth_info_t      auth_info = {0};
     globus_xio_attr_t                   attr = NULL;
     globus_reltime_t                    timeout = {0};
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -338,7 +335,6 @@ authenticate_gssapi(
     }
     globus_mutex_unlock(&test_client.mutex);
 connect_fail:
-use_tls_fail:
 auth_info_init_fail:
 xio_attr_cntl_fail:
 xio_attr_get_fail:
@@ -363,7 +359,6 @@ authenticate_tls(
     {
         .command = CMD_CONNECT,
     };
-    globus_ftp_control_auth_info_t      auth_info = {0};
     globus_xio_attr_t                   attr = NULL;
     globus_reltime_t                    timeout = {0};
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -834,7 +829,6 @@ globus_l_server_auth_callback(
     globus_result_t                     res;
     char *                              username;
     globus_bool_t                       accepted;
-    char *                              tmp_ptr;
 
     if (error)
     {
@@ -1135,7 +1129,6 @@ failed_listen_cleartext:
         globus_io_tcpattr_destroy(&tls_server_attr);
     }
 failed_init_cleartext:
-failed_other_attr_init:
     return result;
 }
 /* initialize_servers() */

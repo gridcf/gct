@@ -1,3 +1,9 @@
+globus-xio-gridftp-multicast (2.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 11 Mar 2022 09:41:33 +0100
+
 globus-xio-gridftp-multicast (2.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS

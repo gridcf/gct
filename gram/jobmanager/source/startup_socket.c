@@ -1352,6 +1352,7 @@ globus_l_gram_startup_socket_callback(
             goto failed_receive;
         }
 
+        sent_fds = NULL;
         for (control_message = CMSG_FIRSTHDR(&message);
              control_message != NULL;
              control_message = CMSG_NXTHDR(&message, control_message))
@@ -1363,6 +1364,13 @@ globus_l_gram_startup_socket_callback(
                 break;
             }
         }
+
+        if (!sent_fds)
+        {
+            rc = GLOBUS_GRAM_PROTOCOL_ERROR_PROTOCOL_FAILED;
+            goto failed_receive;
+        }
+
         message_length  = message_length_buffer[0] << 24;
         message_length += message_length_buffer[1] << 16;
         message_length += message_length_buffer[2] << 8;

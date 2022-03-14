@@ -632,8 +632,6 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
     OM_uint32			req_flags = 0, ret_flags = 0;
     int				return_value = GSI_SOCKET_ERROR;
     gss_buffer_desc		gss_buffer = { 0 };
-    gss_name_t			target_name = GSS_C_NO_NAME;
-    gss_OID			target_name_type = GSS_C_NO_OID;
     int				i, rc=0, sock;
     FILE			*fp = NULL;
     char                        *cert_dir = NULL;

@@ -86,8 +86,6 @@
 
 /*****************************  Common Section  *****************************/
 
-static const char plugin_id[] = "$Id: gssapi.c,v 1.9 2007/09/27 15:40:54 basney Exp $";
-
 static const char * GSSAPI_BLANK_STRING = "";
 
 #ifndef HAVE_GSS_C_NT_HOSTBASED_SERVICE
@@ -287,7 +285,8 @@ sasl_gss_seterror_(const sasl_utils_t *utils, OM_uint32 maj, OM_uint32 min,
     OM_uint32 msg_ctx;
     int ret;
     char *out = NULL;
-    size_t len, curlen = 0;
+    size_t len;
+    unsigned int curlen = 0;
     const char prefix[] = "GSSAPI Error: ";
     
     if(!utils) return;

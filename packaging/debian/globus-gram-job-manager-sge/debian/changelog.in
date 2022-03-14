@@ -1,3 +1,9 @@
+globus-gram-job-manager-sge (3.3-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 11 Mar 2022 19:06:35 +0100
+
 globus-gram-job-manager-sge (3.2-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes

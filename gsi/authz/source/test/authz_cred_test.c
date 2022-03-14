@@ -55,7 +55,6 @@ int
 main(int argc, char **argv)
 {
     gss_cred_id_t                       credential;
-    struct context_arg *                arg = NULL;
     gss_buffer_desc                     init_token = GSS_C_EMPTY_BUFFER;
     gss_buffer_desc                     accept_token = GSS_C_EMPTY_BUFFER;
     OM_uint32                           maj_stat, min_stat;
@@ -63,9 +62,6 @@ main(int argc, char **argv)
     gss_ctx_id_t                        accept_ctx = GSS_C_NO_CONTEXT;
     globus_result_t                     result;
     globus_gsi_authz_handle_t           authz_handle;
-    char                                buf[128];
-    char *                              request_action;
-    char *                              request_object;
     char *                              identity;
     int                                 ok = -1;
     int                                 fail_count = 0;

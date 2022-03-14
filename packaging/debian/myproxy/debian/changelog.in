@@ -1,3 +1,9 @@
+myproxy (6.2.12-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 11 Mar 2022 13:25:38 +0100
+
 myproxy (6.2.11-1+gct.@distro@) @distro@; urgency=medium
 
   * Use sha256 when signing request

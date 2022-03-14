@@ -3,7 +3,7 @@
 Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	9.4
+Version:	9.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
@@ -150,6 +150,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.5-1
+- Fix some compiler warnings
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-1
 - Typo fixes
 

@@ -95,7 +95,6 @@ int get_storage_dir_owner(uid_t *owner);
 
 int main(int argc, char *argv[])
 {
-    SSL_CREDENTIALS *creds;
     myproxy_creds_t my_creds = {0};
     char proxyfile[64] = "";
     int rval=1;
@@ -110,7 +109,6 @@ int main(int argc, char *argv[])
 
     myproxy_log_use_stream (stderr);
 
-    creds = ssl_credentials_new();
     init_arguments (argc, argv, &my_creds);
 
     if (certfile == NULL) {

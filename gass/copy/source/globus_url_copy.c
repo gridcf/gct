@@ -3477,16 +3477,16 @@ guc_l_pipe_to_stack_str(
     found = GLOBUS_FALSE;
     while(!found)
     {
-        if(strchr(in_str, *del) == NULL)
+        if(strchr(in_str, *del) != NULL)
         {
             found = GLOBUS_TRUE;
         }
         else
         {
             del++;
-            if(del == '\0')
+            if(*del == '\0')
             {
-                fprintf(stderr, "The pipe string most contain at least one of the following characters: %s", del_choices);
+                fprintf(stderr, "The pipe string must contain at least one of the following characters: %s", del_choices);
                 return NULL;
             }
         }
@@ -3759,7 +3759,7 @@ globus_l_guc_parse_arguments(
             {
                 *tmp_str = '\0';
                 tmp_str++;
-                if(tmp_str == '\0')
+                if(*tmp_str == '\0')
                 {
                     tmp_str = NULL;
                 }

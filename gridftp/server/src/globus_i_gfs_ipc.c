@@ -4137,17 +4137,17 @@ globus_l_gfs_ipc_reply_read_body_cb(
     globus_byte_t *                     new_buf;
     globus_gfs_ipc_request_t *          request = user_arg;
     globus_i_gfs_ipc_handle_t *         ipc;
-    globus_gfs_command_info_t *         cmd_info;
-    globus_gfs_transfer_info_t *        trans_info;
-    globus_gfs_data_info_t *            data_info;
-    globus_gfs_stat_info_t *            stat_info;
+    globus_gfs_command_info_t *         cmd_info = NULL;
+    globus_gfs_transfer_info_t *        trans_info = NULL;
+    globus_gfs_data_info_t *            data_info = NULL;
+    globus_gfs_stat_info_t *            stat_info = NULL;
     globus_gfs_event_info_t *           event_info;
     globus_gfs_operation_type_t         type;
-    globus_byte_t *                     user_buffer;
-    globus_size_t                       user_buffer_length;
-    int                                 user_buffer_type;
+    globus_byte_t *                     user_buffer = NULL;
+    globus_size_t                       user_buffer_length = 0;
+    int                                 user_buffer_type = 0;
     int                                 rc;
-    void *                              data_arg;
+    void *                              data_arg = NULL;
     globus_bool_t                       process = GLOBUS_FALSE;
     int                                 error_state;
     int                                 no_reply_state;
@@ -4918,6 +4918,7 @@ globus_l_gfs_ipc_reply_cb(
                 goto error_already;
                 break;
             case GLOBUS_GFS_IPC_STATE_REPLY_WAIT:
+                error_state = GLOBUS_GFS_IPC_STATE_REPLY_WAIT;
                 break;
             default:
                 globus_assert(0 && "memory corruption?");

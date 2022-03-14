@@ -1392,7 +1392,7 @@ globus_i_xio_http_write(
     globus_xio_operation_t                  op)
 {
     globus_i_xio_http_handle_t *            http_handle = handle;
-    globus_result_t                         result;
+    globus_result_t                         result = GLOBUS_SUCCESS;
     globus_i_xio_http_header_info_t *       headers;
     GlobusXIOName(globus_i_xio_http_write);
 
@@ -1742,7 +1742,7 @@ globus_i_xio_http_close(
     void *                              attr,
     globus_xio_operation_t              op)
 {
-    globus_result_t                     result;
+    globus_result_t                     result = GLOBUS_SUCCESS;
     globus_i_xio_http_handle_t *        http_handle = handle;
     GlobusXIOName(globus_i_xio_http_close);
 

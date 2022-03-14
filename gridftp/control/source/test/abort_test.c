@@ -85,17 +85,17 @@ pasv_response_callback(
 
     if(ftp_response->code == 227)
     {
-verbose_printf(2, "pasv buffer :%s:\n", ftp_response->response_buffer);
-    pasv_to_host_port(ftp_response->response_buffer, &addr);
-verbose_printf(2, "pasv port %d.%d.%d.%d:%d\n", 
-      addr.host[0],
-      addr.host[1],
-      addr.host[2],
-      addr.host[3],
-      addr.port);
+        verbose_printf(2, "pasv buffer :%s:\n", ftp_response->response_buffer);
+        pasv_to_host_port((char *)ftp_response->response_buffer, &addr);
+        verbose_printf(2, "pasv port %d.%d.%d.%d:%d\n",
+            addr.host[0],
+            addr.host[1],
+            addr.host[2],
+            addr.host[3],
+            addr.port);
 
-    res = globus_ftp_control_local_port(handle, &addr);
-    test_result(res, "globus_ftp_control_local_port()");
+        res = globus_ftp_control_local_port(handle, &addr);
+        test_result(res, "globus_ftp_control_local_port()");
     }
     else
     {

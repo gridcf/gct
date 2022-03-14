@@ -783,7 +783,6 @@ globus_l_gfs_file_stat(
     globus_gfs_stat_t *                 stat_array;
     int                                 stat_count = 0;
     int                                 total_stat_count = 0;
-    DIR *                               dir;
     char                                basepath[MAXPATHLEN];
     char                                filename[MAXPATHLEN];
     char                                symlink_target[MAXPATHLEN];
@@ -850,6 +849,7 @@ globus_l_gfs_file_stat(
     {
         /* use larger path bufs so we have the full name for err msg */
         int                             maxpathlen = GLOBUS_MAX(4096, MAXPATHLEN);
+        DIR *                           dir;
         struct dirent *                 dir_entry;
         int                             i;
         char                            dir_path[maxpathlen];
@@ -1046,8 +1046,13 @@ globus_l_gfs_file_stat(
         stat_count = i;
         
         closedir(dir);
-        
+        goto done_fake;
 
+error_stat2:
+        globus_l_gfs_file_destroy_stat(stat_array, stat_count);
+error_alloc2:
+        closedir(dir);
+        goto error_open;
     }
 done_fake:
 
@@ -1090,7 +1095,7 @@ done_fake:
         if(!stat_array)
         {
             result = GlobusGFSErrorMemory("stat_array");
-            goto error_alloc2;
+            goto error_open;
         }
         
         snprintf(
@@ -1122,9 +1127,6 @@ done_fake:
             if(slow_listings &&
                 (dir_entry->d_type == DT_DIR || dir_entry->d_type == DT_REG))
             {
-                unsigned long                       h = 0;
-                char *                              key;
-
                 stat_buf = (struct stat)
                 {
                     .st_mode = S_IRWXU |
@@ -1186,7 +1188,7 @@ done_fake:
                     &stat_array[i], &stat_buf, dir_entry->d_name, symlink_target, link_stat_buf.st_mode, base_error);
             
             /* set nlink to total files in dir for . entry */
-            if(check_cdir && dir_entry->d_name && 
+            if(check_cdir &&
                 dir_entry->d_name[0] == '.' && dir_entry->d_name[1] == '\0')
             {
                 check_cdir = GLOBUS_FALSE;
@@ -1231,7 +1233,7 @@ done_fake:
                     if(!stat_array)
                     {
                         result = GlobusGFSErrorMemory("stat_array");
-                        goto error_alloc2;
+                        goto error_open;
                     }
                     
                     stat_count = 0;
@@ -1253,11 +1255,7 @@ done_fake:
     
     GlobusGFSFileDebugExit();
     return;
-error_stat2:
-    globus_l_gfs_file_destroy_stat(stat_array, stat_count);
-error_alloc2:
-    closedir(dir);
-    
+
 error_open:
 error_alloc1:
 error_stat1:
@@ -1977,7 +1975,6 @@ globus_l_gfs_file_open_cksm_cb(
     void *                              user_arg)
 {  
     globus_l_gfs_file_cksm_monitor_t *  monitor;
-    char *                              freq;
     GlobusGFSName(globus_l_gfs_file_open_cksm_cb);
     GlobusGFSFileDebugEnter();
     

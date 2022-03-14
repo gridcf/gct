@@ -228,7 +228,6 @@ verbose_printf(
     char *                                    s, 
     ...)
 {
-    char                                     tmp[8192];
     va_list                                   ap;
 
     if(level > verbose_print_level)

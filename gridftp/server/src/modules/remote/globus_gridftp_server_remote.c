@@ -402,7 +402,7 @@ globus_l_gfs_remote_select_nodes(
     repo_name = bounce->repo;
     callback = bounce->callback;
     user_arg = bounce->user_arg;
-    nodes_requested = bounce->num_nodes;
+    nodes_requested = num_nodes;
 
     /* select a new set of nodes */
     result = globus_gfs_brain_select_nodes(
@@ -920,7 +920,6 @@ globus_l_gfs_ipc_event_cb(
     globus_l_gfs_remote_handle_t *      my_handle;
     int                                 i;
     globus_l_gfs_remote_ipc_bounce_t *  bounce_info;
-    globus_list_t *                     list;
     globus_bool_t                       finish = GLOBUS_FALSE;
     globus_l_gfs_remote_node_info_t *   current_node = NULL;
     globus_l_gfs_remote_node_info_t *   master_node = NULL;
@@ -981,8 +980,7 @@ globus_l_gfs_ipc_event_cb(
 
                 for(i = 0; i < bounce_info->node_handle->count; i++)
                 {
-                    node_info = (globus_l_gfs_remote_node_info_t *) 
-                        globus_list_first(list);
+                    node_info = bounce_info->node_handle->nodes[i];
                     info = (globus_gfs_transfer_info_t *) node_info->info;
                 
                     if(node_info->ipc_handle == ipc_handle)

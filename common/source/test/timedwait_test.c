@@ -50,7 +50,6 @@ int
 timedwait_test(void)
 {
     int			i;
-    int			successful_tests=0;
     globus_reltime_t    delay_time;
     /* Test definitions:
      * time when signal function should be called,

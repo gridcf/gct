@@ -24,7 +24,6 @@ static globus_mutex_t lock;
 static globus_cond_t cond;
 static globus_bool_t done;
 static globus_bool_t error = GLOBUS_FALSE;
-#define SIZE 42
 
 static
 void
@@ -55,8 +54,6 @@ int main(int argc,
     globus_ftp_client_handle_t			handle;
     globus_ftp_client_operationattr_t 		attr;
     globus_ftp_client_handleattr_t		handle_attr;
-    globus_byte_t				buffer[SIZE];
-    globus_size_t				buffer_length = sizeof(buffer);
     globus_result_t				result;
     char *					src;
     char *					dst;

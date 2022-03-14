@@ -4510,7 +4510,6 @@ globus_ftp_control_data_write(
     globus_i_ftp_dc_handle_t *                  dc_handle;
     globus_result_t                             result = GLOBUS_SUCCESS;
     globus_object_t *                           err;
-    globus_i_ftp_dc_transfer_handle_t *         transfer_handle;
     static char *                               myname=
                                       "globus_ftp_control_data_write";
 
@@ -4560,8 +4559,6 @@ globus_ftp_control_data_write(
                   myname);
         return globus_error_put(err);
     }
-
-    transfer_handle = dc_handle->transfer_handle;
 
     globus_mutex_lock(&dc_handle->mutex);
     {
@@ -4710,7 +4707,7 @@ globus_ftp_control_data_read(
     void *					callback_arg)
 {
     globus_i_ftp_dc_handle_t *                  dc_handle;
-    globus_result_t                             result;
+    globus_result_t                             result = GLOBUS_SUCCESS;
     globus_object_t *                           err;
     static char *                               myname=
                                       "globus_ftp_control_data_read";
@@ -5077,10 +5074,6 @@ globus_l_ftp_control_deactivate_quit_callback(
     globus_ftp_control_handle_t *               handle,
     globus_object_t *                           error)
 {
-    globus_i_ftp_dc_transfer_handle_t *         transfer_handle;
-
-    transfer_handle = (globus_i_ftp_dc_transfer_handle_t *)user_arg;
-
     globus_mutex_lock(&globus_l_ftp_control_data_mutex);
     {
         globus_l_ftp_control_data_dc_count--;
@@ -7654,13 +7647,11 @@ globus_l_ftp_control_reuse_connect_callback(
 {
     globus_l_ftp_dc_connect_cb_info_t *          connect_cb_info;
     globus_i_ftp_dc_handle_t *                   dc_handle;
-    globus_i_ftp_dc_transfer_handle_t *          transfer_handle;
 
     connect_cb_info = (globus_l_ftp_dc_connect_cb_info_t *)user_args;
 
     dc_handle = connect_cb_info->dc_handle;
     GlobusFTPControlDataTestMagic(dc_handle);
-    transfer_handle = connect_cb_info->transfer_handle;
 
     connect_cb_info->callback(
         connect_cb_info->user_arg,
@@ -7901,7 +7892,6 @@ globus_i_ftp_control_data_cc_destroy(
 {
     globus_i_ftp_dc_handle_t *                   dc_handle;
     globus_result_t                              res = GLOBUS_SUCCESS;
-    globus_bool_t                                destroy_it = GLOBUS_FALSE;
     globus_object_t *                            err;
 
     dc_handle = &control_handle->dc_handle;
@@ -7911,7 +7901,6 @@ globus_i_ftp_control_data_cc_destroy(
         if(dc_handle->state == GLOBUS_FTP_DATA_STATE_NONE)
         {
             dc_handle->initialized = GLOBUS_FALSE;
-            destroy_it = GLOBUS_TRUE;
             res = GLOBUS_SUCCESS;
 	        globus_io_tcpattr_destroy(&dc_handle->io_attr);
             if(dc_handle->nl_io_handle_set)
@@ -7973,7 +7962,6 @@ globus_ftp_control_data_force_close(
     globus_ftp_control_callback_t                close_callback_func,
     void *                                       close_arg)
 {
-    globus_i_ftp_dc_transfer_handle_t *          transfer_handle;
     globus_result_t                              res;
     globus_i_ftp_dc_handle_t *                   dc_handle;
     globus_object_t *                            err;
@@ -8024,8 +8012,6 @@ globus_ftp_control_data_force_close(
                       GLOBUS_NULL,
                 _FCSL("Handle not in the proper state")));
     }
-
-    transfer_handle = control_handle->dc_handle.transfer_handle;
 
     dc_handle = &control_handle->dc_handle;
     GlobusFTPControlDataTestMagic(dc_handle);
@@ -10212,7 +10198,7 @@ globus_l_ftp_eb_connect_callback(
     }
 
     /* this should only happen when there is an error */
-    if(eof_callback != GLOBUS_NULL)
+    if(eof_callback != GLOBUS_NULL && eof_cb_ent != GLOBUS_NULL)
     {
         eof_callback(
             eof_cb_ent->callback_arg,
