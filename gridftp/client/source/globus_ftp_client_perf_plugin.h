@@ -112,8 +112,11 @@ typedef void (*globus_ftp_client_perf_plugin_begin_cb_t)(
  *        or, if a copy method was not specified, the value passed to
  *        init
  *
- * @param time_stamp
- *        the timestamp at which the number of bytes is valid
+ * @param time_stamp_int
+ *        the timestamp at which the number of bytes is valid (integer part)
+ *
+ * @param time_stamp_tenth
+ *        the timestamp at which the number of bytes is valid (tenth part)
  *
  * @param stripe_ndx
  *        the stripe index this data refers to
@@ -131,7 +134,7 @@ typedef void (*globus_ftp_client_perf_plugin_marker_cb_t)(
     void *                                          user_specific,
     globus_ftp_client_handle_t *                    handle,
     long                                            time_stamp_int,
-    char                                            time_stamp_tength,
+    char                                            time_stamp_tenth,
     int                                             stripe_ndx,
     int                                             num_stripes,
     globus_off_t                                    nbytes);

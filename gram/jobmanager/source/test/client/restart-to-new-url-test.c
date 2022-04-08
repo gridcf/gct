@@ -434,7 +434,6 @@ test_restart_to_new_url(void)
         test_assert(monitor.old_output[0] == 0);
     }
 
-done:
     return rc;
 }
 /* test_restart_to_new_url() */

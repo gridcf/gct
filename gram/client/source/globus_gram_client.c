@@ -339,8 +339,6 @@ globus_i_gram_client_deactivate(void)
  * of the information printed by this debugging system is related to errors
  * that occur during GRAM Client API functions. The messages printed to
  * standard output are not structured in any way.
- *
- * @return void
  */
 void
 globus_gram_client_debug(void)

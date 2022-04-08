@@ -1344,8 +1344,6 @@ myproxy_server_check_policy_ext(const char *policy, myproxy_server_peer_t *clien
 	     strlen(MYPROXY_SERVER_POLICY_TYPE_SUBJECT)) == 0) {
        policy += strlen(MYPROXY_SERVER_POLICY_TYPE_SUBJECT);
     }
-    if (client->name == NULL)
-       return 0;
 
     return regex_compare(policy, client->name);
 }

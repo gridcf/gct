@@ -526,7 +526,7 @@ globus_l_gass_copy_glob_expand_ftp_url(
 
     info->base_url = globus_libc_strdup(info->url);
     tmp = strrchr(info->base_url, '/');
-    if(tmp == GLOBUS_NULL || tmp == '\0')
+    if(tmp == GLOBUS_NULL || *tmp == '\0')
     {
         result = globus_error_put(
             globus_error_construct_string(
@@ -942,7 +942,6 @@ globus_l_gass_copy_glob_parse_mlst_line(
     globus_result_t                     result;
     int                                 i;
     char *                              space;
-    char *                              filename;
     char *                              startline;
     char *                              startfact;
     char *                              endfact;
@@ -970,7 +969,6 @@ globus_l_gass_copy_glob_parse_mlst_line(
         goto error_invalid_mlsd;
     }
     *space = '\0';            
-    filename = space + 1;
     startfact = startline;
     
     while(startfact != space)

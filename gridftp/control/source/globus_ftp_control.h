@@ -568,21 +568,21 @@ typedef void
  *  @param handle
  *         The control handle that the command was issued on.
  *  @param error
- *         Indicates if a command was successful read or
+ *         Indicates if a command was successfully read or
  *         or if a failure occurred. This object will be freed once
- *	   this callback returns. If the user wishes to have a copy
- *	   of the error that persists past the life of this callback,
- *	   they must make a copy using globus_object_copy(), and free
- *	   it with globus_object_free().
+ *         this callback returns. If the user wishes to have a copy
+ *         of the error that persists past the life of this callback,
+ *         they must make a copy using globus_object_copy(), and free
+ *         it with globus_object_free().
  *  @param command
  *         The command structure indicates what type of command the
  *         client issued.  Based on the 'type' further information
  *         can be extracted. This command structure will be freed once
- *	   this callback returns. If the user wishes to have a copy
- *	   of the error that persists past the life of this callback,
- *	   they must make a copy using
+ *         this callback returns. If the user wishes to have a copy
+ *         of the error that persists past the life of this callback,
+ *         they must make a copy using
  *         globus_ftp_control_command_copy(), and free
- *	   it with globus_ftp_control_command_free().
+ *         it with globus_ftp_control_command_free().
  */
 typedef void (*globus_ftp_control_command_callback_t)(
     void *                                   callback_arg,
@@ -603,6 +603,13 @@ typedef void (*globus_ftp_control_command_callback_t)(
  *  @param handle
  *         This structure is populated when the callback is called and
  *         represents a control connection to the client.
+ *  @param error
+ *         Indicates if a command was successfully read or
+ *         or if a failure occurred. This object will be freed once
+ *         this callback returns. If the user wishes to have a copy
+ *         of the error that persists past the life of this callback,
+ *         they must make a copy using globus_object_copy(), and free
+ *         it with globus_object_free().
  *  @param auth_result
  *         A globus_ftp_control_auth_result_t containing the
  *         values the client sent for gss authentication, user name,
@@ -1012,7 +1019,7 @@ struct globus_ftp_control_server_s;
  *
  * @param server_handle
  *        The server handle associated with callback.
- * @param result
+ * @param error
  *        Indicates if the operation completed successfully or
  *        if a failure occurred.
  * @param callback_arg

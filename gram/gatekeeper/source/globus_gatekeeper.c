@@ -1494,6 +1494,7 @@ static void doit()
     else if (mapping != NULL)
     {
         strncpy(&identity_buffer[0], mapping, sizeof(identity_buffer));
+        identity_buffer[sizeof(identity_buffer) - 1] = '\0';
     }
 
     userid = identity_buffer;
@@ -2210,16 +2211,19 @@ net_accept(int skt)
 
     while (!gotit)
     {
-	fd_set         fdset;
+	fd_set         fdset1;
+	fd_set         fdset2;
 	struct timeval timeout;
 	int            n;
 
-	FD_ZERO(&fdset);
-	FD_SET(skt, &fdset);
+	FD_ZERO(&fdset1);
+	FD_ZERO(&fdset2);
+	FD_SET(skt, &fdset1);
+	FD_SET(skt, &fdset2);
 	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
 
-	n = select(skt + 1, &fdset, (fd_set *) 0, &fdset, &timeout);
+	n = select(skt + 1, &fdset1, (fd_set *) 0, &fdset2, &timeout);
 
 	if (n < 0 && errno != EINTR)
 	{

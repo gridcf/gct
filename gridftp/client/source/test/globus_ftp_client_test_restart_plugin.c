@@ -106,7 +106,7 @@ globus_bool_t
 globus_l_ftp_client_test_restart_plugin_activate(void)
 {
     char *                              rangecnt;
-    if(rangecnt = getenv("FTP_TEST_RESTART_AFTER_RANGE"))
+    if((rangecnt = getenv("FTP_TEST_RESTART_AFTER_RANGE")))
     {
         globus_l_ftp_client_test_restart_range = atoi(rangecnt);
         if(globus_l_ftp_client_test_restart_range < 0)
@@ -877,8 +877,8 @@ globus_l_ftp_client_test_restart_plugin_response(
     d = plugin_specific;
     if(response->code == 111 &&
         globus_l_ftp_client_test_restart_range > 0 &&
-        d->when == FTP_RESTART_AT_STOR_RESPONSE || 
-        d->when == FTP_RESTART_AT_RETR_RESPONSE)
+        (d->when == FTP_RESTART_AT_STOR_RESPONSE ||
+         d->when == FTP_RESTART_AT_RETR_RESPONSE))
     {
         if(--globus_l_ftp_client_test_restart_range == 0)
         {
@@ -1054,37 +1054,6 @@ globus_l_ftp_client_test_restart_plugin_fault(
 {
     fprintf(stderr,"[restart plugin]: Fault detected\n");
 }
-
-static
-void 
-globus_l_ftp_client_test_restart_plugin_complete(
-    globus_ftp_client_plugin_t *		plugin,
-    void *						plugin_specific,
-    globus_ftp_client_handle_t *		handle)
-{
-    globus_l_ftp_restart_plugin_specific_t *	d;
-
-    fprintf(stderr,"[restart plugin]: operation completed\n");
-
-    d = plugin_specific;
-
-    if(d->source_url)
-    {
-	globus_libc_free(d->source_url);
-        globus_ftp_client_operationattr_destroy(&d->source_attr);
-    }
-    if(d->dest_url)
-    {
-	globus_libc_free(d->dest_url);
-        globus_ftp_client_operationattr_destroy(&d->dest_attr);
-    }
-    if (d->chgrp_group) 
-    {
-        globus_libc_free(d->chgrp_group);
-        d->chgrp_group = GLOBUS_NULL;
-    }
- }
-
 
 globus_result_t
 globus_ftp_client_test_restart_plugin_init(

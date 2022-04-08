@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.2
+Version:	9.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.3-1
+- Fix some compiler warnings
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.2-1
 - Typo fixes
 

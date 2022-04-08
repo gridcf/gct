@@ -349,7 +349,6 @@ globus_l_gass_server_ez_register_accept_callback(
 					)
 {
     int rc;
-    char * subjectname;
     char * path=NULL;
     FILE *fp;
     char * url;
@@ -358,12 +357,9 @@ globus_l_gass_server_ez_register_accept_callback(
     struct stat	statstruct;
     globus_byte_t * buf;
     int amt;
-    const char *flags;
+    const char *flags = "";
     size_t length;
     uintptr_t buffer_size;
-
-    
-    subjectname=globus_gass_transfer_request_get_subject(request);
 
     globus_l_gass_server_ez_enter();
     /* lookup our options */

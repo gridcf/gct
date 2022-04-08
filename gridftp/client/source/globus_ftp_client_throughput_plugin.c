@@ -158,7 +158,7 @@ throughput_plugin_marker_cb(
     void *                                      user_specific,
     globus_ftp_client_handle_t *                handle,
     long                                        time_stamp_int,
-    char                                        time_stamp_tength,
+    char                                        time_stamp_tenth,
     int                                         stripe_ndx,
     int                                         num_stripes,
     globus_off_t                                nbytes)
@@ -173,7 +173,7 @@ throughput_plugin_marker_cb(
 
     info = (throughput_plugin_info_t *) user_specific;
 
-    time_stamp = time_stamp_int + (time_stamp_tength / 10.0);
+    time_stamp = time_stamp_int + (time_stamp_tenth / 10.0);
 
     /* init prev and cur storage if not already done so */
     if(info->prev_times == GLOBUS_NULL)

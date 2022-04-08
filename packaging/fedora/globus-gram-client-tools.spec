@@ -3,7 +3,7 @@
 Name:		globus-gram-client-tools
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	12.1
+Version:	12.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Job Management Tools (globusrun)
 
@@ -70,6 +70,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.2-1
+- Fix some compiler warnings
+
 * Mon Mar 16 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.1-1
 - Install globus-job-get-output-helper man page
 

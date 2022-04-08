@@ -198,7 +198,7 @@ globus_l_fork_module_activate(void)
     int                                 rc;
     globus_reltime_t                    delay;
     globus_result_t                     result;
-    int                                 save_errno;
+
     GlobusFuncName(globus_l_fork_module_activate);
 
     rc = globus_module_activate(GLOBUS_COMMON_MODULE);
@@ -239,7 +239,6 @@ globus_l_fork_module_activate(void)
 
     if (logfile_state == NULL)
     {
-        save_errno = errno;
         SEGForkDebug(SEG_FORK_DEBUG_ERROR,
                 ("Fatal error: out of memory\n"));
         goto destroy_cond_error;
@@ -248,7 +247,6 @@ globus_l_fork_module_activate(void)
     rc = globus_l_fork_increase_buffer(logfile_state);
     if (rc != GLOBUS_SUCCESS)
     {
-        save_errno = errno;
         SEGForkDebug(SEG_FORK_DEBUG_ERROR,
                 ("Fatal error: out of memory\n"));
         goto free_logfile_state_error;
@@ -488,7 +486,7 @@ globus_l_fork_find_logfile(
 {
     struct stat                         s;
     int                                 rc;
-    int                                 save_errno;
+    int                                 save_errno = 0;
     GlobusFuncName(globus_l_fork_find_logfile);
 
     SEGForkEnter();

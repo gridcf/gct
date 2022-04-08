@@ -52,10 +52,6 @@ close_cb(
     globus_result_t                             result,
     void *                                      user_arg)
 {
-    test_info_t *                               info;
-
-    info = (test_info_t *) user_arg;
-
     globus_mutex_lock(&globus_l_mutex);
     {
         globus_l_closed = GLOBUS_TRUE;

@@ -61,13 +61,13 @@ void perf_plugin_marker_cb(
     void *                                          user_specific,
     globus_ftp_client_handle_t *                    handle,
     long                                            time_stamp_int,
-    char                                            time_stamp_tength,
+    char                                            time_stamp_tenth,
     int                                             stripe_ndx,
     int                                             num_stripes,
     globus_off_t                                    nbytes)
 {
     globus_libc_fprintf(stderr, "perf_plugin_marker_cb\n");
-    globus_libc_fprintf(stderr, "time_stamp   %ld.%d\n", time_stamp_int, time_stamp_tength);
+    globus_libc_fprintf(stderr, "time_stamp   %ld.%d\n", time_stamp_int, time_stamp_tenth);
     globus_libc_fprintf(stderr, "stripe_ndx   %d\n", stripe_ndx);
     globus_libc_fprintf(stderr, "num_stripes  %d\n", num_stripes);
     globus_libc_fprintf(stderr, "nbytes       %" GLOBUS_OFF_T_FORMAT "\n", nbytes);

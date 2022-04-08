@@ -847,11 +847,10 @@ myproxy_authenticate_init(myproxy_socket_attrs_t *attrs,
            }
        }
    } else {
-       char *fqhn, *buf;
+       char *fqhn;
        if (new_server_identity_check_behavior_needed()) {
            OM_uint32 major_status, minor_status;
            gss_buffer_desc hostip;
-           int rc;
            static gss_OID_desc gss_nt_host_ip_oid =
                 { 10, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x02" };
            gss_OID_desc * gss_nt_host_ip = &gss_nt_host_ip_oid;
@@ -2844,7 +2843,7 @@ convert_message(const char			*buffer,
 	if (foundone == 1)
 	{
 	    /* No. Is that OK? */
-	    if (flags * CONVERT_MESSAGE_ALLOW_MULTIPLE)
+	    if (flags && CONVERT_MESSAGE_ALLOW_MULTIPLE)
 	    {
 		/* Yes. Add carriage return to existing line and concatenate */
 		*line = realloc(*line, line_index+2);

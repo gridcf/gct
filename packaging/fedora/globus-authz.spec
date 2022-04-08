@@ -3,7 +3,7 @@
 Name:		globus-authz
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	4.5
+Version:	4.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus authz library
 
@@ -137,6 +137,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.6-1
+- Fix some compiler warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.5-1
 - Use sha256 hash when generating test certificates
 

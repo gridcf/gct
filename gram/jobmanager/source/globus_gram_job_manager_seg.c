@@ -1157,15 +1157,15 @@ globus_l_condor_parse_log(
 {
     regmatch_t                          matches[8];
     const char *                        p;
-    int                                 event_type_number;
+    int                                 event_type_number = 0;
     const char *                        event_time;
-    int                                 cluster;
-    int                                 proc;
-    int                                 subproc;
-    globus_bool_t                       terminated_normally;
+    int                                 cluster = 0;
+    int                                 proc = 0;
+    int                                 subproc = 0;
+    globus_bool_t                       terminated_normally = GLOBUS_FALSE;
     int                                 return_value = 0;
     struct tm                           event_tm;
-    time_t                              event_stamp;
+    time_t                              event_stamp = 0;
     int                                 rc;
     globus_off_t                        parsed_length = 0;
     globus_scheduler_event_t *          event;

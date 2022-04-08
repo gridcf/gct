@@ -91,7 +91,7 @@ globus_l_args_create_error_msg( char **        error_msg,
     usage_len = strlen( oneline_usage );
 
     len = strlen(p);
-    strncpy( &p[len], oneline_usage, usage_len );
+    memcpy( &p[len], oneline_usage, usage_len );
     sprintf( &p[len+usage_len], "%s", error_epilogue );
 
     if (error_msg)

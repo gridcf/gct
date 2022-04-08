@@ -178,7 +178,7 @@ perf_plugin_response_cb(
     char *                                      tmp_ptr;
     int                                         count;
     long                                        time_stamp_int;
-    char                                        time_stamp_tenght;
+    char                                        time_stamp_tenth;
     int                                         stripe_ndx;
     int                                         num_stripes;
     globus_off_t                                nbytes;
@@ -214,11 +214,11 @@ perf_plugin_response_cb(
             tmp_ptr++;
         }
 
-        time_stamp_tenght = 0;
+        time_stamp_tenth = 0;
         if(*tmp_ptr == '.')
         {
             tmp_ptr++;
-            time_stamp_tenght = *tmp_ptr - '0';
+            time_stamp_tenth = *tmp_ptr - '0';
             tmp_ptr++;
         }
 
@@ -271,7 +271,7 @@ perf_plugin_response_cb(
             ps->user_specific,
             handle,
             time_stamp_int,
-            time_stamp_tenght,
+            time_stamp_tenth,
             stripe_ndx,
             num_stripes,
             nbytes);

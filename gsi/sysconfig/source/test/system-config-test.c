@@ -154,9 +154,6 @@ int main(int argc, char *argv[])
     else if (strcmp(argv[1], "get_signing_policy_filename") == 0
         && argc == 4)
     {
-        char                           *signing_policy_filename = NULL;
-        char                           *ca_name_string = argv[1];
-
         globus_assert_string(0, "Test not implemented");
     }
     else if (strcmp(argv[1], "get_ca_cert_files") == 0

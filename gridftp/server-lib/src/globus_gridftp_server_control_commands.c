@@ -1089,12 +1089,9 @@ globus_l_gsc_cmd_quit(
     int                                     argc,
     void *                                  user_arg)
 {
-    globus_i_gsc_server_handle_t *          server_handle;
     GlobusGridFTPServerName(globus_l_gsc_cmd_quit);
 
     GlobusGridFTPServerDebugInternalEnter();
-
-    server_handle = op->server_handle;
 
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_SECURITY);
@@ -1395,6 +1392,7 @@ globus_l_gsc_cmd_opts(
     
         tmp_ptr = cmd_a[2];
 
+        msg = _FSMSL("500 OPTS failed.\r\n");
         done = GLOBUS_FALSE;
         while(!done && *tmp_ptr != '\0')
         {

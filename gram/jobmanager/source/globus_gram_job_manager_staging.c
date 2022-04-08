@@ -367,7 +367,6 @@ globus_l_staging_replace_stream(
 {
     globus_list_t *                     list;
     globus_rsl_value_t                  *to;
-    globus_rsl_value_t                  from_cached;
     globus_bool_t                       single;
     int                                 rc = GLOBUS_SUCCESS;
 
@@ -382,8 +381,6 @@ globus_l_staging_replace_stream(
          */
         return GLOBUS_SUCCESS;
     }
-    from_cached.type = GLOBUS_RSL_VALUE_LITERAL;
-    from_cached.value.literal.string = cached_destination;
 
     /* The stdout and stderr attributes can occur in two forms:
      * - stdout = destination [tag]
@@ -479,7 +476,7 @@ globus_gram_job_manager_staging_remove(
                                         query;
     globus_gram_job_manager_staging_info_t *
                                         item;
-    globus_list_t **                    list;
+    globus_list_t **                    list = NULL;
     globus_list_t *                     node;
     const char *                        typestr = "";
 

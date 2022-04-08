@@ -180,17 +180,6 @@ globus_l_ftp_client_test_pause_plugin_put(
 
 static
 void
-globus_l_ftp_client_test_pause_plugin_command(
-    globus_ftp_client_plugin_t *			plugin,
-    void *						plugin_specific,
-    globus_ftp_client_handle_t *			handle,
-    const char *					url,
-    const char *					command_name)
-{
-}
-
-static
-void
 globus_l_ftp_client_test_pause_plugin_response(
     globus_ftp_client_plugin_t *			plugin,
     void *						plugin_specific,
@@ -263,7 +252,6 @@ globus_ftp_client_test_pause_plugin_init(
     globus_result_t					result;
     globus_object_t *					err;
     int *						plugin_specific;
-    static char * myname = "globus_ftp_client_test_pause_plugin_init";
 
     plugin_specific = globus_libc_malloc(sizeof(int));
     result = globus_ftp_client_plugin_init(

@@ -1,3 +1,9 @@
+globus-ftp-control (9.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler and doxygen warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 09 Mar 2022 18:24:03 +0100
+
 globus-ftp-control (9.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Use sha256 hash when generating test certificates

@@ -1880,8 +1880,6 @@ globus_l_gfs_config_display_docbook_usage()
 
     for(i = 0; i < option_count; i++)
     {        
-        char *                          shortflag;
-        char *                          longflag;
         char *                          value;
         char *                          defval;
         
@@ -1909,27 +1907,19 @@ globus_l_gfs_config_display_docbook_usage()
         switch(o->type)
         {
           case GLOBUS_L_GFS_CONFIG_BOOL:
-            shortflag = "-";
-            longflag = "-";
             value = NULL;
             defval = o->int_value ? "TRUE" : "FALSE";
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
-            shortflag = "-";
-            longflag = "-";
             value = "number"; 
             defval = o->int_value > 0 ? 
                 globus_common_create_string("%d", o->int_value) : NULL;
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
-            shortflag = "-";
-            longflag = "-";
             value = "string";
             defval = o->value ? o->value : NULL;
             break;
           default:
-            shortflag = "";
-            longflag = "";
             value = ""; 
             defval = o->value ? o->value : NULL;
             break;
@@ -2000,8 +1990,6 @@ globus_l_gfs_config_display_asciidoc_usage()
 
     for(i = 0; i < option_count; i++)
     {        
-        char *                          shortflag;
-        char *                          longflag;
         char *                          value;
         char *                          defval;
         
@@ -2034,27 +2022,19 @@ globus_l_gfs_config_display_asciidoc_usage()
         switch(o->type)
         {
           case GLOBUS_L_GFS_CONFIG_BOOL:
-            shortflag = "-";
-            longflag = "-";
             value = NULL;
             defval = o->int_value ? "TRUE" : "FALSE";
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
-            shortflag = "-";
-            longflag = "-";
             value = "number"; 
             defval = o->int_value > 0 ? 
                 globus_common_create_string("%d", o->int_value) : NULL;
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
-            shortflag = "-";
-            longflag = "-";
             value = "string";
             defval = o->value ? o->value : NULL;
             break;
           default:
-            shortflag = "";
-            longflag = "";
             value = ""; 
             defval = o->value ? o->value : NULL;
             break;

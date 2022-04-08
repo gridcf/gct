@@ -118,8 +118,6 @@ main()
             char                               *errstring;
             globus_object_t                    *error,
                                                *error2;
-            const globus_object_type_t         *type;
-            int                                 j;
 
             error = globus_error_get(result);
             ok(error != NULL, "error_get_%d", i);

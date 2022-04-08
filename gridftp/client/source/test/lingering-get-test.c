@@ -23,6 +23,7 @@
  * deactivation.
  */
 #include "globus_ftp_client.h"
+#include "globus_ftp_client_test_common.h"
 #include "globus_preload.h"
 
 static globus_mutex_t lock;
@@ -54,8 +55,6 @@ int main(int argc,
 {
     globus_ftp_client_handle_t			handle;
     globus_ftp_client_operationattr_t		attr;
-    globus_byte_t				buffer[1024];
-    globus_size_t				buffer_length = sizeof(buffer);
     globus_result_t				result;
     char *					src;
     char *					dst;

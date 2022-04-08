@@ -242,8 +242,6 @@ static char * testhnfail[] = {
 int
 main(int argc, char *argv[])
 {
-    int i = 1;
-
     globus_module_activate(GLOBUS_COMMON_MODULE);
 
     printf("1..13\n");

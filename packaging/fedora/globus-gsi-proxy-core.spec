@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.7
+Version:	9.8
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -143,6 +143,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.8-1
+- Fix some compiler warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.7-1
 - Use sha256 when signing request
 

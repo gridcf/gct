@@ -3,7 +3,7 @@
 Name:		globus-gass-server-ez
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	6.1
+Version:	6.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Server_ez
 
@@ -125,6 +125,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2-1
+- Fix some compiler warnings
+
 * Wed Nov 21 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.1-1
 - Doxygen fixes
 

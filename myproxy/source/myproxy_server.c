@@ -1945,8 +1945,7 @@ myproxy_authorize_accept(myproxy_server_context_t *context,
            if (!verror_is_error()) {
                /* if we don't have a good error message already,
                   it means we had insufficient authentication */
-               if (!client_request->passphrase ||
-                   client_request->passphrase[0] == '\0') {
+               if (client_request->passphrase[0] == '\0') {
                    verror_put_string("no passphrase");
                }
                verror_put_string("authentication failed");
@@ -2256,7 +2255,6 @@ authenticate_client(myproxy_socket_attrs_t *attrs,
    if (authcnt == 0) {
        /* if we already have a password, try it now */
        if (status[AUTHORIZETYPE_PASSWD] == AUTHORIZEMETHOD_SUFFICIENT &&
-	   client_request->passphrase &&
 	   client_request->passphrase[0] != '\0') {
 	   if (verify_passphrase(creds, client_request,
 				 client_name, config) == 1) {

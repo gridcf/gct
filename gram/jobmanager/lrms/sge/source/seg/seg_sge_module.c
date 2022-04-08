@@ -7,12 +7,13 @@
 
 /* This #define is needed for the correct operation of the GLIBC strptime
  * function. */
-#define _XOPEN_SOURCE 1
+#define _XOPEN_SOURCE 600
 
 #include "globus_common.h"
 #include "globus_scheduler_event_generator.h"
 #include "version.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #define SEG_SGE_DEBUG(level, message) \
@@ -483,7 +484,6 @@ free_sge_cell:
     {
         free(sge_cell);
     }
-free_sge_root:
     if (sge_root != NULL)
     {
         free(sge_root);

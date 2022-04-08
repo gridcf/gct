@@ -78,8 +78,8 @@ main(
     globus_bool_t                           append = GLOBUS_FALSE;
     globus_bool_t                           eret_esto = GLOBUS_FALSE;
     int                                     rc;
-    const char *                            filename;
-    char				    eret_esto_alg_str[ALG_NAME_LEN];
+    const char *                            filename = NULL;
+    char                                    eret_esto_alg_str[ALG_NAME_LEN];
     FILE *                                  fp;
     globus_ftp_client_handle_t              ftp_handle;
 
@@ -127,8 +127,8 @@ main(
         else if(strcmp(argv[ctr], "-u") == 0)
         {
             user_handle = GLOBUS_TRUE;
-	    res = globus_ftp_client_handle_init(&ftp_handle, GLOBUS_NULL);    
-	    test_res(res);
+            res = globus_ftp_client_handle_init(&ftp_handle, GLOBUS_NULL);
+            test_res(res);
         }
         else if(strcmp(argv[ctr], "-p") == 0)
         {
@@ -138,9 +138,9 @@ main(
         {
             if (ctr + 1 < argc)
             {
-	    	strcpy(eret_esto_alg_str, argv[ctr + 1]);
+                strcpy(eret_esto_alg_str, argv[ctr + 1]);
                 ctr++;
-		eret_esto = GLOBUS_TRUE;
+                eret_esto = GLOBUS_TRUE;
             }
         }
         else if(strcmp(argv[ctr], "-s") == 0)
@@ -200,16 +200,16 @@ main(
     }
     if (eret_esto)
     {
-	if (read)
-	{
+        if (read)
+        {
             res = globus_xio_attr_cntl(attr, gridftp_driver, 
                 GLOBUS_XIO_GRIDFTP_SET_ERET, eret_esto_alg_str);
-	}
-	else
-	{
+        }
+        else
+        {
             res = globus_xio_attr_cntl(attr, gridftp_driver, 
                 GLOBUS_XIO_GRIDFTP_SET_ESTO, eret_esto_alg_str);
-	}
+        }
         test_res(res);
     }
     if (subject)

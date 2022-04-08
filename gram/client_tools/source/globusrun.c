@@ -362,7 +362,6 @@ main(int argc, char* argv[])
     char *                             request_file      = NULL;
     char *                             rm_contact        = NULL;
     char *                             program           = NULL;
-    globus_bool_t                      ignore_ctrlc      = GLOBUS_FALSE;
     globus_rsl_t *                     request_ast       = NULL;
     globus_list_t *                    options_found     = NULL;
     globus_list_t *                    list              = NULL;
@@ -467,7 +466,6 @@ main(int argc, char* argv[])
 
         case arg_n:
             options |= GLOBUSRUN_ARG_IGNORE_CTRLC;
-            ignore_ctrlc = GLOBUS_TRUE;
             break;
 
         case arg_a:

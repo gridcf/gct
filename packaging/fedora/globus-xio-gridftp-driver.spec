@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(echo %{name} | tr - _)
-Version:	3.5
+Version:	3.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
@@ -152,6 +152,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.6-1
+- Fix some compiler warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.5-1
 - Use sha256 hash when generating test certificates
 

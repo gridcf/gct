@@ -535,17 +535,16 @@ globus_l_gfs_spawn_child(
         /* inc the connection count 2 here since we will dec it on this close
         and on the death of the child process */
         globus_gfs_config_inc_int("open_connections_count", 2);
-        globus_mutex_unlock(&globus_l_gfs_mutex);
         result = globus_xio_register_close(
             handle,
             NULL,
             globus_l_gfs_close_cb,
-            NULL);    
+            NULL);
         if(result != GLOBUS_SUCCESS)
         {
-            globus_l_gfs_close_cb(handle, result, NULL);
-        }        
-    }    
+            globus_i_gfs_connection_closed();
+        }
+    }
 
     GlobusGFSDebugExit();
     return GLOBUS_SUCCESS;
@@ -613,7 +612,8 @@ globus_l_gfs_ipc_closed(
     }
 
     handle = (globus_xio_handle_t) user_arg;
-    globus_mutex_unlock(&globus_l_gfs_mutex);
+
+    globus_mutex_lock(&globus_l_gfs_mutex);
     {
         result = globus_xio_register_close(
             handle,

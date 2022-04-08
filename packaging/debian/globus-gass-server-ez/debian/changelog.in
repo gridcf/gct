@@ -1,3 +1,9 @@
+globus-gass-server-ez (6.2-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 09 Mar 2022 19:24:17 +0100
+
 globus-gass-server-ez (6.1-1+gct.@distro@) @distro@; urgency=medium
 
   * Doxygen fixes

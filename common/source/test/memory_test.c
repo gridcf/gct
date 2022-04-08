@@ -112,7 +112,6 @@ int dump(globus_byte_t * buf, int size)
     int  ctr;
     int  col = 0;
     int failed=0;
-    const char *p = reference_output;
     
     for(ctr = 0; ctr < size; ctr++)
     {

@@ -648,7 +648,7 @@ typedef struct
  *        The full url to the expanded entry.  A directory entry will end
  *        in a forward slash '/'.
  * 
- * @param stat
+ * @param info_stat
  *        A pointer to a globus_gass_copy_glob_stat_t containing information
  *        about the entry. 
  *

@@ -367,6 +367,7 @@ globus_libc_gethostname(char *name, int len)
         (env = getenv("GLOBUS_HOSTNAME")) != GLOBUS_NULL)
     {
         strncpy(hostname, env, MAXHOSTNAMELEN);
+        hostname[MAXHOSTNAMELEN - 1] = '\0';
         hostname_length = strlen(hostname);
     }
 #endif

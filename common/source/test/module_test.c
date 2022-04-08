@@ -103,7 +103,6 @@ module_test(void)
     void *                              mod_pointer;
     const char                          *name="GLOBUS_ENV_TEST_VAR";
     char *                              value1 = "value1";
-    int                                 successful_tests=0;
     
 
     printf("1..16\n");
@@ -142,7 +141,7 @@ module_test(void)
      * Activate a module with globus_module_activate()
      */
     rc = globus_module_activate(&module1);
-    ok(rc == GLOBUS_SUCCESS & 
+    ok(rc == GLOBUS_SUCCESS &&
        active_modules[0] == 1 &&
        active_modules[1] == 1 &&
        active_modules[2] == 1, "activate_module1");

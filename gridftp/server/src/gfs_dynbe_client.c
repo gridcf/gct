@@ -172,6 +172,7 @@ main(
     rc = globus_module_activate(GLOBUS_XIO_MODULE);
     if(rc != 0)
     {
+        result = GLOBUS_FAILURE;
         goto error_activate;
     }
 
@@ -210,7 +211,7 @@ main(
     tmp32 = htonl(1);
     memcpy(&buffer[GF_DYN_ENTRY_COUNT_NDX], &tmp32, sizeof(uint32_t));
 
-    strncpy((char *) &buffer[GF_DYN_CS_NDX], be_cs, GF_DYN_CS_LEN);
+    strncpy((char *) &buffer[GF_DYN_CS_NDX], be_cs, GF_DYN_CS_LEN - 1);
 
     result = globus_xio_open(g_xio_handle, reg_cs, NULL);
     if(result != GLOBUS_SUCCESS)

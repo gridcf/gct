@@ -85,7 +85,6 @@ globus_i_gfs_log_open()
     int                                 len;
     int                                 ctr;
     char *                              tag;
-    globus_result_t                     result;
     globus_reltime_t                    flush_interval;
     globus_size_t                       buffer;
     int                                 rc;
@@ -369,7 +368,6 @@ globus_i_gfs_log_open()
 void
 globus_i_gfs_log_close(void)
 {
-    globus_list_t *                     list;
     GlobusGFSName(globus_i_gfs_log_close);
     GlobusGFSDebugEnter();
 

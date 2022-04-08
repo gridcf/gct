@@ -20,7 +20,6 @@
 #include "globus_xio_load.h"
 #include "globus_common.h"
 #include "globus_xio_wrapblock.h"
-#include "version.h"
 
 typedef struct xio_l_wrapblock_handle_s
 {

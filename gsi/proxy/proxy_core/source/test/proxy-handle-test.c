@@ -85,8 +85,6 @@ static
 bool
 proxy_handle_destroy_null_test(void)
 {
-    globus_result_t                     result = GLOBUS_SUCCESS;
-
     globus_gsi_proxy_handle_destroy(NULL);
 
     return true;
@@ -1061,9 +1059,7 @@ bool
 proxy_handle_set_pathlen_null_test(void)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    globus_gsi_proxy_handle_t           handle = NULL;
     bool                                ok = true;
-    STACK_OF(X509_EXTENSION)           *extensions = NULL;
 
     result = globus_gsi_proxy_handle_set_pathlen(NULL, 0);
     if (result == GLOBUS_SUCCESS)
@@ -1240,7 +1236,6 @@ proxy_handle_set_proxy_cert_info_null_test(void)
 {
     bool                                ok = true;
     globus_result_t                     result = GLOBUS_SUCCESS;
-    globus_gsi_proxy_handle_t           handle = NULL;
 
     result = globus_gsi_proxy_handle_set_proxy_cert_info(NULL, NULL);
     if (result == GLOBUS_SUCCESS)
@@ -1489,7 +1484,6 @@ proxy_handle_set_is_limited_null_test(void)
     }
 
     globus_gsi_proxy_handle_destroy(handle);
-no_handle:
     return ok;
 }
 

@@ -1308,7 +1308,6 @@ globus_ftp_control_server_authenticate(
         OM_uint32                       maj_stat = GSS_S_COMPLETE;
         OM_uint32                       min_stat = GSS_S_COMPLETE;
         OM_uint32                       ctx_flags = 0;
-        gss_name_t                      src_name = GSS_C_NO_NAME;
         gss_buffer_desc                 subject_buf = GSS_C_EMPTY_BUFFER;
 
         rc = globus_io_handle_get_xio_handle(
@@ -1403,7 +1402,7 @@ globus_ftp_control_server_authenticate(
             cc_handle->auth_info.auth_gssapi_subject,
             subject_buf.length + 1,
             "%s",
-            subject_buf.value);
+            (char*)subject_buf.value);
 
         gss_release_buffer(&min_stat, &subject_buf);
     }

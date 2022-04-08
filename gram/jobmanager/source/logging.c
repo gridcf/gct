@@ -55,8 +55,6 @@ globus_gram_job_manager_logging_init(
     globus_gram_job_manager_config_t *  config)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    time_t                              now;
-    struct tm *                         nowtm;
     int                                 rc;
 
     if (config->syslog_enabled)
@@ -112,8 +110,6 @@ globus_gram_job_manager_logging_init(
 
     globus_l_gram_logging_module.header_func =
             globus_logging_stdio_ng_module.header_func;
-    now = time(NULL);
-    nowtm = gmtime(&now);
 
     result = globus_logging_init(
             &globus_i_gram_job_manager_log_stdio,

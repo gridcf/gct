@@ -397,7 +397,6 @@ globus_xio_driver_pass_close(
     void *                              in_ua)
 {
     globus_i_xio_op_t *                 op;
-    globus_i_xio_handle_t *             handle;
     globus_i_xio_context_t *            context;
     globus_i_xio_context_entry_t *      my_context;
     globus_bool_t                       pass;
@@ -412,7 +411,6 @@ globus_xio_driver_pass_close(
     GlobusXIODebugInternalEnter();
     op = (in_op);
     globus_assert(op->ndx < op->stack_size);
-    handle = op->_op_handle;
     context = op->_op_context;
     op->progress = GLOBUS_TRUE;
     op->block_timeout = GLOBUS_FALSE;

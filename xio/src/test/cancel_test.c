@@ -186,7 +186,6 @@ cancel_main(
     globus_xio_handle_t                     handle;
     globus_result_t                         res;
     globus_xio_attr_t                       attr;
-    int                                     opt_offset;
     int                                     secs;
     int                                     usecs;
 

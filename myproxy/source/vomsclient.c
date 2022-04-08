@@ -223,7 +223,7 @@ voms_get_role_command(const char *str)
     memset(buf, '\0', buf_len);
 
     buf[i++] = 'R';
-    strncpy(&buf[i], p_role, role_len);
+    memcpy(&buf[i], p_role, role_len);
 
     return buf;
 }
@@ -268,10 +268,10 @@ voms_get_mapping_command(const char *str)
     if (str[0] != '/') {
         buf[i++] = '/';
     }
-    strncpy(&buf[i], str, group_len);
+    memcpy(&buf[i], str, group_len);
     i += group_len;
     buf[i++] = ':';
-    strncpy(&buf[i], p_role, role_len);
+    memcpy(&buf[i], p_role, role_len);
 
     return buf;
 }
@@ -304,7 +304,7 @@ voms_get_group_command(const char *str)
     if (str[0] != '/') {
        buf[i++] = '/';
     }
-    strncpy(&buf[i], str, str_len);
+    memcpy(&buf[i], str, str_len);
     buf_len = strlen(buf);
     if (buf[buf_len-1] == '/') {
         buf[buf_len-1] = '\0';

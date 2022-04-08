@@ -445,7 +445,7 @@ globus_l_xio_telnet_attr_copy(
     void *                              src_driver_attr)
 {
     globus_l_xio_telnet_attr_t *        src_attr;
-    globus_l_xio_telnet_attr_t *       dest_attr;
+    globus_l_xio_telnet_attr_t *        dest_attr = NULL;
     globus_result_t                     res;
     GlobusXIOName(globus_l_xio_telnet_attr_init);
 

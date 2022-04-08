@@ -243,7 +243,7 @@ xio_l_gmc_handle_destroy(
 
     if(handle->result != GLOBUS_SUCCESS)
     {
-        err_obj = globus_error_get(ftp_handle->result);
+        err_obj = globus_error_get(handle->result);
         globus_object_free(err_obj);
     }
     if(handle->local_url != NULL)
@@ -263,7 +263,6 @@ xio_l_gmc_make_ftp_error_list(
 {
     char *                              start_str;
     char *                              end_str;
-    int                                 len;
     char *                              error_url;
     globus_list_t *                     url_error_list = NULL;
     char *                              err_str;
@@ -297,15 +296,18 @@ xio_l_gmc_make_ftp_error_list(
         then we fail everything */
     tmp_str += sizeof(GMC_ERROR_TOKEN);
     start_str = tmp_str;
-    while(start_str != '\0')
+    while(*start_str != '\0')
     {
         end_str = strstr(start_str, "\n");
         if(end_str == NULL)
         {
             end_str = start_str + strlen(start_str);
         }
-        len = end_str - start_str;
-        *end_str = '\0';
+        else
+        {
+            *end_str = '\0';
+            end_str += 1;
+        }
 
         rc = globus_url_parse(start_str, &url_info);
         if(rc != GLOBUS_URL_SUCCESS)
@@ -322,6 +324,8 @@ xio_l_gmc_make_ftp_error_list(
 
         error_url = strdup(start_str);
         globus_list_insert(&url_error_list, error_url);
+
+        start_str = end_str;
     }
 
     return url_error_list;
@@ -1226,7 +1230,7 @@ xio_l_gridftp_multicast_write(
     int                                 iovec_count,
     globus_xio_operation_t              op)
 {
-    globus_size_t                       wait_for;
+    globus_size_t                       wait_for = 0;
     int                                 i;
     int                                 j;
     xio_l_gridftp_multicast_handle_t *  handle;

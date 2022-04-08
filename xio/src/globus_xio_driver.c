@@ -253,13 +253,10 @@ globus_i_xio_handle_dec(
     globus_bool_t *                     destroy_handle)
 {
     globus_result_t                     res;
-    globus_i_xio_context_t *            context;
     globus_i_xio_space_info_t *         space_info;
     GlobusXIOName(globus_i_xio_handle_dec);
 
     GlobusXIODebugInternalEnter();
-
-    context = handle->context;
 
     *destroy_handle = GLOBUS_FALSE;
 
@@ -519,12 +516,9 @@ globus_l_xio_driver_op_write_kickout(
     void *                              user_arg)
 {
     globus_xio_operation_type_t         deliver_type;
-    globus_xio_operation_type_t         op_type;
     int                                 ndx;
     int                                 wb_ndx;
     globus_i_xio_handle_t *             handle;
-    globus_i_xio_context_entry_t *      my_context;
-    globus_i_xio_context_t *            context;
     globus_i_xio_op_entry_t *           my_op;
     globus_i_xio_op_t *                 op;
     GlobusXIOName(globus_l_xio_driver_op_write_kickout);
@@ -536,9 +530,7 @@ globus_l_xio_driver_op_write_kickout(
     op->entry[my_op->prev_ndx].next_ndx = op->ndx;
     op->ndx = my_op->prev_ndx;
     ndx = op->ndx;
-    my_context = &op->_op_context->entry[ndx];
     handle = op->_op_handle;
-    context = op->_op_context;
 
     GlobusIXIOClearCancel(op);
 
@@ -548,7 +540,6 @@ globus_l_xio_driver_op_write_kickout(
      *  on the local stack may be changed, theus the magic.
      */
     deliver_type = my_op->type;
-    op_type = my_op->type;
     my_op->deliver_type = &deliver_type;
 
     if(ndx == 0)
@@ -592,12 +583,9 @@ globus_l_xio_driver_op_read_kickout(
     void *                              user_arg)
 {
     globus_xio_operation_type_t         deliver_type;
-    globus_xio_operation_type_t         op_type;
     int                                 ndx;
     int                                 wb_ndx;
     globus_i_xio_handle_t *             handle;
-    globus_i_xio_context_entry_t *      my_context;
-    globus_i_xio_context_t *            context;
     globus_i_xio_op_entry_t *           my_op;
     globus_i_xio_op_t *                 op;
     GlobusXIOName(globus_l_xio_driver_op_read_kickout);
@@ -609,9 +597,7 @@ globus_l_xio_driver_op_read_kickout(
     op->entry[my_op->prev_ndx].next_ndx = op->ndx;
     op->ndx = my_op->prev_ndx;
     ndx = op->ndx;
-    my_context = &op->_op_context->entry[ndx];
     handle = op->_op_handle;
-    context = op->_op_context;
 
     GlobusIXIOClearCancel(op);
     
@@ -621,7 +607,6 @@ globus_l_xio_driver_op_read_kickout(
      *  on the local stack may be changed, theus the magic.
      */
     deliver_type = my_op->type;
-    op_type = my_op->type;
     my_op->deliver_type = &deliver_type;
 
     if(ndx == 0)
@@ -869,8 +854,6 @@ globus_l_xio_driver_open_op_kickout(
     void *                              user_arg)
 {
     globus_i_xio_handle_t *             handle;
-    globus_i_xio_context_t *            context;
-    globus_i_xio_context_entry_t *      my_context;
     int                                 ndx = 0;
     int                                 wb_ndx;
     globus_i_xio_op_entry_t *           my_op;
@@ -885,9 +868,7 @@ globus_l_xio_driver_open_op_kickout(
     my_op = &op->entry[op->ndx - 1];
     op->ndx = my_op->prev_ndx;
     ndx = op->ndx;
-    my_context = &op->_op_context->entry[ndx];
     handle = op->_op_handle;
-    context = op->_op_context;
 
     deliver_type = my_op->type;
     my_op->deliver_type =&deliver_type;

@@ -262,7 +262,6 @@ int
 globus_error_errno_search(
     globus_object_t *                   error)
 {
-    globus_module_descriptor_t *        source_module;
     int                                 current_errno;
     
     if(error == NULL)

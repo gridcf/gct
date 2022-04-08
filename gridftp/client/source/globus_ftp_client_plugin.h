@@ -168,6 +168,8 @@ typedef void (*globus_ftp_client_plugin_destroy_t)(
  *        Plugin-specific data.
  * @param handle
  *        The handle associated with the connection.
+ * @param url
+ *        The URL of the server to connect to.
  *
  * @note This function will not be called for a get, put, or
  * third-party transfer operation when a cached connection is used.
@@ -358,7 +360,7 @@ typedef void (*globus_ftp_client_plugin_symlink_t)(
     void *                  plugin_specific,
     globus_ftp_client_handle_t *        handle,
     const char *                url,
-    const char *                utime_time,
+    const char *                link_url,
     const globus_ftp_client_operationattr_t *   attr,
     globus_bool_t               restart);
 
@@ -1076,6 +1078,9 @@ typedef void (*globus_ftp_client_plugin_write_t)(
  *        Plugin-specific data.
  * @param handle
  *        The handle associated with the request.
+ * @param error
+ *        An error which occurred while processing this
+ *        command/response pair.
  * @param buffer
  *        The buffer which was successfully transferred over the network.
  * @param length
@@ -1147,7 +1152,7 @@ typedef void (*globus_ftp_client_plugin_command_t)(
  *        The URL which this response came from.
  * @param error
  *        An error which occurred while processing this
- *	  command/response pair.
+ *        command/response pair.
  * @param ftp_response
  *        The response structure from the ftp control library.
  */

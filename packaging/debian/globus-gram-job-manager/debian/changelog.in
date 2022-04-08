@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.8-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix some compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 11 Mar 2022 19:02:44 +0100
+
 globus-gram-job-manager (15.7-1+gct.@distro@) @distro@; urgency=medium
 
   * Use sha256 hash when generating test certificates

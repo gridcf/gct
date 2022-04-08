@@ -154,8 +154,6 @@ globus_l_gram_job_manager_state_machine(
     globus_bool_t                       event_registered = GLOBUS_FALSE;
     globus_reltime_t                    delay_time;
     int                                 rc = 0;
-    int                                 save_status;
-    int                                 save_jobmanager_state;
     globus_gram_job_manager_query_t *   query;
     globus_bool_t                       first_poll = GLOBUS_FALSE;
     globus_gram_jobmanager_state_t      next_state;
@@ -690,8 +688,6 @@ globus_l_gram_job_manager_state_machine(
             request->jobmanager_state =
                 GLOBUS_GRAM_JOB_MANAGER_STATE_FAILED_CLOSE_OUTPUT;
         }
-        save_status = request->status;
-        save_jobmanager_state = request->jobmanager_state;
 
         /* Reply to any outstanding queries */
         while (!globus_fifo_empty(&request->pending_queries))
@@ -1102,7 +1098,7 @@ globus_gram_job_manager_reply(
     globus_size_t                       replysize;
     globus_byte_t *                     sendbuf;
     globus_size_t                       sendsize;
-    OM_uint32                           major_status;
+    OM_uint32                           major_status = GSS_S_COMPLETE;
     OM_uint32                           minor_status;
     int                                 token_status;
     globus_hashtable_t                  extensions = NULL;
@@ -1748,6 +1744,8 @@ globus_l_gram_job_manager_set_restart_state(
         request->unsent_status_change = GLOBUS_TRUE;
         request->jobmanager_state = GLOBUS_GRAM_JOB_MANAGER_STATE_POLL1;
         changed = GLOBUS_TRUE;
+        break;
+      default:
         break;
     }
     /*request->restart_state = GLOBUS_GRAM_JOB_MANAGER_STATE_START;*/

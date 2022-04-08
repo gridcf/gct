@@ -124,7 +124,7 @@ typedef void
     globus_gass_transfer_request_proto_t *	proto,
     globus_gass_transfer_request_t		request,
     globus_byte_t *				bytes,
-    globus_size_t				send_length,
+    globus_size_t				bytes_length,
     globus_bool_t				last_data);
 
 /**

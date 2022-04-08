@@ -511,7 +511,7 @@ globus_l_xio_gssapi_ftp_radix_decode(
 {
     int                                 i;
     int                                 j;
-    int                                 D;
+    int                                 D = 0;
     char *                              p;
     GlobusXIOName(globus_l_xio_gssapi_ftp_radix_decode);
 
@@ -601,7 +601,7 @@ globus_l_xio_gssapi_ftp_radix_encode(
 {
     int                                 i;
     int                                 j;
-    unsigned char                       c;
+    unsigned char                       c = 0;
     GlobusXIOName(globus_l_xio_gssapi_ftp_radix_encode);
 
     GlobusXIOGssapiftpDebugEnter();
@@ -1298,9 +1298,9 @@ globus_l_xio_gssapi_ftp_server_read_cb(
 {
     globus_l_xio_gssapi_ftp_handle_t *  handle;
     char *                              out_buf;
-    char *                              msg;
+    char *                              msg = NULL;
     globus_result_t                     res;
-    globus_bool_t                       complete;
+    globus_bool_t                       complete = GLOBUS_FALSE;
     globus_bool_t                       reply = GLOBUS_TRUE;
     char **                             cmd_a = NULL;
     globus_byte_t *                     in_buffer;
@@ -1485,7 +1485,7 @@ globus_l_xio_gssapi_ftp_server_read_cb(
                 globus_assert(0 && "Handle should be in reading state");
                 break;
         }
-        if(reply)
+        if(reply && msg)
         {
             /* send the entire reply */
             handle->auth_write_iov.iov_base = msg;

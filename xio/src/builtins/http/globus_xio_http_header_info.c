@@ -179,7 +179,7 @@ globus_i_xio_http_header_info_set_header(
     /* Special cases for entity-body handling headers */
     if (strcasecmp(header_name, "Content-Length") == 0)
     {
-        rc = globus_libc_scan_off_t(header_value, &length, NULL);
+        rc = globus_libc_scan_off_t((char *)header_value, &length, NULL);
         if (rc < 1)
         {
             result = GlobusXIOHttpErrorInvalidHeader(header_name, header_value);

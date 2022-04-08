@@ -338,7 +338,7 @@ globus_l_xio_smtp_open(
 
     globus_l_xio_smtp_attr_copy((void **)&info, driver_attr);
 
-    globus_xio_driver_pass_open(
+    res = globus_xio_driver_pass_open(
         op, contact_info, globus_l_xio_smtp_open_cb, info);
 
     return res;
@@ -386,7 +386,8 @@ globus_l_xio_smtp_close(
     sprintf(info->message, "\r\n.\r\nQUIT\r\n");
     info->iovec.iov_base = info->message;
     info->iovec.iov_len = strlen(info->message);
-    globus_xio_driver_pass_write(op, &info->iovec, 1, info->iovec.iov_len,
+    res = globus_xio_driver_pass_write(
+        op, &info->iovec, 1, info->iovec.iov_len,
         globus_l_xio_smtp_write_close_cb, (void *)info);
 
     return res;
@@ -418,14 +419,11 @@ globus_l_xio_smtp_write(
 {
     globus_result_t                     res;
     globus_size_t                       wait_for;
-    l_smtp_info_t *                     info;
-
-    info = (l_smtp_info_t *) driver_specific_handle;
 
     wait_for = globus_xio_operation_get_wait_for(op);
 
-    globus_xio_driver_pass_write(op, 
-        (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
+    res = globus_xio_driver_pass_write(
+        op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
         globus_l_xio_smtp_write_cb, NULL);
 
     return res;

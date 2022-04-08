@@ -2221,7 +2221,7 @@ globus_l_ftp_control_write_cb(
     globus_result_t                           rc;
     globus_ftp_control_rw_queue_element_t *   element;
     globus_bool_t                             write_queue_empty;
-    globus_bool_t                             read_queue_empty;
+    globus_bool_t                             read_queue_empty = GLOBUS_TRUE;
     globus_bool_t                             call_close_cb = GLOBUS_FALSE;
     
     globus_i_ftp_control_debug_printf(1,
@@ -4275,7 +4275,7 @@ globus_i_ftp_control_radix_encode(
 {
     int                                    i;
     int                                    j;
-    unsigned char                          c;
+    unsigned char                          c = 0;
     
     for (i=0,j=0; i < *length; i++)
     {
@@ -4344,7 +4344,7 @@ globus_i_ftp_control_radix_decode(
 {
     int                                    i;
     int                                    j;
-    int                                    D;
+    int                                    D = 0;
     char *                                 p;
 
     for (i=0,j=0; inbuf[i] && inbuf[i] != pad; i++) 
