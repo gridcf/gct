@@ -1,3 +1,9 @@
+myproxy (6.2.13-1+gct.@distro@) @distro@; urgency=medium
+
+  * Use existing socket during trust root retrieval
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 10 Apr 2022 14:17:08 +0200
+
 myproxy (6.2.12-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler warnings

@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.12
+Version:        6.2.13
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sun Apr 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.13-1
+- Use existing socket during trust root retrieval
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.12-1
 - Fix some compiler warnings
 

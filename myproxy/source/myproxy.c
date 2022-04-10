@@ -173,7 +173,7 @@ static int check_port_range(int sockfd, struct sockaddr *addr) {
         }
 
         if (sscanf(port_range, "%hu %hu", &min_port, &max_port) == 2) {
-            int bind_rval;
+            int bind_rval = 0;
 
             port = min_port;
             if (addr->sa_family == AF_INET) {
@@ -346,9 +346,8 @@ static int connect_socket_to_host(char *host, int port) {
                         res->ai_protocol);
 
         if (!(sockfd < 0)) {
-            char straddr[INET6_ADDRSTRLEN];
-
             if (check_port_range(sockfd, res->ai_addr)) {
+                char straddr[INET6_ADDRSTRLEN];
                 getnameinfo(res->ai_addr, res->ai_addrlen,
                             straddr, sizeof(straddr),
                             NULL, 0, NI_NUMERICHOST);
@@ -554,21 +553,16 @@ myproxy_bootstrap_trust(myproxy_socket_attrs_t *attrs)
     SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
     #endif
 
-    if (!(sbio = BIO_new_ssl_connect(ctx))) goto error;
+    if (!(sbio = BIO_new_ssl(ctx, 1))) goto error;
     if ( (sockfd = get_connected_myproxy_host_socket(
                    attrs->pshost, attrs->psport) ) < 0) {
         goto error;
     }
     BIO_get_ssl(sbio, &ssl);
-    char chport[6];
-    snprintf(chport, sizeof(chport), "%d", attrs->psport);
-    BIO_set_conn_port(sbio, chport);
-    BIO_set_conn_hostname(sbio, attrs->pshost);
-    BIO_set_fd(sbio, sockfd, 0);
+    SSL_set_fd(ssl, sockfd);
 
     if (BIO_do_handshake(sbio) <= 0) goto error;
-    BIO_write(sbio, "0", 1);    /* GSI deleg flag */
-    if (BIO_flush(sbio) <= 0) goto error;
+    if (BIO_write(sbio, "0", 1) < 1) goto error;    /* GSI deleg flag */
 
     sk=SSL_get_peer_cert_chain(ssl);
     x = sk_X509_value(sk,0);    /* start with EEC */
@@ -2843,7 +2837,7 @@ convert_message(const char                      *buffer,
         if (foundone == 1)
         {
             /* No. Is that OK? */
-            if (flags && CONVERT_MESSAGE_ALLOW_MULTIPLE)
+            if (flags & CONVERT_MESSAGE_ALLOW_MULTIPLE)
             {
                 /* Yes. Add carriage return to existing line and concatenate */
                 *line = realloc(*line, line_index + 2);
