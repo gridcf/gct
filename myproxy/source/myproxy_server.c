@@ -4,7 +4,7 @@
  * program to store user's delegated credentials for later retrieval
  */
 
-#include "myproxy_common.h"	/* all needed headers included here */
+#include "myproxy_common.h"     /* all needed headers included here */
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -45,8 +45,8 @@ struct option long_options[] =
     {"port",       required_argument, NULL, 'p'},
     {"pidfile",    required_argument, NULL, 'P'},
     {"portfile",   required_argument, NULL, 'z'},
-    {"config",     required_argument, NULL, 'c'},       
-    {"storage",    required_argument, NULL, 's'},       
+    {"config",     required_argument, NULL, 'c'},
+    {"storage",    required_argument, NULL, 's'},
     {"usage",            no_argument, NULL, 'u'},
     {"verbose",          no_argument, NULL, 'v'},
     {"version",          no_argument, NULL, 'V'},
@@ -59,7 +59,7 @@ static char version[] =
 "myproxy-server version " MYPROXY_VERSION " (" MYPROXY_VERSION_DATE ") "  "\n";
 
 /* Signal handling */
-typedef void Sigfunc(int);  
+typedef void Sigfunc(int);
 
 Sigfunc *my_signal(int signo, Sigfunc *func);
 void sig_exit(int signo);
@@ -68,35 +68,35 @@ void sig_hup(int signo);
 void sig_ign(int signo);
 
 /* Function declarations */
-int init_arguments(int argc, 
-                   char *argv[], 
-                   myproxy_socket_attrs_t *server_attrs, 
+int init_arguments(int argc,
+                   char *argv[],
+                   myproxy_socket_attrs_t *server_attrs,
                    myproxy_server_context_t *server_context);
 
 int myproxy_init_server(myproxy_socket_attrs_t *server_attrs);
 
 int handle_config(myproxy_server_context_t *server_context);
 
-int handle_client(myproxy_socket_attrs_t *server_attrs, 
+int handle_client(myproxy_socket_attrs_t *server_attrs,
                   myproxy_server_context_t *server_context);
 
 void respond_with_error_and_die(myproxy_socket_attrs_t *attrs,
-				const char *error,
-				myproxy_server_context_t *context);
+                                const char *error,
+                                myproxy_server_context_t *context);
 
-void send_response(myproxy_socket_attrs_t *server_attrs, 
-		   myproxy_response_t *response, 
-		   char *client_name,
-		   int ignore_net_error);
+void send_response(myproxy_socket_attrs_t *server_attrs,
+                   myproxy_response_t *response,
+                   char *client_name,
+                   int ignore_net_error);
 
-void get_proxy(myproxy_socket_attrs_t *server_attrs, 
-	       myproxy_creds_t *creds,
-	       myproxy_request_t *request,
-	       myproxy_response_t *response,
-	       int max_proxy_lifetime);
+void get_proxy(myproxy_socket_attrs_t *server_attrs,
+               myproxy_creds_t *creds,
+               myproxy_request_t *request,
+               myproxy_response_t *response,
+               int max_proxy_lifetime);
 
-void put_proxy(myproxy_socket_attrs_t *server_attrs, 
-               myproxy_creds_t *creds, 
+void put_proxy(myproxy_socket_attrs_t *server_attrs,
+               myproxy_creds_t *creds,
                myproxy_response_t *response,
                int max_cred_lifetime);
 
@@ -105,9 +105,9 @@ void info_proxy(myproxy_creds_t *creds, myproxy_response_t *response);
 void destroy_proxy(myproxy_creds_t *creds, myproxy_response_t *response);
 
 void change_passwd(myproxy_creds_t *creds, char *new_passphrase,
-		   myproxy_response_t *response);
+                   myproxy_response_t *response);
 
-static void failure(const char *failure_message); 
+static void failure(const char *failure_message);
 
 static void my_failure(const char *failure_message);
 
@@ -122,34 +122,34 @@ static int become_daemon_step3(char);
 static void write_pfile(const char path[], long val);
 
 static int myproxy_check_policy(myproxy_server_context_t *context,
-      				myproxy_socket_attrs_t *attrs,
-				myproxy_server_peer_t *client,
-				const char *policy_name,
-				const char **server_policy,
-				const char *credential_policy,
-				const char **default_credential_policy);
+                                myproxy_socket_attrs_t *attrs,
+                                myproxy_server_peer_t *client,
+                                const char *policy_name,
+                                const char **server_policy,
+                                const char *credential_policy,
+                                const char **default_credential_policy);
 
 static int myproxy_authorize_accept(myproxy_server_context_t *context,
                                     myproxy_socket_attrs_t *attrs,
-				    myproxy_request_t *client_request,
-				    myproxy_server_peer_t *client);
+                                    myproxy_request_t *client_request,
+                                    myproxy_server_peer_t *client);
 
 /* returns 1 if passphrase matches, 0 otherwise */
 static int
 verify_passphrase(struct myproxy_creds *creds,
-		  myproxy_request_t *client_request,
-		  char *client_name,
-		  myproxy_server_context_t* config);
+                  myproxy_request_t *client_request,
+                  char *client_name,
+                  myproxy_server_context_t* config);
 
 /* returns -1 if authentication failed,
             0 if authentication succeeded,
             1 if certificate-based (renewal) authentication succeeded */
 static int authenticate_client(myproxy_socket_attrs_t *attrs,
-			       struct myproxy_creds *creds,
-			       myproxy_request_t *client_request,
-			       char *client_name,
-			       myproxy_server_context_t* config,
-			       int already_authenticated,
+                               struct myproxy_creds *creds,
+                               myproxy_request_t *client_request,
+                               char *client_name,
+                               myproxy_server_context_t* config,
+                               int already_authenticated,
                                int allowed_to_renew);
 
 /* Delegate requested credentials to the client */
@@ -180,8 +180,8 @@ static int startup_pipe[2];
 static int listenfd = -1;
 
 int
-main(int argc, char *argv[]) 
-{    
+main(int argc, char *argv[])
+{
     pid_t childpid, otherpid;
     struct sockaddr_storage client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
@@ -191,13 +191,13 @@ main(int argc, char *argv[])
 
     myproxy_socket_attrs_t         *socket_attrs;
     myproxy_server_context_t       *server_context;
-  
+
     /* check library version */
     if (myproxy_check_version()) {
-	fprintf(stderr, "MyProxy library version mismatch.\n"
-		"Expecting %s.  Found %s.  Exiting.\n",
-		MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
-	exit(1);
+        fprintf(stderr, "MyProxy library version mismatch.\n"
+                "Expecting %s.  Found %s.  Exiting.\n",
+                MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
+        exit(1);
     }
     voms_lib_handle = dlopen("libmyproxy_voms.so", RTLD_LAZY|RTLD_LOCAL);
     if (voms_lib_handle != NULL)
@@ -223,8 +223,8 @@ main(int argc, char *argv[])
         exit(1);
     }
 
-    /* 
-     * Test to see if we're run out of inetd 
+    /*
+     * Test to see if we're run out of inetd
      * If so, then stdin will be connected to a socket,
      * so getpeername() will succeed.
      * If we're not run out of inetd, do the proper daemon setup
@@ -239,7 +239,7 @@ main(int argc, char *argv[])
                 exit(1);
             }
         }
-    } else { 
+    } else {
         server_context->run_as_daemon = 0;
         close(1);
         (void) open("/dev/null",O_WRONLY);
@@ -247,10 +247,10 @@ main(int argc, char *argv[])
 
     /* Initialize Logging */
     if (debug) {
-	myproxy_debug_set_level(1);
+        myproxy_debug_set_level(1);
         myproxy_log_use_stream(stderr);
     } else {
-	myproxy_log_use_syslog(LOG_DAEMON, server_context->my_name);
+        myproxy_log_use_syslog(LOG_DAEMON, server_context->my_name);
     }
 
     /*
@@ -258,12 +258,12 @@ main(int argc, char *argv[])
      * instead of fprintf() and ilk.
      */
     myproxy_log("myproxy-server %s starting at %s",
-		myproxy_version(0,0,0), timestamp());
+                myproxy_version(0,0,0), timestamp());
 
     /* If process is killed or Ctrl-C */
-    my_signal(SIGTERM, sig_exit); 
+    my_signal(SIGTERM, sig_exit);
     sigaddset(&mysigset, SIGTERM);
-    my_signal(SIGINT,  sig_exit); 
+    my_signal(SIGINT,  sig_exit);
     sigaddset(&mysigset, SIGINT);
 
     /* Read my configuration */
@@ -272,7 +272,7 @@ main(int argc, char *argv[])
         myproxy_log("Exiting.");
         exit(1);
     }
-   
+
     /* Make sure all's well with the storage directory. */
     if (myproxy_check_storage_dir() == -1) {
         myproxy_log_verror();
@@ -294,24 +294,24 @@ main(int argc, char *argv[])
     }
 
     if (!server_context->run_as_daemon) {
-       server_context->usage.client_ip[0] = '\0';
-       getnameinfo((struct sockaddr *)&client_addr,
-                   sizeof(client_addr),
-                   server_context->usage.client_ip,
-                   sizeof(server_context->usage.client_ip),
-                   NULL, 0,
-                   NI_NUMERICHOST);
-       myproxy_log("Connection from %s", server_context->usage.client_ip);
-       socket_attrs->socket_fd = fileno(stdin);
-       if (handle_client(socket_attrs, server_context) < 0) {
-	  my_failure("error in handle_client()");
-       } 
-    } else {    
-       /* Initialize the server before becoming a daemon to catch
-          errors before exit of parent process. */
-       listenfd = myproxy_init_server(socket_attrs);
+        server_context->usage.client_ip[0] = '\0';
+        getnameinfo((struct sockaddr *)&client_addr,
+                    sizeof(client_addr),
+                    server_context->usage.client_ip,
+                    sizeof(server_context->usage.client_ip),
+                    NULL, 0,
+                    NI_NUMERICHOST);
+        myproxy_log("Connection from %s", server_context->usage.client_ip);
+        socket_attrs->socket_fd = fileno(stdin);
+        if (handle_client(socket_attrs, server_context) < 0) {
+            my_failure("error in handle_client()");
+        }
+    } else {
+        /* Initialize the server before becoming a daemon to catch
+           errors before exit of parent process. */
+        listenfd = myproxy_init_server(socket_attrs);
 
-       /* Run as a daemon */
+        /* Run as a daemon */
         if (!debug) {
             if (become_daemon_step2() < 0) {
                 my_failure("Error forking daemon.  Exiting.\n");
@@ -319,120 +319,120 @@ main(int argc, char *argv[])
         }
         /* no exit() allowed before become_daemon_step3() call */
 
-       if (getuid() == 0 && !server_context->pidfile) {
-           server_context->pidfile = "/run/myproxy.pid";
-       }
-       if (server_context->pidfile) {
-           /* It'd be nice to call pidfile_open() before forking the
-              daemon process, but we'd lose our POSIX file lock on the
-              pidfile when the original process exits, so we
-              create/lock/write pidfile here after forking a new
-              daemon process. */
-           pfh = pidfile_open(server_context->pidfile, 0600, &otherpid);
-           if (pfh == NULL) {
-               if (errno == EEXIST) {
-                   myproxy_log("Daemon already running, pid=%ld, pidfile=%s.\n"
-                      "Use the -P option to run multiple "
-                      "myproxy-server instances with different pidfiles.",
-                      (long)otherpid, server_context->pidfile);
-                   if (!debug) become_daemon_step3(1); /* notify parent */
-                   exit(1);
-               }
-               /* If we cannot create pidfile from other reasons, only warn. */
-               myproxy_log("Cannot open or create pidfile %s",
-                           server_context->pidfile);
-           }
-       }
-       if (pfh) pidfile_write(pfh);
-       if (server_context->portfile) {
-           write_pfile(server_context->portfile, socket_attrs->psport);
-       }
+        if (getuid() == 0 && !server_context->pidfile) {
+            server_context->pidfile = "/run/myproxy.pid";
+        }
+        if (server_context->pidfile) {
+            /* It'd be nice to call pidfile_open() before forking the
+               daemon process, but we'd lose our POSIX file lock on the
+               pidfile when the original process exits, so we
+               create/lock/write pidfile here after forking a new
+               daemon process. */
+            pfh = pidfile_open(server_context->pidfile, 0600, &otherpid);
+            if (pfh == NULL) {
+                if (errno == EEXIST) {
+                    myproxy_log("Daemon already running, pid=%ld, pidfile=%s.\n"
+                        "Use the -P option to run multiple "
+                        "myproxy-server instances with different pidfiles.",
+                        (long)otherpid, server_context->pidfile);
+                    if (!debug) become_daemon_step3(1); /* notify parent */
+                    exit(1);
+                }
+                /* If we cannot create pidfile from other reasons, only warn. */
+                myproxy_log("Cannot open or create pidfile %s",
+                            server_context->pidfile);
+            }
+        }
+        if (pfh) pidfile_write(pfh);
+        if (server_context->portfile) {
+            write_pfile(server_context->portfile, socket_attrs->psport);
+        }
 
-       /* Set up signal handling to deal with zombie processes left over  */
-       my_signal(SIGCHLD, sig_chld);
-       sigaddset(&mysigset, SIGCHLD);
+        /* Set up signal handling to deal with zombie processes left over  */
+        my_signal(SIGCHLD, sig_chld);
+        sigaddset(&mysigset, SIGCHLD);
 
-       /* Re-read configuration file on SIGHUP */
-       my_signal(SIGHUP, sig_hup);
-       sigaddset(&mysigset, SIGHUP);
+        /* Re-read configuration file on SIGHUP */
+        my_signal(SIGHUP, sig_hup);
+        sigaddset(&mysigset, SIGHUP);
 
-       if (!debug) {
-           become_daemon_step3(0); /* all done with initialization */
-       }
+        if (!debug) {
+            become_daemon_step3(0); /* all done with initialization */
+        }
 
-       /* Set up concurrent server */
-       while (1) {
+        /* Set up concurrent server */
+        while (1) {
 
-	  /* make sure Globus hasn't blocked signals we care about */
+            /* make sure Globus hasn't blocked signals we care about */
 #ifdef HAVE_PTHREAD_SIGMASK
-	  pthread_sigmask(SIG_UNBLOCK, &mysigset, NULL);
+            pthread_sigmask(SIG_UNBLOCK, &mysigset, NULL);
 #else
-	  sigprocmask(SIG_UNBLOCK, &mysigset, NULL);
+            sigprocmask(SIG_UNBLOCK, &mysigset, NULL);
 #endif
 
-	  socket_attrs->socket_fd = accept(listenfd,
-					   (struct sockaddr *) &client_addr,
-					   &client_addr_len);
-      if (cleanshutdown) goto parent_exit;
-     if (handle_config(server_context) < 0) {
-          myproxy_log_verror();
-          my_failure("error in handle_config()");
-      }
-	  if (socket_attrs->socket_fd < 0) {
-	     if (errno == EINTR) {
-		continue; 
-	     } else {
-		myproxy_log_perror("Error in accept()");
-        continue;
-	     }
-	  }
-	  if (!debug) {
-	     childpid = fork();
-	     
-	     if (childpid < 0) {              /* check for error */
-		myproxy_log_perror("Error in fork");
-		close(socket_attrs->socket_fd);
-	     } else if (childpid != 0) {
-		/* Parent */
-		/* parent closes connected socket */
-		close(socket_attrs->socket_fd);	     
-		continue;	/* while(1) */
-	     }
-	     
-	     /* child process */
-         server_context->usage.client_ip[0] = '\0';
-         getnameinfo((struct sockaddr *)&client_addr,
-                     sizeof(client_addr),
-                     server_context->usage.client_ip,
-                     sizeof(server_context->usage.client_ip),
-                     NULL, 0,
-                     NI_NUMERICHOST);
-             myproxy_log("Connection from %s", server_context->usage.client_ip);
-	     close(0);
-	     close(1);
-	     if (!debug) {
-		close(2);
-	     }
-	     close(listenfd);
-         if (pfh) pidfile_close(pfh);
-         if (server_context->request_timeout == 0) {
-             alarm(MYPROXY_DEFAULT_TIMEOUT);
-         } else if (server_context->request_timeout > 0) {
-             alarm(server_context->request_timeout);
-         }
-	  }
-	  my_signal(SIGCHLD, SIG_DFL);
-	  if (handle_client(socket_attrs, server_context) < 0) {
-	     my_failure_chld("error in handle_client()");
-	  } 
-	  _exit(0);
-       }
+            socket_attrs->socket_fd = accept(listenfd,
+                                             (struct sockaddr *) &client_addr,
+                                             &client_addr_len);
+            if (cleanshutdown) goto parent_exit;
+            if (handle_config(server_context) < 0) {
+                myproxy_log_verror();
+                my_failure("error in handle_config()");
+            }
+            if (socket_attrs->socket_fd < 0) {
+                if (errno == EINTR) {
+                    continue;
+                } else {
+                    myproxy_log_perror("Error in accept()");
+                    continue;
+                }
+            }
+            if (!debug) {
+                childpid = fork();
+
+                if (childpid < 0) {              /* check for error */
+                    myproxy_log_perror("Error in fork");
+                    close(socket_attrs->socket_fd);
+                } else if (childpid != 0) {
+                    /* Parent */
+                    /* parent closes connected socket */
+                    close(socket_attrs->socket_fd);
+                    continue;       /* while(1) */
+                }
+
+                /* child process */
+                server_context->usage.client_ip[0] = '\0';
+                getnameinfo((struct sockaddr *)&client_addr,
+                            sizeof(client_addr),
+                            server_context->usage.client_ip,
+                            sizeof(server_context->usage.client_ip),
+                            NULL, 0,
+                            NI_NUMERICHOST);
+                myproxy_log("Connection from %s", server_context->usage.client_ip);
+                close(0);
+                close(1);
+                if (!debug) {
+                    close(2);
+                }
+                close(listenfd);
+                if (pfh) pidfile_close(pfh);
+                if (server_context->request_timeout == 0) {
+                    alarm(MYPROXY_DEFAULT_TIMEOUT);
+                } else if (server_context->request_timeout > 0) {
+                    alarm(server_context->request_timeout);
+                }
+            }
+            my_signal(SIGCHLD, SIG_DFL);
+            if (handle_client(socket_attrs, server_context) < 0) {
+                my_failure_chld("error in handle_client()");
+            }
+            _exit(0);
+        }
     }
 
  parent_exit:
     pidfile_remove(pfh);
     return 0;
-}   
+}
 
 int
 handle_config(myproxy_server_context_t *server_context)
@@ -443,32 +443,32 @@ handle_config(myproxy_server_context_t *server_context)
         }
         readconfig = 0;         /* reset the flag now that we've read it */
 
-    /* Check to see if config file had syslog_ident
-       or syslog_facility specified.
-       If so, then re-open the syslog with the new name.       */
-    if ((!debug) &&
-        ((server_context->syslog_ident != NULL) ||
-         (server_context->syslog_facility != LOG_DAEMON))) {
-        closelog();
-        if (server_context->syslog_ident != NULL) {
-            myproxy_log_use_syslog(server_context->syslog_facility,
-                                   server_context->syslog_ident);
-        } else {
-            myproxy_log_use_syslog(server_context->syslog_facility,
-                                   server_context->my_name);
+        /* Check to see if config file had syslog_ident
+           or syslog_facility specified.
+           If so, then re-open the syslog with the new name.       */
+        if ((!debug) &&
+            ((server_context->syslog_ident != NULL) ||
+             (server_context->syslog_facility != LOG_DAEMON))) {
+            closelog();
+            if (server_context->syslog_ident != NULL) {
+                myproxy_log_use_syslog(server_context->syslog_facility,
+                                       server_context->syslog_ident);
+            } else {
+                myproxy_log_use_syslog(server_context->syslog_facility,
+                                       server_context->my_name);
+            }
         }
-    }
 
-    /* 
-     * set up gridmap file if explicitly defined.
-     * if not, default to the usual place, but do not over write
-     * the env var if previously defined.
-     */
-    if ( server_context->certificate_mapfile != NULL ) {
-      setenv( "GRIDMAP", server_context->certificate_mapfile, 1 );
-    } else {
-      setenv( "GRIDMAP", "/etc/grid-security/grid-mapfile", 0 );
-    }
+        /*
+         * set up gridmap file if explicitly defined.
+         * if not, default to the usual place, but do not over write
+         * the env var if previously defined.
+         */
+        if ( server_context->certificate_mapfile != NULL ) {
+            setenv( "GRIDMAP", server_context->certificate_mapfile, 1 );
+        } else {
+            setenv( "GRIDMAP", "/etc/grid-security/grid-mapfile", 0 );
+        }
     }
 
     return 0;
@@ -476,7 +476,7 @@ handle_config(myproxy_server_context_t *server_context)
 
 int
 handle_client(myproxy_socket_attrs_t *attrs,
-	      myproxy_server_context_t *context) 
+              myproxy_server_context_t *context)
 {
     myproxy_server_peer_t client;
     char  *client_buffer = NULL;
@@ -517,64 +517,64 @@ handle_client(myproxy_socket_attrs_t *attrs,
 
     /* Authenticate server to client and get DN of client */
     if (myproxy_authenticate_accept_fqans(attrs, client.name,
-	  sizeof(client.name), &client.fqans) < 0) {
-	/* Client_name may not be set on error so don't use it. */
-	myproxy_log_verror();
-	respond_with_error_and_die(attrs, "authentication failed", context);
+          sizeof(client.name), &client.fqans) < 0) {
+        /* Client_name may not be set on error so don't use it. */
+        myproxy_log_verror();
+        respond_with_error_and_die(attrs, "authentication failed", context);
     }
 
     /* Log client name */
-    myproxy_log("Authenticated client %s", client.name); 
+    myproxy_log("Authenticated client %s", client.name);
 
     if (client.fqans && *client.fqans) {
-       char **attributes = client.fqans;
-       myproxy_debug("Client's attributes: ");
-       while (attributes && *attributes) {
-	  myproxy_debug("%s", *attributes);
-	  attributes++;
-       }
+        char **attributes = client.fqans;
+        myproxy_debug("Client's attributes: ");
+        while (attributes && *attributes) {
+            myproxy_debug("%s", *attributes);
+            attributes++;
+        }
     }
-    
+
     /* Receive client request */
     requestlen = myproxy_recv_ex(attrs, &client_buffer);
     if (requestlen <= 0) {
         myproxy_log_verror();
-	respond_with_error_and_die(attrs, "Error in myproxy_recv_ex()", context);
+        respond_with_error_and_die(attrs, "Error in myproxy_recv_ex()", context);
     }
-   
+
     /* Deserialize client request */
-    if (myproxy_deserialize_request(client_buffer, requestlen, 
+    if (myproxy_deserialize_request(client_buffer, requestlen,
                                     client_request) < 0) {
-	myproxy_log_verror();
+        myproxy_log_verror();
         respond_with_error_and_die(attrs, "error parsing request", context);
     }
     free(client_buffer);
     client_buffer = NULL;
 
     /* Set response OK unless error... */
-    server_response->response_type =  MYPROXY_OK_RESPONSE;
-      
+    server_response->response_type = MYPROXY_OK_RESPONSE;
+
     /* Log received client request. We log before the authorization
      * check, so we have the request info for troubleshooting purposes
      * even if the request is denied. */
     switch (client_request->command_type) {
-    case MYPROXY_GET_PROXY: 
+      case MYPROXY_GET_PROXY:
         command_name = "GET"; break;
-    case MYPROXY_RETRIEVE_CERT:
+      case MYPROXY_RETRIEVE_CERT:
         command_name = "RETRIEVE"; break;
-    case MYPROXY_PUT_PROXY:
+      case MYPROXY_PUT_PROXY:
         command_name = "PUT"; break;
-    case MYPROXY_INFO_PROXY:
+      case MYPROXY_INFO_PROXY:
         command_name = "INFO"; break;
-    case MYPROXY_DESTROY_PROXY:
+      case MYPROXY_DESTROY_PROXY:
         command_name = "DESTROY"; break;
-    case MYPROXY_CHANGE_CRED_PASSPHRASE:
+      case MYPROXY_CHANGE_CRED_PASSPHRASE:
         command_name = "CHANGE_CRED_PASSPHRASE"; break;
-    case MYPROXY_STORE_CERT:
+      case MYPROXY_STORE_CERT:
         command_name = "STORE"; break;
-    case MYPROXY_GET_TRUSTROOTS:
+      case MYPROXY_GET_TRUSTROOTS:
         command_name = "GET TRUSTROOTS"; break;
-    default:
+      default:
         myproxy_log("Received UNKNOWN command: %d",
                     client_request->command_type);
         respond_with_error_and_die(attrs, "UNKNOWN command in request.\n", context);
@@ -618,7 +618,7 @@ handle_client(myproxy_socket_attrs_t *attrs,
     if (client_request->command_type != MYPROXY_GET_TRUSTROOTS) {
         /* Check client username */
         if ((client_request->username == NULL) ||
-            (strlen(client_request->username) == 0)) 
+            (strlen(client_request->username) == 0))
         {
             myproxy_log("client %s Invalid username (%s) received",
                         client.name,
@@ -682,7 +682,7 @@ handle_client(myproxy_socket_attrs_t *attrs,
     }
 
     /* All authorization policies are enforced in this function. */
-    if (myproxy_authorize_accept(context, attrs, 
+    if (myproxy_authorize_accept(context, attrs,
                                  client_request, &client) < 0) {
         myproxy_log("authorization failed");
         myproxy_free(NULL, client_request, server_response);
@@ -695,7 +695,7 @@ handle_client(myproxy_socket_attrs_t *attrs,
     client_creds->owner_name     = strdup(client.name);
     client_creds->username       = strdup(client_request->username);
     client_creds->passphrase     = strdup(client_request->passphrase);
-    client_creds->lifetime 	 = client_request->proxy_lifetime;
+    client_creds->lifetime       = client_request->proxy_lifetime;
     if (client_request->retrievers != NULL)
         client_creds->retrievers = strdup(client_request->retrievers);
     if (client_request->keyretrieve != NULL)
@@ -712,67 +712,67 @@ handle_client(myproxy_socket_attrs_t *attrs,
 
     /* Handle client request */
     switch (client_request->command_type) {
-    case MYPROXY_GET_PROXY: 
+      case MYPROXY_GET_PROXY:
 
-	if (caonly ||
-        !myproxy_creds_exist(client_request->username,
-				 client_request->credname)) {
-	    use_ca_callout = 1;
-	}
-	/* fall through to MYPROXY_RETRIEVE_CERT */
-
-    case MYPROXY_RETRIEVE_CERT:
-
-	if (!use_ca_callout) {
-	  /* Retrieve the credentials from the repository */
-	  if (myproxy_creds_retrieve(client_creds) < 0) {
-	    respond_with_error_and_die(attrs, verror_get_string(), context);
-	  }
-
-	  myproxy_debug("  Owner: %s", client_creds->username);
-	  myproxy_debug("  Location: %s", client_creds->location);
-	  myproxy_debug("  Max. delegation lifetime: %d seconds",
-			client_creds->lifetime);
-	  if (context->max_proxy_lifetime) {
-	      myproxy_debug("  Server max_proxy_lifetime: %d seconds",
-			    context->max_proxy_lifetime);
-	  }
-
-	  /* Are credentials locked? */
-	  if (client_creds->lockmsg) {
-	    char *error, *msg="credential locked\n";
-	    error = malloc(strlen(msg)+strlen(client_creds->lockmsg)+1);
-	    strcpy(error, msg);
-	    strcat(error, client_creds->lockmsg);
-	    respond_with_error_and_die(attrs, error, context);
-	  }
-
-	  if (myproxy_creds_verify(client_creds) < 0) {
-	    myproxy_creds_free(client_creds);
-	    myproxy_free(NULL, client_request, server_response);
-	    respond_with_error_and_die(attrs, verror_get_string(), context);
-	  }
-	}
-
-	if (client_request->want_trusted_certs) {
-    case MYPROXY_GET_TRUSTROOTS:
-
-	    if (context->cert_dir) {
-		server_response->trusted_certs =
-		    myproxy_get_certs(context->cert_dir);
-        if (server_response->trusted_certs) {
-            myproxy_log("Sending trust roots to %s", client.name);
-        } else {
-            myproxy_log("myproxy_get_certs() failed");
-            myproxy_log_verror();
+        if (caonly ||
+            !myproxy_creds_exist(client_request->username,
+                                 client_request->credname)) {
+            use_ca_callout = 1;
         }
-	    } else {
-		myproxy_log("WARNING: client requested trusted certificates but "
-			      "cert_dir not configured");
-	    }
-	}
+        /* fall through to MYPROXY_RETRIEVE_CERT */
 
-	/* Send initial OK response */
+      case MYPROXY_RETRIEVE_CERT:
+
+        if (!use_ca_callout) {
+            /* Retrieve the credentials from the repository */
+            if (myproxy_creds_retrieve(client_creds) < 0) {
+                respond_with_error_and_die(attrs, verror_get_string(), context);
+            }
+
+            myproxy_debug("  Owner: %s", client_creds->username);
+            myproxy_debug("  Location: %s", client_creds->location);
+            myproxy_debug("  Max. delegation lifetime: %d seconds",
+                          client_creds->lifetime);
+            if (context->max_proxy_lifetime) {
+                myproxy_debug("  Server max_proxy_lifetime: %d seconds",
+                              context->max_proxy_lifetime);
+            }
+
+            /* Are credentials locked? */
+            if (client_creds->lockmsg) {
+                char *error, *msg="credential locked\n";
+                error = malloc(strlen(msg) + strlen(client_creds->lockmsg) + 1);
+                strcpy(error, msg);
+                strcat(error, client_creds->lockmsg);
+                respond_with_error_and_die(attrs, error, context);
+            }
+
+            if (myproxy_creds_verify(client_creds) < 0) {
+                myproxy_creds_free(client_creds);
+                myproxy_free(NULL, client_request, server_response);
+                respond_with_error_and_die(attrs, verror_get_string(), context);
+            }
+        }
+
+        if (client_request->want_trusted_certs) {
+      case MYPROXY_GET_TRUSTROOTS:
+
+            if (context->cert_dir) {
+                server_response->trusted_certs =
+                    myproxy_get_certs(context->cert_dir);
+                if (server_response->trusted_certs) {
+                    myproxy_log("Sending trust roots to %s", client.name);
+                } else {
+                    myproxy_log("myproxy_get_certs() failed");
+                    myproxy_log_verror();
+                }
+            } else {
+                myproxy_log("WARNING: client requested trusted certificates but "
+                            "cert_dir not configured");
+            }
+        }
+
+        /* Send initial OK response */
         if (client_request->command_type != MYPROXY_GET_TRUSTROOTS) {
             send_response(attrs, server_response, client.name, 0);
             /* Any trustroots wanted as addl. info would have been sent
@@ -784,111 +784,111 @@ handle_client(myproxy_socket_attrs_t *attrs,
             }
         }
 
-        if( client_request->command_type == MYPROXY_GET_PROXY )
-        {	
-	  /* Delegate the credential and set final server_response */
+        if (client_request->command_type == MYPROXY_GET_PROXY)
+        {
+            /* Delegate the credential and set final server_response */
 
-	  if (use_ca_callout) {
-	    context->usage.ca_used = 1;
-	    myproxy_debug("using CA callout");
-	    get_certificate_authority(attrs, client_creds, client_request,
-				      server_response, context);
-	  } else {
-	    myproxy_debug("retrieving proxy");
-        if (context->proxy_extfile) {
-            if (myproxy_set_extensions_from_file(context->proxy_extfile) < 0) {
-                myproxy_log("myproxy_set_extensions_from_file() failed");
-                myproxy_log_verror(); verror_clear();
-            }                
-        } else if (context->proxy_extapp) {
-            if (myproxy_set_extensions_from_callout(context->proxy_extapp,
+            if (use_ca_callout) {
+                context->usage.ca_used = 1;
+                myproxy_debug("using CA callout");
+                get_certificate_authority(attrs, client_creds, client_request,
+                                          server_response, context);
+            } else {
+                myproxy_debug("retrieving proxy");
+                if (context->proxy_extfile) {
+                    if (myproxy_set_extensions_from_file(context->proxy_extfile) < 0) {
+                        myproxy_log("myproxy_set_extensions_from_file() failed");
+                        myproxy_log_verror(); verror_clear();
+                    }
+                } else if (context->proxy_extapp) {
+                    if (myproxy_set_extensions_from_callout(context->proxy_extapp,
                         client_request->username, client_creds->location) < 0) {
-                myproxy_log("myproxy_set_extensions_from_callout() failed");
-                myproxy_log_verror(); verror_clear();
+                        myproxy_log("myproxy_set_extensions_from_callout() failed");
+                        myproxy_log_verror(); verror_clear();
+                    }
+                }
+                if (have_voms != 0 && get_voms_proxy_impl != NULL &&
+                    client_request->voname != NULL &&
+                    context->allow_voms_attribute_requests) {
+                    get_voms_proxy_impl(attrs, client_creds, client_request,
+                                        server_response,
+                                        context);
+                }
+                else
+                    get_proxy(attrs, client_creds, client_request, server_response,
+                              context->max_proxy_lifetime);
             }
         }
-        if (have_voms != 0 && get_voms_proxy_impl != NULL &&
-            client_request->voname != NULL &&
-	    context->allow_voms_attribute_requests) {
-            get_voms_proxy_impl(attrs, client_creds, client_request,
-                           server_response, 
-                           context);
-        }
-        else
-	    get_proxy(attrs, client_creds, client_request, server_response,
-		      context->max_proxy_lifetime);
-	  }
-        } 
-	else if( client_request->command_type == MYPROXY_RETRIEVE_CERT )
+        else if (client_request->command_type == MYPROXY_RETRIEVE_CERT)
         {
-          /* Delegate the credential and set final server_response */
-          get_credentials(attrs, client_creds, client_request, server_response,
-                          context->max_proxy_lifetime);
+            /* Delegate the credential and set final server_response */
+            get_credentials(attrs, client_creds, client_request, server_response,
+                            context->max_proxy_lifetime);
         }
         break;
 
-    case MYPROXY_PUT_PROXY:
-	if (myproxy_check_passphrase_policy(client_request->passphrase,
-					    context->passphrase_policy_pgm,
-					    client_request->username,
-					    client_request->credname,
-					    client_request->retrievers,
-					    client_request->renewers,
-					    client.name) < 0) {
-	    myproxy_creds_free(client_creds);
-	    myproxy_free(NULL, client_request, server_response);
-	    respond_with_error_and_die(attrs, verror_get_string(), context);
-	}
+      case MYPROXY_PUT_PROXY:
+        if (myproxy_check_passphrase_policy(client_request->passphrase,
+                                            context->passphrase_policy_pgm,
+                                            client_request->username,
+                                            client_request->credname,
+                                            client_request->retrievers,
+                                            client_request->renewers,
+                                            client.name) < 0) {
+            myproxy_creds_free(client_creds);
+            myproxy_free(NULL, client_request, server_response);
+            respond_with_error_and_die(attrs, verror_get_string(), context);
+        }
 
-	/* Send initial OK response */
-	send_response(attrs, server_response, client.name, 0);
+        /* Send initial OK response */
+        send_response(attrs, server_response, client.name, 0);
 
-	/* Store the credentials in the repository and
-	   set final server_response */
-    put_proxy(attrs, client_creds, server_response,
-              context->max_cred_lifetime);
-    break;
-
-    case MYPROXY_INFO_PROXY:
-        info_proxy(client_creds, server_response);
-	if (server_response->info_creds == client_creds) {
-	    client_creds = NULL; /* avoid potential double-free */
-	}
+        /* Store the credentials in the repository and
+           set final server_response */
+        put_proxy(attrs, client_creds, server_response,
+                  context->max_cred_lifetime);
         break;
-    case MYPROXY_DESTROY_PROXY:
+
+      case MYPROXY_INFO_PROXY:
+        info_proxy(client_creds, server_response);
+        if (server_response->info_creds == client_creds) {
+            client_creds = NULL; /* avoid potential double-free */
+        }
+        break;
+      case MYPROXY_DESTROY_PROXY:
         destroy_proxy(client_creds, server_response);
         break;
 
-    case MYPROXY_CHANGE_CRED_PASSPHRASE:
-	/* change credential passphrase*/
-	if (myproxy_check_passphrase_policy(client_request->new_passphrase,
-					    context->passphrase_policy_pgm,
-					    client_request->username,
-					    client_request->credname,
-					    client_request->retrievers,
-					    client_request->renewers,
-					    client.name) < 0) {
-	    myproxy_creds_free(client_creds);
-	    myproxy_free(NULL, client_request, server_response);
-	    respond_with_error_and_die(attrs, verror_get_string(), context);
-	}
+      case MYPROXY_CHANGE_CRED_PASSPHRASE:
+        /* change credential passphrase*/
+        if (myproxy_check_passphrase_policy(client_request->new_passphrase,
+                                            context->passphrase_policy_pgm,
+                                            client_request->username,
+                                            client_request->credname,
+                                            client_request->retrievers,
+                                            client_request->renewers,
+                                            client.name) < 0) {
+            myproxy_creds_free(client_creds);
+            myproxy_free(NULL, client_request, server_response);
+            respond_with_error_and_die(attrs, verror_get_string(), context);
+        }
 
-	change_passwd(client_creds, client_request->new_passphrase,
-		      server_response);
+        change_passwd(client_creds, client_request->new_passphrase,
+                      server_response);
         break;
 
-    case MYPROXY_STORE_CERT:
+      case MYPROXY_STORE_CERT:
         /* Store the end-entity credential */
-          /* Send initial OK response */
-          send_response(attrs, server_response, client.name, 0);
- 
-          /* Store the credentials in the repository and
-             set final server_response */
-          put_credentials(attrs, client_creds, server_response,
-                          context->max_cred_lifetime);
-          break;
+        /* Send initial OK response */
+        send_response(attrs, server_response, client.name, 0);
 
-    default:
+        /* Store the credentials in the repository and
+           set final server_response */
+        put_credentials(attrs, client_creds, server_response,
+                        context->max_cred_lifetime);
+        break;
+
+      default:
         server_response->error_string = strdup("Unknown command.\n");
         break;
     }
@@ -912,20 +912,20 @@ handle_client(myproxy_socket_attrs_t *attrs,
     myproxy_free_extensions();
 
     if (client.fqans) {
-       char **p;
-       for (p = client.fqans; p && *p; p++)
-	  free(*p);
-       free(client.fqans);
+        char **p;
+        for (p = client.fqans; p && *p; p++)
+            free(*p);
+        free(client.fqans);
     }
 
     return 0;
 }
 
-int 
-init_arguments(int argc, char *argv[], 
-               myproxy_socket_attrs_t *attrs, 
-               myproxy_server_context_t *context) 
-{   
+int
+init_arguments(int argc, char *argv[],
+               myproxy_socket_attrs_t *attrs,
+               myproxy_server_context_t *context)
+{
     extern char *optarg;
 
     int arg;
@@ -933,10 +933,10 @@ init_arguments(int argc, char *argv[],
 
     char *last_directory_seperator;
     char directory_seperator = '/';
-    
+
     /* NULL implies INADDR_ANY */
     attrs->pshost = NULL;
-    
+
     if (getenv("MYPROXY_SERVER_PORT")) {
         attrs->psport = atoi(getenv("MYPROXY_SERVER_PORT"));
     } else {
@@ -945,69 +945,69 @@ init_arguments(int argc, char *argv[],
 
     /* Get my name, removing any preceding path */
     last_directory_seperator = strrchr(argv[0], directory_seperator);
-    
+
     if (last_directory_seperator == NULL)
     {
-	context->my_name = strdup(argv[0]);
+        context->my_name = strdup(argv[0]);
     }
     else
     {
-	context->my_name = strdup(last_directory_seperator + 1);
+        context->my_name = strdup(last_directory_seperator + 1);
     }
-    
-    while((arg = getopt_long(argc, argv, short_options, 
-			     long_options, NULL)) != EOF) 
+
+    while((arg = getopt_long(argc, argv, short_options,
+                             long_options, NULL)) != EOF)
     {
-        switch(arg) 
+        switch(arg)
         {
-        case 'l':   /* listen to hostname / ipaddr */
+          case 'l':       /* listen to hostname / ipaddr */
             attrs->pshost = strdup(optarg);
             break;
-        case 'p': 	/* port */
+          case 'p':       /* port */
             attrs->psport = atoi(optarg);
             break;
-        case 'P': 	/* pidfile */
+          case 'P':       /* pidfile */
             context->pidfile = strdup(optarg);
             break;
-        case 'z': 	/* portfile */
+          case 'z':       /* portfile */
             context->portfile = strdup(optarg);
             break;
-        case 'h': 	/* print help and exit */
+          case 'h':       /* print help and exit */
             printf("%s", usage);
             exit(0);
             break;
-        case 'c':
-            context->config_file =  malloc(strlen(optarg) + 1);
-            strcpy(context->config_file, optarg);   
+          case 'c':
+            context->config_file = malloc(strlen(optarg) + 1);
+            strcpy(context->config_file, optarg);
             break;
-	case 'v':
-	    myproxy_debug_set_level(1);
-	    break;
-        case 'V': /* print version and exit */
+          case 'v':
+            myproxy_debug_set_level(1);
+            break;
+          case 'V':       /* print version and exit */
             printf("%s", version);
             exit(0);
             break;
-        case 's': /* set the credential storage directory */
+          case 's':       /* set the credential storage directory */
             myproxy_set_storage_dir(optarg);
             break;
-	case 'u': /* print version and exit */
+          case 'u':       /* print version and exit */
             printf("%s", usage);
             exit(0);
             break;
-        case 'd':
+          case 'd':
             debug = 1;
             break;
-        default:        /* print usage and exit */ 
+          default:        /* print usage and exit */
             fprintf(stderr, "%s", usage);
-	    exit(1);
+            exit(1);
             break;
         }
     }
 
     if (optind != argc) {
-	fprintf(stderr, "%s: invalid option -- %s\n", argv[0],
-		argv[optind]);
-	arg_error = -1;
+        fprintf(stderr, "%s: invalid option -- %s\n", argv[0],
+                argv[optind]);
+        arg_error = -1;
     }
 
     return arg_error;
@@ -1016,16 +1016,16 @@ init_arguments(int argc, char *argv[],
 static int
 bind_socket(const char *hostname, int port)
 {
-    int sock=-1;
+    int sock = -1;
     struct addrinfo hints, *res, *ressave;
     int on = 1;
     struct linger lin = {0,0};
     int n;
-    char portstr[6]={0}, *portstrp=NULL;
+    char portstr[6] = {0}, *portstrp = NULL;
 
     /* getaddrinfo() requires either hostname or port to be set */
-    assert(hostname || port); 
-        
+    assert(hostname || port);
+
     if (port) {
         snprintf(portstr, 6, "%d", port);
         portstrp=portstr;
@@ -1075,7 +1075,7 @@ bind_socket(const char *hostname, int port)
                             chosenhost, chosenport, strerror(errno));
             }
             close(sock);
-            sock=-1;
+            sock = -1;
         } else {
             myproxy_log("Failed to create socket for %s:%s: %s",
                         chosenhost, chosenport, strerror(errno));
@@ -1093,27 +1093,27 @@ bind_socket(const char *hostname, int port)
  *
  * Create a generic server socket ready on the given port ready to accept.
  *
- * returns the listener fd on success 
+ * returns the listener fd on success
  */
-int 
-myproxy_init_server(myproxy_socket_attrs_t *attrs) 
+int
+myproxy_init_server(myproxy_socket_attrs_t *attrs)
 {
-    int listen_sock=-1;
+    int listen_sock = -1;
     GSI_SOCKET *tmp_gsi_sock;
 
     if ((tmp_gsi_sock = GSI_SOCKET_new(0)) == NULL) {
-	failure("malloc() failed in GSI_SOCKET_new()");
+        failure("malloc() failed in GSI_SOCKET_new()");
     }
     if (GSI_SOCKET_check_creds(tmp_gsi_sock) == GSI_SOCKET_ERROR) {
         char error_string[1024] = { 0 };
-	GSI_SOCKET_get_error_string(tmp_gsi_sock, error_string,
-				    sizeof(error_string));
-	myproxy_log("Problem with server credentials.\n%s\n",
-		    error_string);
-	exit(1);
+        GSI_SOCKET_get_error_string(tmp_gsi_sock, error_string,
+                                    sizeof(error_string));
+        myproxy_log("Problem with server credentials.\n%s\n",
+                    error_string);
+        exit(1);
     }
     GSI_SOCKET_destroy(tmp_gsi_sock);
-    
+
     if (attrs->pshost || attrs->psport) {
         myproxy_debug("using getaddrinfo() to configure listen socket");
         listen_sock = bind_socket(attrs->pshost, attrs->psport);
@@ -1132,10 +1132,10 @@ myproxy_init_server(myproxy_socket_attrs_t *attrs)
     }
     if (listen_sock == -1) {
         failure("Error creating server socket");
-    } 
+    }
 
     if (listen(listen_sock, INT_MAX) < 0) {
-	    failure("Error in listen()");
+        failure("Error in listen()");
     }
 
     if (attrs->psport == 0) {
@@ -1169,39 +1169,39 @@ myproxy_init_server(myproxy_socket_attrs_t *attrs)
 
 void
 respond_with_error_and_die(myproxy_socket_attrs_t *attrs,
-			   const char *error, myproxy_server_context_t *context)
+                           const char *error, myproxy_server_context_t *context)
 {
-    myproxy_response_t		response = {0}; /* initialize with 0s */
-    int				responselen;
-    char			*response_buffer = NULL;
-    
+    myproxy_response_t          response = {0}; /* initialize with 0s */
+    int                         responselen;
+    char                        *response_buffer = NULL;
+
 
     memset (&response, 0, sizeof (response));
     response.version = strdup(MYPROXY_VERSION);
     response.response_type = MYPROXY_ERROR_RESPONSE;
     response.authorization_data = NULL;
     response.error_string = strdup(error);
-    
+
     responselen = myproxy_serialize_response_ex(&response,
-						&response_buffer);
-    
+                                                &response_buffer);
+
     if (responselen < 0) {
         my_failure_chld("error in myproxy_serialize_response()");
     }
 
     if (myproxy_send(attrs, response_buffer, responselen) < 0) {
         my_failure_chld("error in myproxy_send()\n");
-    } 
+    }
 
     myproxy_log("Exiting: %s", error);
-    
+
     myproxy_free(attrs, NULL, NULL);
 
     if(debug) exit(1); else _exit(1);
 }
 
 void send_response(myproxy_socket_attrs_t *attrs, myproxy_response_t *response,
-		   char *client_name, int ignore_net_error)
+                   char *client_name, int ignore_net_error)
 {
     char *server_buffer = NULL;
     int responselen;
@@ -1212,28 +1212,28 @@ void send_response(myproxy_socket_attrs_t *attrs, myproxy_response_t *response,
     sprintf(response->version, "%s", MYPROXY_VERSION);
 
     responselen = myproxy_serialize_response_ex(response, &server_buffer);
-    
+
     if (responselen < 0) {
         my_failure_chld("error in myproxy_serialize_response()");
     }
 
     /* Log response */
     if (response->response_type == MYPROXY_OK_RESPONSE) {
-      myproxy_debug("Sending OK response to client %s", client_name);
+        myproxy_debug("Sending OK response to client %s", client_name);
     } else if (response->response_type == MYPROXY_ERROR_RESPONSE) {
-      myproxy_debug("Sending ERROR response \"%s\" to client %s",
-		    response->error_string, client_name);
+        myproxy_debug("Sending ERROR response \"%s\" to client %s",
+                      response->error_string, client_name);
     }
 
     if (myproxy_send(attrs, server_buffer, responselen) < 0) {
         int error_number = GSI_SOCKET_get_errno(attrs->gsi_socket);
 
-	myproxy_log_verror();
+        myproxy_log_verror();
         if (!(ignore_net_error &&
               (error_number == EPIPE ||
                error_number == ECONNRESET)))
             my_failure_chld("error in myproxy_send()\n");
-    } 
+    }
     free(response->version);
     response->version = NULL;
     free(server_buffer);
@@ -1248,42 +1248,42 @@ void send_response(myproxy_socket_attrs_t *attrs, myproxy_response_t *response,
  */
 
 /* Delegate requested credentials to the client */
-void get_proxy(myproxy_socket_attrs_t *attrs, 
-	       myproxy_creds_t *creds,
-	       myproxy_request_t *request,
-	       myproxy_response_t *response,
+void get_proxy(myproxy_socket_attrs_t *attrs,
+               myproxy_creds_t *creds,
+               myproxy_request_t *request,
+               myproxy_response_t *response,
                int max_proxy_lifetime)
 {
     int lifetime = 0;
 
     if (request->proxy_lifetime > 0) {
-	lifetime = request->proxy_lifetime;
+        lifetime = request->proxy_lifetime;
     }
     if (creds->lifetime > 0) {
-	if (lifetime > 0) {
-	    lifetime = MIN(lifetime, creds->lifetime);
-	} else {
-	    lifetime = creds->lifetime;
-	}
+        if (lifetime > 0) {
+            lifetime = MIN(lifetime, creds->lifetime);
+        } else {
+            lifetime = creds->lifetime;
+        }
     }
     if (max_proxy_lifetime > 0) {
-	if (lifetime > 0) {
-	    lifetime = MIN(lifetime, max_proxy_lifetime);
-	} else {
-	    lifetime = max_proxy_lifetime;
-	}
+        if (lifetime > 0) {
+            lifetime = MIN(lifetime, max_proxy_lifetime);
+        } else {
+            lifetime = max_proxy_lifetime;
+        }
     }
 
     if (myproxy_init_delegation(attrs, creds->location, lifetime,
-				request->passphrase) < 0) {
+                                request->passphrase) < 0) {
         myproxy_log_verror();
-	response->response_type =  MYPROXY_ERROR_RESPONSE; 
-	response->error_string = strdup("Unable to delegate credentials.\n");
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Unable to delegate credentials.\n");
     } else {
         myproxy_log("Delegating credentials for %s lifetime=%d",
-		    creds->owner_name, lifetime);
-	response->response_type = MYPROXY_OK_RESPONSE;
-    } 
+                    creds->owner_name, lifetime);
+        response->response_type = MYPROXY_OK_RESPONSE;
+    }
 }
 
 /* Delegate requested credentials to the client */
@@ -1294,34 +1294,34 @@ void get_credentials(myproxy_socket_attrs_t *attrs,
                      int                     max_proxy_lifetime)
 {
     if (myproxy_get_credentials(attrs, creds->location) < 0) {
-      myproxy_log_verror();
-      response->response_type =  MYPROXY_ERROR_RESPONSE;
-      response->error_string = strdup("Unable to retrieve credentials.\n");
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Unable to retrieve credentials.\n");
     } else {
-      myproxy_log("Sent credentials for %s", creds->owner_name);
-      response->response_type = MYPROXY_OK_RESPONSE;
+        myproxy_log("Sent credentials for %s", creds->owner_name);
+        response->response_type = MYPROXY_OK_RESPONSE;
     }
 }
 
 
 /* Accept delegated credentials from client */
-void put_proxy(myproxy_socket_attrs_t *attrs, 
-               myproxy_creds_t *creds, 
+void put_proxy(myproxy_socket_attrs_t *attrs,
+               myproxy_creds_t *creds,
                myproxy_response_t *response,
-               int max_cred_lifetime) 
+               int max_cred_lifetime)
 {
     char delegfile[MAXPATHLEN] = { 0 };
 
     if (myproxy_accept_delegation(attrs, delegfile, sizeof(delegfile),
-				  creds->passphrase) < 0) {
-	myproxy_log_verror();
-        response->response_type =  MYPROXY_ERROR_RESPONSE; 
-        response->error_string = strdup("Failed to accept credentials.\n"); 
+                                  creds->passphrase) < 0) {
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Failed to accept credentials.\n");
         return;
     }
 
     myproxy_debug("  Accepted delegation: %s", delegfile);
- 
+
     check_and_store_credentials(delegfile, creds, response, max_cred_lifetime);
 }
 
@@ -1337,10 +1337,10 @@ void put_credentials(myproxy_socket_attrs_t *attrs,
                                    delegfile,
                                    sizeof(delegfile)) < 0)
     {
-      myproxy_log_verror();
-      response->response_type =  MYPROXY_ERROR_RESPONSE;
-      response->error_string = strdup("Failed to accept credentials.\n");
-      return;
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Failed to accept credentials.\n");
+        return;
     }
 
     myproxy_debug("  Accepted credentials: %s", delegfile);
@@ -1357,10 +1357,10 @@ void check_and_store_credentials(const char              path[],
     int cred_lifetime = 0;
 
     if (ssl_verify_cred(path) < 0) {
-      myproxy_log_verror();
-      response->response_type = MYPROXY_ERROR_RESPONSE;
-      response->error_string = strdup("Credentials are not valid.\n");
-      goto cleanup;
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Credentials are not valid.\n");
+        goto cleanup;
     }
 
     if (max_cred_lifetime) {
@@ -1392,9 +1392,9 @@ void check_and_store_credentials(const char              path[],
     creds->location = strdup(path);
 
     if (myproxy_creds_store(creds) < 0) {
-	myproxy_log_verror();
-        response->response_type = MYPROXY_ERROR_RESPONSE; 
-        response->error_string = strdup("Unable to store credentials.\n"); 
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Unable to store credentials.\n");
     } else {
         response->response_type = MYPROXY_OK_RESPONSE;
     }
@@ -1406,45 +1406,45 @@ cleanup:
 
 void info_proxy(myproxy_creds_t *creds, myproxy_response_t *response) {
     if (myproxy_creds_retrieve_all(creds) < 0) {
-       myproxy_log_verror();
-       response->response_type =  MYPROXY_ERROR_RESPONSE;
-       response->error_string = strdup(verror_get_string());
-    } else { 
-       response->response_type = MYPROXY_OK_RESPONSE;
-       response->info_creds = creds; /* beware shallow copy here */
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup(verror_get_string());
+    } else {
+        response->response_type = MYPROXY_OK_RESPONSE;
+        response->info_creds = creds; /* beware shallow copy here */
     }
 }
 
 void destroy_proxy(myproxy_creds_t *creds, myproxy_response_t *response) {
-    
+
     myproxy_debug("Deleting credentials for username \"%s\"", creds->username);
     myproxy_debug("  Owner is \"%s\"", creds->owner_name);
     myproxy_debug("  Delegation lifetime is %d seconds", creds->lifetime);
-    
-    if (myproxy_creds_delete(creds) < 0) { 
-	myproxy_log_verror();
-        response->response_type =  MYPROXY_ERROR_RESPONSE; 
-	response->error_string = strdup(verror_get_string());
+
+    if (myproxy_creds_delete(creds) < 0) {
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup(verror_get_string());
     } else {
-	response->response_type = MYPROXY_OK_RESPONSE;
+        response->response_type = MYPROXY_OK_RESPONSE;
     }
- 
+
 }
 
 void change_passwd(myproxy_creds_t *creds, char *new_passphrase,
-		   myproxy_response_t *response) {
-    
+                   myproxy_response_t *response) {
+
     myproxy_debug("Changing pass phrase for username \"%s\"", creds->username);
     myproxy_debug("  Owner is \"%s\"", creds->owner_name);
-    
-    if (myproxy_creds_change_passphrase(creds, new_passphrase) < 0) { 
-	myproxy_log_verror();
-        response->response_type =  MYPROXY_ERROR_RESPONSE; 
-        response->error_string = strdup("Unable to change pass phrase.\n"); 
+
+    if (myproxy_creds_change_passphrase(creds, new_passphrase) < 0) {
+        myproxy_log_verror();
+        response->response_type = MYPROXY_ERROR_RESPONSE;
+        response->error_string = strdup("Unable to change pass phrase.\n");
     } else {
-	response->response_type = MYPROXY_OK_RESPONSE;
+        response->response_type = MYPROXY_OK_RESPONSE;
     }
- 
+
 }
 
 /*
@@ -1469,7 +1469,7 @@ Sigfunc *my_signal(int signo, Sigfunc *func)
         new_action.sa_flags |= SA_INTERRUPT;  /* SunOS 4.x */
 #endif
     }
-    else { 
+    else {
 #ifdef SA_RESTART
         new_action.sa_flags |= SA_RESTART;    /* SVR4, 4.4BSD */
 #endif
@@ -1481,7 +1481,7 @@ Sigfunc *my_signal(int signo, Sigfunc *func)
     else {
         return old_action.sa_handler;
     }
-} 
+}
 
 /* Signal handlers here.
    Call only asynchronous-safe functions!
@@ -1490,10 +1490,10 @@ void
 sig_chld(int signo) {
     pid_t pid;
     int   stat;
-    
+
     while ( (pid = waitpid(-1, &stat, WNOHANG)) > 0);
     return;
-} 
+}
 
 void sig_hup(int signo) {
     readconfig = 1;             /* set the flag */
@@ -1509,13 +1509,13 @@ static void
 failure(const char *failure_message) {
     myproxy_log_perror("Failure: %s", failure_message);
     exit(1);
-} 
+}
 
 static void
 my_failure(const char *failure_message) {
-    myproxy_log("Failure: %s", failure_message);       
+    myproxy_log("Failure: %s", failure_message);
     exit(1);
-} 
+}
 
 static void
 my_failure_chld(const char *failure_message) {
@@ -1541,9 +1541,9 @@ become_daemon_step1()
 {
     int fd = 0;
     int fdlimit;
-    
+
     /* Steps taken from UNIX Programming FAQ */
-    
+
     /* 4. `chdir("/")' to ensure that our process doesn't keep any directory in use */
     chdir("/");
 
@@ -1554,18 +1554,18 @@ become_daemon_step1()
     /* 6. Close all file descriptors */
     fdlimit = sysconf(_SC_OPEN_MAX);
     while (fd < fdlimit)
-      close(fd++);
+        close(fd++);
 
-    /* 7.Establish new open descriptors for stdin, stdout and stderr */    
+    /* 7.Establish new open descriptors for stdin, stdout and stderr */
     (void)open("/dev/null", O_RDWR);
-    dup(0); 
+    dup(0);
     dup(0);
 #ifdef TIOCNOTTY
     fd = open("/dev/tty", O_RDWR);
     if (fd >= 0) {
-      ioctl(fd, TIOCNOTTY, 0);
-      (void)close(fd);
-    } 
+        ioctl(fd, TIOCNOTTY, 0);
+        (void)close(fd);
+    }
 #endif /* TIOCNOTTY */
     return 0;
 }
@@ -1588,39 +1588,39 @@ become_daemon_step2()
     /* 1. Fork off a child so the new process is not a process group leader */
     childpid = fork();
     switch (childpid) {
-    case 0:         /* child */
-      close(startup_pipe[0]);
-      break;
-    case -1:        /* error */
-      perror("Error in fork()");
-      return -1;
-    default:        /* exit the original process */
-      close(startup_pipe[1]);
-      read(startup_pipe[0], &byte, 1); /* wait for child to signal */
-      close(startup_pipe[0]);
-      _exit(byte);
+      case 0:         /* child */
+        close(startup_pipe[0]);
+        break;
+      case -1:        /* error */
+        perror("Error in fork()");
+        return -1;
+      default:        /* exit the original process */
+        close(startup_pipe[1]);
+        read(startup_pipe[0], &byte, 1); /* wait for child to signal */
+        close(startup_pipe[0]);
+        _exit(byte);
     }
 
     /* 2. Set session id to become a process group and session group leader */
-    if (setsid() < 0) { 
-        perror("Error in setsid()"); 
-	return -1;
-    } 
+    if (setsid() < 0) {
+        perror("Error in setsid()");
+        return -1;
+    }
 
     /* 3. Fork again so the parent, (the session group leader), can exit.
-          This means that we, as a non-session group leader, can never 
-          regain a controlling terminal. 
+          This means that we, as a non-session group leader, can never
+          regain a controlling terminal.
     */
     signal(SIGHUP, SIG_IGN);
     childpid = fork();
     switch (childpid) {
-    case 0:             /* child */
-	break;
-    case -1:            /* error */
-	perror("Error in fork()");
-	return -1;
-    default:            /* exit the original process */
-	_exit(0);
+      case 0:             /* child */
+        break;
+      case -1:            /* error */
+        perror("Error in fork()");
+        return -1;
+      default:            /* exit the original process */
+        _exit(0);
     }
 
     return 0;
@@ -1661,7 +1661,7 @@ write_pfile(const char path[], long val)
  */
 static int myproxy_check_policy(myproxy_server_context_t *context,
                                 myproxy_socket_attrs_t *attrs,
-				myproxy_server_peer_t *client,
+                                myproxy_server_peer_t *client,
                                 const char *policy_name,
                                 const char **server_policy,
                                 const char *credential_policy,
@@ -1672,25 +1672,25 @@ static int myproxy_check_policy(myproxy_server_context_t *context,
     myproxy_debug("applying %s policy", policy_name);
     authorization_ok = myproxy_server_check_policy_list_ext(server_policy, client);
     if (authorization_ok != 1) {
-       verror_put_string("\"%s\" not authorized by server's %s policy",
-	                 client->name, policy_name);
-       return authorization_ok;
+        verror_put_string("\"%s\" not authorized by server's %s policy",
+                          client->name, policy_name);
+        return authorization_ok;
     }
 
     if (credential_policy != NULL) {
-       authorization_ok = myproxy_server_check_policy_ext(credential_policy, client);
-       if (authorization_ok != 1) {
-	  verror_put_string("\"%s\" not authorized by credential's %s policy",
-		            client->name, policy_name);
-	  return authorization_ok;
-       }
+        authorization_ok = myproxy_server_check_policy_ext(credential_policy, client);
+        if (authorization_ok != 1) {
+            verror_put_string("\"%s\" not authorized by credential's %s policy",
+                              client->name, policy_name);
+            return authorization_ok;
+        }
     } else if (default_credential_policy != NULL) {
-       authorization_ok = myproxy_server_check_policy_list_ext(default_credential_policy, client);
-       if (authorization_ok != 1) {
-	  verror_put_string("\"%s\" not authorized by server's default %s policy",
-		            client->name, policy_name);
-	  return authorization_ok;
-       }
+        authorization_ok = myproxy_server_check_policy_list_ext(default_credential_policy, client);
+        if (authorization_ok != 1) {
+            verror_put_string("\"%s\" not authorized by server's default %s policy",
+                              client->name, policy_name);
+            return authorization_ok;
+        }
     }
 
     return authorization_ok;
@@ -1733,8 +1733,8 @@ check_self_authz(myproxy_server_context_t *context,
             }
         } else {
             if (user_dn_lookup(creds->username,
-                                 &subject, context)) {
-                verror_put_string("unknown username: %s", 
+                               &subject, context)) {
+                verror_put_string("unknown username: %s",
                                   creds->username);
                 return -1;          /* error */
             }
@@ -1751,7 +1751,7 @@ check_self_authz(myproxy_server_context_t *context,
 
     return rval;
 }
-                 
+
 
 /* Check authorization for all incoming requests.  The authorization
  * rules are as follows.
@@ -1777,7 +1777,7 @@ check_self_authz(myproxy_server_context_t *context,
  * GET_TRUSTROOTS:
  *   Client DN must match server-wide authorized_retrievers policy.
  * PUT, STORE, and DESTROY:
- *   If accepted_credentials_mapfile or accepted_credentials_mapapp, 
+ *   If accepted_credentials_mapfile or accepted_credentials_mapapp,
  *   client_name / client_request->username map entry must be present/valid.
  *   Client DN must match accepted_credentials.
  *   If credentials already exist for the username, the client must own them.
@@ -1791,510 +1791,510 @@ check_self_authz(myproxy_server_context_t *context,
 static int
 myproxy_authorize_accept(myproxy_server_context_t *context,
                          myproxy_socket_attrs_t *attrs,
-			 myproxy_request_t *client_request,
-			 myproxy_server_peer_t *client)
+                         myproxy_request_t *client_request,
+                         myproxy_server_peer_t *client)
 {
-   int   credentials_exist = 0;
-   int   client_owns_credentials = 0;
-   int   authorization_ok = -1; /* 1 = success, 0 = failure, -1 = error */
-   int   allowed_to_retrieve = 0;
-   int   allowed_to_renew = 0;
-   int   trusted_retriever = 0;
-   int   return_status = -1;
-   myproxy_creds_t creds = { 0 };
-   char  *userdn = NULL;
+    int   credentials_exist = 0;
+    int   client_owns_credentials = 0;
+    int   authorization_ok = -1; /* 1 = success, 0 = failure, -1 = error */
+    int   allowed_to_retrieve = 0;
+    int   allowed_to_renew = 0;
+    int   trusted_retriever = 0;
+    int   return_status = -1;
+    myproxy_creds_t creds = { 0 };
+    char  *userdn = NULL;
 
-   if (caonly) {
-       switch (client_request->command_type) {
-       case MYPROXY_GET_PROXY:
-       case MYPROXY_GET_TRUSTROOTS:
-           break;
-       default:
-           verror_put_string("command not supported by MyProxy CA");
-           respond_with_error_and_die(attrs, verror_get_string(), context);
-       }
-   }
+    if (caonly) {
+        switch (client_request->command_type) {
+          case MYPROXY_GET_PROXY:
+          case MYPROXY_GET_TRUSTROOTS:
+            break;
+          default:
+            verror_put_string("command not supported by MyProxy CA");
+            respond_with_error_and_die(attrs, verror_get_string(), context);
+        }
+    }
 
-   if (client_request->command_type != MYPROXY_GET_TRUSTROOTS)
-   {
-       if (caonly) {
-           credentials_exist = 0;
-       } else {
-           credentials_exist =
-               myproxy_creds_exist(client_request->username,
-                                   client_request->credname);
-       }
+    if (client_request->command_type != MYPROXY_GET_TRUSTROOTS)
+    {
+        if (caonly) {
+            credentials_exist = 0;
+        } else {
+            credentials_exist =
+                myproxy_creds_exist(client_request->username,
+                                    client_request->credname);
+        }
 
-       if (credentials_exist == -1) {
-           myproxy_log_verror();
-           verror_put_string("Error checking credential existence");
-           goto end;
-       }
+        if (credentials_exist == -1) {
+            myproxy_log_verror();
+            verror_put_string("Error checking credential existence");
+            goto end;
+        }
 
-       creds.username = strdup(client_request->username);
-       if (client_request->credname) {
-           creds.credname = strdup(client_request->credname);
-       }
+        creds.username = strdup(client_request->username);
+        if (client_request->credname) {
+            creds.credname = strdup(client_request->credname);
+        }
 
-       if (credentials_exist) {
-           if (myproxy_creds_retrieve(&creds) < 0) {
-               verror_put_string("Unable to retrieve credential information");
-               goto end;
-           }
+        if (credentials_exist) {
+            if (myproxy_creds_retrieve(&creds) < 0) {
+                verror_put_string("Unable to retrieve credential information");
+                goto end;
+            }
 
-           context->usage.credentials_exist = credentials_exist;
+            context->usage.credentials_exist = credentials_exist;
 
-           if (strcmp(creds.owner_name, client->name) == 0) {
-               client_owns_credentials = 1;
-           }
-       }
-   }
+            if (strcmp(creds.owner_name, client->name) == 0) {
+                client_owns_credentials = 1;
+            }
+        }
+    }
 
-   switch (client_request->command_type) {
-   case MYPROXY_RETRIEVE_CERT:
-       authorization_ok =
-	  myproxy_check_policy(context, attrs, client,
-	                "authorized_key_retrievers",
-	                (const char **)context->authorized_key_retrievers_dns,
-			creds.keyretrieve,
-			(const char **)context->default_key_retrievers_dns);
-       if (authorization_ok != 1)
-	  goto end;
-       
-       if (!credentials_exist) {
-           no_creds_abort(attrs, client_request->username, client_request->credname,
-                          context);
-       }
-       /* fall through to MYPROXY_GET_PROXY */
+    switch (client_request->command_type) {
+      case MYPROXY_RETRIEVE_CERT:
+        authorization_ok =
+            myproxy_check_policy(context, attrs, client,
+                        "authorized_key_retrievers",
+                        (const char **)context->authorized_key_retrievers_dns,
+                        creds.keyretrieve,
+                        (const char **)context->default_key_retrievers_dns);
+        if (authorization_ok != 1)
+            goto end;
 
-   case MYPROXY_GET_PROXY:
-       /* check trusted_retrievers */
-       authorization_ok =
-	       myproxy_check_policy(context, attrs, client,
-			"trusted_retrievers",
-			(const char **)context->trusted_retriever_dns,
-			creds.trusted_retrievers,
-			(const char **)context->default_trusted_retriever_dns);
-       if (authorization_ok == 1) {
-           if (check_self_authz(context, &creds, client) != 1) {
-               myproxy_log_verror();
-               myproxy_log("self-authz not allowed for trusted retriever");
-           } else {
-               trusted_retriever = 1;
-               context->usage.trusted_retr = 1;
-               myproxy_log("trusted retrievers policy matched");
-           }
-       }
+        if (!credentials_exist) {
+            no_creds_abort(attrs, client_request->username, client_request->credname,
+                           context);
+        }
+        /* fall through to MYPROXY_GET_PROXY */
 
-       allowed_to_retrieve =
-               myproxy_check_policy(context, attrs, client,
+      case MYPROXY_GET_PROXY:
+        /* check trusted_retrievers */
+        authorization_ok =
+            myproxy_check_policy(context, attrs, client,
+                        "trusted_retrievers",
+                        (const char **)context->trusted_retriever_dns,
+                        creds.trusted_retrievers,
+                        (const char **)context->default_trusted_retriever_dns);
+        if (authorization_ok == 1) {
+            if (check_self_authz(context, &creds, client) != 1) {
+                myproxy_log_verror();
+                myproxy_log("self-authz not allowed for trusted retriever");
+            } else {
+                trusted_retriever = 1;
+                context->usage.trusted_retr = 1;
+                myproxy_log("trusted retrievers policy matched");
+            }
+        }
+
+        allowed_to_retrieve =
+            myproxy_check_policy(context, attrs, client,
                    "authorized_retrievers",
                    (const char **)context->authorized_retriever_dns,
                    creds.retrievers,
                    (const char **)context->default_retriever_dns);
 
-       allowed_to_renew =
-           myproxy_check_policy(context, attrs, client,
+        allowed_to_renew =
+            myproxy_check_policy(context, attrs, client,
                    "authorized_renewers",
                    (const char **)context->authorized_renewer_dns,
                    creds.renewers,
                    (const char **)context->default_renewer_dns);
 
-       if (!allowed_to_retrieve && !allowed_to_renew) {
-           goto end;
-       }
+        if (!allowed_to_retrieve && !allowed_to_renew) {
+            goto end;
+        }
 
-       /* log non-fatal errors collected so far and clear them
-          so we don't confuse the client with too much diagnostics */
-       if (debug) myproxy_log_verror();
-       verror_clear();
+        /* log non-fatal errors collected so far and clear them
+           so we don't confuse the client with too much diagnostics */
+        if (debug) myproxy_log_verror();
+        verror_clear();
 
-       /* if it appears that we need to use the ca callouts because
-        * of no stored creds, we should check if the ca is configured
-        * and if the user exists in the mapfile if not using the
-        * external program callout.
-        */
-       if (!credentials_exist) {
-           if ( (context->certificate_issuer_program == NULL) && 
-                (context->certificate_issuer_cert == NULL) ) {
-               no_creds_abort(attrs, client_request->username,
-                              client_request->credname, context);
-           }
+        /* if it appears that we need to use the ca callouts because
+         * of no stored creds, we should check if the ca is configured
+         * and if the user exists in the mapfile if not using the
+         * external program callout.
+         */
+        if (!credentials_exist) {
+            if ( (context->certificate_issuer_program == NULL) &&
+                 (context->certificate_issuer_cert == NULL) ) {
+                no_creds_abort(attrs, client_request->username,
+                               client_request->credname, context);
+            }
 
-           if (context->certificate_issuer_cert) {
+            if (context->certificate_issuer_cert) {
 
-               if ( user_dn_lookup( client_request->username,
-                                    &userdn, context ) ) {
-                   verror_put_string("unknown username: %s", 
-                                     client_request->username);
-                   respond_with_error_and_die(attrs, verror_get_string(), context);
-               }
-               if (userdn) {
-                   free(userdn);
-                   userdn = NULL;
-               }
-           }
-       }
+                if ( user_dn_lookup( client_request->username,
+                                     &userdn, context ) ) {
+                    verror_put_string("unknown username: %s",
+                                      client_request->username);
+                    respond_with_error_and_die(attrs, verror_get_string(), context);
+                }
+                if (userdn) {
+                    free(userdn);
+                    userdn = NULL;
+                }
+            }
+        }
 
-       /* this call may set context->limited_proxy */
-   authorization_ok =
-	   authenticate_client(attrs, &creds, client_request, client->name,
-			       context, trusted_retriever, allowed_to_renew);
+        /* this call may set context->limited_proxy */
+        authorization_ok =
+            authenticate_client(attrs, &creds, client_request, client->name,
+                                context, trusted_retriever, allowed_to_renew);
 
-       if (authorization_ok < 0) {
-           if (!verror_is_error()) {
-               /* if we don't have a good error message already,
-                  it means we had insufficient authentication */
-               if (client_request->passphrase[0] == '\0') {
-                   verror_put_string("no passphrase");
-               }
-               verror_put_string("authentication failed");
-           }
-           goto end;		/* authentication failed */
-       } else if (authorization_ok == 0) {
-           authorization_ok = allowed_to_retrieve;
-       } else if (authorization_ok == 1) { /* renewal */
-           if (check_self_authz(context, &creds, client) != 1) {
-               authorization_ok = -1;
-               verror_put_string("self-authz not allowed for renewer");
-           }
-       }
+        if (authorization_ok < 0) {
+            if (!verror_is_error()) {
+                /* if we don't have a good error message already,
+                   it means we had insufficient authentication */
+                if (client_request->passphrase[0] == '\0') {
+                    verror_put_string("no passphrase");
+                }
+                verror_put_string("authentication failed");
+            }
+            goto end;            /* authentication failed */
+        } else if (authorization_ok == 0) {
+            authorization_ok = allowed_to_retrieve;
+        } else if (authorization_ok == 1) { /* renewal */
+            if (check_self_authz(context, &creds, client) != 1) {
+                authorization_ok = -1;
+                verror_put_string("self-authz not allowed for renewer");
+            }
+        }
 
-       if (authorization_ok != 1) {
-           goto end;
-       }
+        if (authorization_ok != 1) {
+            goto end;
+        }
 
-       if (context->limited_proxy == -1) { /* config says ignore limited */
-           GSI_SOCKET_set_peer_limited_proxy(attrs->gsi_socket, 0);
-       } else if (context->limited_proxy == 1) {
-           GSI_SOCKET_set_peer_limited_proxy(attrs->gsi_socket, 1);
-       }
+        if (context->limited_proxy == -1) { /* config says ignore limited */
+            GSI_SOCKET_set_peer_limited_proxy(attrs->gsi_socket, 0);
+        } else if (context->limited_proxy == 1) {
+            GSI_SOCKET_set_peer_limited_proxy(attrs->gsi_socket, 1);
+        }
 
-       if (GSI_SOCKET_peer_used_limited_proxy(attrs->gsi_socket)) {
-           myproxy_debug("client authenticated with a limited proxy chain");
-           if (!credentials_exist) {
-               verror_put_string("MyProxy CA will not accept limited proxy for authentication.");
-               authorization_ok = 0;
-               goto end;
-           }
-           if (client_request->command_type == MYPROXY_RETRIEVE_CERT) {
-               switch(ssl_limited_proxy_file(creds.location)) {
-               case 1:
-                   break;       /* ok */
-               case 0:
-                   verror_put_string("Client with limited proxy may not retrieve full credentials.");
-                   authorization_ok = 0;
-                   goto end;
-               default:
-                   verror_put_string("Can't determine if credentials contain a limited proxy.");
-                   authorization_ok = 0;
-                   goto end;
-               }
-           }
-       }
-       break;
+        if (GSI_SOCKET_peer_used_limited_proxy(attrs->gsi_socket)) {
+            myproxy_debug("client authenticated with a limited proxy chain");
+            if (!credentials_exist) {
+                verror_put_string("MyProxy CA will not accept limited proxy for authentication.");
+                authorization_ok = 0;
+                goto end;
+            }
+            if (client_request->command_type == MYPROXY_RETRIEVE_CERT) {
+                switch(ssl_limited_proxy_file(creds.location)) {
+                  case 1:
+                    break;       /* ok */
+                  case 0:
+                    verror_put_string("Client with limited proxy may not retrieve full credentials.");
+                    authorization_ok = 0;
+                    goto end;
+                  default:
+                    verror_put_string("Can't determine if credentials contain a limited proxy.");
+                    authorization_ok = 0;
+                    goto end;
+                }
+            }
+        }
+        break;
 
-   case MYPROXY_GET_TRUSTROOTS:
-       /* just check authorized_retrievers */
-       authorization_ok = myproxy_check_policy(
-           context, attrs, client, "authorized_retrievers",
-           (const char **)context->authorized_retriever_dns, NULL, NULL);
+      case MYPROXY_GET_TRUSTROOTS:
+        /* just check authorized_retrievers */
+        authorization_ok = myproxy_check_policy(
+            context, attrs, client, "authorized_retrievers",
+            (const char **)context->authorized_retriever_dns, NULL, NULL);
 
-       if (authorization_ok != 1) {
-           verror_put_string("\"%s\" not authorized to retrieve credentials from this "
-                             "server (authorized_retrievers policy)", client->name);
-           goto end;
-       }
-       break;
+        if (authorization_ok != 1) {
+            verror_put_string("\"%s\" not authorized to retrieve credentials from this "
+                              "server (authorized_retrievers policy)", client->name);
+            goto end;
+        }
+        break;
 
-   case MYPROXY_PUT_PROXY:
-   case MYPROXY_STORE_CERT:
-   case MYPROXY_DESTROY_PROXY:
+      case MYPROXY_PUT_PROXY:
+      case MYPROXY_STORE_CERT:
+      case MYPROXY_DESTROY_PROXY:
         /* Check for a valid mapping in accepted_credentials_mapfile or
          * accepted_credentials_mapapp.  Note that accept_credmap returns 0
          * upon success (or if no check of mapfile/mapapp is needed). */
         if (accept_credmap(client->name,client_request->username,context)) {
             goto end;  /* No valid UserDN/Username mapping found! */
         }
-       
-       /* Is this client authorized to store credentials here? */
-       authorization_ok =
-	   myproxy_server_check_policy_list_ext((const char **)context->accepted_credential_dns, client);
-       if (authorization_ok != 1) {
-	   verror_put_string("\"%s\" not authorized to store credentials on this server (accepted_credentials policy)", client->name);
-	   goto end;
-       }
 
-       if (credentials_exist == 1) {
-	   if (!client_owns_credentials) {
-	       if ((client_request->command_type == MYPROXY_PUT_PROXY) ||
-                   (client_request->command_type == MYPROXY_STORE_CERT)) {
-               verror_put_string("Credentials are already stored for user %s",
-                                 client_request->username);
-               if (client_request->credname) {
-                   verror_put_string("and credential name \"%s\"",
-                                     client_request->credname);
-               }
-               verror_put_string("and they are not owned by\n\"%s\",",
-                                 client->name);
-               verror_put_string("so you may not overwrite them.");
-               verror_put_string("Please choose a different username or credential name or");
-               verror_put_string("contact your myproxy-server administrator.");
-	       } else {
-               verror_put_string("Credentials not owned by \"%s\".",
-                                 client->name);
-	       }
-	       goto end;
-	   }
-       }
-       break;
+        /* Is this client authorized to store credentials here? */
+        authorization_ok =
+            myproxy_server_check_policy_list_ext((const char **)context->accepted_credential_dns, client);
+        if (authorization_ok != 1) {
+            verror_put_string("\"%s\" not authorized to store credentials on this server (accepted_credentials policy)", client->name);
+            goto end;
+        }
 
-   case MYPROXY_INFO_PROXY:
-       /* Authorization checking done inside the processing of the
-	  INFO request, since there may be multiple credentials stored
-	  under this username. */
-       authorization_ok = 1;
-       break;
+        if (credentials_exist == 1) {
+            if (!client_owns_credentials) {
+                if ((client_request->command_type == MYPROXY_PUT_PROXY) ||
+                    (client_request->command_type == MYPROXY_STORE_CERT)) {
+                    verror_put_string("Credentials are already stored for user %s",
+                                      client_request->username);
+                    if (client_request->credname) {
+                        verror_put_string("and credential name \"%s\"",
+                                          client_request->credname);
+                    }
+                    verror_put_string("and they are not owned by\n\"%s\",",
+                                      client->name);
+                    verror_put_string("so you may not overwrite them.");
+                    verror_put_string("Please choose a different username or credential name or");
+                    verror_put_string("contact your myproxy-server administrator.");
+                } else {
+                    verror_put_string("Credentials not owned by \"%s\".",
+                                      client->name);
+                }
+                goto end;
+            }
+        }
+        break;
 
-   case MYPROXY_CHANGE_CRED_PASSPHRASE:
-       if (!client_owns_credentials) {
-	   verror_put_string("'%s' does not own the credentials",
-			     client->name);
-	   goto end;
-       }
+      case MYPROXY_INFO_PROXY:
+        /* Authorization checking done inside the processing of the
+           INFO request, since there may be multiple credentials stored
+           under this username. */
+        authorization_ok = 1;
+        break;
 
-       authorization_ok = verify_passphrase(&creds, client_request,
-					    client->name, context);
-       if (!authorization_ok) {
-	   verror_put_string("invalid pass phrase");
-	   goto end;
-       }
-       break;
+      case MYPROXY_CHANGE_CRED_PASSPHRASE:
+        if (!client_owns_credentials) {
+            verror_put_string("'%s' does not own the credentials",
+                              client->name);
+            goto end;
+        }
 
-   default:
-       verror_put_string("unknown command");
-       goto end;
-   }
+        authorization_ok = verify_passphrase(&creds, client_request,
+                                             client->name, context);
+        if (!authorization_ok) {
+            verror_put_string("invalid pass phrase");
+            goto end;
+        }
+        break;
 
-   if (authorization_ok == -1) {
-      verror_put_string("Error checking authorization");
-      goto end;
-   }
+      default:
+        verror_put_string("unknown command");
+        goto end;
+    }
 
-   if (authorization_ok != 1) {
-      verror_put_string("authorization failed");
-      goto end;
-   }
+    if (authorization_ok == -1) {
+        verror_put_string("Error checking authorization");
+        goto end;
+    }
 
-   return_status = 0;
+    if (authorization_ok != 1) {
+        verror_put_string("authorization failed");
+        goto end;
+    }
+
+    return_status = 0;
 
 end:
-   if (creds.passphrase)
-      memset(creds.passphrase, 0, strlen(creds.passphrase));
-   myproxy_creds_free_contents(&creds);
+    if (creds.passphrase)
+        memset(creds.passphrase, 0, strlen(creds.passphrase));
+    myproxy_creds_free_contents(&creds);
 
-   return return_status;
+    return return_status;
 }
 
 static int
 do_authz_handshake(myproxy_socket_attrs_t *attrs,
-		   struct myproxy_creds *creds,
-		   myproxy_request_t *client_request,
-		   char *client_name,
-		   myproxy_server_context_t* config,
-		   author_method_t methods[],
-		   authorization_data_t *auth_data)
+                   struct myproxy_creds *creds,
+                   myproxy_request_t *client_request,
+                   char *client_name,
+                   myproxy_server_context_t* config,
+                   author_method_t methods[],
+                   authorization_data_t *auth_data)
 {
-   myproxy_response_t server_response = {0};
-   char  *client_buffer = NULL;
-   int   client_length;
-   int   return_status = -1;
-   authorization_data_t *client_auth_data = NULL;
-   author_method_t client_auth_method;
+    myproxy_response_t server_response = {0};
+    char  *client_buffer = NULL;
+    int   client_length;
+    int   return_status = -1;
+    authorization_data_t *client_auth_data = NULL;
+    author_method_t client_auth_method;
 
-   assert(auth_data != NULL);
-   
-   memset(&server_response, 0, sizeof(server_response));
+    assert(auth_data != NULL);
 
-   myproxy_debug("sending MYPROXY_AUTHORIZATION_RESPONSE");
-   authorization_init_server(&server_response.authorization_data, methods);
-   server_response.response_type = MYPROXY_AUTHORIZATION_RESPONSE;
-   send_response(attrs, &server_response, client_name, 0);
+    memset(&server_response, 0, sizeof(server_response));
 
-   /* Wait for client's response. Its first four bytes are supposed to
-      contain a specification of the method that the client chose for
-      authorization. */
-   client_length = myproxy_recv_ex(attrs, &client_buffer);
-   if (client_length <= 0)
-      goto end;
+    myproxy_debug("sending MYPROXY_AUTHORIZATION_RESPONSE");
+    authorization_init_server(&server_response.authorization_data, methods);
+    server_response.response_type = MYPROXY_AUTHORIZATION_RESPONSE;
+    send_response(attrs, &server_response, client_name, 0);
 
-   client_auth_method = (author_method_t)(*client_buffer);
-   myproxy_debug("client chose %s",
-		 authorization_get_name(client_auth_method));
-   /* fill in the client's response and return pointer to filled data */
-   client_auth_data = authorization_store_response(
-	                  client_buffer + sizeof(client_auth_method),
-			  client_length - sizeof(client_auth_method),
-			  client_auth_method,
-			  server_response.authorization_data);
-   if (client_auth_data == NULL) 
-      goto end;
+    /* Wait for client's response. Its first four bytes are supposed to
+       contain a specification of the method that the client chose for
+       authorization. */
+    client_length = myproxy_recv_ex(attrs, &client_buffer);
+    if (client_length <= 0)
+        goto end;
 
-   if (auth_data->server_data) free(auth_data->server_data);
-   auth_data->server_data = strdup(client_auth_data->server_data);
-   if (auth_data->client_data) free(auth_data->client_data);
-   auth_data->client_data = malloc(client_auth_data->client_data_len);
-   if (auth_data->client_data == NULL) {
-      verror_put_string("malloc() failed");
-      verror_put_errno(errno);
-      goto end;
-   }
-   memcpy(auth_data->client_data, client_auth_data->client_data, 
-	  client_auth_data->client_data_len);
-   auth_data->client_data_len = client_auth_data->client_data_len;
-   auth_data->method = client_auth_data->method;
+    client_auth_method = (author_method_t)(*client_buffer);
+    myproxy_debug("client chose %s",
+                  authorization_get_name(client_auth_method));
+    /* fill in the client's response and return pointer to filled data */
+    client_auth_data = authorization_store_response(
+                          client_buffer + sizeof(client_auth_method),
+                          client_length - sizeof(client_auth_method),
+                          client_auth_method,
+                          server_response.authorization_data);
+    if (client_auth_data == NULL)
+        goto end;
+
+    if (auth_data->server_data) free(auth_data->server_data);
+    auth_data->server_data = strdup(client_auth_data->server_data);
+    if (auth_data->client_data) free(auth_data->client_data);
+    auth_data->client_data = malloc(client_auth_data->client_data_len);
+    if (auth_data->client_data == NULL) {
+        verror_put_string("malloc() failed");
+        verror_put_errno(errno);
+        goto end;
+    }
+    memcpy(auth_data->client_data, client_auth_data->client_data,
+           client_auth_data->client_data_len);
+    auth_data->client_data_len = client_auth_data->client_data_len;
+    auth_data->method = client_auth_data->method;
 
 #if defined(HAVE_LIBSASL2)
-   if (auth_data->method == AUTHORIZETYPE_SASL) {
-       config->usage.sasl_used = 1;
-       if (auth_sasl_negotiate_server(attrs, client_request) < 0) {
-	   verror_put_string("SASL authentication failed");
-	   goto end;
-       }
-   }
+    if (auth_data->method == AUTHORIZETYPE_SASL) {
+        config->usage.sasl_used = 1;
+        if (auth_sasl_negotiate_server(attrs, client_request) < 0) {
+            verror_put_string("SASL authentication failed");
+            goto end;
+        }
+    }
 #endif
-   
-   if (authorization_check_ex(auth_data, creds,
-			      client_name, config) == 1) {
-       return_status = 0;
-   }
+
+    if (authorization_check_ex(auth_data, creds,
+                               client_name, config) == 1) {
+        return_status = 0;
+    }
 
 end:
-   authorization_data_free(server_response.authorization_data);
-   if (client_buffer) free(client_buffer);
+    authorization_data_free(server_response.authorization_data);
+    if (client_buffer) free(client_buffer);
 
-   return return_status;
+    return return_status;
 }
 
 static int
 verify_passphrase(struct myproxy_creds *creds,
-		  myproxy_request_t *client_request,
-		  char *client_name,
-		  myproxy_server_context_t* config)
+                  myproxy_request_t *client_request,
+                  char *client_name,
+                  myproxy_server_context_t* config)
 {
     authorization_data_t auth_data = { 0 };
     int return_status;
     auth_data.server_data = NULL;
     auth_data.client_data = strdup(client_request->passphrase);
     auth_data.client_data_len =
-	strlen(client_request->passphrase) + 1;
+        strlen(client_request->passphrase) + 1;
     auth_data.method = AUTHORIZETYPE_PASSWD;
     return_status = authorization_check_ex(&auth_data, creds,
-					   client_name, config);
+                                           client_name, config);
     free(auth_data.client_data);
     return return_status;
 }
 
 /* returns -1 if authentication failed,
             0 if authentication succeeded,
-	    1 if certificate-based (renewal) authentication succeeded */
+            1 if certificate-based (renewal) authentication succeeded */
 static int
 authenticate_client(myproxy_socket_attrs_t *attrs,
-		    struct myproxy_creds *creds,
+                    struct myproxy_creds *creds,
                     myproxy_request_t *client_request,
-		    char *client_name,
-		    myproxy_server_context_t* config,
-		    int already_authenticated,
+                    char *client_name,
+                    myproxy_server_context_t* config,
+                    int already_authenticated,
                     int allowed_to_renew)
 {
-   int return_status = -1, authcnt, certauth = 0;
-   int i, j;
-   author_method_t methods[AUTHORIZETYPE_NUMMETHODS] = { 0 };
-   author_status_t status[AUTHORIZETYPE_NUMMETHODS] = { 0 };
-   authorization_data_t auth_data = { 0 };
+    int return_status = -1, authcnt, certauth = 0;
+    int i, j;
+    author_method_t methods[AUTHORIZETYPE_NUMMETHODS] = { 0 };
+    author_status_t status[AUTHORIZETYPE_NUMMETHODS] = { 0 };
+    authorization_data_t auth_data = { 0 };
 
-   authcnt = already_authenticated; /* if already authenticated, just
-				       do required methods */
-   for (i=0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
-       if (i == AUTHORIZETYPE_CERT && allowed_to_renew != 1) {
-           status[i] = AUTHORIZEMETHOD_DISABLED;
-       } else {
-           status[i] = authorization_get_status(i, creds, client_name, config);
-       }
-   }
+    authcnt = already_authenticated; /* if already authenticated, just
+                                        do required methods */
+    for (i = 0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
+        if (i == AUTHORIZETYPE_CERT && allowed_to_renew != 1) {
+            status[i] = AUTHORIZEMETHOD_DISABLED;
+        } else {
+            status[i] = authorization_get_status(i, creds, client_name, config);
+        }
+    }
 
-   /* First, check any required methods. */
-   for (i=0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
-       if (status[i] == AUTHORIZEMETHOD_REQUIRED) {
-	   /* password is a special case for now.
-	      don't send password challenges. */
-	   if (i == AUTHORIZETYPE_PASSWD) {
-	       if (verify_passphrase(creds, client_request,
-				     client_name, config) != 1) {
-               /* verify_passphrase() will set verror */
-		   goto end;
-	       }
-	       authcnt++;
-	   } else {
-	       methods[0] = i;
-	       if (do_authz_handshake(attrs, creds, client_request,
-				      client_name, config,
-				      methods, &auth_data) < 0) {
-		   verror_put_string("authentication failed");
-		   goto end;
-	       }
-	       if (i == AUTHORIZETYPE_CERT) {
-		   certauth = 1;
-	       }
-	       authcnt++;
-	   }
-       }
-   }
+    /* First, check any required methods. */
+    for (i = 0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
+        if (status[i] == AUTHORIZEMETHOD_REQUIRED) {
+            /* password is a special case for now.
+               don't send password challenges. */
+            if (i == AUTHORIZETYPE_PASSWD) {
+                if (verify_passphrase(creds, client_request,
+                                      client_name, config) != 1) {
+                    /* verify_passphrase() will set verror */
+                    goto end;
+                }
+                authcnt++;
+            } else {
+                methods[0] = i;
+                if (do_authz_handshake(attrs, creds, client_request,
+                                       client_name, config,
+                                       methods, &auth_data) < 0) {
+                    verror_put_string("authentication failed");
+                    goto end;
+                }
+                if (i == AUTHORIZETYPE_CERT) {
+                    certauth = 1;
+                }
+                authcnt++;
+            }
+        }
+    }
 
-   /* if none required, try sufficient */
-   if (authcnt == 0) {
-       /* if we already have a password, try it now */
-       if (status[AUTHORIZETYPE_PASSWD] == AUTHORIZEMETHOD_SUFFICIENT &&
-	   client_request->passphrase[0] != '\0') {
-	   if (verify_passphrase(creds, client_request,
-				 client_name, config) == 1) {
-	       authcnt++;
-	   } else {
-           /* if given password was bad,
-              fail immediately for a more helpful error message */
-           /* verify_passphrase() will set verror */
-		   goto end;
-       }
-       }
-   }
-   if (authcnt == 0) {
-       for (i=0, j=0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
-	   if (status[i] == AUTHORIZEMETHOD_SUFFICIENT &&
-	       i != AUTHORIZETYPE_PASSWD) {
-	       methods[j++] = i;
-	   }
-       }
-       if (j > 0) {
-	   if (do_authz_handshake(attrs, creds, client_request, client_name,
-				  config, methods, &auth_data) < 0) {
-	       verror_put_string("authentication failed");
-	       goto end;
-	   }
-	   if (auth_data.method == AUTHORIZETYPE_CERT) {
-	       certauth = 1;
-	   }
-	   authcnt++;
-       }
-   }
+    /* if none required, try sufficient */
+    if (authcnt == 0) {
+        /* if we already have a password, try it now */
+        if (status[AUTHORIZETYPE_PASSWD] == AUTHORIZEMETHOD_SUFFICIENT &&
+            client_request->passphrase[0] != '\0') {
+            if (verify_passphrase(creds, client_request,
+                                  client_name, config) == 1) {
+                authcnt++;
+            } else {
+                /* if given password was bad,
+                   fail immediately for a more helpful error message */
+                /* verify_passphrase() will set verror */
+                goto end;
+            }
+        }
+    }
+    if (authcnt == 0) {
+        for (i = 0, j = 0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
+            if (status[i] == AUTHORIZEMETHOD_SUFFICIENT &&
+                i != AUTHORIZETYPE_PASSWD) {
+                methods[j++] = i;
+            }
+        }
+        if (j > 0) {
+            if (do_authz_handshake(attrs, creds, client_request, client_name,
+                                   config, methods, &auth_data) < 0) {
+                verror_put_string("authentication failed");
+                goto end;
+            }
+            if (auth_data.method == AUTHORIZETYPE_CERT) {
+                certauth = 1;
+            }
+            authcnt++;
+        }
+    }
 
-   if (certauth) {
-       return_status = 1;
-   } else if (authcnt) {
-       return_status = 0;
-   }
+    if (certauth) {
+        return_status = 1;
+    } else if (authcnt) {
+        return_status = 0;
+    }
 
 end:
-   authorization_data_free_contents(&auth_data);
-   return return_status;
+    authorization_data_free_contents(&auth_data);
+    return return_status;
 }
 

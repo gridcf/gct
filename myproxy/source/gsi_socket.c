@@ -37,42 +37,42 @@ GSI_SOCKET_set_error_string(GSI_SOCKET *self,
  */
 static int
 append_gss_status(char *buffer,
-		  int bufferlen,
-		  const OM_uint32 gss_code,
-		  const int type)
+                  int bufferlen,
+                  const OM_uint32 gss_code,
+                  const int type)
 {
     OM_uint32 min_stat;
     gss_buffer_desc error_string;
     OM_uint32 context = 0;
     int total_chars = 0;
     int chars;
-        
+
     assert(buffer != NULL);
-    
-    do 
+
+    do
     {
-	gss_display_status(&min_stat, gss_code, type, GSS_C_NULL_OID,
-			   &context, &error_string);
+        gss_display_status(&min_stat, gss_code, type, GSS_C_NULL_OID,
+                           &context, &error_string);
 
-	if ((error_string.value != NULL) &&
-	    (error_string.length > 0))
-	{
-	    chars = my_strncpy(buffer, error_string.value, bufferlen);
-	    
-	    if (chars == -1)
-	    {
-		return -1;
-	    }
-	    
-	    total_chars += chars;
-	    buffer = &buffer[chars];
-	    bufferlen -= chars;
-	}
+        if ((error_string.value != NULL) &&
+            (error_string.length > 0))
+        {
+            chars = my_strncpy(buffer, error_string.value, bufferlen);
 
-	(void) gss_release_buffer(&min_stat, &error_string);
+            if (chars == -1)
+            {
+                return -1;
+            }
+
+            total_chars += chars;
+            buffer = &buffer[chars];
+            bufferlen -= chars;
+        }
+
+        (void) gss_release_buffer(&min_stat, &error_string);
 
     } while(context);
-    
+
     return total_chars;
 }
 
@@ -83,33 +83,33 @@ append_gss_status(char *buffer,
  */
 static int
 read_all(const int sock,
-	 char *buffer,
-	 const int nbytes)
+         char *buffer,
+         const int nbytes)
 {
     int total_bytes_read = 0;
     int bytes_read;
-    
+
     assert(buffer != NULL);
-    
+
     while (total_bytes_read < nbytes)
     {
-	bytes_read = read(sock, &buffer[total_bytes_read], 
-			  nbytes - total_bytes_read);
-	
-	if (bytes_read == -1)
-	{
-	    return -1;
-	}
+        bytes_read = read(sock, &buffer[total_bytes_read],
+                          nbytes - total_bytes_read);
 
-	if (bytes_read == 0)
-	{
-	    /* EOF */
-	    errno = EPIPE;
-	    return -1;
-	}
-	total_bytes_read += bytes_read;
+        if (bytes_read == -1)
+        {
+            return -1;
+        }
+
+        if (bytes_read == 0)
+        {
+            /* EOF */
+            errno = EPIPE;
+            return -1;
+        }
+        total_bytes_read += bytes_read;
     }
-    
+
     return total_bytes_read;
 }
 
@@ -120,34 +120,34 @@ read_all(const int sock,
  */
 static int
 write_all(const int sock,
-	  const char *buffer,
-	  const int nbytes)
+          const char *buffer,
+          const int nbytes)
 {
     int total_bytes_written = 0;
     int bytes_written;
-    
+
     assert(buffer != NULL);
-    
+
     while (total_bytes_written < nbytes)
     {
-	bytes_written = write(sock, &buffer[total_bytes_written], 
-			      nbytes - total_bytes_written);
-	
-	if (bytes_written == -1)
-	{
-	    return -1;
-	}
+        bytes_written = write(sock, &buffer[total_bytes_written],
+                              nbytes - total_bytes_written);
 
-	if (bytes_written == 0)
-	{
-	    /* EOF */
-	    errno = EPIPE;
-	    return -1;
-	}
+        if (bytes_written == -1)
+        {
+            return -1;
+        }
 
-	total_bytes_written += bytes_written;
+        if (bytes_written == 0)
+        {
+            /* EOF */
+            errno = EPIPE;
+            return -1;
+        }
+
+        total_bytes_written += bytes_written;
     }
-    
+
     return total_bytes_written;
 }
 
@@ -162,98 +162,98 @@ read_token(const int sock,
            char **p_buffer,
            const int max_token_len)
 {
-    enum header_fields 
+    enum header_fields
     {
-	flag                            = 0,
-	major_version                   = 1,
-	minor_version                   = 2,
-	length_high_byte                = 3,
-	length_low_byte                 = 4
+        flag                            = 0,
+        major_version                   = 1,
+        minor_version                   = 2,
+        length_high_byte                = 3,
+        length_low_byte                 = 4
     };
-    int tot_buffer_len=0, retval;
-    
+    int tot_buffer_len = 0, retval;
+
     assert(p_buffer != NULL);
     *p_buffer = NULL;
 
     do {
-	unsigned char header[5];
-	char *bufferp;
-	int data_len, buffer_len;
-	fd_set rfds;
-	struct timeval tv = { 0 };
+        unsigned char header[5];
+        char *bufferp;
+        int data_len, buffer_len;
+        fd_set rfds;
+        struct timeval tv = { 0 };
 
-	if (read_all(sock, (char *)header, sizeof(header)) < 0) {
-	    if (errno == EPIPE && tot_buffer_len > 0) goto done;
-	    if (*p_buffer != NULL) {
+        if (read_all(sock, (char *)header, sizeof(header)) < 0) {
+            if (errno == EPIPE && tot_buffer_len > 0) goto done;
+            if (*p_buffer != NULL) {
+                free(*p_buffer);
+                *p_buffer = NULL;
+            }
+            return -1;
+        }
+
+        /*
+         * Check and make sure token looks right
+         */
+        if (((header[flag] < 20) || (header[flag] > 26)) ||
+            (header[major_version] != 3)) {
+            if (*p_buffer != NULL) {
+                free(*p_buffer);
+                *p_buffer = NULL;
+            }
+            errno = EINVAL;
+            return -1;
+        }
+
+        data_len = (header[length_high_byte] << 8) + header[length_low_byte];
+
+        buffer_len = data_len + sizeof(header);
+
+        if (max_token_len > 0 && (tot_buffer_len+buffer_len) > max_token_len) {
+            if (*p_buffer != NULL) {
+                free(*p_buffer);
+                *p_buffer = NULL;
+            }
+            verror_put_string("max_token_len (%d) exceeded", max_token_len);
+            errno = ENOMEM;
+            return -1;
+        }
+
+        bufferp = *p_buffer = realloc(*p_buffer, tot_buffer_len+buffer_len);
+
+        if (bufferp == NULL) {
+            if (*p_buffer != NULL) {
+                free(*p_buffer);
+                *p_buffer = NULL;
+            }
+            return -1;
+        }
+
+        bufferp += tot_buffer_len;
+        tot_buffer_len += buffer_len;
+
+        memcpy(bufferp, header, sizeof(header));
+
+        bufferp += sizeof(header);
+
+        if (read_all(sock, bufferp, data_len) < 0)
+        {
             free(*p_buffer);
             *p_buffer = NULL;
-	    }
-	    return -1;
-	}
+            return -1;
+        }
 
-	/*
-	 * Check and make sure token looks right
-	 */
-	if (((header[flag] < 20) || (header[flag] > 26)) ||
-	    (header[major_version] != 3)) {
-	    if (*p_buffer != NULL) {
+        /* Check for more data on the socket.  We want the entire
+           message and SSL may have fragmented it. */
+        FD_ZERO(&rfds);
+        FD_SET(sock, &rfds);
+        retval = select(sock + 1, &rfds, NULL, NULL, &tv);
+        if (retval < 0) {
             free(*p_buffer);
             *p_buffer = NULL;
-	    }
-	    errno = EINVAL;
-	    return -1;
-	}
-    
-	data_len = (header[length_high_byte] << 8) + header[length_low_byte];
-
-	buffer_len = data_len + sizeof(header);
-
-    if (max_token_len > 0 && (tot_buffer_len+buffer_len) > max_token_len) {
-	    if (*p_buffer != NULL) {
-            free(*p_buffer);
-            *p_buffer = NULL;
-	    }
-        verror_put_string("max_token_len (%d) exceeded", max_token_len);
-        errno = ENOMEM;
-        return -1;
-    }
-
-	bufferp = *p_buffer = realloc(*p_buffer, tot_buffer_len+buffer_len);
-	
-	if (bufferp == NULL) {
-	    if (*p_buffer != NULL) {
-		free(*p_buffer);
-		*p_buffer = NULL;
-	    }
-	    return -1;
-	}
-
-	bufferp += tot_buffer_len;
-	tot_buffer_len += buffer_len;
-
-	memcpy(bufferp, header, sizeof(header));
-
-	bufferp += sizeof(header);
-    
-	if (read_all(sock, bufferp, data_len) < 0)
-	{
-	    free(*p_buffer);
-	    *p_buffer = NULL;
-	    return -1;
-	}
-
-	/* Check for more data on the socket.  We want the entire
-	   message and SSL may have fragmented it. */
-	FD_ZERO(&rfds);
-	FD_SET(sock, &rfds);
-	retval = select(sock+1, &rfds, NULL, NULL, &tv);
-	if (retval < 0) {
-	    free(*p_buffer);
-	    *p_buffer = NULL;
-	    return -1;
-	}
+            return -1;
+        }
     } while (retval == 1);
-    
+
 done:
     return tot_buffer_len;
 }
@@ -267,8 +267,8 @@ done:
  */
 static int
 write_token(const int sock,
-	    const char *buffer,
-	    const size_t buffer_size)
+            const char *buffer,
+            const size_t buffer_size)
 {
     int return_value;
 
@@ -281,12 +281,12 @@ write_token(const int sock,
 
 static int
 assist_write_token(void *sock,
-		   void *buffer,
-		   size_t buffer_size)
+                   void *buffer,
+                   size_t buffer_size)
 {
     assert(sock != NULL);
     assert(buffer != NULL);
-    
+
     return write_token(*((int *) sock), (char *) buffer, buffer_size);
 }
 
@@ -298,15 +298,15 @@ assist_write_token(void *sock,
 static void
 GSI_SOCKET_set_error_from_verror(GSI_SOCKET *self)
 {
-    char		*string;
-    
+    char                *string;
+
     if (verror_is_error() == 0)
     {
-	return;
+        return;
     }
-    
+
     string = verror_get_string();
-    
+
     if (string != NULL)
     {
         if (self->error_string) {
@@ -314,11 +314,11 @@ GSI_SOCKET_set_error_from_verror(GSI_SOCKET *self)
         }
         self->error_string = strdup(string);
     }
-    
+
     self->error_number = verror_get_errno();
 }
 
-	    
+
 /*********************************************************************
  *
  * API Functions
@@ -329,16 +329,16 @@ GSI_SOCKET *
 GSI_SOCKET_new(int sock)
 {
     GSI_SOCKET *self = NULL;
-    
+
     self = malloc(sizeof(GSI_SOCKET));
-    
+
     if (self == NULL)
     {
-	return NULL;
+        return NULL;
     }
 
     memset(self, 0, sizeof(GSI_SOCKET));
-    
+
     self->gss_context = GSS_C_NO_CONTEXT;
     self->sock = sock;
 
@@ -354,29 +354,29 @@ GSI_SOCKET_destroy(GSI_SOCKET *self)
 {
     if (self == NULL)
     {
-	return;
+        return;
     }
-    
+
     if (self->gss_context != GSS_C_NO_CONTEXT)
     {
-	gss_buffer_desc output_token_desc  = GSS_C_EMPTY_BUFFER;
+        gss_buffer_desc output_token_desc  = GSS_C_EMPTY_BUFFER;
 
-	gss_delete_sec_context(&self->minor_status,
-			       &self->gss_context,
-			       &output_token_desc);
-	
-	/* XXX Should deal with output_token_desc here */
-	gss_release_buffer(&self->minor_status, &output_token_desc);
+        gss_delete_sec_context(&self->minor_status,
+                               &self->gss_context,
+                               &output_token_desc);
+
+        /* XXX Should deal with output_token_desc here */
+        gss_release_buffer(&self->minor_status, &output_token_desc);
     }
 
     if (self->peer_name != NULL)
     {
-	free(self->peer_name);
+        free(self->peer_name);
     }
-    
+
     if (self->error_string)
     {
-	free(self->error_string);
+        free(self->error_string);
     }
 
     if (self->certreq)
@@ -395,104 +395,104 @@ GSI_SOCKET_destroy(GSI_SOCKET *self)
 
 int
 GSI_SOCKET_get_error_string(GSI_SOCKET *self,
-			    char *buffer,
-			    int bufferlen)
+                            char *buffer,
+                            int bufferlen)
 {
     int total_chars = 0;
     int chars;
-    
-    
+
+
     if ((buffer == NULL) || (bufferlen == 0))
     {
-	/* Punt */
-	return -1;
+        /* Punt */
+        return -1;
     }
-    
+
     if (self == NULL)
     {
-	return my_strncpy(buffer, "GSI SOCKET not initialized", bufferlen);
+        return my_strncpy(buffer, "GSI SOCKET not initialized", bufferlen);
     }
 
     if (self->error_string != NULL)
     {
-	chars = my_strncpy(buffer, self->error_string, bufferlen);
-	
-	if (chars == -1)
-	{
-	    goto truncated;
-	}
-	
-	total_chars += chars;
-	buffer = &buffer[chars];
-	bufferlen -= chars;
+        chars = my_strncpy(buffer, self->error_string, bufferlen);
+
+        if (chars == -1)
+        {
+            goto truncated;
+        }
+
+        total_chars += chars;
+        buffer = &buffer[chars];
+        bufferlen -= chars;
     }
 
     if (self->error_number != 0)
     {
-	if (total_chars && bufferlen && *(buffer-1) != '\n') {
-	    *buffer = '\n'; buffer++; total_chars++; bufferlen--;
-	}
+        if (total_chars && bufferlen && *(buffer - 1) != '\n') {
+            *buffer = '\n'; buffer++; total_chars++; bufferlen--;
+        }
 
-	chars = my_strncpy(buffer, strerror(self->error_number), bufferlen);
+        chars = my_strncpy(buffer, strerror(self->error_number), bufferlen);
 
-	if (chars == -1)
-	{
-	    goto truncated;
-	}
-		
-	total_chars += chars;
-	buffer = &buffer[chars];
-	bufferlen -= chars;
+        if (chars == -1)
+        {
+            goto truncated;
+        }
+
+        total_chars += chars;
+        buffer = &buffer[chars];
+        bufferlen -= chars;
     }
 
     if (self->major_status)
     {
-	if (total_chars && bufferlen && *(buffer-1) != '\n') {
-	    *buffer = '\n'; buffer++; total_chars++; bufferlen--;
-	}
-
-	/* Parse errors from gss-assist routines */
-	switch(self->major_status) 
-	{
-    case GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_READ:
-    case GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_WRITE:
-        chars = my_strncpy(buffer, "Connection closed.", bufferlen);
-        break;
-    default:
-        chars = append_gss_status(buffer, bufferlen, 
-                                  self->major_status,
-                                  GSS_C_GSS_CODE);
-
-        if (chars == -1)
-        {
-            goto truncated;
+        if (total_chars && bufferlen && *(buffer - 1) != '\n') {
+            *buffer = '\n'; buffer++; total_chars++; bufferlen--;
         }
-		
+
+        /* Parse errors from gss-assist routines */
+        switch(self->major_status)
+        {
+          case GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_READ:
+          case GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_WRITE:
+            chars = my_strncpy(buffer, "Connection closed.", bufferlen);
+            break;
+          default:
+            chars = append_gss_status(buffer, bufferlen,
+                                      self->major_status,
+                                      GSS_C_GSS_CODE);
+
+            if (chars == -1)
+            {
+                goto truncated;
+            }
+
+            total_chars += chars;
+            buffer = &buffer[chars];
+            bufferlen -= chars;
+
+            chars = append_gss_status(buffer, bufferlen,
+                                      self->minor_status,
+                                      GSS_C_MECH_CODE);
+
+            if (chars == -1)
+            {
+                goto truncated;
+            }
+        }
+
         total_chars += chars;
         buffer = &buffer[chars];
         bufferlen -= chars;
-
-        chars = append_gss_status(buffer, bufferlen,
-                                  self->minor_status,
-                                  GSS_C_MECH_CODE);
-
-        if (chars == -1)
-        {
-            goto truncated;
-        }
-	}
-
-	total_chars += chars;
-	buffer = &buffer[chars];
-	bufferlen -= chars;
     }
 
     if (total_chars == 0)
     {
-	/* No error */
-	buffer[0] = '\0';
+        /* No error */
+        buffer[0] = '\0';
     }
-    
+
     return total_chars;
 
   truncated:
@@ -504,13 +504,13 @@ GSI_SOCKET_clear_error(GSI_SOCKET *self)
 {
     if (self == NULL)
     {
-	return;
+        return;
     }
-    
+
     if (self->error_string != NULL)
     {
-	free(self->error_string);
-	self->error_string = NULL;
+        free(self->error_string);
+        self->error_string = NULL;
     }
     self->error_number = 0;
     self->major_status = 0;
@@ -523,7 +523,7 @@ GSI_SOCKET_allow_anonymous(GSI_SOCKET *self, const int value)
 {
     if (self == NULL)
     {
-	return GSI_SOCKET_ERROR;
+        return GSI_SOCKET_ERROR;
     }
 
     self->allow_anonymous = value;
@@ -573,19 +573,19 @@ GSI_SOCKET_context_established(GSI_SOCKET *self)
 /* XXX This routine really needs a complete overhaul */
 int
 GSI_SOCKET_use_creds(GSI_SOCKET *self,
-		     const char *creds)
+                     const char *creds)
 {
     int return_code = GSI_SOCKET_ERROR;
-    
+
     if (creds == NULL)
     {
-	/* XXX Do nothing for now */
-	return_code = GSI_SOCKET_SUCCESS;
+        /* XXX Do nothing for now */
+        return_code = GSI_SOCKET_SUCCESS;
     }
     else
     {
-	unsetenv("X509_USER_CERT");
-	unsetenv("X509_USER_KEY");
+        unsetenv("X509_USER_CERT");
+        unsetenv("X509_USER_KEY");
         return_code = (setenv("X509_USER_PROXY", creds, 1) == -1) ? GSI_SOCKET_ERROR : GSI_SOCKET_SUCCESS;
     }
 
@@ -595,62 +595,62 @@ GSI_SOCKET_use_creds(GSI_SOCKET *self,
 int
 GSI_SOCKET_check_creds(GSI_SOCKET *self)
 {
-    gss_cred_id_t		creds = GSS_C_NO_CREDENTIAL;
-    int				return_value = GSI_SOCKET_ERROR;
+    gss_cred_id_t               creds = GSS_C_NO_CREDENTIAL;
+    int                         return_value = GSI_SOCKET_ERROR;
 
-    if (self == NULL) {	
-	return GSI_SOCKET_ERROR;
+    if (self == NULL) {
+        return GSI_SOCKET_ERROR;
     }
 
     self->major_status = globus_gss_assist_acquire_cred(&self->minor_status,
-							GSS_C_BOTH,
-							&creds);
+                                                        GSS_C_BOTH,
+                                                        &creds);
 
     if (self->major_status != GSS_S_COMPLETE) {
-	goto error;
+        goto error;
     }
-    
+
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     if (creds != GSS_C_NO_CREDENTIAL) {
-	OM_uint32 minor_status;
+        OM_uint32 minor_status;
 
-	gss_release_cred(&minor_status, &creds);
+        gss_release_cred(&minor_status, &creds);
     }
-    
+
     return return_value;
 }
 
 int
 GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[])
 {
-    int				token_status;
-    gss_cred_id_t		creds = GSS_C_NO_CREDENTIAL;
-    gss_name_t			server_gss_name = GSS_C_NO_NAME;
-    OM_uint32			req_flags = 0, ret_flags = 0;
-    int				return_value = GSI_SOCKET_ERROR;
-    gss_buffer_desc		gss_buffer = { 0 };
-    int				i, rc=0, sock;
-    FILE			*fp = NULL;
+    int                         token_status;
+    gss_cred_id_t               creds = GSS_C_NO_CREDENTIAL;
+    gss_name_t                  server_gss_name = GSS_C_NO_NAME;
+    OM_uint32                   req_flags = 0, ret_flags = 0;
+    int                         return_value = GSI_SOCKET_ERROR;
+    gss_buffer_desc             gss_buffer = { 0 };
+    int                         i, rc = 0, sock;
+    FILE                        *fp = NULL;
     char                        *cert_dir = NULL;
-    globus_result_t res;
-    
+    globus_result_t             res;
+
     if (self == NULL)
     {
-	return GSI_SOCKET_ERROR;
+        return GSI_SOCKET_ERROR;
     }
 
     if (accepted_peer_names == NULL ||
-	accepted_peer_names[0] == GSS_C_NO_NAME) {
-	return GSI_SOCKET_ERROR;
+        accepted_peer_names[0] == GSS_C_NO_NAME) {
+        return GSI_SOCKET_ERROR;
     }
 
     if (self->gss_context != GSS_C_NO_CONTEXT)
     {
-	GSI_SOCKET_set_error_string(self, "GSI_SOCKET already authenticated");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET already authenticated");
+        goto error;
     }
 
     res = GLOBUS_GSI_SYSCONFIG_GET_CERT_DIR(&cert_dir);
@@ -663,17 +663,17 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
     }
 
     self->major_status = globus_gss_assist_acquire_cred(&self->minor_status,
-							GSS_C_INITIATE,
-							&creds);
+                                                        GSS_C_INITIATE,
+                                                        &creds);
 
     if (self->major_status != GSS_S_COMPLETE) {
-	if (self->allow_anonymous) {
-	    req_flags |= GSS_C_ANON_FLAG;
-	    myproxy_debug("no valid credentials found -- "
-			  "performing anonymous authentication");
-	} else {
-	    goto error;
-	}
+        if (self->allow_anonymous) {
+            req_flags |= GSS_C_ANON_FLAG;
+            myproxy_debug("no valid credentials found -- "
+                          "performing anonymous authentication");
+        } else {
+            goto error;
+        }
     }
 
     req_flags |= GSS_C_REPLAY_FLAG;
@@ -682,45 +682,45 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
     req_flags |= GSS_C_INTEG_FLAG;
 
     if ((sock = dup(self->sock)) < 0) {
-	GSI_SOCKET_set_error_string(self, "dup() of socket fd failed");
-	self->error_number = errno;
-	goto error;
+        GSI_SOCKET_set_error_string(self, "dup() of socket fd failed");
+        self->error_number = errno;
+        goto error;
     }
     if ((fp = fdopen(sock, "r")) == NULL) {
-	GSI_SOCKET_set_error_string(self, "fdopen() of socket failed");
-	self->error_number = errno;
-	goto error;
+        GSI_SOCKET_set_error_string(self, "fdopen() of socket failed");
+        self->error_number = errno;
+        goto error;
     }
     if (setvbuf(fp, NULL, _IONBF, 0) != 0) {
-	GSI_SOCKET_set_error_string(self, "setvbuf() for socket failed");
-	self->error_number = errno;
-	goto error;
+        GSI_SOCKET_set_error_string(self, "setvbuf() for socket failed");
+        self->error_number = errno;
+        goto error;
     }
-    
+
     self->major_status =
-	globus_gss_assist_init_sec_context(&self->minor_status,
-					   creds,
-					   &self->gss_context,
-					   "GSI-NO-TARGET",
-					   req_flags,
-					   &ret_flags,
-					   &token_status,
-					   globus_gss_assist_token_get_fd,
-					   (void *)fp,
-					   assist_write_token,
-					   (void *)&self->sock);
+        globus_gss_assist_init_sec_context(&self->minor_status,
+                                           creds,
+                                           &self->gss_context,
+                                           "GSI-NO-TARGET",
+                                           req_flags,
+                                           &ret_flags,
+                                           &token_status,
+                                           globus_gss_assist_token_get_fd,
+                                           (void *)fp,
+                                           assist_write_token,
+                                           (void *)&self->sock);
 
     if (self->major_status != GSS_S_COMPLETE) {
         goto error;
     }
 
-    
+
     /* Verify that all service requests were honored. */
     req_flags &= ~(GSS_C_ANON_FLAG); /* GSI GSSAPI doesn't set this flag */
     if ((req_flags & ret_flags) != req_flags) {
-      GSI_SOCKET_set_error_string(self,
-                                  "requested GSSAPI service not supported");
-      goto error;
+        GSI_SOCKET_set_error_string(self,
+                                    "requested GSSAPI service not supported");
+        goto error;
     }
 
     if (ret_flags & GSS_C_GLOBUS_LIMITED_PROXY_FLAG) {
@@ -729,20 +729,20 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
 
     /* Check the authenticated identity of the server. */
     self->major_status = gss_inquire_context(&self->minor_status,
-					     self->gss_context,
-					     NULL,
-					     &server_gss_name,
-					     NULL, NULL, NULL, NULL, NULL);
+                                             self->gss_context,
+                                             NULL,
+                                             &server_gss_name,
+                                             NULL, NULL, NULL, NULL, NULL);
     if (self->major_status != GSS_S_COMPLETE) {
-	GSI_SOCKET_set_error_string(self, "gss_inquire_context() failed");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "gss_inquire_context() failed");
+        goto error;
     }
 
     self->major_status = gss_display_name(&self->minor_status,
-					  server_gss_name, &gss_buffer, NULL);
+                                          server_gss_name, &gss_buffer, NULL);
     if (self->major_status != GSS_S_COMPLETE) {
-	GSI_SOCKET_set_error_string(self, "gss_display_name() failed");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "gss_display_name() failed");
+        goto error;
     }
 
     self->peer_name = strdup(gss_buffer.value);
@@ -751,17 +751,17 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
 
     /* We told gss_assist_init_sec_context() not to check the server
        name so we can check it manually here. */
-    for (i=0; accepted_peer_names[i] != GSS_C_NO_NAME; i++) {
-	gss_buffer_desc	apn_gss_buffer = { 0 };
+    for (i = 0; accepted_peer_names[i] != GSS_C_NO_NAME; i++) {
+        gss_buffer_desc apn_gss_buffer = { 0 };
 
-	self->major_status = gss_compare_name(&self->minor_status,
-					      server_gss_name,
-					      accepted_peer_names[i], &rc);
-	if (self->major_status != GSS_S_COMPLETE) {
+        self->major_status = gss_compare_name(&self->minor_status,
+                                              server_gss_name,
+                                              accepted_peer_names[i], &rc);
+        if (self->major_status != GSS_S_COMPLETE) {
             OM_uint32 stM, stm;
             gss_buffer_desc errbuf = {0};
 
-	    char error_string[1050];
+            char error_string[1050];
             stM = gss_display_status(&stm, self->minor_status, GSS_C_MECH_CODE,
                 GSS_C_NO_OID, NULL, &errbuf);
             if (stM == GSS_S_COMPLETE && errbuf.length > 0)
@@ -777,48 +777,48 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
                 error_string[1049] = '\0';
             }
 
-	    GSI_SOCKET_set_error_string(self, error_string);
-	    goto error;
-	}
+            GSI_SOCKET_set_error_string(self, error_string);
+            goto error;
+        }
 
-	self->major_status = gss_display_name(&self->minor_status,
-					      accepted_peer_names[i],
-					      &apn_gss_buffer, NULL);
-	if (self->major_status != GSS_S_COMPLETE) {
-	  GSI_SOCKET_set_error_string(self, "gss_display_name() failed");
-	  goto error;
-	}
+        self->major_status = gss_display_name(&self->minor_status,
+                                              accepted_peer_names[i],
+                                              &apn_gss_buffer, NULL);
+        if (self->major_status != GSS_S_COMPLETE) {
+            GSI_SOCKET_set_error_string(self, "gss_display_name() failed");
+            goto error;
+        }
 
-	if (rc) {
-	    myproxy_debug("server name matches \"%s\"",
-			  apn_gss_buffer.value);
-	    break;
-	} else {
-	    myproxy_debug("server name does not match \"%s\"",
-			  apn_gss_buffer.value);
-	}
-	gss_release_buffer(&self->minor_status, &apn_gss_buffer);
+        if (rc) {
+            myproxy_debug("server name matches \"%s\"",
+                          apn_gss_buffer.value);
+            break;
+        } else {
+            myproxy_debug("server name does not match \"%s\"",
+                          apn_gss_buffer.value);
+        }
+        gss_release_buffer(&self->minor_status, &apn_gss_buffer);
     }
-    if (!rc) {		/* no match with acceptable target names */
-	GSI_SOCKET_set_error_string(self, "authenticated peer name does not match");
-	return_value = GSI_SOCKET_UNAUTHORIZED;
-	goto error;
+    if (!rc) {          /* no match with acceptable target names */
+        GSI_SOCKET_set_error_string(self, "authenticated peer name does not match");
+        return_value = GSI_SOCKET_UNAUTHORIZED;
+        goto error;
     }
     myproxy_debug("authenticated server name is acceptable");
 
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     {
-	OM_uint32 minor_status;
-	gss_release_cred(&minor_status, &creds);
-	gss_release_buffer(&minor_status, &gss_buffer);
-	gss_release_name(&minor_status, &server_gss_name);
+        OM_uint32 minor_status;
+        gss_release_cred(&minor_status, &creds);
+        gss_release_buffer(&minor_status, &gss_buffer);
+        gss_release_name(&minor_status, &server_gss_name);
     }
     if (cert_dir) free(cert_dir);
     if (fp) fclose(fp);
-    
+
     return return_value;
 }
 
@@ -826,22 +826,22 @@ GSI_SOCKET_authentication_init(GSI_SOCKET *self, gss_name_t accepted_peer_names[
 int
 GSI_SOCKET_authentication_accept(GSI_SOCKET *self)
 {
-    gss_cred_id_t		creds = GSS_C_NO_CREDENTIAL;
-    int				token_status;
-    int				return_value = GSI_SOCKET_ERROR;
-    OM_uint32			gss_flags = 0;
-    int				sock;
-    FILE			*fp = NULL;
+    gss_cred_id_t               creds = GSS_C_NO_CREDENTIAL;
+    int                         token_status;
+    int                         return_value = GSI_SOCKET_ERROR;
+    OM_uint32                   gss_flags = 0;
+    int                         sock;
+    FILE                        *fp = NULL;
     char                        *cert_dir = NULL;
-    globus_result_t res;
+    globus_result_t             res;
 
-    if (self == NULL) {	
-	return GSI_SOCKET_ERROR;
+    if (self == NULL) {
+        return GSI_SOCKET_ERROR;
     }
 
     if (self->gss_context != GSS_C_NO_CONTEXT) {
-	GSI_SOCKET_set_error_string(self, "GSI_SOCKET already authenticated");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET already authenticated");
+        goto error;
     }
 
     res = GLOBUS_GSI_SYSCONFIG_GET_CERT_DIR(&cert_dir);
@@ -854,13 +854,13 @@ GSI_SOCKET_authentication_accept(GSI_SOCKET *self)
     }
 
     self->major_status = globus_gss_assist_acquire_cred(&self->minor_status,
-							GSS_C_ACCEPT,
-							&creds);
+                                                        GSS_C_ACCEPT,
+                                                        &creds);
 
     if (self->major_status != GSS_S_COMPLETE) {
-	goto error;
+        goto error;
     }
-    
+
     /* These are supposed to be return flags only, according to RFC
        2774, but GSI helpfully uses them as request flags too. */
     gss_flags |= GSS_C_REPLAY_FLAG;
@@ -869,46 +869,46 @@ GSI_SOCKET_authentication_accept(GSI_SOCKET *self)
     gss_flags |= GSS_C_INTEG_FLAG;
 
     if ((sock = dup(self->sock)) < 0) {
-	GSI_SOCKET_set_error_string(self, "dup() of socket fd failed");
-	self->error_number = errno;
-	goto error;
+        GSI_SOCKET_set_error_string(self, "dup() of socket fd failed");
+        self->error_number = errno;
+        goto error;
     }
     if ((fp = fdopen(sock, "r")) == NULL) {
-	GSI_SOCKET_set_error_string(self, "fdopen() of socket failed");
-	self->error_number = errno;
-	goto error;
+        GSI_SOCKET_set_error_string(self, "fdopen() of socket failed");
+        self->error_number = errno;
+        goto error;
     }
     if (setvbuf(fp, NULL, _IONBF, 0) != 0) {
     GSI_SOCKET_set_error_string(self, "setvbuf() for socket failed");
-	self->error_number = errno;
-	goto error;
+        self->error_number = errno;
+        goto error;
     }
-    
+
     self->major_status =
-	globus_gss_assist_accept_sec_context(&self->minor_status,
-					     &self->gss_context,
-					     creds,
-					     &self->peer_name,
-					     &gss_flags,
-					     NULL, /* u2u flag */
-					     &token_status,
-					     NULL, /* Delegated creds
-						    * added in Globus 1.1.3
-						    */
-					     globus_gss_assist_token_get_fd,
-					     (void *)fp,
-					     assist_write_token,
-					     (void *)&self->sock);
+        globus_gss_assist_accept_sec_context(&self->minor_status,
+                                             &self->gss_context,
+                                             creds,
+                                             &self->peer_name,
+                                             &gss_flags,
+                                             NULL, /* u2u flag */
+                                             &token_status,
+                                             NULL, /* Delegated creds
+                                                    * added in Globus 1.1.3
+                                                    */
+                                             globus_gss_assist_token_get_fd,
+                                             (void *)fp,
+                                             assist_write_token,
+                                             (void *)&self->sock);
 
     if (self->major_status != GSS_S_COMPLETE) {
-	goto error;
+        goto error;
     }
 
     if (!(gss_flags & GSS_C_CONF_FLAG)) {
-      GSI_SOCKET_set_error_string(self,
-                                  "requested confidentiality GSSAPI service"
-                                  " but it is not available");
-      goto error;
+        GSI_SOCKET_set_error_string(self,
+                                    "requested confidentiality GSSAPI service"
+                                    " but it is not available");
+        goto error;
     }
 
     if (gss_flags & GSS_C_GLOBUS_LIMITED_PROXY_FLAG) {
@@ -917,54 +917,54 @@ GSI_SOCKET_authentication_accept(GSI_SOCKET *self)
 
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     if (creds != GSS_C_NO_CREDENTIAL) {
-	OM_uint32 minor_status;
+        OM_uint32 minor_status;
 
-	gss_release_cred(&minor_status, &creds);
+        gss_release_cred(&minor_status, &creds);
     }
     if (cert_dir) free(cert_dir);
     if (fp) fclose(fp);
-    
+
     return return_value;
 }
 
 int
 GSI_SOCKET_get_peer_name(GSI_SOCKET *self,
-			   char *buffer,
-			   const int buffer_len)
+                         char *buffer,
+                         const int buffer_len)
 {
     int return_value = GSI_SOCKET_ERROR;
-    
+
     if (self == NULL)
     {
-	return GSI_SOCKET_ERROR;
+        return GSI_SOCKET_ERROR;
     }
-    
+
     if (buffer == NULL)
     {
-	self->error_number = EINVAL;
-	return GSI_SOCKET_ERROR;
+        self->error_number = EINVAL;
+        return GSI_SOCKET_ERROR;
     }
-    
+
     if (self->peer_name == NULL)
     {
-	GSI_SOCKET_set_error_string(self, "Client not authenticated");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "Client not authenticated");
+        goto error;
     }
-    
+
     return_value = my_strncpy(buffer, self->peer_name, buffer_len);
 
     if (return_value == -1)
     {
-	return_value = GSI_SOCKET_TRUNCATED;
-	goto error;
+        return_value = GSI_SOCKET_TRUNCATED;
+        goto error;
     }
 
     /* SUCCESS */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     return return_value;
 }
@@ -974,12 +974,12 @@ char *
 GSI_SOCKET_get_peer_hostname(GSI_SOCKET *self)
 {
     struct sockaddr_storage addr;
-    socklen_t			addr_len = sizeof(addr);
-    char host			[NI_MAXHOST];
-    int					loopback=0;
+    socklen_t                   addr_len = sizeof(addr);
+    char host                   [NI_MAXHOST];
+    int                         loopback = 0;
 
     if (getpeername(self->sock, (struct sockaddr *) &addr,
-		    &addr_len) < 0) {
+                    &addr_len) < 0) {
         self->error_number = errno;
         GSI_SOCKET_set_error_string(self, "Could not get peer address");
         return NULL;
@@ -1059,81 +1059,81 @@ GSI_SOCKET_get_peer_fqans(GSI_SOCKET *self, char ***fqans)
 
 int
 GSI_SOCKET_write_buffer(GSI_SOCKET *self,
-			const char *buffer,
-			const size_t buffer_len)
+                        const char *buffer,
+                        const size_t buffer_len)
 {
     int return_value = GSI_SOCKET_ERROR;
-    
+
     if (self == NULL)
     {
-	return GSI_SOCKET_ERROR;
+        return GSI_SOCKET_ERROR;
     }
-    
+
 #if 0
-    if (buffer[buffer_len-1] == '\0') {
-	myproxy_debug("writing a null-terminated message");
+    if (buffer[buffer_len - 1] == '\0') {
+        myproxy_debug("writing a null-terminated message");
     } else {
-	myproxy_debug("writing a non-null-terminated message");
+        myproxy_debug("writing a non-null-terminated message");
     }
 #endif
 
     if ((buffer == NULL) || (buffer_len == 0))
     {
-	return 0;
+        return 0;
     }
-    
+
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-	/* No context established, just send in the clear */
-	return_value = write_token(self->sock, buffer, buffer_len);
-	
-	if (return_value == -1)
-	{
-	    self->error_number = errno;
-	    GSI_SOCKET_set_error_string(self, "failed to write token");
-	    goto error;
-	}
+        /* No context established, just send in the clear */
+        return_value = write_token(self->sock, buffer, buffer_len);
+
+        if (return_value == -1)
+        {
+            self->error_number = errno;
+            GSI_SOCKET_set_error_string(self, "failed to write token");
+            goto error;
+        }
     }
     else
     {
-	/* Encrypt buffer before sending */
-	gss_buffer_desc unwrapped_buffer;
-	gss_buffer_desc wrapped_buffer;
-	int conf_state;
-	
-	unwrapped_buffer.value = (char *) buffer;
-	unwrapped_buffer.length = buffer_len;
-	
-	self->major_status = gss_wrap(&self->minor_status,
-				      self->gss_context,
-				      1 /* encrypt */,
-				      GSS_C_QOP_DEFAULT,
-				      &unwrapped_buffer,
-				      &conf_state,
-				      &wrapped_buffer);
-	
-	if (self->major_status != GSS_S_COMPLETE)
-	{
-	    goto error;
-	}
-	
-	if (!conf_state) {
-	  GSI_SOCKET_set_error_string(self, "GSI_SOCKET failed to encrypt");
-	  goto error;
-	}
-	
-	return_value = write_token(self->sock, wrapped_buffer.value,
-				   wrapped_buffer.length);
-	
-	if (return_value == -1)
-	{
-	    self->error_number = errno;
-	    GSI_SOCKET_set_error_string(self, "failed to write token");
-	    gss_release_buffer(&self->minor_status, &wrapped_buffer);
-	    goto error;
-	}
-	
-	gss_release_buffer(&self->minor_status, &wrapped_buffer);
+        /* Encrypt buffer before sending */
+        gss_buffer_desc unwrapped_buffer;
+        gss_buffer_desc wrapped_buffer;
+        int conf_state;
+
+        unwrapped_buffer.value = (char *) buffer;
+        unwrapped_buffer.length = buffer_len;
+
+        self->major_status = gss_wrap(&self->minor_status,
+                                      self->gss_context,
+                                      1 /* encrypt */,
+                                      GSS_C_QOP_DEFAULT,
+                                      &unwrapped_buffer,
+                                      &conf_state,
+                                      &wrapped_buffer);
+
+        if (self->major_status != GSS_S_COMPLETE)
+        {
+            goto error;
+        }
+
+        if (!conf_state) {
+            GSI_SOCKET_set_error_string(self, "GSI_SOCKET failed to encrypt");
+            goto error;
+        }
+
+        return_value = write_token(self->sock, wrapped_buffer.value,
+                                   wrapped_buffer.length);
+
+        if (return_value == -1)
+        {
+            self->error_number = errno;
+            GSI_SOCKET_set_error_string(self, "failed to write token");
+            gss_release_buffer(&self->minor_status, &wrapped_buffer);
+            goto error;
+        }
+
+        gss_release_buffer(&self->minor_status, &wrapped_buffer);
     }
 /*     fprintf(stderr, "\nwrote:\n%s\n", buffer); */
   error:
@@ -1144,87 +1144,87 @@ static
 size_t safe_strlen(const char s[], size_t bufsiz)
 {
     int i;
-    for (i=0; i < bufsiz; i++) {
-	if (s[i] == '\0') {
-	    return i;
-	}
+    for (i = 0; i < bufsiz; i++) {
+        if (s[i] == '\0') {
+            return i;
+        }
     }
     return i;
 }
 
 int GSI_SOCKET_read_token(GSI_SOCKET *self,
-			  unsigned char **pbuffer,
-			  size_t *pbuffer_len)
+                          unsigned char **pbuffer,
+                          size_t *pbuffer_len)
 {
-    int			bytes_read;
+    int                 bytes_read;
     static unsigned char *saved_buffer = NULL; /* not thread safe! */
     static int          saved_buffer_len = 0;
-    unsigned char	*buffer;
-    int			return_status = GSI_SOCKET_ERROR;
-    
+    unsigned char       *buffer;
+    int                 return_status = GSI_SOCKET_ERROR;
+
     if (saved_buffer) {
 
-	buffer = saved_buffer;
-	bytes_read = saved_buffer_len;
-	saved_buffer = NULL;
-	saved_buffer_len = 0;
+        buffer = saved_buffer;
+        bytes_read = saved_buffer_len;
+        saved_buffer = NULL;
+        saved_buffer_len = 0;
 
     } else {
 
-	bytes_read = read_token(self->sock,
-                            (char **) &buffer,
-                            self->max_token_len);
-    
-	if (bytes_read == -1)
-	{
-	    self->error_number = errno;
-	    GSI_SOCKET_set_error_string(self, "failed to read token");
-	    goto error;
-	}
+        bytes_read = read_token(self->sock,
+                                (char **) &buffer,
+                                self->max_token_len);
+
+        if (bytes_read == -1)
+        {
+            self->error_number = errno;
+            GSI_SOCKET_set_error_string(self, "failed to read token");
+            goto error;
+        }
 
     if (bytes_read == 0)
     {
-	    self->error_number = errno;
-	    GSI_SOCKET_set_error_string(self, "connection closed");
-	    goto error;
+        self->error_number = errno;
+        GSI_SOCKET_set_error_string(self, "connection closed");
+        goto error;
     }
 
-	if (self->gss_context != GSS_C_NO_CONTEXT)
-	{
-	    /* Need to unwrap read data */
-	    gss_buffer_desc unwrapped_buffer;
-	    gss_buffer_desc wrapped_buffer;
-	    int conf_state;
-	    gss_qop_t qop_state;
+        if (self->gss_context != GSS_C_NO_CONTEXT)
+        {
+            /* Need to unwrap read data */
+            gss_buffer_desc unwrapped_buffer;
+            gss_buffer_desc wrapped_buffer;
+            int conf_state;
+            gss_qop_t qop_state;
 
-	    wrapped_buffer.value = buffer;
-	    wrapped_buffer.length = bytes_read;
+            wrapped_buffer.value = buffer;
+            wrapped_buffer.length = bytes_read;
 
-	    self->major_status = gss_unwrap(&self->minor_status,
-					    self->gss_context,
-					    &wrapped_buffer,
-					    &unwrapped_buffer,
-					    &conf_state,
-					    &qop_state);
+            self->major_status = gss_unwrap(&self->minor_status,
+                                            self->gss_context,
+                                            &wrapped_buffer,
+                                            &unwrapped_buffer,
+                                            &conf_state,
+                                            &qop_state);
 
-	    free(buffer);
+            free(buffer);
 
-	    if (self->major_status != GSS_S_COMPLETE)
-	    {
-		goto error;
-	    }
-	
-	    buffer = unwrapped_buffer.value;
-	    bytes_read = unwrapped_buffer.length;
-	}
+            if (self->major_status != GSS_S_COMPLETE)
+            {
+                goto error;
+            }
+
+            buffer = unwrapped_buffer.value;
+            bytes_read = unwrapped_buffer.length;
+        }
 
     }
 
     if (bytes_read == 0)
     {
-	    self->error_number = errno;
-	    GSI_SOCKET_set_error_string(self, "connection closed");
-	    goto error;
+        self->error_number = errno;
+        GSI_SOCKET_set_error_string(self, "connection closed");
+        goto error;
     }
 
     /* HACK: We may have multiple tokens concatenated together here.
@@ -1232,23 +1232,23 @@ int GSI_SOCKET_read_token(GSI_SOCKET *self,
        framing.  Still, we can find the start/end of some messages
        by looking for the standard VERSION string at the start. */
     if (strncmp((const char *)buffer, "VERSION", strlen("VERSION")) == 0) {
-	size_t token_len = safe_strlen((const char *)buffer, bytes_read)+1;
-	if (bytes_read > token_len) {
+        size_t token_len = safe_strlen((const char *)buffer, bytes_read) + 1;
+        if (bytes_read > token_len) {
 
-	    /* Our buffer is bigger than one message.  Just return the
-	       one message here and save the rest for later. */
+            /* Our buffer is bigger than one message.  Just return the
+               one message here and save the rest for later. */
 
-	    char *old_buffer;
+            char *old_buffer;
 
-	    old_buffer = (char *)buffer;
-	    saved_buffer_len = bytes_read - token_len;
-	    buffer = malloc(token_len);
-	    memcpy(buffer, old_buffer, token_len);
-	    saved_buffer = malloc(saved_buffer_len);
-	    memcpy(saved_buffer, old_buffer+token_len, saved_buffer_len);
-	    bytes_read = token_len;
-	    free(old_buffer);
-	}
+            old_buffer = (char *)buffer;
+            saved_buffer_len = bytes_read - token_len;
+            buffer = malloc(token_len);
+            memcpy(buffer, old_buffer, token_len);
+            saved_buffer = malloc(saved_buffer_len);
+            memcpy(saved_buffer, old_buffer+token_len, saved_buffer_len);
+            bytes_read = token_len;
+            free(old_buffer);
+        }
     }
 
     /* Success */
@@ -1258,13 +1258,13 @@ int GSI_SOCKET_read_token(GSI_SOCKET *self,
 /*     fprintf(stderr, "\nread:\n%s\n", buffer); */
 
 #if 0
-    if (buffer[bytes_read-1] == '\0') {
-	myproxy_debug("read a null-terminated message");
+    if (buffer[bytes_read - 1] == '\0') {
+        myproxy_debug("read a null-terminated message");
     } else {
-	myproxy_debug("read a non-null-terminated message");
+        myproxy_debug("read a non-null-terminated message");
     }
 #endif
-    
+
   error:
     return return_status;
 }
@@ -1273,64 +1273,64 @@ void GSI_SOCKET_free_token(unsigned char *buffer)
 {
     if (buffer != NULL)
     {
-	free(buffer);
+        free(buffer);
     }
 }
 
 int GSI_SOCKET_delegation_init_ext(GSI_SOCKET *self,
-				   const char *source_credentials,
-				   int lifetime,
-				   const char *passphrase)
+                                   const char *source_credentials,
+                                   int lifetime,
+                                   const char *passphrase)
 {
-    int				return_value = GSI_SOCKET_ERROR;
-    SSL_CREDENTIALS		*creds = NULL;
-    SSL_PROXY_RESTRICTIONS	*proxy_restrictions = NULL;
-    unsigned char		*input_buffer = NULL;
-    size_t			input_buffer_length;
-    unsigned char		*output_buffer = NULL;
-    int				output_buffer_length;
-    
+    int                         return_value = GSI_SOCKET_ERROR;
+    SSL_CREDENTIALS             *creds = NULL;
+    SSL_PROXY_RESTRICTIONS      *proxy_restrictions = NULL;
+    unsigned char               *input_buffer = NULL;
+    size_t                      input_buffer_length;
+    unsigned char               *output_buffer = NULL;
+    int                         output_buffer_length;
+
 
     if (self == NULL)
     {
-	goto error;
+        goto error;
     }
 
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-	GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
-	goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
+        goto error;
     }
 
     /*
      * Load proxy we are going to use to sign delegation
      */
     creds = ssl_credentials_new();
-    
+
     if (creds == NULL)
     {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
-    
+
     if (passphrase && passphrase[0] == '\0') {
-	passphrase = NULL;
+        passphrase = NULL;
     }
 
     if (ssl_proxy_load_from_file(creds, source_credentials,
-				 passphrase) == SSL_ERROR)
+                                 passphrase) == SSL_ERROR)
     {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
 
     /*
      * Read the certificate request from the client
      */
     if (GSI_SOCKET_read_token(self, &input_buffer,
-			      &input_buffer_length) == GSI_SOCKET_ERROR)
+                              &input_buffer_length) == GSI_SOCKET_ERROR)
     {
-	goto error;
+        goto error;
     }
 
     /* HACK: We may get an error message rather than a certreq... */
@@ -1339,7 +1339,7 @@ int GSI_SOCKET_delegation_init_ext(GSI_SOCKET *self,
         myproxy_response_t *response;
         response = malloc(sizeof(*response));
         memset(response, 0, sizeof(*response));
-        myproxy_handle_response((const char *)input_buffer, 
+        myproxy_handle_response((const char *)input_buffer,
                                 input_buffer_length,
                                 response);
         myproxy_free(NULL, NULL, response);
@@ -1351,18 +1351,18 @@ int GSI_SOCKET_delegation_init_ext(GSI_SOCKET *self,
      * Set up the restrictions on the proxy
      */
     proxy_restrictions = ssl_proxy_restrictions_new();
-    
+
     if (proxy_restrictions == NULL)
     {
-	goto error;
+        goto error;
     }
 
     if (ssl_proxy_restrictions_set_lifetime(proxy_restrictions,
-					    (long) lifetime) == SSL_ERROR)
+                                            (long) lifetime) == SSL_ERROR)
     {
-	goto error;
+        goto error;
     }
-   
+
     if (GSI_SOCKET_peer_used_limited_proxy(self)) {
         ssl_proxy_restrictions_set_limited(proxy_restrictions, 1);
     }
@@ -1371,85 +1371,85 @@ int GSI_SOCKET_delegation_init_ext(GSI_SOCKET *self,
      * Sign the request
      */
     if (ssl_proxy_delegation_sign(creds,
-				  proxy_restrictions,
-				  input_buffer,
-				  input_buffer_length,
-				  &output_buffer,
-				  &output_buffer_length) == SSL_ERROR)
+                                  proxy_restrictions,
+                                  input_buffer,
+                                  input_buffer_length,
+                                  &output_buffer,
+                                  &output_buffer_length) == SSL_ERROR)
     {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
 
     /*
      * Write the proxy certificate back to user
      */
     if (GSI_SOCKET_write_buffer(self,
-				(const char *)output_buffer,
-				output_buffer_length) == GSI_SOCKET_ERROR)
+                                (const char *)output_buffer,
+                                output_buffer_length) == GSI_SOCKET_ERROR)
     {
-	goto error;
+        goto error;
     }
 
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     if (input_buffer != NULL)
     {
-	GSI_SOCKET_free_token(input_buffer);
+        GSI_SOCKET_free_token(input_buffer);
     }
-    
+
     if (output_buffer != NULL)
     {
-	ssl_free_buffer(output_buffer);
+        ssl_free_buffer(output_buffer);
     }
-    
+
     if (creds != NULL)
     {
-	ssl_credentials_destroy(creds);
+        ssl_credentials_destroy(creds);
     }
 
     if (proxy_restrictions != NULL)
     {
-	ssl_proxy_restrictions_destroy(proxy_restrictions);
+        ssl_proxy_restrictions_destroy(proxy_restrictions);
     }
-    
+
     return return_value;
 }
 
 
 int
 GSI_SOCKET_delegation_accept(GSI_SOCKET *self,
-			     unsigned char **delegated_credentials,
-			     int *delegated_credentials_len,
-			     char *passphrase)
+                             unsigned char **delegated_credentials,
+                             int *delegated_credentials_len,
+                             char *passphrase)
 {
-    int			return_value = GSI_SOCKET_ERROR;
-    SSL_CREDENTIALS	*creds = NULL;
-    unsigned char	*output_buffer = NULL;
-    int			output_buffer_len;
-    unsigned char	*input_buffer = NULL;
-    size_t		input_buffer_len;
-    unsigned char	*fmsg;
+    int                 return_value = GSI_SOCKET_ERROR;
+    SSL_CREDENTIALS     *creds = NULL;
+    unsigned char       *output_buffer = NULL;
+    int                 output_buffer_len;
+    unsigned char       *input_buffer = NULL;
+    size_t              input_buffer_len;
+    unsigned char       *fmsg;
     int                 i;
-    
+
     if (self == NULL)
-    {	
-	return GSI_SOCKET_ERROR;
+    {
+        return GSI_SOCKET_ERROR;
     }
 
     if ((delegated_credentials == NULL) ||
-	(delegated_credentials_len == 0))
+        (delegated_credentials_len == 0))
     {
-	self->error_number = EINVAL;
-	goto error;
+        self->error_number = EINVAL;
+        goto error;
     }
-    
+
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-	GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
-	return GSI_SOCKET_ERROR;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
+        return GSI_SOCKET_ERROR;
     }
 
     if (self->certreq) {
@@ -1460,31 +1460,31 @@ GSI_SOCKET_delegation_accept(GSI_SOCKET *self,
             GSI_SOCKET_set_error_from_verror(self);
             goto error;
         }
-        
+
     } else {
 
-    /* Generate proxy certificate request and send */
-    if (ssl_proxy_delegation_init(&creds, &output_buffer, &output_buffer_len,
-				  0 /* default number of bits */,
-				  NULL /* No callback */) == SSL_ERROR)
-    {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
-    }
-    
+        /* Generate proxy certificate request and send */
+        if (ssl_proxy_delegation_init(&creds, &output_buffer, &output_buffer_len,
+                                      0 /* default number of bits */,
+                                      NULL /* No callback */) == SSL_ERROR)
+        {
+            GSI_SOCKET_set_error_from_verror(self);
+            goto error;
+        }
+
     }
 
     if (GSI_SOCKET_write_buffer(self, (const char *)output_buffer,
-				output_buffer_len) == GSI_SOCKET_ERROR)
+                                output_buffer_len) == GSI_SOCKET_ERROR)
     {
-	goto error;
+        goto error;
     }
-    
+
     /* Now read the signed certificate */
     if (GSI_SOCKET_read_token(self, &input_buffer,
-			      &input_buffer_len) == GSI_SOCKET_ERROR)
+                              &input_buffer_len) == GSI_SOCKET_ERROR)
     {
-	goto error;
+        goto error;
     }
 
     /* HACK: We may get just an error message rather than a cert... */
@@ -1493,7 +1493,7 @@ GSI_SOCKET_delegation_accept(GSI_SOCKET *self,
         myproxy_response_t *response;
         response = malloc(sizeof(*response));
         memset(response, 0, sizeof(*response));
-        myproxy_handle_response((const char *)input_buffer, 
+        myproxy_handle_response((const char *)input_buffer,
                                 input_buffer_len,
                                 response);
         myproxy_free(NULL, NULL, response);
@@ -1507,47 +1507,47 @@ GSI_SOCKET_delegation_accept(GSI_SOCKET *self,
        We can't separate the certificate chain easily from
        the final protocol message, so just discard it. */
     fmsg = input_buffer;
-    for (i=0; i < input_buffer_len-strlen("VERSION"); i++, fmsg++) {
-	if (strncmp((const char *)fmsg, "VERSION", strlen("VERSION")) == 0) {
-	    input_buffer_len = fmsg-input_buffer;
-	    break;
-	}
+    for (i = 0; i < input_buffer_len-strlen("VERSION"); i++, fmsg++) {
+        if (strncmp((const char *)fmsg, "VERSION", strlen("VERSION")) == 0) {
+            input_buffer_len = fmsg-input_buffer;
+            break;
+        }
     }
-    
+
     if (ssl_proxy_delegation_finalize(creds, input_buffer,
-				      input_buffer_len) == SSL_ERROR)
+                                      input_buffer_len) == SSL_ERROR)
     {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
-    
+
     if (passphrase && passphrase[0] == '\0') {
-	passphrase = NULL;
+        passphrase = NULL;
     }
     if (ssl_proxy_to_pem(creds, delegated_credentials,
-			 delegated_credentials_len, passphrase) == SSL_ERROR)
+                         delegated_credentials_len, passphrase) == SSL_ERROR)
     {
-	GSI_SOCKET_set_error_from_verror(self);
-	goto error;
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
-    
+
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     if (creds != NULL)
     {
-	ssl_credentials_destroy(creds);
+        ssl_credentials_destroy(creds);
     }
-    
+
     if (input_buffer != NULL)
     {
-	GSI_SOCKET_free_token(input_buffer);
+        GSI_SOCKET_free_token(input_buffer);
     }
-    
+
     if (output_buffer != NULL)
     {
-	ssl_free_buffer(output_buffer);
+        ssl_free_buffer(output_buffer);
     }
 
     return return_value;
@@ -1555,22 +1555,22 @@ GSI_SOCKET_delegation_accept(GSI_SOCKET *self,
 
 int
 GSI_SOCKET_delegation_accept_ext(GSI_SOCKET *self,
-				 char *delegated_credentials,
-				 int delegated_credentials_len,
-				 char *passphrase)
+                                 char *delegated_credentials,
+                                 int delegated_credentials_len,
+                                 char *passphrase)
 {
-    int			return_value = GSI_SOCKET_ERROR;
-    unsigned char	*output_buffer = NULL;
-    int			output_buffer_len;
-    char        *filename = NULL;
-    int			fd = -1;
+    int                 return_value = GSI_SOCKET_ERROR;
+    unsigned char       *output_buffer = NULL;
+    int                 output_buffer_len;
+    char                *filename = NULL;
+    int                 fd = -1;
 
 
     if (GSI_SOCKET_delegation_accept(self, &output_buffer, &output_buffer_len,
-				     passphrase) != GSI_SOCKET_SUCCESS) {
-	goto error;
+                                     passphrase) != GSI_SOCKET_SUCCESS) {
+        goto error;
     }
-    
+
     /* Now store the credentials */
     filename = myproxy_creds_path_template();
     if (filename == NULL) {     /* should never happen */
@@ -1588,11 +1588,11 @@ GSI_SOCKET_delegation_accept_ext(GSI_SOCKET *self,
 
     if (write(fd, output_buffer, output_buffer_len) == -1)
     {
-	verror_put_errno(errno);
-	verror_put_string("Error writing proxy to %s", filename);
-	goto error;
+        verror_put_errno(errno);
+        verror_put_string("Error writing proxy to %s", filename);
+        goto error;
     }
-    
+
     if (delegated_credentials != NULL)
     {
         if (my_strncpy(delegated_credentials, filename,
@@ -1601,14 +1601,14 @@ GSI_SOCKET_delegation_accept_ext(GSI_SOCKET *self,
             goto error;
         }
     }
-    
+
     /* Success */
     return_value = GSI_SOCKET_SUCCESS;
-    
+
   error:
     if (output_buffer != NULL)
     {
-	ssl_free_buffer(output_buffer);
+        ssl_free_buffer(output_buffer);
     }
     if (fd >= 0) close(fd);
     if (return_value != GSI_SOCKET_SUCCESS && fd >= 0)
@@ -1645,20 +1645,20 @@ int GSI_SOCKET_credentials_accept_ext(GSI_SOCKET *self,
     int                        i;
     char                      *filename = NULL;
     char                      *certstart;
-    int                        rval, 
+    int                        rval,
                                fd                 = 0;
     int                        size;
 
 
     if (self == NULL)
     {
-      goto error;
+        goto error;
     }
 
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-      GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
-      goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
+        goto error;
     }
 
     /* Read the Cred sent from the client. */
@@ -1675,11 +1675,11 @@ int GSI_SOCKET_credentials_accept_ext(GSI_SOCKET *self,
        We can't separate the certificate chain easily from
        the final protocol message, so just discard it. */
     fmsg = input_buffer;
-    for (i=0; i < input_buffer_length-strlen("VERSION"); i++, fmsg++) {
-      if (strncmp((const char *)fmsg, "VERSION", strlen("VERSION")) == 0) {
-          input_buffer_length = fmsg-input_buffer;
-          break;
-      }
+    for (i = 0; i < input_buffer_length-strlen("VERSION"); i++, fmsg++) {
+        if (strncmp((const char *)fmsg, "VERSION", strlen("VERSION")) == 0) {
+            input_buffer_length = fmsg-input_buffer;
+            break;
+        }
     }
 
     /* Now store the credentials */
@@ -1701,22 +1701,22 @@ int GSI_SOCKET_credentials_accept_ext(GSI_SOCKET *self,
 
     certstart = (char *)input_buffer;
 
-    while (size) 
+    while (size)
     {
-      if ((rval = write(fd, certstart, size)) < 0) 
-      {
-          perror("write");
-          goto error;
-      }
+        if ((rval = write(fd, certstart, size)) < 0)
+        {
+            perror("write");
+            goto error;
+        }
 
-      size -= rval;
-      certstart += rval;
+        size -= rval;
+        certstart += rval;
     }
 
-    if (write(fd, "\n\0", 1) < 0) 
+    if (write(fd, "\n\0", 1) < 0)
     {
-      perror("write");
-      goto error;
+        perror("write");
+        goto error;
     }
 
     if (my_strncpy(credentials, filename, credentials_len) < 0) {
@@ -1730,22 +1730,22 @@ int GSI_SOCKET_credentials_accept_ext(GSI_SOCKET *self,
   error:
     if (input_buffer != NULL)
     {
-      GSI_SOCKET_free_token(input_buffer);
+        GSI_SOCKET_free_token(input_buffer);
     }
 
     if (creds != NULL)
     {
-      ssl_credentials_destroy(creds);
+        ssl_credentials_destroy(creds);
     }
 
     if (proxy_restrictions != NULL)
     {
-      ssl_proxy_restrictions_destroy(proxy_restrictions);
+        ssl_proxy_restrictions_destroy(proxy_restrictions);
     }
 
-    if( fd >= 0)
+    if (fd >= 0)
     {
-      close( fd );
+        close(fd);
     }
 
     if (return_value != GSI_SOCKET_SUCCESS && fd >= 0)
@@ -1758,7 +1758,7 @@ int GSI_SOCKET_credentials_accept_ext(GSI_SOCKET *self,
     return return_value;
 }
 
-int 
+int
 GSI_SOCKET_credentials_init_ext(GSI_SOCKET *self,
                                 const char *source_credentials)
 {
@@ -1768,21 +1768,21 @@ GSI_SOCKET_credentials_init_ext(GSI_SOCKET *self,
 
     if (self == NULL)
     {
-      goto error;
+        goto error;
     }
 
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-      GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
-      goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
+        goto error;
     }
 
     if (GSI_SOCKET_write_buffer(self,
                                 source_credentials,
-                                strlen(source_credentials)+1)
+                                strlen(source_credentials) + 1)
         == GSI_SOCKET_ERROR)
     {
-      goto error;
+        goto error;
     }
 
     /* Success */
@@ -1791,18 +1791,18 @@ GSI_SOCKET_credentials_init_ext(GSI_SOCKET *self,
   error:
     if (output_buffer != NULL)
     {
-      ssl_free_buffer(output_buffer);
+        ssl_free_buffer(output_buffer);
     }
 
     if (proxy_restrictions != NULL)
     {
-      ssl_proxy_restrictions_destroy(proxy_restrictions);
+        ssl_proxy_restrictions_destroy(proxy_restrictions);
     }
 
     return return_value;
 }
 
-int 
+int
 GSI_SOCKET_get_creds(GSI_SOCKET *self,
                      const char *source_credentials)
 {
@@ -1813,19 +1813,19 @@ GSI_SOCKET_get_creds(GSI_SOCKET *self,
 
     if (self == NULL)
     {
-      goto error;
+        goto error;
     }
 
     if (self->gss_context == GSS_C_NO_CONTEXT)
     {
-      GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
-      goto error;
+        GSI_SOCKET_set_error_string(self, "GSI_SOCKET not authenticated");
+        goto error;
     }
 
     if (buffer_from_file(source_credentials, &output_buffer,
-			 &output_buffer_length) < 0) {
-      GSI_SOCKET_set_error_from_verror(self);
-      goto error;
+                         &output_buffer_length) < 0) {
+        GSI_SOCKET_set_error_from_verror(self);
+        goto error;
     }
 
     /*
@@ -1836,7 +1836,7 @@ GSI_SOCKET_get_creds(GSI_SOCKET *self,
                   (const char *)output_buffer,
                                 output_buffer_length) == GSI_SOCKET_ERROR)
     {
-      goto error;
+        goto error;
     }
 
     /* Success */
@@ -1845,13 +1845,13 @@ GSI_SOCKET_get_creds(GSI_SOCKET *self,
   error:
     if (output_buffer != NULL)
     {
-      free(output_buffer);
+        free(output_buffer);
     }
 
     return return_value;
 }
 
-int 
+int
 GSI_SOCKET_get_errno(GSI_SOCKET *self)
 {
     if (self)
