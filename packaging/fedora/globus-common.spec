@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.12
+Version:	18.13
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -239,6 +239,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Apr 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.13-1
+- Simplify code
+
 * Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.12-1
 - Fix some compiler and doxygen warnings
 

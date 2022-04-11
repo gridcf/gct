@@ -1,3 +1,9 @@
+globus-common (18.13-1+gct.@distro@) @distro@; urgency=medium
+
+  * Simplify code
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Mon, 11 Apr 2022 14:33:05 +0200
+
 globus-common (18.12-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler and doxygen warnings

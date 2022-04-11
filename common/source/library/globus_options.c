@@ -104,17 +104,13 @@ globus_l_alphabetize_list(
     globus_options_entry_t *            e1 = low_datum;
     globus_options_entry_t *            e2 = high_datum;
 
-    if (e1->short_opt && !e2->short_opt)
+    if (!e2->short_opt)
     {
         return GLOBUS_TRUE;
     }
-    else if ((!e1->short_opt) && e2->short_opt)
+    else if (!e1->short_opt)
     {
         return GLOBUS_FALSE;
-    }
-    else if ((!e1->short_opt) && (!e2->short_opt))
-    {
-        return GLOBUS_TRUE;
     }
     else if (globus_libc_strncasecmp(e1->short_opt, e2->short_opt, strlen(e1->short_opt)) <= 0)
     {
