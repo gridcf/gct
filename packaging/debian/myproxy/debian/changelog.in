@@ -1,6 +1,7 @@
 myproxy (6.2.13-1+gct.@distro@) @distro@; urgency=medium
 
   * Use existing socket during trust root retrieval
+  * Fix wrong name in myproxy-store -V output
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 10 Apr 2022 14:17:08 +0200
 
