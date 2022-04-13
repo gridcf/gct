@@ -1214,30 +1214,28 @@ ssl_proxy_store_to_file(SSL_CREDENTIALS         *proxy_creds,
                         const char              *path,
                         const char              *pass_phrase)
 {
+    int                         bufsiz;
+    char                        *tmpfilename = NULL;
     int                         fd = -1;
-    int                         open_flags;
     int                         return_status = SSL_ERROR;
     unsigned char               *buffer = NULL;
     int                         buffer_len;
-    mode_t                      file_mode = 0;
 
     assert(proxy_creds != NULL);
     assert(path != NULL);
 
     my_init();
 
-    /*
-     * Use open to open the file so we can make sure it doesn't already
-     * exist.
-     */
-    open_flags = O_CREAT | O_EXCL | O_WRONLY;
-    file_mode = S_IRUSR | S_IWUSR;      /* 0600 */
+    bufsiz = strlen(path) + 15;
+    tmpfilename = malloc(bufsiz);
+    snprintf(tmpfilename, bufsiz, "%s.temp.XXXXXX", path);
 
-    fd = open(path, open_flags, file_mode);
+    /* mkstemp creates a file with O_EXCL flag, and permissions 0600 */
+    fd = mkstemp(tmpfilename);
 
     if (fd == -1)
     {
-        verror_put_string("Error creating %s", path);
+        verror_put_string("Error creating %s", tmpfilename);
         verror_put_errno(errno);
         goto error;
     }
@@ -1258,6 +1256,16 @@ ssl_proxy_store_to_file(SSL_CREDENTIALS         *proxy_creds,
         goto error;
     }
 
+    close(fd);
+    fd = -1;
+
+    if (rename(tmpfilename, path) < 0)
+    {
+        verror_put_string("rename(%s, %s) failed", tmpfilename, path);
+        verror_put_errno(errno);
+        goto error;
+    }
+
     /* Success */
     return_status = SSL_SUCCESS;
 
@@ -1274,8 +1282,13 @@ ssl_proxy_store_to_file(SSL_CREDENTIALS         *proxy_creds,
         if (return_status == SSL_ERROR)
         {
             /* Remove any file we created */
-            ssl_proxy_file_destroy(path);
+            ssl_proxy_file_destroy(tmpfilename);
         }
+    }
+
+    if (tmpfilename)
+    {
+        free(tmpfilename);
     }
 
     return return_status;
