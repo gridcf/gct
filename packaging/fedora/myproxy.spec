@@ -391,6 +391,7 @@ fi
 - Use existing socket during trust root retrieval
 - Fix wrong name in myproxy-store -V output
 - Use write+rename when changing passphrase
+- Improve detection of an encrypted private key
 
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.12-1
 - Fix some compiler warnings

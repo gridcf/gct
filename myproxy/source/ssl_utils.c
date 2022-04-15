@@ -865,25 +865,12 @@ ssl_private_key_is_encrypted(const char *path)
     if ((key = PEM_read_PrivateKey(key_file, NULL,
                 PEM_CALLBACK(my_pass_phrase_callback))) == NULL)
     {
-        unsigned long error, reason;
-
-        error = ERR_peek_error();
-        reason = ERR_GET_REASON(error);
-        if (error == 0 ||
-            reason == EVP_R_BAD_DECRYPT ||
-            reason == PEM_R_BAD_PASSWORD_READ ||
-            reason == PEM_R_NOT_PROC_TYPE)
-        {
-            return_status = 1;          /* key is encrypted */
-            goto cleanup;
-        } else {
-            verror_put_string("Error reading private key %s", path);
-            ssl_error_to_verror();
-            goto cleanup;       /* error */
-        }
+        return_status = 1;          /* key is encrypted */
     }
-
-    return_status = 0;          /* key unencrypted */
+    else
+    {
+        return_status = 0;          /* key is unencrypted */
+    }
 
  cleanup:
     if (key_file) fclose(key_file);
