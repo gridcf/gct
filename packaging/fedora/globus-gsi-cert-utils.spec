@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	10.8
+Version:	10.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Mon Apr 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.9-1
+- Add missing comma
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.8-1
 - Typo fixes
 
