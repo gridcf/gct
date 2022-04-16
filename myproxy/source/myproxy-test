@@ -227,7 +227,7 @@ die "grid-proxy-info -file $iproxyloc -identity failed, stopped"
     if (!defined($iproxysubject) || $iproxysubject eq "");
 
 srand(time||$$);
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 $trustrootdir = "$tmpdir/.globus/certificates.test.$$";
 $origtrustrootdir = $ENV{'X509_CERT_DIR'} if defined($ENV{'X509_CERT_DIR'});
 
@@ -474,7 +474,7 @@ if ($exitstatus != 0 && $output =~ /invalid credential passphrase/) {
 }
 
 $old_passphrase = $passphrase;
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 ($exitstatus, $output) =
     &runtest("myproxy-change-pass-phrase -v -S",
 	     "$old_passphrase\n$passphrase\n");
@@ -696,7 +696,7 @@ if ($exitstatus == 0) {
 
 # For myproxy-store, we need an encrypted key to store.
 # So, let's encrypt our proxy key.
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 $testkey = "$tmpdir/myproxy-test.$$.key";
 &runcmd("$openssl rsa -des3 -passout stdin -in \$X509_USER_KEY -out $testkey",
 	 $passphrase . "\n");
@@ -1302,7 +1302,7 @@ if (defined($origtrustrootdir)) {
 # Test 42
 #
 if ($startserver) { # only way to know check_multiple_credentials is true
-  $passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+  $passphrase = sprintf "%010d", int(rand(0x7fffffff));
   ($exitstatus, $output) =
     &runtest("myproxy-init -v -a -k multiple -c 1 -t 1 -S",
              $passphrase . "\n");
@@ -1313,7 +1313,7 @@ if ($startserver) { # only way to know check_multiple_credentials is true
                $passphrase . "\n");
   }
   if ($exitstatus == 0) {
-    $passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+    $passphrase = sprintf "%010d", int(rand(0x7fffffff));
     ($exitstatus, $output) =
       &runtest("myproxy-logon -k multiple -t 1 -o $tmpdir/myproxy-test.$$ -v -S",
                $passphrase . "\n");
@@ -2084,7 +2084,7 @@ sub docpperftest {
 	$i = $perfiters;
 	while ($i--) {
 	    $old_passphrase = $passphrase;
-	    $passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+	    $passphrase = sprintf "%010d", int(rand(0x7fffffff));
 	    ($exitstatus, $output) =
 		&runtest("myproxy-change-pass-phrase -v -S -k $$",
 			 "$old_passphrase\n$passphrase\n");

@@ -4,6 +4,7 @@ myproxy (6.2.13-1+gct.@distro@) @distro@; urgency=medium
   * Fix wrong name in myproxy-store -V output
   * Use write+rename when changing passphrase
   * Improve detection of an encrypted private key
+  * Fix broken snprintf format in test script
 
  -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 10 Apr 2022 14:17:08 +0200
 
