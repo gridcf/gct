@@ -3,6 +3,8 @@ Grid Community Toolkit
 
 [![Build Status](https://api.travis-ci.com/gridcf/gct.svg?branch=master)](https://travis-ci.com/github/gridcf/gct)
 
+[![Build/Test/Deploy](https://github.com/gridcf/gct/actions/workflows/build-test-deploy.yml/badge.svg)](https://github.com/gridcf/gct/actions/workflows/build-test-deploy.yml)
+
 This is the official git repository for the Grid Community Toolkit (GCT). Find the documentation on https://gridcf.org/gct-docs/.
 
 The GCT is a nascent effort by the [Grid Community Forum (GridCF)](https://gridcf.org/) to provide community-based support for critical software packages for grid computing.

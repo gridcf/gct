@@ -12,10 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ['centos:centos7']
+        image: ['centos:centos7', 'rockylinux:8', 'quay.io/centos/centos:stream8']
         components: ['udt,myproxy,ssh', 'gram5']
+        # Ignore UDT for the CentOS Stream 9 case because libnice is not available there yet
+        include:
+          - image: 'quay.io/centos/centos:stream9'
+            components: 'myproxy,ssh'
+          - image: 'quay.io/centos/centos:stream9'
+            components: 'gram5'
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
     
       - name: build/test on ${{ matrix.image }} with ${{ matrix.components }}
         env:
@@ -25,6 +33,10 @@ jobs:
         run: travis-ci/setup_tasks.sh
         
       - name: build source tarballs and srpms
+        # Only run this step for the centos:centos7 case and for only one component selection
+        if: |
+          contains(matrix.image , 'centos:centos7') &&
+          contains(matrix.components , 'udt,myproxy,ssh')
         env:
           IMAGE: centos:centos7
           TASK: srpms
@@ -32,7 +44,10 @@ jobs:
       
       # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
       - name: Establish ssh and upload source tarballs
-        if: contains(github.ref , 'refs/tags/')
+        # Only run this step for the centos:centos7 case
+        if: |
+          contains(matrix.image , 'centos:centos7') &&
+          contains(github.ref , 'refs/tags/')
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |

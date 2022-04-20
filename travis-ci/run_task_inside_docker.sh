@@ -9,19 +9,34 @@ COMPONENTS=${3-}
 set -e
 
 case $(</etc/redhat-release) in
-    CentOS*\ 6*) OS=centos6 ;;
     CentOS*\ 7*) OS=centos7 ;;
-    Fedora*\ 26*) OS=fedora26 ;;
-    Fedora*\ 27*) OS=fedora27 ;;
+    CentOS\ Stream*\ 8*) OS=centos-stream-8;;
+    CentOS\ Stream*\ 9*) OS=centos-stream-9;;
+    Rocky\ Linux*\ 8*) OS=rockylinux8 ;;
     *) OS=unknown ;;
 esac
 
 # EPEL required for UDT
 case $OS in
-    centos6)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+    # from `https://docs.fedoraproject.org/en-US/epel/#_quickstart`
+    centos7)  yum -y install epel-release
               ;;
-    centos7)  yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    rockylinux8)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled powertools
+              dnf -y install epel-release
               ;;
+    centos-stream-8)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled powertools
+              dnf -y install epel-release epel-next-release
+              ;;
+    centos-stream-9)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled crb
+              dnf -y install \
+                https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
+                https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
 esac
 
 # Clean the yum cache
@@ -32,6 +47,25 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
           'perl(Test)' 'perl(Test::More)' 'perl(File::Spec)' \
           'perl(URI)' file sudo bison patch curl \
           pam pam-devel libedit libedit-devel)
+
+if [[ $OS != centos7 ]]; then
+
+    # provides `cmp` used by `packaging/git-dirt-filter`
+    packages+=(diffutils)
+    if [[ $OS == centos-stream-9 ]]; then
+
+        # also install "zlib zlib-devel" because it's needed for `configure`ing
+        # "gridftp/server/src"
+        packages+=(zlib zlib-devel)
+        # "perl-English" isn't installed by default, so install it explicitly,
+        # because needed for "gridmap-tools-test.pl"
+        packages+=(perl-English)
+        # "perl-Sys-Hostname" isn't installed by default, so install it explicitly,
+        # because needed for globus_ftp_client test scripta.
+        # see https://github.com/fscheiner/gct/runs/5144915195?check_suite_focus=true#step:3:15649
+        packages+=(perl-Sys-Hostname)
+    fi
+fi
 
 if [[ $TASK == tests ]]; then
     set +e
@@ -61,8 +95,11 @@ elif [[ $TASK == *rpms ]]; then
     packages+=(pam libedit libedit-devel)
 fi
 
-
-yum -y -d1 install "${packages[@]}"
+if [[ $OS == centos7 ]]; then
+	yum -y -d1 install "${packages[@]}"
+else
+	dnf --allowerasing -y -d1 install "${packages[@]}"
+fi
 
 # UID of travis user inside needs to match UID of travis user outside
 getent passwd travis > /dev/null || useradd travis -u $TRAVISUID -o
