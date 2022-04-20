@@ -200,7 +200,7 @@ $ENV{'X509_USER_CERT'} = $ENV{'X509_USER_PROXY'};
 $ENV{'X509_USER_KEY'} = $ENV{'X509_USER_PROXY'};
 
 srand(time||$$);
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 
 my $mport   = undef;
 my $s1port  = undef;
@@ -471,7 +471,7 @@ if ($exitstatus == 0) {
 ## Test 6
 ##
 $old_passphrase = $passphrase;
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 ($exitstatus, $output) =
     &runtest("myproxy-change-pass-phrase -s localhost -p $mport -v -S -d -k \"test credential\"",
 	     "$old_passphrase\n$passphrase\n");
@@ -837,7 +837,7 @@ if ($exitstatus == 0) {
 
 # For myproxy-store, we need an encrypted key to store.
 # So, let's encrypt our proxy key.
-$passphrase = sprintf "%010.d", int(rand(0x7fffffff));
+$passphrase = sprintf "%010d", int(rand(0x7fffffff));
 $testkey = "$tmpdir/myproxy-test.$$.key";
 &runtest("openssl rsa -des3 -passout stdin -in \$X509_USER_KEY -out $testkey",
 	 $passphrase . "\n");

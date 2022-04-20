@@ -82,7 +82,7 @@ struct option long_options[] = {
 static char short_options[] = "uhl:vVdr:R:Z:xXaAk:K:t:c:y:s:p:E:";
 
 static char version[] =
-    "myproxy-init version " MYPROXY_VERSION " (" MYPROXY_VERSION_DATE ") "
+    "myproxy-store version " MYPROXY_VERSION " (" MYPROXY_VERSION_DATE ") "
     "\n";
 
 static char *certfile               = NULL;	/* certificate file name */
