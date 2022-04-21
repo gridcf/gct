@@ -1,3 +1,9 @@
+globus-ftp-control (9.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix cut-and-paste error in Makefile
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 21 Apr 2022 14:23:33 +0200
+
 globus-ftp-control (9.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler and doxygen warnings

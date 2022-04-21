@@ -3,7 +3,7 @@
 Name:		globus-ftp-control
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	9.9
+Version:	9.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Control Library
 
@@ -144,6 +144,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Apr 21 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.10-1
+- Fix cut-and-paste error in Makefile
+
 * Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.9-1
 - Fix some compiler and doxygen warnings
 

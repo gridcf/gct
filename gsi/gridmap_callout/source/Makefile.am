@@ -17,7 +17,7 @@ DOC_STAMPS =
 if ENABLE_DOXYGEN
 DOC_STAMPS += doc-stamp
 
-doc-stamp: Doxyfile $(libglobus_gridmap_callout_error_la_SOURCES)
+doc-stamp: Doxyfile $(libglobus_gridmap_callout_la_SOURCES)
 	rm -rf doc
 	$(DOXYGEN)
 	touch $@
