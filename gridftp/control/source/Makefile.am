@@ -31,7 +31,7 @@ DOC_STAMPS =
 if ENABLE_DOXYGEN
 DOC_STAMPS += doc-stamp
 
-doc-stamp: Doxyfile $(libglobus_common_la_SOURCES) globus_gridftp_protocol_extensions.dox
+doc-stamp: Doxyfile $(libglobus_ftp_control_la_SOURCES) globus_gridftp_protocol_extensions.dox
 	rm -rf doc
 	$(DOXYGEN)
 	touch $@

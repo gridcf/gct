@@ -3,7 +3,7 @@
 Name:		globus-net-manager
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	1.6
+Version:	1.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Network Manager Library
 
@@ -207,6 +207,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Apr 21 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.7-1
+- Fix cut-and-paste error in Makefile
+
 * Fri Mar 26 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 1.6-1
 - Doxygen fix
 
