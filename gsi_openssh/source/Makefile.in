@@ -20,15 +20,17 @@ abs_top_srcdir=@abs_top_srcdir@
 top_builddir=@top_builddir@
 program_prefix=@program_prefix@
 
+GSI_OPENSSH_VERSION=@GSI_OPENSSH_VERSION@
+
 DESTDIR=
 VPATH=@srcdir@
 SSH_PROGRAM=@bindir@/@program_prefix@ssh
-ASKPASS_PROGRAM=$(libexecdir)/ssh-askpass
-SFTP_SERVER=$(libexecdir)/sftp-server
-SSH_KEYSIGN=$(libexecdir)/ssh-keysign
-SSH_KEYCAT=$(libexecdir)/ssh-keycat
-SSH_PKCS11_HELPER=$(libexecdir)/ssh-pkcs11-helper
-SSH_SK_HELPER=$(libexecdir)/ssh-sk-helper
+ASKPASS_PROGRAM=$(libexecdir)/$(program_prefix)ssh-askpass
+SFTP_SERVER=$(libexecdir)/$(program_prefix)sftp-server
+SSH_KEYSIGN=$(libexecdir)/$(program_prefix)ssh-keysign
+SSH_KEYCAT=$(libexecdir)/$(program_prefix)ssh-keycat
+SSH_PKCS11_HELPER=$(libexecdir)/$(program_prefix)ssh-pkcs11-helper
+SSH_SK_HELPER=$(libexecdir)/$(program_prefix)ssh-sk-helper
 PRIVSEP_PATH=@PRIVSEP_PATH@
 SSH_PRIVSEP_USER=@SSH_PRIVSEP_USER@
 STRIP_OPT=@STRIP_OPT@
@@ -73,7 +75,7 @@ MKDIR_P=@MKDIR_P@
 
 .SUFFIXES: .lo
 
-TARGETS=ssh$(EXEEXT) sshd$(EXEEXT) scp$(EXEEXT) sftp-server$(EXEEXT) sftp$(EXEEXT) ssh-keygen$(EXEEXT)
+TARGETS=ssh$(EXEEXT) sshd$(EXEEXT) ssh-add$(EXEEXT) ssh-keygen$(EXEEXT) ssh-keyscan${EXEEXT} ssh-keysign${EXEEXT} ssh-pkcs11-helper$(EXEEXT) ssh-agent$(EXEEXT) scp$(EXEEXT) sftp-server$(EXEEXT) sftp$(EXEEXT) ssh-sk-helper$(EXEEXT) ssh-keycat$(EXEEXT)
 
 XMSS_OBJS=\
 	ssh-xmss.o \
@@ -139,25 +141,27 @@ SSHDOBJS=sshd.o auth-rhosts.o auth-passwd.o \
 	sandbox-seccomp-filter.o sandbox-capsicum.o sandbox-pledge.o \
 	sandbox-solaris.o uidswap.o $(SKOBJS)
 
-SCP_OBJS=	scp.o progressmeter.o
+SFTP_CLIENT_OBJS=sftp-common.o sftp-client.o sftp-glob.o
 
-#SSHADD_OBJS=	ssh-add.o $(SKOBJS)
+SCP_OBJS=	scp.o progressmeter.o $(SFTP_CLIENT_OBJS)
 
-#SSHAGENT_OBJS=	ssh-agent.o ssh-pkcs11-client.o $(SKOBJS)
+SSHADD_OBJS=	ssh-add.o $(SKOBJS)
+
+SSHAGENT_OBJS=	ssh-agent.o ssh-pkcs11-client.o $(SKOBJS)
 
 SSHKEYGEN_OBJS=	ssh-keygen.o sshsig.o $(SKOBJS)
 
-#SSHKEYSIGN_OBJS=ssh-keysign.o readconf.o uidswap.o $(SKOBJS)
+SSHKEYSIGN_OBJS=ssh-keysign.o readconf.o uidswap.o $(SKOBJS)
 
-#P11HELPER_OBJS=	ssh-pkcs11-helper.o ssh-pkcs11.o $(SKOBJS)
+P11HELPER_OBJS=	ssh-pkcs11-helper.o ssh-pkcs11.o $(SKOBJS)
 
-#SKHELPER_OBJS=	ssh-sk-helper.o ssh-sk.o sk-usbhid.o
+SKHELPER_OBJS=	ssh-sk-helper.o ssh-sk.o sk-usbhid.o
 
-#SSHKEYSCAN_OBJS=ssh-keyscan.o $(SKOBJS)
+SSHKEYSCAN_OBJS=ssh-keyscan.o $(SKOBJS)
 
 SFTPSERVER_OBJS=sftp-common.o sftp-server.o sftp-server-main.o
 
-SFTP_OBJS=	sftp.o sftp-client.o sftp-common.o sftp-glob.o progressmeter.o
+SFTP_OBJS=	sftp.o progressmeter.o $(SFTP_CLIENT_OBJS)
 
 MANPAGES	= moduli.5.out scp.1.out ssh-add.1.out ssh-agent.1.out ssh-keygen.1.out ssh-keyscan.1.out ssh.1.out sshd.8.out sftp-server.8.out sftp.1.out ssh-keysign.8.out ssh-pkcs11-helper.8.out ssh-sk-helper.8.out sshd_config.5.out ssh_config.5.out
 MANPAGES_IN	= moduli.5 scp.1 ssh-add.1 ssh-agent.1 ssh-keygen.1 ssh-keyscan.1 ssh.1 sshd.8 sftp-server.8 sftp.1 ssh-keysign.8 ssh-pkcs11-helper.8 ssh-sk-helper.8 sshd_config.5 ssh_config.5
@@ -221,29 +225,29 @@ sshd$(EXEEXT): libssh.a	$(LIBCOMPAT) $(SSHDOBJS)
 scp$(EXEEXT): $(LIBCOMPAT) libssh.a $(SCP_OBJS)
 	$(LD) -o $@ $(SCP_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
-#ssh-add$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHADD_OBJS)
-#	$(LD) -o $@ $(SSHADD_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
+ssh-add$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHADD_OBJS)
+	$(LD) -o $@ $(SSHADD_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
-#ssh-agent$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHAGENT_OBJS)
-#	$(LD) -o $@ $(SSHAGENT_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
+ssh-agent$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHAGENT_OBJS)
+	$(LD) -o $@ $(SSHAGENT_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
 ssh-keygen$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHKEYGEN_OBJS)
 	$(LD) -o $@ $(SSHKEYGEN_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
-#ssh-keysign$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHKEYSIGN_OBJS)
-#	$(LD) -o $@ $(SSHKEYSIGN_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
+ssh-keysign$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHKEYSIGN_OBJS)
+	$(LD) -o $@ $(SSHKEYSIGN_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
-#ssh-pkcs11-helper$(EXEEXT): $(LIBCOMPAT) libssh.a $(P11HELPER_OBJS)
-#	$(LD) -o $@ $(P11HELPER_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat -lssh -lopenbsd-compat $(LIBS)
+ssh-pkcs11-helper$(EXEEXT): $(LIBCOMPAT) libssh.a $(P11HELPER_OBJS)
+	$(LD) -o $@ $(P11HELPER_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
-#ssh-sk-helper$(EXEEXT): $(LIBCOMPAT) libssh.a $(SKHELPER_OBJS)
-#	$(LD) -o $@ $(SKHELPER_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat -lssh -lopenbsd-compat $(LIBS) $(LIBFIDO2)
+ssh-sk-helper$(EXEEXT): $(LIBCOMPAT) libssh.a $(SKHELPER_OBJS)
+	$(LD) -o $@ $(SKHELPER_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS) $(LIBFIDO2)
 
-#ssh-keycat$(EXEEXT): $(LIBCOMPAT) $(SSHDOBJS) libssh.a ssh-keycat.o uidswap.o
-#	$(LD) -o $@ ssh-keycat.o uidswap.o $(LDFLAGS) -lssh -lopenbsd-compat $(KEYCATLIBS) $(LIBS)
+ssh-keycat$(EXEEXT): $(LIBCOMPAT) $(SSHDOBJS) libssh.a ssh-keycat.o uidswap.o
+	$(LD) -o $@ ssh-keycat.o uidswap.o $(LDFLAGS) -lssh -lopenbsd-compat $(KEYCATLIBS) $(LIBS)
 
-#ssh-keyscan$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHKEYSCAN_OBJS)
-#	$(LD) -o $@ $(SSHKEYSCAN_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat -lssh $(LIBS)
+ssh-keyscan$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHKEYSCAN_OBJS)
+	$(LD) -o $@ $(SSHKEYSCAN_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
 
 sftp-server$(EXEEXT): $(LIBCOMPAT) libssh.a $(SFTPSERVER_OBJS)
 	$(LD) -o $@ $(SFTPSERVER_OBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
@@ -390,7 +394,7 @@ distprep: catman-do depend-check
 	$(AUTORECONF)
 	-rm -rf autom4te.cache .depend.bak
 
-distdir=gsi-openssh-8.6p1c
+distdir=gsi-openssh-$(GSI_OPENSSH_VERSION)
 distsubdirs=$(srcdir)/openbsd-compat $(srcdir)/contrib $(srcdir)/regress $(srcdir)/m4
 
 distdir:
@@ -431,32 +435,32 @@ install-files:
 	$(MKDIR_P) -m 0755 $(DESTDIR)$(PRIVSEP_PATH)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh$(EXEEXT)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) scp$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)scp$(EXEEXT)
-	#$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-add$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-add$(EXEEXT)
-	#$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-agent$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-agent$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-add$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-add$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-agent$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-agent$(EXEEXT)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-keygen$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-keygen$(EXEEXT)
-	#$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-keyscan$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-keyscan$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-keyscan$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)ssh-keyscan$(EXEEXT)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) sshd$(EXEEXT) $(DESTDIR)$(sbindir)/$(program_prefix)sshd$(EXEEXT)
-	#$(LIBTOOL) --mode=install $(INSTALL) -m 4711 $(STRIP_OPT) ssh-keysign$(EXEEXT) $(DESTDIR)$(SSH_KEYSIGN)$(EXEEXT)
-	#$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-pkcs11-helper$(EXEEXT) $(DESTDIR)$(SSH_PKCS11_HELPER)$(EXEEXT)
-	#$(INSTALL) -m 0755 $(STRIP_OPT) ssh-sk-helper$(EXEEXT) $(DESTDIR)$(SSH_SK_HELPER)$(EXEEXT)
-	#$(INSTALL) -m 0755 $(STRIP_OPT) ssh-keycat$(EXEEXT) $(DESTDIR)$(libexecdir)/ssh-keycat$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 4711 $(STRIP_OPT) ssh-keysign$(EXEEXT) $(DESTDIR)$(SSH_KEYSIGN)$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-pkcs11-helper$(EXEEXT) $(DESTDIR)$(SSH_PKCS11_HELPER)$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-sk-helper$(EXEEXT) $(DESTDIR)$(SSH_SK_HELPER)$(EXEEXT)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) ssh-keycat$(EXEEXT) $(DESTDIR)$(libexecdir)/ssh-keycat$(EXEEXT)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) sftp$(EXEEXT) $(DESTDIR)$(bindir)/$(program_prefix)sftp$(EXEEXT)
 	$(LIBTOOL) --mode=install $(INSTALL) -m 0755 $(STRIP_OPT) sftp-server$(EXEEXT) $(DESTDIR)$(SFTP_SERVER)$(EXEEXT)
 	$(INSTALL) -m 644 ssh.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh.1
 	$(INSTALL) -m 644 scp.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)scp.1
-	#$(INSTALL) -m 644 ssh-add.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-add.1
-	#$(INSTALL) -m 644 ssh-agent.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-agent.1
+	$(INSTALL) -m 644 ssh-add.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-add.1
+	$(INSTALL) -m 644 ssh-agent.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-agent.1
 	$(INSTALL) -m 644 ssh-keygen.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-keygen.1
-	#$(INSTALL) -m 644 ssh-keyscan.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-keyscan.1
+	$(INSTALL) -m 644 ssh-keyscan.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-keyscan.1
 	$(INSTALL) -m 644 moduli.5.out $(DESTDIR)$(mandir)/$(mansubdir)5/$(program_prefix)moduli.5
 	$(INSTALL) -m 644 sshd_config.5.out $(DESTDIR)$(mandir)/$(mansubdir)5/$(program_prefix)sshd_config.5
 	$(INSTALL) -m 644 ssh_config.5.out $(DESTDIR)$(mandir)/$(mansubdir)5/$(program_prefix)ssh_config.5
 	$(INSTALL) -m 644 sshd.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)sshd.8
 	$(INSTALL) -m 644 sftp.1.out $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)sftp.1
 	$(INSTALL) -m 644 sftp-server.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)sftp-server.8
-	#$(INSTALL) -m 644 ssh-keysign.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-keysign.8
-	#$(INSTALL) -m 644 ssh-pkcs11-helper.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-pkcs11-helper.8
-	#$(INSTALL) -m 644 ssh-sk-helper.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/ssh-sk-helper.8
+	$(INSTALL) -m 644 ssh-keysign.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-keysign.8
+	$(INSTALL) -m 644 ssh-pkcs11-helper.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-pkcs11-helper.8
+	$(INSTALL) -m 644 ssh-sk-helper.8.out $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-sk-helper.8
 
 install-sysconf:
 	$(MKDIR_P) $(DESTDIR)$(sysconfdir)
@@ -508,10 +512,10 @@ uninstallall:	uninstall
 uninstall:
 	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)ssh$(EXEEXT)
 	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)scp$(EXEEXT)
-	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)ssh-add$(EXEEXT)
-	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)ssh-agent$(EXEEXT)
+	-rm -f $(DESTDIR)$(bindir)/ssh-add$(EXEEXT)
+	-rm -f $(DESTDIR)$(bindir)/ssh-agent$(EXEEXT)
 	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)ssh-keygen$(EXEEXT)
-	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)ssh-keyscan$(EXEEXT)
+	-rm -f $(DESTDIR)$(bindir)/ssh-keyscan$(EXEEXT)
 	-rm -f $(DESTDIR)$(bindir)/$(program_prefix)sftp$(EXEEXT)
 	-rm -f $(DESTDIR)$(sbindir)/$(program_prefix)sshd$(EXEEXT)
 	-rm -r $(DESTDIR)$(SFTP_SERVER)$(EXEEXT)
@@ -520,15 +524,15 @@ uninstall:
 	-rm -f $(DESTDIR)$(SSH_SK_HELPER)$(EXEEXT)
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh.1
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)scp.1
-	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-add.1
-	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-agent.1
+	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/ssh-add.1
+	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/ssh-agent.1
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-keygen.1
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)sftp.1
-	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/$(program_prefix)ssh-keyscan.1
+	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)1/ssh-keyscan.1
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)sshd.8
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)sftp-server.8
-	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-keysign.8
-	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/$(program_prefix)ssh-pkcs11-helper.8
+	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/ssh-keysign.8
+	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/ssh-pkcs11-helper.8
 	-rm -f $(DESTDIR)$(mandir)/$(mansubdir)8/ssh-sk-helper.8
 
 regress-prep:
@@ -689,7 +693,8 @@ UNITTESTS_TEST_MISC_OBJS=\
 	regress/unittests/misc/test_parse.o \
 	regress/unittests/misc/test_expand.o \
 	regress/unittests/misc/test_convtime.o \
-	regress/unittests/misc/test_argv.o
+	regress/unittests/misc/test_argv.o \
+	regress/unittests/misc/test_strdelim.o
 
 regress/unittests/misc/test_misc$(EXEEXT): \
     ${UNITTESTS_TEST_MISC_OBJS} \

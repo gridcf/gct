@@ -39,7 +39,6 @@
 #include <signal.h>
 
 #include "openbsd-compat/openssl-compat.h"
-#include "fips_mode_replacement.h"
 
 #include "sshkey.h"
 #include "cipher.h"
