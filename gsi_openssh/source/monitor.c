@@ -1,4 +1,4 @@
-/* $OpenBSD: monitor.c,v 1.225 2021/04/15 16:24:31 markus Exp $ */
+/* $OpenBSD: monitor.c,v 1.228 2021/08/11 05:20:17 djm Exp $ */
 /*
  * Copyright 2002 Niels Provos <provos@citi.umich.edu>
  * Copyright 2002 Markus Friedl <markus@openbsd.org>
@@ -126,8 +126,6 @@ int mm_answer_authrole(struct ssh *, int, struct sshbuf *);
 int mm_answer_authpassword(struct ssh *, int, struct sshbuf *);
 int mm_answer_bsdauthquery(struct ssh *, int, struct sshbuf *);
 int mm_answer_bsdauthrespond(struct ssh *, int, struct sshbuf *);
-int mm_answer_skeyquery(struct ssh *, int, struct sshbuf *);
-int mm_answer_skeyrespond(struct ssh *, int, struct sshbuf *);
 int mm_answer_keyallowed(struct ssh *, int, struct sshbuf *);
 int mm_answer_keyverify(struct ssh *, int, struct sshbuf *);
 int mm_answer_pty(struct ssh *, int, struct sshbuf *);
@@ -737,8 +735,8 @@ mm_answer_sign(struct ssh *ssh, int sock, struct sshbuf *m)
 	} else
 		fatal_f("no hostkey from index %d", keyid);
 
-	debug3_f("%s signature %p(%zu)", is_proof ? "hostkey proof" : "KEX",
-	    signature, siglen);
+	debug3_f("%s %s signature len=%zu", alg,
+	    is_proof ? "hostkey proof" : "KEX", siglen);
 
 	sshbuf_reset(m);
 	if ((r = sshbuf_put_string(m, signature, siglen)) != 0)
@@ -1046,7 +1044,7 @@ mm_answer_bsdauthrespond(struct ssh *ssh, int sock, struct sshbuf *m)
 
 	if ((r = sshbuf_get_cstring(m, &response, NULL)) != 0)
 		fatal_fr(r, "parse");
-	authok = options.challenge_response_authentication &&
+	authok = options.kbd_interactive_authentication &&
 	    auth_userresponse(authctxt->as, response, 0);
 	authctxt->as = NULL;
 	debug3_f("<%s> = <%d>", response, authok);
@@ -1246,8 +1244,6 @@ mm_answer_keyallowed(struct ssh *ssh, int sock, struct sshbuf *m)
 	    (r = sshkey_froms(m, &key)) != 0 ||
 	    (r = sshbuf_get_u32(m, &pubkey_auth_attempt)) != 0)
 		fatal_fr(r, "parse");
-
-	debug3_f("key_from_blob: %p", key);
 
 	if (key != NULL && authctxt->valid) {
 		/* These should not make it past the privsep child */
@@ -1529,7 +1525,7 @@ mm_answer_keyverify(struct ssh *ssh, int sock, struct sshbuf *m)
 	    SSH_FP_DEFAULT)) == NULL)
 		fatal_f("sshkey_fingerprint failed");
 
-	debug3_f("%s %p signature %s%s%s", auth_method, key,
+	debug3_f("%s %s signature %s%s%s", auth_method, sshkey_type(key),
 	    (ret == 0) ? "verified" : "unverified",
 	    (ret != 0) ? ": " : "", (ret != 0) ? ssh_err(ret) : "");
 

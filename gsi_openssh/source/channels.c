@@ -1,4 +1,4 @@
-/* $OpenBSD: channels.c,v 1.406 2021/04/03 06:18:40 djm Exp $ */
+/* $OpenBSD: channels.c,v 1.407 2021/05/19 01:24:05 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -3491,7 +3491,6 @@ channel_setup_fwd_listener_tcpip(struct ssh *ssh, int type,
 		}
 		/* Start listening for connections on the socket. */
 		if (listen(sock, SSH_LISTEN_BACKLOG) == -1) {
-			error("listen: %.100s", strerror(errno));
 			error("listen [%s]:%s: %.100s", ntop, strport,
 			    strerror(errno));
 			close(sock);
@@ -4059,7 +4058,7 @@ channel_request_rforward_cancel_streamlocal(struct ssh *ssh, const char *path)
 
 	return 0;
 }
- 
+
 /*
  * Request cancellation of remote forwarding of a connection from local side.
  */
