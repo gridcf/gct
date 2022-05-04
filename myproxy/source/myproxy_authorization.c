@@ -29,9 +29,9 @@ _find_data(author_method_t method, authorization_data_t **data);
 /*
  * Implementation of password-based authorization
  */
-author_status_t
-auth_passwd_get_status(struct myproxy_creds *creds, char *client_name,
-                       myproxy_server_context_t *config)
+static author_status_t auth_passwd_get_status(struct myproxy_creds *creds,
+                                              char *client_name,
+                                              myproxy_server_context_t *config)
 {
     assert(creds);
     assert(config);
@@ -56,16 +56,15 @@ auth_passwd_get_status(struct myproxy_creds *creds, char *client_name,
     return AUTHORIZEMETHOD_DISABLED;
 }
 
-char *
-auth_passwd_create_server_data(void)
+static char *auth_passwd_create_server_data(void)
 {
    return strdup("Enter MyProxy pass phrase:");
 }
 
-char *
-auth_passwd_create_client_data(authorization_data_t *data,
-                               void *extra_data, size_t extra_data_len,
-                               size_t *client_data_len)
+static char *auth_passwd_create_client_data(authorization_data_t *data,
+                                            void *extra_data,
+                                            size_t extra_data_len,
+                                            size_t *client_data_len)
 {
    char *tmp;
 
@@ -78,9 +77,10 @@ auth_passwd_create_client_data(authorization_data_t *data,
    return tmp;
 }
 
-int auth_passwd_check_client(authorization_data_t *client_auth_data,
-                             struct myproxy_creds *creds, char *client_name,
-                             myproxy_server_context_t *config)
+static int auth_passwd_check_client(authorization_data_t *client_auth_data,
+                                    struct myproxy_creds *creds,
+                                    char *client_name,
+                                    myproxy_server_context_t *config)
 {
    int exist=0, encrypted=0, cred_passphrase_match=0;
 #if defined(HAVE_LIBPAM)
@@ -207,7 +207,7 @@ int auth_passwd_check_client(authorization_data_t *client_auth_data,
 #endif /* defined(HAVE_LIBPAM) */
 }
 
-struct authorization_func authorization_passwd = {
+static struct authorization_func authorization_passwd = {
    auth_passwd_get_status,
    auth_passwd_create_server_data,
    auth_passwd_create_client_data,
@@ -220,9 +220,9 @@ struct authorization_func authorization_passwd = {
  * Implementation of certificate-based authorization
  */
 
-author_status_t
-auth_cert_get_status(struct myproxy_creds *creds, char *client_name,
-                     myproxy_server_context_t *config)
+static author_status_t auth_cert_get_status(struct myproxy_creds *creds,
+                                            char *client_name,
+                                            myproxy_server_context_t *config)
 {
     /* Just check here if this server allows renewal.
        Other checks for credential existence or CA configuration
@@ -236,7 +236,7 @@ auth_cert_get_status(struct myproxy_creds *creds, char *client_name,
 
 #define CHALLENGE_SIZE  16
 
-char *auth_cert_create_server_data(void)
+static char *auth_cert_create_server_data(void)
 {
    unsigned char random[CHALLENGE_SIZE];
    char *challenge;
@@ -271,8 +271,11 @@ char *auth_cert_create_server_data(void)
 
 /* the extra data parameter must contain a filename with a certificate to
    authorization */
-char *auth_cert_create_client_data(authorization_data_t *data,
-      void *extra_data, size_t extra_data_len, size_t *client_data_len)
+static char *auth_cert_create_client_data_ex(authorization_data_t *data,
+                                             void *extra_data,
+                                             size_t extra_data_len,
+                                             size_t *client_data_len,
+                                             const EVP_MD *md)
 {
    char * return_data = NULL;
    SSL_CREDENTIALS *proxy = NULL;
@@ -294,7 +297,7 @@ char *auth_cert_create_client_data(authorization_data_t *data,
 
    if (ssl_sign((unsigned char *)data->server_data,
                 strlen(data->server_data), proxy,
-                &signature, (int *)&signature_len) == SSL_ERROR) {
+                &signature, (int *)&signature_len, md) == SSL_ERROR) {
       verror_prepend_string("ssl_sign()");
       goto end;
    }
@@ -337,10 +340,29 @@ end:
    return return_data;
 }
 
-int auth_cert_check_client(authorization_data_t *auth_data,
-                           struct myproxy_creds *creds,
-                           char *client_name,
-                           myproxy_server_context_t *config)
+static char *auth_cert_create_client_data(authorization_data_t *data,
+                                          void *extra_data,
+                                          size_t extra_data_len,
+                                          size_t *client_data_len)
+{
+    return auth_cert_create_client_data_ex(data, extra_data, extra_data_len,
+                                           client_data_len, EVP_sha1());
+}
+
+static char *auth_cert256_create_client_data(authorization_data_t *data,
+                                             void *extra_data,
+                                             size_t extra_data_len,
+                                             size_t *client_data_len)
+{
+    return auth_cert_create_client_data_ex(data, extra_data, extra_data_len,
+                                           client_data_len, EVP_sha256());
+}
+
+static int auth_cert_check_client_ex(authorization_data_t *auth_data,
+                                     struct myproxy_creds *creds,
+                                     char *client_name,
+                                     myproxy_server_context_t *config,
+                                     const EVP_MD *md)
 {
    SSL_CREDENTIALS *chain = NULL;
    unsigned char *signature = NULL;
@@ -369,7 +391,7 @@ int auth_cert_check_client(authorization_data_t *auth_data,
 
    if (ssl_verify((unsigned char *)auth_data->server_data,
                   strlen(auth_data->server_data),
-                  chain, signature, signature_len) == SSL_ERROR) {
+                  chain, signature, signature_len, md) == SSL_ERROR) {
       verror_prepend_string("certificate verification failed");
       goto end;
    }
@@ -429,8 +451,25 @@ end:
    return return_status;
 }
 
+static int auth_cert_check_client(authorization_data_t *auth_data,
+                                  struct myproxy_creds *creds,
+                                  char *client_name,
+                                  myproxy_server_context_t *config)
+{
+    return auth_cert_check_client_ex(auth_data, creds, client_name, config,
+                                     EVP_sha1());
+}
 
-struct authorization_func authorization_cert = {
+static int auth_cert256_check_client(authorization_data_t *auth_data,
+                                     struct myproxy_creds *creds,
+                                     char *client_name,
+                                     myproxy_server_context_t *config)
+{
+    return auth_cert_check_client_ex(auth_data, creds, client_name, config,
+                                     EVP_sha256());
+}
+
+static struct authorization_func authorization_cert = {
    auth_cert_get_status,
    auth_cert_create_server_data,
    auth_cert_create_client_data,
@@ -439,15 +478,24 @@ struct authorization_func authorization_cert = {
    "X509_certificate"
 };
 
+static struct authorization_func authorization_cert256 = {
+   auth_cert_get_status,
+   auth_cert_create_server_data,
+   auth_cert256_create_client_data,
+   auth_cert256_check_client,
+   AUTHORIZETYPE_CERT256,
+   "X509_certificate_SHA256"
+};
+
 
 #if defined(HAVE_LIBSASL2)
 /*
  * Implementation of SASL-based authorization
  */
 
-author_status_t
-auth_sasl_get_status(struct myproxy_creds *creds, char *client_name,
-                     myproxy_server_context_t *config)
+static author_status_t auth_sasl_get_status(struct myproxy_creds *creds,
+                                            char *client_name,
+                                            myproxy_server_context_t *config)
 {
     if (config->sasl_policy) {
         if (strcmp(config->sasl_policy, "required") == 0) {
@@ -460,7 +508,7 @@ auth_sasl_get_status(struct myproxy_creds *creds, char *client_name,
     return AUTHORIZEMETHOD_DISABLED;
 }
 
-char *auth_sasl_create_server_data(void)
+static char *auth_sasl_create_server_data(void)
 {
    char *challenge = strdup("SASL authorization negotiation server");
 
@@ -468,8 +516,10 @@ char *auth_sasl_create_server_data(void)
 }
 
 
-char *auth_sasl_create_client_data(authorization_data_t *data,
-      void *extra_data, size_t extra_data_len, size_t *client_data_len)
+static char *auth_sasl_create_client_data(authorization_data_t *data,
+                                          void *extra_data,
+                                          size_t extra_data_len,
+                                          size_t *client_data_len)
 {
    char *tmp;
 
@@ -482,10 +532,10 @@ char *auth_sasl_create_client_data(authorization_data_t *data,
    return tmp;
 }
 
-int auth_sasl_check_client(authorization_data_t *auth_data,
-                           struct myproxy_creds *creds,
-                           char *client_name,
-                           myproxy_server_context_t *config)
+static int auth_sasl_check_client(authorization_data_t *auth_data,
+                                  struct myproxy_creds *creds,
+                                  char *client_name,
+                                  myproxy_server_context_t *config)
 {
     if (config)
         config->usage.sasl_used = 1;
@@ -499,7 +549,7 @@ int auth_sasl_check_client(authorization_data_t *auth_data,
 
 
 
-struct authorization_func authorization_sasl = {
+static struct authorization_func authorization_sasl = {
    auth_sasl_get_status,
    auth_sasl_create_server_data,
    auth_sasl_create_client_data,
@@ -515,7 +565,8 @@ static struct authorization_func *authorization_funcs[] = {
 #if defined(HAVE_LIBSASL2)
    &authorization_sasl,
 #endif
-   &authorization_cert
+   &authorization_cert,
+   &authorization_cert256
 };
 
 static int num_funcs = sizeof(authorization_funcs) / sizeof(authorization_funcs[0]);

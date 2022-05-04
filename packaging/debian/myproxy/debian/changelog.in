@@ -1,3 +1,9 @@
+myproxy (6.2.14-1+gct.@distro@) @distro@; urgency=medium
+
+  * Support both SHA1 and SHA256
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 04 May 2022 12:23:04 +0200
+
 myproxy (6.2.13-1+gct.@distro@) @distro@; urgency=medium
 
   * Use existing socket during trust root retrieval

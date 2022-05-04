@@ -387,7 +387,7 @@ int ssl_creds_certificate_is_proxy(SSL_CREDENTIALS *creds);
  * no needed.
  */
 int ssl_sign(unsigned char *data, int length, SSL_CREDENTIALS *creds,
-             unsigned char **signature, int *signature_len);
+             unsigned char **signature, int *signature_len, const EVP_MD *md);
 
 /*
  * ssl_verify()
@@ -395,7 +395,7 @@ int ssl_sign(unsigned char *data, int length, SSL_CREDENTIALS *creds,
  * Verify signature
  */
 int ssl_verify(unsigned char *data, int length, SSL_CREDENTIALS *creds,
-               unsigned char *signature, int signature_len);
+               unsigned char *signature, int signature_len, const EVP_MD *md);
 
 /*
  * int ssl_verify_gsi_chain()
