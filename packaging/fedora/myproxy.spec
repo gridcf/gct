@@ -389,6 +389,7 @@ fi
 %changelog
 * Wed May 04 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.14-1
 - Support both SHA1 and SHA256
+- Fix double free bug
 
 * Sun Apr 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.13-1
 - Use existing socket during trust root retrieval

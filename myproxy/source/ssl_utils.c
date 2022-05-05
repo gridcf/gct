@@ -2069,6 +2069,7 @@ ssl_sign(unsigned char *data, int length,
        verror_put_string("Creating signature (EVP_SignFinal())");
        ssl_error_to_verror();
        free(*signature);
+       *signature = NULL;
        EVP_MD_CTX_destroy(ctx);
        return SSL_ERROR;
     }
