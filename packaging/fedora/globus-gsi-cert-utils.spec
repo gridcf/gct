@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	10.9
+Version:	10.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Sat May 07 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.10-1
+- Can't use non-existing or non-accessible files as source for random data
+
 * Mon Apr 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.9-1
 - Add missing comma
 

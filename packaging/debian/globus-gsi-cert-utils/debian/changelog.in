@@ -1,3 +1,10 @@
+globus-gsi-cert-utils (10.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * Can't use non-existing or non-accessible files as source for random
+    data
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 07 May 2022 06:31:59 +0200
+
 globus-gsi-cert-utils (10.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Add missing comma

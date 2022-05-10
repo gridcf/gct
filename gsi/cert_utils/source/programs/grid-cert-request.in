@@ -753,7 +753,7 @@ create_certs () {
 
     if test ! -z "${INTERACTIVE}" ; then
         "$openssl" req -new -keyout ${KEY_FILE} -out ${REQ_OUTPUT} \
-            -rand ${RAND_TEMP}:/var/adm/wtmp:/var/log/messages \
+            -rand ${RAND_TEMP} \
             -config ${used_config} ${NO_DES}
         RET=$?
         rm -f ${RAND_TEMP}
@@ -761,7 +761,7 @@ create_certs () {
         create_input_file "${COMMON_NAME}" "${used_config}" > ${REQ_INPUT}
 
         "$openssl" req -new -keyout ${KEY_FILE} \
-              -rand ${RAND_TEMP}:/var/adm/wtmp:/var/log/messages \
+              -rand ${RAND_TEMP} \
               -out ${REQ_OUTPUT} -config ${used_config} \
               ${NO_DES} < ${REQ_INPUT} 
         RET=$?
