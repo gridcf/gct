@@ -2216,7 +2216,8 @@ authenticate_client(myproxy_socket_attrs_t *attrs,
     authcnt = already_authenticated; /* if already authenticated, just
                                         do required methods */
     for (i = 0; i < AUTHORIZETYPE_NUMMETHODS; i++) {
-        if (i == AUTHORIZETYPE_CERT && allowed_to_renew != 1) {
+        if ((i == AUTHORIZETYPE_CERT || i == AUTHORIZETYPE_CERT256) &&
+            allowed_to_renew != 1) {
             status[i] = AUTHORIZEMETHOD_DISABLED;
         } else {
             status[i] = authorization_get_status(i, creds, client_name, config);
@@ -2243,7 +2244,7 @@ authenticate_client(myproxy_socket_attrs_t *attrs,
                     verror_put_string("authentication failed");
                     goto end;
                 }
-                if (i == AUTHORIZETYPE_CERT) {
+                if (i == AUTHORIZETYPE_CERT || i == AUTHORIZETYPE_CERT256) {
                     certauth = 1;
                 }
                 authcnt++;
@@ -2280,7 +2281,8 @@ authenticate_client(myproxy_socket_attrs_t *attrs,
                 verror_put_string("authentication failed");
                 goto end;
             }
-            if (auth_data.method == AUTHORIZETYPE_CERT) {
+            if (auth_data.method == AUTHORIZETYPE_CERT ||
+                auth_data.method == AUTHORIZETYPE_CERT256) {
                 certauth = 1;
             }
             authcnt++;

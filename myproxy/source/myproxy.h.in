@@ -8,7 +8,7 @@
 #ifndef __MYPROXY_H
 #define __MYPROXY_H
 
-#define MYPROXY_VERSION "MYPROXYv2"	/* protocol version string */
+#define MYPROXY_VERSION "MYPROXYv2"     /* protocol version string */
 
 /* compilation options */
 #if defined(HAVE_LIBPAM)
@@ -77,7 +77,7 @@ char *myproxy_version(int *major, int *minor, int *micro);
 int myproxy_check_version_ex(int major, int minor, int micro);
 #define myproxy_check_version() \
   myproxy_check_version_ex(MYPROXY_VERSION_MAJOR, MYPROXY_VERSION_MINOR, \
-			   MYPROXY_VERSION_MICRO)
+                           MYPROXY_VERSION_MICRO)
 
 #include "myproxy_constants.h"
 #include "myproxy_authorization.h"

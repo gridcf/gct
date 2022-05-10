@@ -40,8 +40,8 @@ typedef struct _ssl_proxy_restrictions SSL_PROXY_RESTRICTIONS;
 /*
  * Returns values for functions
  */
-#define SSL_SUCCESS		1
-#define SSL_ERROR		0
+#define SSL_SUCCESS             1
+#define SSL_ERROR               0
 
 /*
  * ssl_credentials_destroy()
@@ -68,8 +68,8 @@ int ssl_proxy_file_destroy(const char *path);
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_certificate_load_from_file(SSL_CREDENTIALS	*creds,
-				   const char		*path);
+int ssl_certificate_load_from_file(SSL_CREDENTIALS      *creds,
+                                   const char           *path);
 
 /*
  * ssl_certificate_push()
@@ -96,10 +96,10 @@ int ssl_certificate_push(SSL_CREDENTIALS  *creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_private_key_load_from_file(SSL_CREDENTIALS	*creds,
-				   const char		*path,
-				   const char		*pass_phrase,
-				   const char		*pass_phrase_prompt);
+int ssl_private_key_load_from_file(SSL_CREDENTIALS      *creds,
+                                   const char           *path,
+                                   const char           *pass_phrase,
+                                   const char           *pass_phrase_prompt);
 
 /*
  * ssl_private_key_store_to_file()
@@ -126,10 +126,10 @@ int ssl_private_key_is_encrypted(const char *path);
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_from_pem(SSL_CREDENTIALS	*creds,
-		       const unsigned char	*buffer,
-		       int			buffer_len,
-		       const char		*pass_phrase);
+int ssl_proxy_from_pem(SSL_CREDENTIALS          *creds,
+                       const unsigned char      *buffer,
+                       int                      buffer_len,
+                       const char               *pass_phrase);
 
 /*
  * ssl_proxy_load_from_file()
@@ -141,9 +141,9 @@ int ssl_proxy_from_pem(SSL_CREDENTIALS	*creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_load_from_file(SSL_CREDENTIALS		*creds,
-			     const char			*path,
-			     const char			*pass_phrase);
+int ssl_proxy_load_from_file(SSL_CREDENTIALS            *creds,
+                             const char                 *path,
+                             const char                 *pass_phrase);
 
 /*
  * ssl_proxy_to_pem()
@@ -153,10 +153,10 @@ int ssl_proxy_load_from_file(SSL_CREDENTIALS		*creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_to_pem(SSL_CREDENTIALS			*creds,
-		     unsigned char			**pbuffer,
-		     int				*pbuffer_len,
-		     const char			*pass_phrase);
+int ssl_proxy_to_pem(SSL_CREDENTIALS                    *creds,
+                     unsigned char                      **pbuffer,
+                     int                                *pbuffer_len,
+                     const char                         *pass_phrase);
 
 /*
  *
@@ -168,9 +168,9 @@ int ssl_proxy_to_pem(SSL_CREDENTIALS			*creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_store_to_file(SSL_CREDENTIALS		*creds,
-			    const char			*path,
-			    const char			*pass_phrase);
+int ssl_proxy_store_to_file(SSL_CREDENTIALS             *creds,
+                            const char                  *path,
+                            const char                  *pass_phrase);
 
 /*
  * ssl_new_credentials()
@@ -221,11 +221,11 @@ int ssl_certreq_pem_to_der(char *certreq,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_delegation_init(SSL_CREDENTIALS	**new_creds,
-			      unsigned char	**buffer,
-			      int		*buffer_length,
-			      int		requested_bits,
-			      void		(*callback)(int,int,void *));
+int ssl_proxy_delegation_init(SSL_CREDENTIALS   **new_creds,
+                              unsigned char     **buffer,
+                              int               *buffer_length,
+                              int               requested_bits,
+                              void              (*callback)(int,int,void *));
 
 
 /*
@@ -243,9 +243,9 @@ int ssl_proxy_delegation_init(SSL_CREDENTIALS	**new_creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_delegation_finalize(SSL_CREDENTIALS	*creds,
-				  unsigned char		*buffer,
-				  int			buffer_length);
+int ssl_proxy_delegation_finalize(SSL_CREDENTIALS       *creds,
+                                  unsigned char         *buffer,
+                                  int                   buffer_length);
 
 /*
  * ssl_proxy_delegation_sign()
@@ -273,12 +273,12 @@ int ssl_proxy_delegation_finalize(SSL_CREDENTIALS	*creds,
  *
  * Returns SSL_SUCCESS or SSL_ERROR, setting verror.
  */
-int ssl_proxy_delegation_sign(SSL_CREDENTIALS		*creds,
-			      SSL_PROXY_RESTRICTIONS	*restrictions,
-			      unsigned char		*request_buffer,
-			      int			request_buffer_length,
-			      unsigned char		**proxy_buffer,
-			      int			*proxy_buffer_length);
+int ssl_proxy_delegation_sign(SSL_CREDENTIALS           *creds,
+                              SSL_PROXY_RESTRICTIONS    *restrictions,
+                              unsigned char             *request_buffer,
+                              int                       request_buffer_length,
+                              unsigned char             **proxy_buffer,
+                              int                       *proxy_buffer_length);
 
 /*
  * ssl_free_buffer()
@@ -315,9 +315,9 @@ void ssl_proxy_restrictions_destroy(SSL_PROXY_RESTRICTIONS *restrictions);
  * Returns SSL_SUCCESS on success, SSL_ERROR otherwise setting verror.
  */
 int ssl_proxy_restrictions_set_lifetime(SSL_PROXY_RESTRICTIONS *restrictions,
-					const long seconds);
+                                        const long seconds);
 
-			   
+
 /*
  * ssl_proxy_restrictions_set_limited()
  *
@@ -327,9 +327,9 @@ int ssl_proxy_restrictions_set_lifetime(SSL_PROXY_RESTRICTIONS *restrictions,
  * Returns SSL_SUCCESS on success, SSL_ERROR otherwise setting verror.
  */
 int ssl_proxy_restrictions_set_limited(SSL_PROXY_RESTRICTIONS *restrictions,
-					const int limited);
+                                        const int limited);
 
-			   
+
 /* ssl_get_base_subject_file()
  *
  * Get user's subject name from certificate in the supplied filename
@@ -348,21 +348,21 @@ ssl_get_base_subject_file(const char *proxyfile, char **subject);
 int
 ssl_get_base_subject(SSL_CREDENTIALS *creds, char **subject);
 
-/* 
+/*
  * ssl_creds_to_buffer()
  *
- * Encode credentials from SSL_CREDENTIALS struct into buffer. Memory for the 
+ * Encode credentials from SSL_CREDENTIALS struct into buffer. Memory for the
  * buffer is obtained with malloc(3) and must be freed with free(3).
  *
  * Returns SSL_SUCCESS or SSL_ERROR
  */
-int ssl_creds_to_buffer(SSL_CREDENTIALS *chain, unsigned char **buffer, 
+int ssl_creds_to_buffer(SSL_CREDENTIALS *chain, unsigned char **buffer,
                         int *buffer_length);
 
 /*
  * ssl_creds_from_buffer()
  *
- * Decode credentals from buffer into SSL_CREDENTIALS struct. Caller should 
+ * Decode credentals from buffer into SSL_CREDENTIALS struct. Caller should
  * free *creds with ssl_credentials_destroy()
  *
  * Returns SSL_SUCCESS or SSL_ERROR
@@ -372,7 +372,7 @@ int ssl_creds_from_buffer(unsigned char *buffer, int buffer_length,
 
 /*
  * ssl_creds_certificate_is_proxy()
- * 
+ *
  * Returns 1 if certificate is proxy(RFC 3820, GT3, GT2) certificate.
  *         0 if certificate is not proxy.
  *        -1 on error.
@@ -381,13 +381,13 @@ int ssl_creds_certificate_is_proxy(SSL_CREDENTIALS *creds);
 
 /*
  * ssl_sign()
- * 
+ *
  * Sign data with private key passed in SSL_CREDENTIALS. Memory for the
  * signature is allocated with malloc(3) and must be freed with free(2) when
  * no needed.
  */
 int ssl_sign(unsigned char *data, int length, SSL_CREDENTIALS *creds,
-             unsigned char **signature, int *signature_len);
+             unsigned char **signature, int *signature_len, const EVP_MD *md);
 
 /*
  * ssl_verify()
@@ -395,7 +395,7 @@ int ssl_sign(unsigned char *data, int length, SSL_CREDENTIALS *creds,
  * Verify signature
  */
 int ssl_verify(unsigned char *data, int length, SSL_CREDENTIALS *creds,
-               unsigned char *signature, int signature_len);
+               unsigned char *signature, int signature_len, const EVP_MD *md);
 
 /*
  * int ssl_verify_gsi_chain()

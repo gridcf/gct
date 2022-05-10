@@ -2596,9 +2596,15 @@ int myproxy_handle_authorization(myproxy_socket_attrs_t *attrs,
         /* Server wants authorization. Try the possibilities. */
         if (client_request->authzcreds != NULL) { /* We have an AUTHZ cert. */
             d = authorization_create_response(
-                   server_response->authorization_data,
-                   AUTHORIZETYPE_CERT, client_request->authzcreds,
-                   strlen(client_request->authzcreds) + 1);
+                    server_response->authorization_data,
+                    AUTHORIZETYPE_CERT256, client_request->authzcreds,
+                    strlen(client_request->authzcreds) + 1);
+            if (d == NULL) {
+                d = authorization_create_response(
+                        server_response->authorization_data,
+                        AUTHORIZETYPE_CERT, client_request->authzcreds,
+                        strlen(client_request->authzcreds) + 1);
+            }
         } else {
             verror_put_string("No credentials for renewal authorization.");
         }

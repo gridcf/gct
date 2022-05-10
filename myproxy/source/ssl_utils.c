@@ -2051,7 +2051,7 @@ ssl_creds_certificate_is_proxy(SSL_CREDENTIALS *creds)
 int
 ssl_sign(unsigned char *data, int length,
          SSL_CREDENTIALS *creds,
-         unsigned char **signature, int *signature_len)
+         unsigned char **signature, int *signature_len, const EVP_MD *md)
 {
     EVP_MD_CTX *ctx = EVP_MD_CTX_create();
 
@@ -2062,13 +2062,14 @@ ssl_sign(unsigned char *data, int length,
         return SSL_ERROR;
     }
 
-    EVP_SignInit(ctx, EVP_sha256());
+    EVP_SignInit(ctx, md);
     EVP_SignUpdate(ctx, (void *)data, length);
     if (EVP_SignFinal(ctx, *signature, (unsigned int *)signature_len,
                       creds->private_key) != 1) {
        verror_put_string("Creating signature (EVP_SignFinal())");
        ssl_error_to_verror();
        free(*signature);
+       *signature = NULL;
        EVP_MD_CTX_destroy(ctx);
        return SSL_ERROR;
     }
@@ -2080,12 +2081,12 @@ ssl_sign(unsigned char *data, int length,
 int
 ssl_verify(unsigned char *data, int length,
            SSL_CREDENTIALS *creds,
-           unsigned char *signature, int signature_len)
+           unsigned char *signature, int signature_len, const EVP_MD *md)
 {
     EVP_MD_CTX *ctx = EVP_MD_CTX_create();
     EVP_PKEY *pubkey = NULL;
 
-    EVP_VerifyInit(ctx, EVP_sha256());
+    EVP_VerifyInit(ctx, md);
     EVP_VerifyUpdate(ctx, (void*) data, length);
     pubkey = X509_get_pubkey(creds->certificate);
     if (EVP_VerifyFinal(ctx, signature, signature_len, pubkey) != 1 ) {
