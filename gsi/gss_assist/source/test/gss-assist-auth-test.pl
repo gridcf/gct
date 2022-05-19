@@ -87,6 +87,7 @@ sub basic_func
    close(CLIENT);
    close(SERVER);
 
+   print $errors;
    ok(($errors eq "" && !$expect_failure) || $expect_failure, $test_name)
 }
 
