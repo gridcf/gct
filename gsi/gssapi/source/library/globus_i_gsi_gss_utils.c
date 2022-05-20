@@ -2365,6 +2365,13 @@ globus_i_gsi_gssapi_init_ssl_context(
     }
     #endif
 
+#if OPENSSL_VERSION_NUMBER >= 0x10101000L
+    /* When using TLS 1.3 OpenSSL sends two tickets after the handshake is
+     * complete. As this isn't useful here and can break the gsi authentication
+     * flow disable them entirely. */
+    SSL_CTX_set_num_tickets(cred_handle->ssl_context, 0);
+#endif
+
     SSL_CTX_set_cert_verify_callback(cred_handle->ssl_context,
                                      globus_gsi_callback_X509_verify_cert,
                                      NULL);

@@ -54,10 +54,6 @@ GSS_CALLCONV gss_init_sec_context(
     OM_uint32                           local_major_status;
     globus_result_t                     local_result;
     int                                 rc;
-#if defined(TLS1_3_VERSION)
-    unsigned char *                     tbuf = NULL;
-    size_t                              tlen = 0;
-#endif
     char                                cbuf[1];
     gss_OID                             actual_mech = GSS_C_NO_OID;
     globus_gsi_cert_utils_cert_type_t   cert_type;
@@ -368,69 +364,6 @@ GSS_CALLCONV gss_init_sec_context(
         }
 #       if LINK_WITH_INTERNAL_OPENSSL_API
         context->ret_flags |= GSS_C_TRANS_FLAG;
-#       endif
-
-        /*
-         * TLS v1.3 sends 2 session tokens after the handshake is completed.
-         * If we are using a token source that sends one SSL token at a time
-         * (e.g. the file based token source in globus-gss-assist)
-         * these session tokens will not be seen by BIO_do_handshake before
-         * the handshake is completed.
-         * We need to recieve them before continuing with the GSI proxy.
-         */
-
-#       if defined(TLS1_3_VERSION)
-        if (SSL_version(context->gss_ssl) >= TLS1_3_VERSION)
-        {
-            // Compute the length of the first token in the last input
-            // If it matches the total length we are using a token source
-            // that only provide single tokens.
-            tbuf = input_token->value;
-            tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
-            if (input_token->length == tlen + 5) {
-                context->gss_state = GSS_CON_ST_TOKEN1;
-                break;
-            }
-        }
-
-        goto flags;
-
-    case(GSS_CON_ST_TOKEN1):
-
-        tbuf = input_token->value;
-        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
-
-        if (input_token->length != tlen + 5)
-        {
-            major_status = GSS_S_UNAUTHORIZED;
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
-                (_GGSL("Failed identifying TLS session token 1")));
-            context->gss_state = GSS_CON_ST_DONE;
-            break;
-        }
-        context->gss_state = GSS_CON_ST_TOKEN2;
-        break;
-
-    case(GSS_CON_ST_TOKEN2):
-
-        tbuf = input_token->value;
-        tlen = ((unsigned int)tbuf[3] << 8) + (unsigned int)tbuf[4];
-
-        if (input_token->length != tlen + 5)
-        {
-            major_status = GSS_S_UNAUTHORIZED;
-            GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status,
-                GLOBUS_GSI_GSSAPI_ERROR_TOKEN_FAIL,
-                (_GGSL("Failed identifying TLS session token 2")));
-            context->gss_state = GSS_CON_ST_DONE;
-            break;
-        }
-
-    flags:
-
 #       endif
 
         /*
