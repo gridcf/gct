@@ -1,5 +1,0 @@
-debian/tmp/etc/gsissh/moduli
-debian/tmp/usr/bin/gsissh-keygen
-debian/tmp/usr/lib/gsissh/ssh-keysign
-debian/tmp/usr/share/man/man1/gsissh-keygen.1
-debian/tmp/usr/share/man/man8/gsissh-keysign.8
