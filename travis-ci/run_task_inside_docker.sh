@@ -13,6 +13,7 @@ case $(</etc/redhat-release) in
     CentOS\ Stream*\ 8*) OS=centos-stream-8;;
     CentOS\ Stream*\ 9*) OS=centos-stream-9;;
     Rocky\ Linux*\ 8*) OS=rockylinux8 ;;
+    Rocky\ Linux*\ 9*) OS=rockylinux9 ;;
     *) OS=unknown ;;
 esac
 
@@ -24,6 +25,11 @@ case $OS in
     rockylinux8)
               dnf -y install dnf-plugins-core
               dnf config-manager --set-enabled powertools
+              dnf -y install epel-release
+              ;;
+    rockylinux9)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled crb
               dnf -y install epel-release
               ;;
     centos-stream-8)
@@ -52,7 +58,8 @@ if [[ $OS != centos7 ]]; then
 
     # provides `cmp` used by `packaging/git-dirt-filter`
     packages+=(diffutils)
-    if [[ $OS == centos-stream-9 ]]; then
+    if [[ $OS == centos-stream-9 || \
+          $OS == rockylinux9 ]]; then
 
         # also install "zlib zlib-devel" because it's needed for `configure`ing
         # "gridftp/server/src"

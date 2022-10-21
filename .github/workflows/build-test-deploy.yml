@@ -22,6 +22,10 @@ jobs:
             components: 'myproxy,ssh'
           - image: 'quay.io/centos/centos:stream9'
             components: 'gram5'
+          - image: 'rockylinux:9'
+            components: 'myproxy,ssh'
+          - image: 'rockylinux:9'
+            components: 'gram5'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,7 +39,8 @@ jobs:
         run: travis-ci/setup_tasks.sh
         
       - name: build source tarballs and srpms
-        # Only run this step for the centos:centos7 case and for only one component selection
+        # Only run this step for the centos:centos7 case and for only one component selection,
+        # it still builds **all** source tarballs and SRPMs
         if: |
           contains(matrix.image , 'centos:centos7') &&
           contains(matrix.components , 'udt,myproxy,ssh')
@@ -46,9 +51,12 @@ jobs:
       
       # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
       - name: Establish ssh and upload source tarballs
-        # Only run this step for the centos:centos7 case
+        # Only run this step for the centos:centos7 case and
+        # for only one component selection and
+        # only when a tag was created
         if: |
           contains(matrix.image , 'centos:centos7') &&
+          contains(matrix.components , 'udt,myproxy,ssh') &&
           contains(github.ref , 'refs/tags/')
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -56,5 +64,5 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
-          ssh-add - <<< "${{ secrets.ID_GCTUPLOADER }}"
+          ssh-add - <<< "${{ secrets.ID_GRIDCF_UPLOADER }}"
           travis-ci/upload_source_tarballs.sh ${{ github.repository_owner }}
