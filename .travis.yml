@@ -5,21 +5,29 @@
 
 # Also, the following gram tests failed for all fedora versions:
 #   nonblocking-register-test.pl, register-callback-test.pl, register-test.pl
-arch:
+os: linux
+dist: focal
+language: ruby
+# As per [1] explicitly included builds inherit the first value in an array.
+# [1]: https://docs.travis-ci.com/user/multi-cpu-architectures#example-multi-architecture-build-matrix
+# Hence the desired arch needs to be specified for each job additionally
+# below.
+#arch:
   # Disabled for now
   #- amd64
   # Handled via partner queue, uncharged
-  - ppc64le
+  #- ppc64le
   #- arm64
 jobs:
   include:
 
     - &run_tests
       # Template; subsequent uses modify 'env'
+      arch:
+        - ppc64le
       env:
         - IMAGE=centos:centos7 TASK=tests COMPONENTS=udt,myproxy,ssh
       stage: test
-      sudo: required
       services:
         - docker
 
@@ -30,6 +38,19 @@ jobs:
 
       script:
       - travis-ci/setup_tasks.sh
+
     - <<: *run_tests
+      arch:
+        - arm64
+
+    - <<: *run_tests
+      arch:
+        - ppc64le
+      env:
+        - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
+
+    - <<: *run_tests
+      arch:
+        - arm64
       env:
         - IMAGE=centos:centos7 TASK=tests COMPONENTS=gram5
