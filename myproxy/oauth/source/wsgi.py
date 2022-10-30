@@ -1,4 +1,4 @@
-#! /usr/bin/python2
+#! /usr/bin/python3
 #
 # Copyright 2010-2011 University of Chicago
 #
@@ -47,8 +47,8 @@ class SecureWSGIServer(WSGIServer):
         try:
             request.shutdown(socket.SHUT_RDWR) 
             request.close() 
-        except Exception, e: 
-            print "Exception closing request" + str(e) 
+        except Exception as e:
+            print("Exception closing request" + str(e))
 
 class SecureWSGIRequestHandler( WSGIRequestHandler):
     """An SSL-aware WSGIRequestHandler, which sets HTTPS environment variables.
@@ -92,7 +92,7 @@ if __name__ == "__main__":
             log_level_str = param
             log_level = getattr(logging, log_level_str)
         elif opt == '-h':
-            print "Usage %s [-c CERT-FILE] [-k KEYFILE] [-u USER] [-p PORT] | [-h]\n" %(sys.argv[0])
+            print("Usage %s [-c CERT-FILE] [-k KEYFILE] [-u USER] [-p PORT] | [-h]\n" %(sys.argv[0]))
             sys.exit(0)
     if certfile is None:
         certfile = os.environ.get("X509_USER_CERT")
@@ -107,10 +107,10 @@ if __name__ == "__main__":
     if background:
         pid = os.fork()
         if pid < 0:
-            print >>sys.stderr, "Error forking background process"
+            print("Error forking background process", file=sys.stderr)
             sys.exit(1)
         elif pid > 0:
-            print "Running in background (%d)" % (pid)
+            print("Running in background (%d)" % (pid))
             if pidfile is not None:
                 pid_fd = file(pidfile, "w")
                 try:
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     if pidfile is not None:
         f = file(pidfile, "w")
         try:
-            print >>f, str(os.getpid())
+            print(str(os.getpid()), file=f)
         finally:
             f.close()
     if os.getuid() == 0 and user is not None:

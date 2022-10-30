@@ -18,18 +18,19 @@ import socket
 import cgi
 import random
 import base64
-import httplib
+import http.client
 import json
 import time
 import oauth2 as oauth
-import Crypto.PublicKey.RSA
+import Cryptodome.PublicKey.RSA
 import myproxy
 import pkgutil
 import os
 import sys
 from myproxyoauth import application
 from myproxyoauth.database import db_session, Admin, Client, Transaction
-from urllib import quote
+from urllib.parse import quote
+from functools import reduce
 
 def bad_request(start_response):
     status = "400 Bad Request"
@@ -127,8 +128,8 @@ def initiate(environ, start_response):
         start_response(status, headers)
         return "Uregistered client"
 
-    if hasattr(Crypto.PublicKey.RSA, 'importKey'):
-        key = Crypto.PublicKey.RSA.importKey(client.oauth_client_pubkey)
+    if hasattr(Cryptodome.PublicKey.RSA, 'importKey'):
+        key = Cryptodome.PublicKey.RSA.importKey(client.oauth_client_pubkey)
     else:
         import M2Crypto.RSA
         import M2Crypto.BIO
@@ -146,16 +147,16 @@ def initiate(environ, start_response):
                 return struct.unpack(fmt, data[offs:offs+unpack_len])
 
             def decode(n):
-                len = reduce(lambda x,y: long(x*256+y),
+                len = reduce(lambda x,y: int(x*256+y),
                         unpack_from("4B", n, 0))
-                return reduce(lambda x,y: long(x*256+y),
+                return reduce(lambda x,y: int(x*256+y),
                         unpack_from(str(len)+"B", n, 4))
             keytuple = (decode(k.n), decode(k.e))
         except:
             application.logger.error(str(sys.exc_info()))
             raise
 
-        key = Crypto.PublicKey.RSA.construct(keytuple)
+        key = Cryptodome.PublicKey.RSA.construct(keytuple)
 
     method = environ['REQUEST_METHOD']
     url = url_reconstruct(environ)

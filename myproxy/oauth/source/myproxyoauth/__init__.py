@@ -50,7 +50,7 @@ class MyProxyOAuth(object):
             try:
                 try:
                     return self.routes[route](environ, start_response)
-                except Exception, e:
+                except Exception as e:
                     headers = [("Content-Type", "text/plain")]
                     response = "500 Internal Server Error"
                     return str(e)
@@ -86,7 +86,7 @@ class MyProxyOAuth(object):
                     headers = [("Content-Type", content_type)]
                     start_response(status, headers)
                     return data
-            except Exception, e:
+            except Exception as e:
                 headers = [("Content-Type", "text/plain")]
                 response = "500 Internal Server Error"
                 return str(e)

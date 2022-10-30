@@ -39,13 +39,13 @@ def deserialize_response(msg):
     lines = msg.split('\n')
 
     # get response value
-    responselines = filter( lambda x: x.startswith('RESPONSE'), lines)
+    responselines = [x for x in lines if x.startswith('RESPONSE')]
     responseline = responselines[0]
     response = int(responseline.split('=')[1])
 
     # get error text
     errortext = ""
-    errorlines = filter( lambda x: x.startswith('ERROR'), lines)
+    errorlines = [x for x in lines if x.startswith('ERROR')]
     for e in errorlines:
         etext = e.split('=')[1]
         errortext += etext
@@ -79,7 +79,7 @@ def myproxy_logon(certreq_pem, lifetime, username, passphrase, myproxy_server):
     # disable for compatibility with myproxy server (er, globus)
     # globus doesn't handle this case, apparently, and instead
     # chokes in proxy delegation code
-    context.set_options(0x00000800L)
+    context.set_options(0x00000800)
 
     # connect to myproxy server
     conn = SSL.Connection(context,socket.socket())

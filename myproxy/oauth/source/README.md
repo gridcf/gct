@@ -40,8 +40,8 @@ also need libapache2-mod-wsgi and the apache2 server with the ssl module
 enabled and the default-ssl site enabled.
 
 Prerequisite packages on RedHat-based systems
-* pyOpenSSL
-* python-crypto
+* python3-pyOpenSSL
+* python3-pycryptodomex
 
 If you want to use this with apache2 instead of the standalone service, you'll
-also need httpd, mod\_wsgi, and mod\_ssl
+also need httpd, python3-mod\_wsgi, and mod\_ssl
