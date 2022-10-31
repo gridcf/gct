@@ -1,6 +1,0 @@
-#! /bin/sh
-if [ "$(id -u)" = 0 ]; then
-    idarg="-i $(id -u myproxyoauth)"
-fi
-export PYTHONPATH="@PYTHONPATH@"
-exec /usr/bin/python /usr/share/myproxy-oauth/myproxy-oauth-setup "$@" ${idarg}

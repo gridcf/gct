@@ -89,8 +89,6 @@ elif [[ $TASK == *rpms ]]; then
     packages+=('perl(DBI)')
     # for globus-scheduler-event-generator:
     packages+=(redhat-lsb-core)
-    # for myproxy-oauth
-    packages+=(m2crypto mod_ssl mod_wsgi pyOpenSSL python-crypto)
     # for gsi-openssh
     packages+=(pam libedit libedit-devel)
 fi

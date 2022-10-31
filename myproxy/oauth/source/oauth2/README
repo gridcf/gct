@@ -1,4 +1,0 @@
-oauth2/__init__.py is downloaded from
-https://github.com/simplegeo/python-oauth2/blob/master/oauth2/__init__.py
-and fixed to be used by the MyProxy OAuth server. All modifications are
-commented in __init__.py.

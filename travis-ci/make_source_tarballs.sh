@@ -45,9 +45,6 @@ package_version=$(grep '^PACKAGE_VERSION =' Makefile | cut -d ' ' -f 3)
 time make dist && mv "${package_name}-${package_version}.tar.gz" package-output/
 
 echo '================================================================================'
-pushd "$root/myproxy/oauth/source"
-time python setup.py sdist
-mv dist/*.tar.gz "$root/package-output/"
 
 err=0
 pushd "$root/package-output/"
@@ -70,5 +67,4 @@ if [[ $err -ne 0 ]]; then
     exit $err
 fi
 
-popd
 
