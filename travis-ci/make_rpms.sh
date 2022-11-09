@@ -16,6 +16,14 @@ usage()
 
 umask 022
 
+case $(</etc/redhat-release) in
+    CentOS*\ 7*) OS=centos7 ;;
+    CentOS\ Stream*\ 8*) OS=centos-stream-8;;
+    CentOS\ Stream*\ 9*) OS=centos-stream-9;;
+    Rocky\ Linux*\ 8*) OS=rockylinux8 ;;
+    Rocky\ Linux*\ 9*) OS=rockylinux9 ;;
+    *) OS=unknown ;;
+esac
 
 root=$(git rev-parse --show-toplevel)
 packagingdir=$root/packaging
@@ -81,8 +89,17 @@ cat <<EOF >> "$topdir/.rpmmacros"
 %_excludedocs 0
 EOF
 
+# Limit package list according to OS possibilities
+all_packages=( $(grep -v '^#' $fedoradir/ORDERING | grep '[^[:space:]]') )
 
-packages=( $(grep -v '^#' $fedoradir/ORDERING | grep '[^[:space:]]') )
+if [[ $OS != *9 ]]; then
+
+    packages=( ${all_packages[@]} )
+else
+    # Not building globus-xio-udt-driver on *9
+    packages_9=( ${all_packages[@]/globus-xio-udt-driver/} )
+    packages=( ${packages_9[@]} )
+fi
 
 cp -f "$tarballdir"/*.tar.gz "$topdir"/SOURCES
 

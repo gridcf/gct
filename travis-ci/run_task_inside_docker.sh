@@ -9,10 +9,36 @@ COMPONENTS=${3-}
 set -e
 
 case $(</etc/redhat-release) in
-    CentOS*\ 7*) OS=centos7 ;;
-    CentOS\ Stream*\ 8*) OS=centos-stream-8;;
-    CentOS\ Stream*\ 9*) OS=centos-stream-9;;
-    Rocky\ Linux*\ 8*) OS=rockylinux8 ;;
+    CentOS*\ 7*)
+
+        OS=centos7
+        release_ver=el7
+        ;;
+
+    CentOS\ Stream*\ 8*)
+
+        OS=centos-stream-8
+        release_ver=el8
+        ;;
+
+    CentOS\ Stream*\ 9*)
+
+        OS=centos-stream-9
+        release_ver=el9
+        ;;
+
+    Rocky\ Linux*\ 8*)
+
+        OS=rockylinux8
+        release_ver=el8
+        ;;
+
+    Rocky\ Linux*\ 9*)
+
+        OS=rockylinux9
+        release_ver=el9
+        ;;
+
     *) OS=unknown ;;
 esac
 
@@ -24,6 +50,11 @@ case $OS in
     rockylinux8)
               dnf -y install dnf-plugins-core
               dnf config-manager --set-enabled powertools
+              dnf -y install epel-release
+              ;;
+    rockylinux9)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled crb
               dnf -y install epel-release
               ;;
     centos-stream-8)
@@ -48,11 +79,11 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
           'perl(URI)' file sudo bison patch curl \
           pam pam-devel libedit libedit-devel)
 
-if [[ $OS != centos7 ]]; then
+if [[ $OS != *7 ]]; then
 
     # provides `cmp` used by `packaging/git-dirt-filter`
     packages+=(diffutils)
-    if [[ $OS == centos-stream-9 ]]; then
+    if [[ $OS == *9 ]]; then
 
         # also install "zlib zlib-devel" because it's needed for `configure`ing
         # "gridftp/server/src"
@@ -78,22 +109,42 @@ elif [[ $TASK == *rpms ]]; then
     # for globus-gridftp-server:
     packages+=(fakeroot)
     # for globus-xio-udt-driver:
-    packages+=(udt udt-devel glib2-devel libnice-devel gettext-devel libffi-devel)
+    if [[ $OS == *9 ]]; then
+
+        # libnice-devel is not available for CentOS Stream 9 / Rocky Linux 9.
+        #
+        # make_rpms.sh was also updated in this regard.
+        :
+    else
+        packages+=(udt udt-devel glib2-devel libnice-devel gettext-devel libffi-devel)
+    fi
     # for globus-gram-job-manager:
     packages+=(libxml2-devel)
     # for myproxy:
     packages+=(pam-devel voms-devel cyrus-sasl-devel openldap-devel voms-clients initscripts)
     # for globus-net-manager:
-    packages+=(python-devel)
+    if [[ $OS == *7 ]]; then
+
+        packages+=(python-devel)
+    else
+        packages+=(python3-devel)
+    fi
     # for globus-gram-audit:
     packages+=('perl(DBI)')
     # for globus-scheduler-event-generator:
-    packages+=(redhat-lsb-core)
+    if [[ $OS == *9 ]]; then
+
+        # redhat-lsb-core is not available for CentOS Stream 9 / Rocky Linux 9.
+        # But the default is also to not use LSB, so can be ignored.
+        :
+    else
+        packages+=(redhat-lsb-core)
+    fi
     # for gsi-openssh
     packages+=(pam libedit libedit-devel)
 fi
 
-if [[ $OS == centos7 ]]; then
+if [[ $OS == *7 ]]; then
 	yum -y -d1 install "${packages[@]}"
 else
 	dnf --allowerasing -y -d1 install "${packages[@]}"
@@ -153,7 +204,8 @@ case $TASK in
     srpms)
         make_tarballs
         echo '==========================================================================================='
-        make_srpms .gct
+        # NOTICE: No dashes in the dist string!
+        make_srpms .gct.$release_ver
 
         # copy all the files we want to deploy into one directory b/c
         # can't specify multiple directories in travis
@@ -165,14 +217,9 @@ case $TASK in
     rpms)
         make_tarballs
         echo '==========================================================================================='
-        if [[ $OS == centos6 ]]; then
-            # doesn't support rpmbuild --nocheck
-            nocheck=
-        else
-            # -C = skip unit tests
-            nocheck=-C
-        fi
-        make_rpms $nocheck .gct.$OS
+        # NOTICE: No dashes in the dist string!
+        # -C = skip unit tests
+        make_rpms -C .gct.$release_ver
 
         # copy all the files we want to deploy into one directory b/c
         # can't specify multiple directories in travis
@@ -182,12 +229,10 @@ case $TASK in
         # raise an error).
         # `overwrite: true` in .travis.yml ought to fix that, but doesn't
         # appear to.
-        if [[ $OS == centos6 ]]; then
-            cp -f packaging/rpmbuild/SRPMS/*.rpm package-output/*.tar.gz  \
-                travis_deploy/
-        fi
+        cp -f packaging/rpmbuild/SRPMS/*.rpm package-output/*.tar.gz  \
+              travis_deploy/
         cp -f packaging/rpmbuild/RPMS/noarch/*.rpm packaging/rpmbuild/RPMS/x86_64/*.rpm  \
-            travis_deploy/
+              travis_deploy/
         ;;
     *)
         echo "*** INVALID TASK '$TASK' ***"
