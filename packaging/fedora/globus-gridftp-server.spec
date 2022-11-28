@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.24
+Version:	13.25
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -223,6 +223,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Nov 28 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.25-1
+- Fix buffer overflow in test
+
 * Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.24-1
 - Fix some compiler warnings
 - Fix unbalanced mutex lock/unlock
