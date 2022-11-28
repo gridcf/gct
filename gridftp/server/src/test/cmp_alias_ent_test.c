@@ -34,7 +34,7 @@ int main()
         { .alias = "hell", .alias_len = 4 },
         { .alias = (char[]){(char)-1, (char)0 }, .alias_len = 1 },
         { .alias = "hell?", .alias_len = 5 },
-        { .alias = "hell[o]", .alias_len = 5 }
+        { .alias = "hell[o]", .alias_len = 7 }
     };
     test_t tests[] = 
     {
