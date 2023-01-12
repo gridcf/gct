@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
+#ifndef FIPS_MODE_REPLACEMENT_H
+#define FIPS_MODE_REPLACEMENT_H
+
 #if OPENSSL_VERSION_NUMBER >= 0x30000000L
 /*
- * OpenSSL version 3.0 and up no longer has FIPS_mode().
- * Making a replacement function is not feasible since FIPS would need to be
- * initialized differently in any case.
- * See https://www.openssl.org/docs/manmaster/man7/fips_module.html for details
+ * OpenSSL versions 3.0 and up no longer have FIPS_mode(). To support both
+ * OpenSSL 3.x and older versions for other OSes, we use the replacement
+ * function as shipped by Fedora/RHEL/CentOS in their OpenSSL 3.x packages.
  */
-# define FIPS_mode() 0
-#endif
+# ifndef FIPS_mode
+#  define FIPS_mode() EVP_default_properties_is_fips_enabled(NULL)
+# endif /* FIPS_mode */
+#endif /* openssl */
+
+#endif /* FIPS_MODE_REPLACEMENT_H */
