@@ -397,8 +397,6 @@ globus_gsi_cred_get_lifetime(
     globus_gsi_cred_handle_t            cred_handle,
     time_t *                            lifetime)
 {
-    time_t                              time_now;
-    ASN1_UTCTIME *                      asn1_time;
     globus_result_t                     result;
 
     GLOBUS_I_GSI_CRED_DEBUG_ENTER;
@@ -413,12 +411,7 @@ globus_gsi_cred_get_lifetime(
         goto error_exit;
     }
 
-    asn1_time = ASN1_UTCTIME_new();
-    X509_gmtime_adj(asn1_time, 0);
-    globus_gsi_cert_utils_make_time(asn1_time, &time_now);
-
-    *lifetime = cred_handle->goodtill - time_now;
-    ASN1_UTCTIME_free(asn1_time);
+    *lifetime = cred_handle->goodtill - time(NULL);
 
     result = GLOBUS_SUCCESS;
 
