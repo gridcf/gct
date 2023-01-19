@@ -1,3 +1,9 @@
+globus-gsi-credential (8.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Greatly simplify getting current time
+
+ -- Mischa Sallé <msalle@nikhef.nl>  Thu, 19 Jan 2023 14:55:00 +0100
+
 globus-gsi-credential (8.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes
