@@ -130,7 +130,7 @@ globus_module_descriptor_t              globus_i_gsi_cert_utils_module;
 
 globus_result_t
 globus_gsi_cert_utils_make_time(
-    const ASN1_UTCTIME *                ctm,
+    const ASN1_TIME *                   ctm,
     time_t *                            newtime);
 
 globus_result_t

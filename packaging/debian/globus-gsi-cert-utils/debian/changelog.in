@@ -1,3 +1,9 @@
+globus-gsi-cert-utils (10.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix parsing of ASN1 timestamps
+
+ -- Mischa Sallé <msalle@nikhef.nl>  Thu, 19 Jan 2023 14:58:23 +0100
+
 globus-gsi-cert-utils (10.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Can't use non-existing or non-accessible files as source for random

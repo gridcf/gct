@@ -171,109 +171,42 @@ globus_l_gsi_cert_utils_deactivate(void)
 #endif
 
 /**
- * @brief Convert ASN1_UTCTIME to time_t
+ * @brief Convert ASN1_TIME to time_t
  * @ingroup globus_gsi_cert_utils
  * @details
- * Convert a ASN1_UTCTIME structure to a time_t
+ * Convert a ASN1_TIME structure to a time_t
  *
  * @param ctm
- *        The ASN1_UTCTIME to convert
+ *        The ASN1_TIME to convert
  * @param newtime
  *        The converted time
  *
  * @return
- *        GLOBUS_SUCCESS or an error captured in a globus_result_t
+ *        GLOBUS_SUCCESS or GLOBUS_FAILURE on error
  */
 globus_result_t
 globus_gsi_cert_utils_make_time(
-    const ASN1_UTCTIME *                ctm,
+    const ASN1_TIME *                   ctm,
     time_t *                            newtime)
 {
-    char *                              str;
-    time_t                              offset;
-    char                                buff1[24];
-    char *                              p;
-    int                                 i;
-    struct tm                           tm;
+    int                                 pday, psec;
     globus_result_t                     result;
     static char *                       _function_name_ =
         "globus_gsi_cert_utils_make_time";
 
     GLOBUS_I_GSI_CERT_UTILS_DEBUG_ENTER;
 
-    p = buff1;
-    i = ctm->length;
-    str = (char *)ctm->data;
-    if ((i < 11) || (i > 17))
+    if (ASN1_TIME_diff(&pday, &psec, NULL, ctm))
+    {
+        *newtime = time(NULL)+pday*86400L+psec;
+        result = GLOBUS_SUCCESS;
+    }
+    else
     {
         *newtime = 0;
-    }
-    memcpy(p,str,10);
-    p += 10;
-    str += 10;
-
-    if ((*str == 'Z') || (*str == '-') || (*str == '+'))
-    {
-        *(p++)='0'; *(p++)='0';
-    }
-    else
-    {
-        *(p++)= *(str++); *(p++)= *(str++);
-    }
-    *(p++)='Z';
-    *(p++)='\0';
-
-    if (*str == 'Z')
-    {
-        offset=0;
-    }
-    else
-    {
-        if ((*str != '+') && (str[5] != '-'))
-        {
-            *newtime = 0;
-        }
-        offset=((str[1]-'0')*10+(str[2]-'0'))*60;
-        offset+=(str[3]-'0')*10+(str[4]-'0');
-        if (*str == '-')
-        {
-            offset=-offset;
-        }
+        result = GLOBUS_FAILURE;
     }
 
-    tm.tm_isdst = 0;
-    tm.tm_year = (buff1[0]-'0')*10+(buff1[1]-'0');
-
-    if (tm.tm_year < 70)
-    {
-        tm.tm_year+=100;
-    }
-        
-    tm.tm_mon   = (buff1[2]-'0')*10+(buff1[3]-'0')-1;
-    tm.tm_mday  = (buff1[4]-'0')*10+(buff1[5]-'0');
-    tm.tm_hour  = (buff1[6]-'0')*10+(buff1[7]-'0');
-    tm.tm_min   = (buff1[8]-'0')*10+(buff1[9]-'0');
-    tm.tm_sec   = (buff1[10]-'0')*10+(buff1[11]-'0');
-
-    /*
-     * mktime assumes local time, so subtract off
-     * timezone, which is seconds off of GMT. first
-     * we need to initialize it with tzset() however.
-     */
-
-    tzset();
-
-#if defined(HAVE_TIME_T_TIMEZONE)
-    *newtime = (mktime(&tm) + offset*60*60 - timezone);
-#elif defined(HAVE_TIME_T__TIMEZONE)
-    *newtime = (mktime(&tm) + offset*60*60 - _timezone);
-#elif defined(HAVE_TIMEGM)
-    *newtime = (timegm(&tm) + offset*60*60);
-#else
-    *newtime = (mktime(&tm) + offset*60*60);
-#endif
-
-    result = GLOBUS_SUCCESS;
     GLOBUS_I_GSI_CERT_UTILS_DEBUG_EXIT;
 
     return result;

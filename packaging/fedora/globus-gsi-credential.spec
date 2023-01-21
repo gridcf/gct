@@ -3,7 +3,7 @@
 Name:		globus-gsi-credential
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	8.3
+Version:	8.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Credential Library
 
@@ -137,6 +137,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jan 19 2023 Mischa Salle <msalle@nikhef.nl> - 8.4-1
+- Greatly simplify getting current time
+
 * Fri Aug 20 2021 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.3-1
 - Typo fixes
 
