@@ -153,7 +153,7 @@ AC_ARG_WITH(sasl2,
 		   AC_MSG_CHECKING(that sasl.h matches libsasl2)
 		   AC_TRY_RUN([
 #include <sasl.h>
-int main() { if (SASL_VERSION_MAJOR != 2) exit(1); else exit(0); }
+int main(void) { if (SASL_VERSION_MAJOR != 2) return 1; else return 0; }
 		      ],
 		      [AC_MSG_RESULT([yes])],
 		      [
@@ -222,7 +222,7 @@ AC_ARG_WITH(openldap,
 		  AC_MSG_CHECKING(for OpenLDAP v2.3 or later)
           AC_TRY_RUN([
 #include <ldap.h>
-int main() { if (LDAP_VENDOR_VERSION < 20300) exit(1); else exit(0); }
+int main(void) { if (LDAP_VENDOR_VERSION < 20300) return 1; else return 0; }
 		      ],
 		      [AC_MSG_RESULT([yes])],
 		      [
