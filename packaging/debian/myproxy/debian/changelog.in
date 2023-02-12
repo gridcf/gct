@@ -1,3 +1,9 @@
+myproxy (6.2.15-1+gct.@distro@) @distro@; urgency=medium
+
+  * Avoid calling the undeclared exit function in configure
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 12 Feb 2023 18:26:19 +0100
+
 myproxy (6.2.14-1+gct.@distro@) @distro@; urgency=medium
 
   * Support both SHA1 and SHA256

@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.14
+Version:        6.2.15
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sun Feb 12 2023 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.15-1
+- Avoid calling the undeclared exit function in configure
+
 * Wed May 04 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.14-1
 - Support both SHA1 and SHA256
 - Fix double free bug
