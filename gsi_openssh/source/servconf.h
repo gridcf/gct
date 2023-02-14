@@ -249,6 +249,7 @@ typedef struct {
 	int	expose_userauth_info;
 	u_int64_t timing_secret;
 	char   *sk_provider;
+	int	required_rsa_size;	/* minimum size of RSA keys */
 }       ServerOptions;
 
 /* Information about the incoming connection as used by Match */

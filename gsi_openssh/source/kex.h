@@ -116,6 +116,8 @@ enum kex_exchange {
 
 #define KEX_INIT_SENT	0x0001
 #define KEX_INITIAL	0x0002
+#define KEX_RSA_SHA2_256_SUPPORTED      0x0008 /* only set in server for now */
+#define KEX_RSA_SHA2_512_SUPPORTED      0x0010 /* only set in server for now */
 
 struct sshenc {
 	char	*name;

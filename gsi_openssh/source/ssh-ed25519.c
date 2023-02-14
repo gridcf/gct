@@ -24,6 +24,9 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <openssl/crypto.h>
+
+#include "fips_mode_replacement.h"
 
 #include "log.h"
 #include "sshbuf.h"
@@ -52,6 +55,10 @@ ssh_ed25519_sign(const struct sshkey *key, u_char **sigp, size_t *lenp,
 	    key->ed25519_sk == NULL ||
 	    datalen >= INT_MAX - crypto_sign_ed25519_BYTES)
 		return SSH_ERR_INVALID_ARGUMENT;
+	if (FIPS_mode()) {
+	    logit_f("Ed25519 keys are not allowed in FIPS mode");
+	    return SSH_ERR_INVALID_ARGUMENT;
+	}
 	smlen = slen = datalen + crypto_sign_ed25519_BYTES;
 	if ((sig = malloc(slen)) == NULL)
 		return SSH_ERR_ALLOC_FAIL;
@@ -108,6 +115,10 @@ ssh_ed25519_verify(const struct sshkey *key,
 	    datalen >= INT_MAX - crypto_sign_ed25519_BYTES ||
 	    signature == NULL || signaturelen == 0)
 		return SSH_ERR_INVALID_ARGUMENT;
+	if (FIPS_mode()) {
+	    logit_f("Ed25519 keys are not allowed in FIPS mode");
+	    return SSH_ERR_INVALID_ARGUMENT;
+	}
 
 	if ((b = sshbuf_from(signature, signaturelen)) == NULL)
 		return SSH_ERR_ALLOC_FAIL;

@@ -13,8 +13,12 @@ r=$?
 grep -vi 'hostkey' $OBJ/sshd_proxy > $OBJ/sshd_proxy.orig
 echo "HostKeyAgent $SSH_AUTH_SOCK" >> $OBJ/sshd_proxy.orig
 
+PUBKEY_ACCEPTED_ALGOS=`$SSH -G "example.com" | \
+    grep -i "PubkeyAcceptedAlgorithms" | cut -d ' ' -f2- | tr "," "|"`
+SSH_ACCEPTED_KEYTYPES=`echo "$SSH_KEYTYPES" | egrep "$PUBKEY_ACCEPTED_ALGOS"`
+
 trace "load hostkeys"
-for k in $SSH_KEYTYPES ; do
+for k in $SSH_ACCEPTED_KEYTYPES ; do
 	${SSHKEYGEN} -qt $k -f $OBJ/agent-key.$k -N '' || fatal "ssh-keygen $k"
 	(
 		printf 'localhost-with-alias,127.0.0.1,::1 '
@@ -31,7 +35,9 @@ cp $OBJ/known_hosts.orig $OBJ/known_hosts
 unset SSH_AUTH_SOCK
 
 for ps in yes; do
-	for k in $SSH_KEYTYPES ; do
+	for k in $SSH_ACCEPTED_KEYTYPES ; do
+		[ "$k" == "ssh-rsa" ] && continue
+		[ "$k" == "ssh-dss" ] && continue
 		verbose "key type $k privsep=$ps"
 		cp $OBJ/sshd_proxy.orig $OBJ/sshd_proxy
 		echo "UsePrivilegeSeparation $ps" >> $OBJ/sshd_proxy

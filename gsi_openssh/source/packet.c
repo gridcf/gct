@@ -2047,6 +2047,7 @@ ssh_packet_write_poll(struct ssh *ssh)
 			return SSH_ERR_CONN_CLOSED;
 		if ((r = sshbuf_consume(state->output, len)) != 0)
 			return r;
+		ssh->stdin_bytes += len;
 	}
 	return 0;
 }

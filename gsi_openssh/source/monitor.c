@@ -386,8 +386,15 @@ monitor_child_preauth(struct ssh *ssh, struct monitor *pmonitor)
 		if (ent->flags & (MON_AUTHDECIDE|MON_ALOG)) {
 			auth_log(ssh, authenticated, partial,
 			    auth_method, auth_submethod);
-			if (!partial && !authenticated)
+			if (!partial && !authenticated) {
+#ifdef GSSAPI
+				/* If gssapi-with-mic failed, MONITOR_REQ_GSSCHECKMIC is disabled.
+				 * We have to reenable it to try again for gssapi-keyex */
+				if (strcmp(auth_method, "gssapi-with-mic") == 0 && options.gss_keyex)
+					monitor_permit(mon_dispatch, MONITOR_REQ_GSSCHECKMIC, 1);
+#endif
 				authctxt->failures++;
+			}
 			if (authenticated || partial) {
 				auth2_update_session_info(authctxt,
 				    auth_method, auth_submethod);

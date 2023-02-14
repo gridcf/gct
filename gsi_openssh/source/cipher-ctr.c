@@ -179,8 +179,7 @@ evp_aes_128_ctr(void)
 	aes_ctr.do_cipher = ssh_aes_ctr;
 #ifndef SSH_OLD_EVP
 	aes_ctr.flags = EVP_CIPH_CBC_MODE | EVP_CIPH_VARIABLE_LENGTH |
-	    EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CUSTOM_IV |
-	    EVP_CIPH_FLAG_FIPS;
+	    EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_CUSTOM_IV;
 #endif
 	return (&aes_ctr);
 }

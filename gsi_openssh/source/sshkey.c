@@ -253,6 +253,29 @@ sshkey_ecdsa_nid_from_name(const char *name)
 	return -1;
 }
 
+int
+sshkey_match_keyname_to_sigalgs(const char *keyname, const char *sigalgs)
+{
+	int ktype;
+
+	if (sigalgs == NULL || *sigalgs == '\0' ||
+	    (ktype = sshkey_type_from_name(keyname)) == KEY_UNSPEC)
+		return 0;
+	else if (ktype == KEY_RSA) {
+		return match_pattern_list("ssh-rsa", sigalgs, 0) == 1 ||
+		    match_pattern_list("rsa-sha2-256", sigalgs, 0) == 1 ||
+		    match_pattern_list("rsa-sha2-512", sigalgs, 0) == 1;
+	} else if (ktype == KEY_RSA_CERT) {
+		return match_pattern_list("ssh-rsa-cert-v01@openssh.com",
+		    sigalgs, 0) == 1 ||
+		    match_pattern_list("rsa-sha2-256-cert-v01@openssh.com",
+		    sigalgs, 0) == 1 ||
+		    match_pattern_list("rsa-sha2-512-cert-v01@openssh.com",
+		    sigalgs, 0) == 1;
+	} else
+		return match_pattern_list(keyname, sigalgs, 0) == 1;
+}
+
 char *
 sshkey_alg_list(int certs_only, int plain_only, int include_sigonly, char sep)
 {
@@ -263,6 +286,18 @@ sshkey_alg_list(int certs_only, int plain_only, int include_sigonly, char sep)
 	for (kt = keytypes; kt->type != -1; kt++) {
 		if (kt->name == NULL || kt->type == KEY_NULL)
 			continue;
+		if (FIPS_mode()) {
+			switch (kt->type) {
+			case KEY_ED25519:
+			case KEY_ED25519_SK:
+			case KEY_ED25519_CERT:
+			case KEY_ED25519_SK_CERT:
+			     continue;
+			     break;
+			default:
+			     break;
+			}
+		}
 		if (!include_sigonly && kt->sigonly)
 			continue;
 		if ((certs_only && !kt->cert) || (plain_only && kt->cert))
@@ -1504,6 +1539,20 @@ sshkey_read(struct sshkey *ret, char **cpp)
 		return SSH_ERR_EC_CURVE_MISMATCH;
 	}
 
+	switch (type) {
+	case KEY_ED25519:
+	case KEY_ED25519_SK:
+	case KEY_ED25519_CERT:
+	case KEY_ED25519_SK_CERT:
+		if (FIPS_mode()) {
+		    sshkey_free(k);
+		    logit_f("Ed25519 keys are not allowed in FIPS mode");
+		    return SSH_ERR_INVALID_ARGUMENT;
+		}
+		break;
+	default:
+		break;
+	}
 	/* Fill in ret from parsed key */
 	ret->type = type;
 	if (sshkey_is_cert(ret)) {
@@ -1689,6 +1738,8 @@ sshkey_cert_type(const struct sshkey *k)
 }
 
 #ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER < 0x30000000L
+/* Original function in OpenSSH Portable 8.8p1 */
 static int
 rsa_generate_private_key(u_int bits, RSA **rsap)
 {
@@ -1708,8 +1759,6 @@ rsa_generate_private_key(u_int bits, RSA **rsap)
 	}
 	if (!BN_set_word(f4, RSA_F4) ||
 	    !RSA_generate_key_ex(private, bits, f4, NULL)) {
-			if (FIPS_mode())
-				logit_f("the key length might be unsupported by FIPS mode approved key generation method");
 		ret = SSH_ERR_LIBCRYPTO_ERROR;
 		goto out;
 	}
@@ -1721,6 +1770,64 @@ rsa_generate_private_key(u_int bits, RSA **rsap)
 	BN_free(f4);
 	return ret;
 }
+# else
+/* Fedora version (requires OpenSSL 3.x) */
+static int
+rsa_generate_private_key(u_int bits, RSA **rsap)
+{
+	EVP_PKEY_CTX *ctx = NULL;
+	EVP_PKEY *res = NULL;
+	BIGNUM *f4 = NULL;
+	int ret = SSH_ERR_INTERNAL_ERROR;
+
+	if (rsap == NULL)
+		return SSH_ERR_INVALID_ARGUMENT;
+	if (bits < SSH_RSA_MINIMUM_MODULUS_SIZE ||
+	    bits > SSHBUF_MAX_BIGNUM * 8)
+		return SSH_ERR_KEY_LENGTH;
+	*rsap = NULL;
+
+	if ((ctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL)) == NULL
+		|| (f4 = BN_new()) == NULL || !BN_set_word(f4, RSA_F4)) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+
+	if (EVP_PKEY_keygen_init(ctx) <= 0) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+
+	if (EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, bits) <= 0) {
+		ret = SSH_ERR_KEY_LENGTH;
+		goto out;
+	}
+
+	if (EVP_PKEY_CTX_set1_rsa_keygen_pubexp(ctx, f4) <= 0)
+		goto out;
+
+	if (EVP_PKEY_keygen(ctx, &res) <= 0) {
+		if (FIPS_mode())
+			logit_f("the key length might be unsupported by FIPS mode approved key generation method");
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+
+	/* This function is deprecated in OpenSSL 3.0 but OpenSSH doesn't worry about it*/
+	*rsap = EVP_PKEY_get1_RSA(res);
+	if (*rsap) {
+		ret = 0;
+	} else {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+ out:
+	EVP_PKEY_CTX_free(ctx);
+	EVP_PKEY_free(res);
+	BN_free(f4);
+	return ret;
+}
+# endif /* OPENSSL_VERSION_NUMBER < 0x30000000L */
 
 static int
 dsa_generate_private_key(u_int bits, DSA **dsap)
@@ -1795,6 +1902,8 @@ sshkey_ecdsa_key_to_nid(EC_KEY *k)
 	return nids[i];
 }
 
+#  if OPENSSL_VERSION_NUMBER < 0x30000000L
+/* Original function in OpenSSH Portable 8.8p1 */
 static int
 ecdsa_generate_private_key(u_int bits, int *nid, EC_KEY **ecdsap)
 {
@@ -1822,6 +1931,46 @@ ecdsa_generate_private_key(u_int bits, int *nid, EC_KEY **ecdsap)
 	EC_KEY_free(private);
 	return ret;
 }
+#  else
+/* Fedora version (requires OpenSSL 3.x) */
+static int
+ecdsa_generate_private_key(u_int bits, int *nid, EC_KEY **ecdsap)
+{
+	EVP_PKEY_CTX *ctx = NULL;
+	EVP_PKEY *res = NULL;
+	int ret = SSH_ERR_INTERNAL_ERROR;
+
+	if (nid == NULL || ecdsap == NULL)
+		return SSH_ERR_INVALID_ARGUMENT;
+	if ((*nid = sshkey_ecdsa_bits_to_nid(bits)) == -1)
+		return SSH_ERR_KEY_LENGTH;
+	*ecdsap = NULL;
+
+	if ((ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL)) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+
+	if (EVP_PKEY_keygen_init(ctx) <= 0 || EVP_PKEY_CTX_set_group_name(ctx, OBJ_nid2sn(*nid)) <= 0
+	   || EVP_PKEY_keygen(ctx, &res) <= 0) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	/* This function is deprecated in OpenSSL 3.0 but OpenSSH doesn't worry about it*/
+	*ecdsap = EVP_PKEY_get1_EC_KEY(res);
+	if (*ecdsap) {
+		EC_KEY_set_asn1_flag(*ecdsap, OPENSSL_EC_NAMED_CURVE);
+		ret = 0;
+	} else {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+ out:
+	EVP_PKEY_CTX_free(ctx);
+	EVP_PKEY_free(res);
+	return ret;
+}
+#  endif /* OPENSSL_VERSION_NUMBER < 0x30000000L */
 # endif /* OPENSSL_HAS_ECC */
 #endif /* WITH_OPENSSL */
 
@@ -2434,18 +2583,24 @@ cert_parse(struct sshbuf *b, struct sshkey *key, struct sshbuf *certbuf)
 	return ret;
 }
 
-#ifdef WITH_OPENSSL
-static int
-check_rsa_length(const RSA *rsa)
+int
+sshkey_check_rsa_length(const struct sshkey *k, int min_size)
 {
+#ifdef WITH_OPENSSL
 	const BIGNUM *rsa_n;
+	int nbits;
 
-	RSA_get0_key(rsa, &rsa_n, NULL, NULL);
-	if (BN_num_bits(rsa_n) < SSH_RSA_MINIMUM_MODULUS_SIZE)
+	if (k == NULL || k->rsa == NULL ||
+	    (k->type != KEY_RSA && k->type != KEY_RSA_CERT))
+		return 0;
+	RSA_get0_key(k->rsa, &rsa_n, NULL, NULL);
+	nbits = BN_num_bits(rsa_n);
+	if (nbits < SSH_RSA_MINIMUM_MODULUS_SIZE ||
+	    (min_size > 0 && nbits < min_size))
 		return SSH_ERR_KEY_LENGTH;
+#endif /* WITH_OPENSSL */
 	return 0;
 }
-#endif
 
 static int
 sshkey_from_blob_internal(struct sshbuf *b, struct sshkey **keyp,
@@ -2508,7 +2663,7 @@ sshkey_from_blob_internal(struct sshbuf *b, struct sshkey **keyp,
 			goto out;
 		}
 		rsa_n = rsa_e = NULL; /* transferred */
-		if ((ret = check_rsa_length(key->rsa)) != 0)
+		if ((ret = sshkey_check_rsa_length(key, 0)) != 0)
 			goto out;
 #ifdef DEBUG_PK
 		RSA_print_fp(stderr, key->rsa, 8);
@@ -2878,6 +3033,11 @@ sshkey_sign(struct sshkey *key,
 		break;
 	case KEY_ED25519_SK:
 	case KEY_ED25519_SK_CERT:
+		if (FIPS_mode()) {
+		    logit_f("Ed25519 keys are not allowed in FIPS mode");
+		    return SSH_ERR_INVALID_ARGUMENT;
+		}
+		/* Fallthrough */
 	case KEY_ECDSA_SK_CERT:
 	case KEY_ECDSA_SK:
 		r = sshsk_sign(sk_provider, key, sigp, lenp, data,
@@ -2935,6 +3095,10 @@ sshkey_verify(const struct sshkey *key,
 		return ssh_ed25519_verify(key, sig, siglen, data, dlen, compat);
 	case KEY_ED25519_SK:
 	case KEY_ED25519_SK_CERT:
+		if (FIPS_mode()) {
+		    logit_f("Ed25519 keys are not allowed in FIPS mode");
+		    return SSH_ERR_INVALID_ARGUMENT;
+		}
 		return ssh_ed25519_sk_verify(key, sig, siglen, data, dlen,
 		    compat, detailsp);
 #ifdef WITH_XMSS
@@ -3711,7 +3875,7 @@ sshkey_private_deserialize(struct sshbuf *buf, struct sshkey **kp)
 			goto out;
 		}
 		rsa_p = rsa_q = NULL; /* transferred */
-		if ((r = check_rsa_length(k->rsa)) != 0)
+		if ((r = sshkey_check_rsa_length(k, 0)) != 0)
 			goto out;
 		if ((r = ssh_rsa_complete_crt_parameters(k, rsa_iqmp)) != 0)
 			goto out;
@@ -4738,7 +4902,7 @@ sshkey_parse_private_pem_fileblob(struct sshbuf *blob, int type,
 			r = SSH_ERR_LIBCRYPTO_ERROR;
 			goto out;
 		}
-		if ((r = check_rsa_length(prv->rsa)) != 0)
+		if ((r = sshkey_check_rsa_length(prv, 0)) != 0)
 			goto out;
 	} else if (EVP_PKEY_base_id(pk) == EVP_PKEY_DSA &&
 	    (type == KEY_UNSPEC || type == KEY_DSA)) {
