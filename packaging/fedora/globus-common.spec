@@ -3,7 +3,7 @@
 Name:		globus-common
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	18.13
+Version:	18.14
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Common Library
 
@@ -239,6 +239,9 @@ make %{?_smp_mflags} check VERBOSE=1 NO_EXTERNAL_NET=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Feb 16 2023 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.14-1
+- Remove register qualifier that is incompatible with C++ 17
+
 * Mon Apr 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 18.13-1
 - Simplify code
 

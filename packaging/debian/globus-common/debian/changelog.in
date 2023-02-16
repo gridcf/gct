@@ -1,3 +1,9 @@
+globus-common (18.14-1+gct.@distro@) @distro@; urgency=medium
+
+  * Remove register qualifier that is incompatible with C++ 17
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 16 Feb 2023 23:45:49 +0100
+
 globus-common (18.13-1+gct.@distro@) @distro@; urgency=medium
 
   * Simplify code

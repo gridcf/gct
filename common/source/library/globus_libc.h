@@ -203,13 +203,13 @@ globus_libc_strncasecmp(
     const char *                            s2,
     globus_size_t                           n);
 
-int globus_libc_setenv(register const char *name,
-		       register const char *value,
+int globus_libc_setenv(const char *name,
+		       const char *value,
 		       int rewrite);
-void globus_libc_unsetenv(register const char *name);
+void globus_libc_unsetenv(const char *name);
 
 /* Use getenv instead */
-GLOBUS_DEPRECATED(char *globus_libc_getenv(register const char *name));
+GLOBUS_DEPRECATED(char *globus_libc_getenv(const char *name));
 
 /* Use strerror or strerror_r as needed instead */
 char *globus_libc_system_error_string(int the_error);
