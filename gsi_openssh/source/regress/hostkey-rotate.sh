@@ -3,6 +3,25 @@
 
 tid="hostkey rotate"
 
+#
+# GNU (f)grep <=2.18, as shipped by FreeBSD<=12 and NetBSD<=9 will occasionally
+# fail to find ssh host keys in the hostkey-rotate test.  If we have those
+# versions, use awk instead.
+# See # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=258616
+#
+case `grep --version 2>&1 | awk '/GNU grep/{print $4}'` in
+2.19)			fgrep=good ;;
+1.*|2.?|2.?.?|2.1?)	fgrep=bad ;;	# stock GNU grep
+2.5.1*)			fgrep=bad ;;	# FreeBSD and NetBSD
+*)			fgrep=good ;;
+esac
+if test "x$fgrep" = "xbad"; then
+	fgrep()
+{
+	awk 'BEGIN{e=1} {if (index($0,"'$1'")>0){e=0;print}} END{exit e}' $2
+}
+fi
+
 rm -f $OBJ/hkr.* $OBJ/ssh_proxy.orig $OBJ/ssh_proxy.orig
 
 grep -vi 'hostkey' $OBJ/sshd_proxy > $OBJ/sshd_proxy.orig
@@ -21,6 +40,8 @@ trace "prepare hostkeys"
 nkeys=0
 all_algs=""
 for k in $SSH_HOSTKEY_TYPES; do
+	[ "$k" == "ssh-rsa" ] && continue
+	[ "$k" == "ssh-dss" ] && continue
 	${SSHKEYGEN} -qt $k -f $OBJ/hkr.$k -N '' || fatal "ssh-keygen $k"
 	echo "Hostkey $OBJ/hkr.${k}" >> $OBJ/sshd_proxy.orig
 	nkeys=`expr $nkeys + 1`
@@ -68,11 +89,15 @@ dossh -oStrictHostKeyChecking=yes -oHostKeyAlgorithms=$all_algs
 # Check that other keys learned
 expect_nkeys $nkeys "learn hostkeys"
 for k in $SSH_HOSTKEY_TYPES; do
+	[ "$k" == "ssh-rsa" ] && continue
+	[ "$k" == "ssh-dss" ] && continue
 	check_key_present $k || fail "didn't learn keytype $k"
 done
 
 # Check each key type
 for k in $SSH_HOSTKEY_TYPES; do
+	[ "$k" == "ssh-rsa" ] && continue
+	[ "$k" == "ssh-dss" ] && continue
 	verbose "learn additional hostkeys, type=$k"
 	dossh -oStrictHostKeyChecking=yes -oHostKeyAlgorithms=$k,$all_algs
 	expect_nkeys $nkeys "learn hostkeys $k"

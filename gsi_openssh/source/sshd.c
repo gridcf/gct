@@ -1952,6 +1952,13 @@ main(int ac, char **av)
 		    &key, NULL)) != 0 && r != SSH_ERR_SYSTEM_ERROR)
 			do_log2_r(r, ll, "Unable to load host key \"%s\"",
 			    options.host_key_files[i]);
+		if (FIPS_mode() && key != NULL && (sshkey_type_plain(key->type) == KEY_ED25519_SK
+				||  sshkey_type_plain(key->type) == KEY_ED25519)) {
+		    logit_f("sshd: Ed25519 keys are not allowed in FIPS mode, skipping %s", options.host_key_files[i]);
+		    sshkey_free(key);
+		    key = NULL;
+		    continue;
+		}
 		if (sshkey_is_sk(key) &&
 		    key->sk_flags & SSH_SK_USER_PRESENCE_REQD) {
 			debug("host key %s requires user presence, ignoring",
@@ -1981,6 +1988,13 @@ main(int ac, char **av)
 			if ((r = sshkey_from_private(key, &pubkey)) != 0)
 				fatal_r(r, "Could not demote key: \"%s\"",
 				    options.host_key_files[i]);
+		}
+		if (pubkey != NULL && (r = sshkey_check_rsa_length(pubkey,
+		    options.required_rsa_size)) != 0) {
+			error_fr(r, "Host key %s", options.host_key_files[i]);
+			sshkey_free(pubkey);
+			sshkey_free(key);
+			continue;
 		}
 		sensitive_data.host_keys[i] = key;
 		sensitive_data.host_pubkeys[i] = pubkey;
@@ -2527,6 +2541,8 @@ do_ssh2_kex(struct ssh *ssh)
 {
 	char *myproposal[PROPOSAL_MAX] = { KEX_SERVER };
 	struct kex *kex;
+	char *hostkey_types = NULL;
+	char *prop_kex = NULL, *prop_enc = NULL, *prop_hostkey = NULL;
 	int r;
 
 	if (options.none_enabled == 1)
@@ -2534,12 +2550,11 @@ do_ssh2_kex(struct ssh *ssh)
 	if (options.nonemac_enabled == 1)
 		debug("WARNING: None MAC enabled");
 
-	myproposal[PROPOSAL_KEX_ALGS] = compat_kex_proposal(ssh,
+	myproposal[PROPOSAL_KEX_ALGS] = prop_kex = compat_kex_proposal(ssh,
 	    options.kex_algorithms);
-	myproposal[PROPOSAL_ENC_ALGS_CTOS] = compat_cipher_proposal(ssh,
-	    options.ciphers);
-	myproposal[PROPOSAL_ENC_ALGS_STOC] = compat_cipher_proposal(ssh,
-	    options.ciphers);
+	myproposal[PROPOSAL_ENC_ALGS_CTOS] =
+	    myproposal[PROPOSAL_ENC_ALGS_STOC] = prop_enc =
+	    compat_cipher_proposal(ssh, options.ciphers);
 	myproposal[PROPOSAL_MAC_ALGS_CTOS] =
 	    myproposal[PROPOSAL_MAC_ALGS_STOC] = options.macs;
 
@@ -2551,9 +2566,11 @@ do_ssh2_kex(struct ssh *ssh)
 	if (options.rekey_limit || options.rekey_interval)
 		ssh_packet_set_rekey_limits(ssh, options.rekey_limit,
 		    options.rekey_interval);
-	/* coverity[leaked_storage : FALSE]*/
-	myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = compat_pkalg_proposal(
-	    ssh, list_hostkey_types());
+
+	hostkey_types = list_hostkey_types();
+	myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = prop_hostkey =
+	    compat_pkalg_proposal(ssh, hostkey_types);
+	free(hostkey_types);
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
 	{
@@ -2648,6 +2665,9 @@ do_ssh2_kex(struct ssh *ssh)
 	    (r = ssh_packet_write_wait(ssh)) != 0)
 		fatal_fr(r, "send test");
 #endif
+	free(prop_kex);
+	free(prop_enc);
+	free(prop_hostkey);
 	debug("KEX done");
 }
 

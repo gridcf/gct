@@ -33,8 +33,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: ssh_config.5,v 1.362 2021/08/12 23:59:25 djm Exp $
-.Dd $Mdocdate: August 12 2021 $
+.\" $OpenBSD: ssh_config.5,v 1.366 2021/09/25 09:40:33 kn Exp $
+.Dd $Mdocdate: September 25 2021 $
 .Dt SSH_CONFIG 5
 .Os
 .Sh NAME
@@ -378,10 +378,15 @@ to be canonicalized to names in the
 or
 .Qq *.c.example.com
 domains.
+.Pp
+A single argument of
+.Qq none
+causes no CNAMEs to be considered for canonicalization.
+This is the default behaviour.
 .It Cm CASignatureAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies which algorithms are allowed for signing of certificates
@@ -449,7 +454,7 @@ the check will not be executed.
 .It Cm Ciphers
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the ciphers allowed and their order of preference.
@@ -876,7 +881,7 @@ The default is
 .It Cm GSSAPIKexAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 The list of key exchange algorithms that are offered for GSSAPI
@@ -935,12 +940,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+rsa-sha2-512,rsa-sha2-256
 .Ed
 .Pp
 The
@@ -982,12 +986,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ecdsa-sha2-nistp256@openssh.com,
 sk-ssh-ed25519@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+rsa-sha2-512,rsa-sha2-256
 .Ed
 .Pp
 If hostkeys are known for the destination host then this default is modified
@@ -1224,7 +1227,7 @@ and
 .It Cm KexAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the available KEX (Key Exchange) algorithms.
@@ -1235,11 +1238,11 @@ character, then the specified methods will be appended to the built-in
 openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq -
-character, then the specified methods (including wildcards) will be removed
+character, then the specified algorithms (including wildcards) will be removed
 from the built-in openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq ^
-character, then the specified methods will be placed at the head of the
+character, then the specified algorithms will be placed at the head of the
 built-in openssh default set.
 .Pp
 The list of available key exchange algorithms may also be obtained using
@@ -1352,7 +1355,7 @@ This option is intended for debugging and no overrides are enabled by default.
 .It Cm MACs
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the MAC (message authentication code) algorithms
@@ -1550,7 +1553,7 @@ The default is
 .It Cm PubkeyAcceptedAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the signature algorithms that will be used for public key
@@ -1680,6 +1683,17 @@ and
 .Fl T
 flags for
 .Xr ssh 1 .
+.It Cm RequiredRSASize
+Specifies the minimum RSA key size (in bits) that
+.Xr ssh 1
+will accept.
+User authentication keys smaller than this limit will be ignored.
+Servers that present host keys smaller than this limit will cause the
+connection to be terminated.
+The default is
+.Cm 1024
+bits.
+Note that this limit may only be raised from the default.
 .It Cm RevokedHostKeys
 Specifies revoked host public keys.
 Keys listed in this file will be refused for host authentication.
@@ -1844,15 +1858,15 @@ This option forces the user to manually
 add all new hosts.
 .Pp
 If this flag is set to
-.Dq accept-new
+.Cm accept-new
 then ssh will automatically add new host keys to the user's
 .Pa known_hosts
 file, but will not permit connections to hosts with
 changed host keys.
 If this flag is set to
-.Dq no
+.Cm no
 or
-.Dq off ,
+.Cm off ,
 ssh will automatically add new host keys to the user known hosts files
 and allow connections to hosts with changed hostkeys to proceed,
 subject to some restrictions.

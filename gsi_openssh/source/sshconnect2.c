@@ -104,6 +104,11 @@ static const struct ssh_conn_info *xxx_conn_info;
 static int
 verify_host_key_callback(struct sshkey *hostkey, struct ssh *ssh)
 {
+	int r;
+
+	if ((r = sshkey_check_rsa_length(hostkey,
+	    options.required_rsa_size)) != 0)
+		fatal_r(r, "Bad server host key");
 	if (verify_host_key(xxx_host, xxx_hostaddr, hostkey,
 	    xxx_conn_info) == -1)
 		fatal("Host key verification failed.");
@@ -228,6 +233,8 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 {
 	char *myproposal[PROPOSAL_MAX] = { KEX_CLIENT };
 	char *s, *all_key;
+	char *hostkeyalgs = NULL, *pkalg = NULL;
+	char *prop_kex = NULL, *prop_enc = NULL, *prop_hostkey = NULL;
 	int r, use_known_hosts_order = 0;
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
@@ -262,10 +269,9 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 
 	if ((s = kex_names_cat(options.kex_algorithms, "ext-info-c")) == NULL)
 		fatal_f("kex_names_cat");
-	myproposal[PROPOSAL_KEX_ALGS] = compat_kex_proposal(ssh, s);
+	myproposal[PROPOSAL_KEX_ALGS] = prop_kex = compat_kex_proposal(ssh, s);
 	myproposal[PROPOSAL_ENC_ALGS_CTOS] =
-	    compat_cipher_proposal(ssh, options.ciphers);
-	myproposal[PROPOSAL_ENC_ALGS_STOC] =
+	    myproposal[PROPOSAL_ENC_ALGS_STOC] = prop_enc =
 	    compat_cipher_proposal(ssh, options.ciphers);
 	myproposal[PROPOSAL_COMP_ALGS_CTOS] =
 	    myproposal[PROPOSAL_COMP_ALGS_STOC] =
@@ -274,14 +280,19 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 	    myproposal[PROPOSAL_MAC_ALGS_STOC] = options.macs;
 	if (use_known_hosts_order) {
 		/* Query known_hosts and prefer algorithms that appear there */
-		myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] =
-		    compat_pkalg_proposal(ssh,
-		    order_hostkeyalgs(host, hostaddr, port, cinfo));
+		if ((hostkeyalgs = order_hostkeyalgs(host, hostaddr, port, cinfo)) == NULL)
+			fatal_f("order_hostkeyalgs");
+		pkalg = match_filter_allowlist(hostkeyalgs, options.pubkey_accepted_algos);
+		free(hostkeyalgs);
 	} else {
-		/* Use specified HostkeyAlgorithms exactly */
-		myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] =
-		    compat_pkalg_proposal(ssh, options.hostkeyalgorithms);
+		/* Use specified HostkeyAlgorithms */
+		pkalg = match_filter_allowlist(options.hostkeyalgorithms, options.pubkey_accepted_algos);
 	}
+	if (pkalg == NULL)
+		fatal_f("match_filter_allowlist");
+	myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = prop_hostkey =
+	    compat_pkalg_proposal(ssh, pkalg);
+	free(pkalg);
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
 	if (options.gss_keyex) {
@@ -393,6 +404,10 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 	    (r = ssh_packet_write_wait(ssh)) != 0)
 		fatal_fr(r, "send packet");
 #endif
+	/* Free only parts of proposal that were dynamically allocated here. */
+	free(prop_kex);
+	free(prop_enc);
+	free(prop_hostkey);
 }
 
 /*
@@ -1831,6 +1846,13 @@ load_identity_file(Identity *id)
 			private = NULL;
 			quit = 1;
 		}
+		if (!quit && (r = sshkey_check_rsa_length(private,
+		    options.required_rsa_size)) != 0) {
+			debug_fr(r, "Skipping key %s", id->filename);
+			sshkey_free(private);
+			private = NULL;
+			quit = 1;
+		}
 		if (!quit && private != NULL && id->agent_fd == -1 &&
 		    !(id->key && id->isprivate))
 			maybe_add_key_to_agent(id->filename, private, comment,
@@ -1954,6 +1976,12 @@ pubkey_prepare(Authctxt *authctxt)
 		close(agent_fd);
 	} else {
 		for (j = 0; j < idlist->nkeys; j++) {
+			if ((r = sshkey_check_rsa_length(idlist->keys[j],
+			    options.required_rsa_size)) != 0) {
+				debug_fr(r, "ignoring %s agent key",
+				    sshkey_ssh_name(idlist->keys[j]));
+				continue;
+			}
 			found = 0;
 			TAILQ_FOREACH(id, &files, next) {
 				/*
@@ -2373,9 +2401,9 @@ userauth_hostbased(struct ssh *ssh)
 			if (authctxt->sensitive->keys[i] == NULL ||
 			    authctxt->sensitive->keys[i]->type == KEY_UNSPEC)
 				continue;
-			if (match_pattern_list(
+			if (!sshkey_match_keyname_to_sigalgs(
 			    sshkey_ssh_name(authctxt->sensitive->keys[i]),
-			    authctxt->active_ktype, 0) != 1)
+			    authctxt->active_ktype))
 				continue;
 			/* we take and free the key */
 			private = authctxt->sensitive->keys[i];
@@ -2401,7 +2429,8 @@ userauth_hostbased(struct ssh *ssh)
 		error_f("sshkey_fingerprint failed");
 		goto out;
 	}
-	debug_f("trying hostkey %s %s", sshkey_ssh_name(private), fp);
+	debug_f("trying hostkey %s %s using sigalg %s",
+		sshkey_ssh_name(private), fp, authctxt->active_ktype);
 
 	/* figure out a name for the client host */
 	lname = get_local_name(ssh_packet_get_connection_in(ssh));

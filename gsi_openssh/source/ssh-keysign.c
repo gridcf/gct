@@ -62,7 +62,7 @@
 extern char *__progname;
 
 static int
-valid_request(struct passwd *pw, char *host, struct sshkey **ret,
+valid_request(struct passwd *pw, char *host, struct sshkey **ret, char **pkalgp,
     u_char *data, size_t datalen)
 {
 	struct sshbuf *b;
@@ -75,6 +75,8 @@ valid_request(struct passwd *pw, char *host, struct sshkey **ret,
 
 	if (ret != NULL)
 		*ret = NULL;
+	if (pkalgp != NULL)
+		*pkalgp = NULL;
 	fail = 0;
 
 	if ((b = sshbuf_from(data, datalen)) == NULL)
@@ -122,8 +124,6 @@ valid_request(struct passwd *pw, char *host, struct sshkey **ret,
 		fail++;
 	} else if (key->type != pktype)
 		fail++;
-	free(pkalg);
-	free(pkblob);
 
 	/* client host name, handle trailing dot */
 	if ((r = sshbuf_get_cstring(b, &p, &len)) != 0)
@@ -154,8 +154,19 @@ valid_request(struct passwd *pw, char *host, struct sshkey **ret,
 
 	if (fail)
 		sshkey_free(key);
-	else if (ret != NULL)
-		*ret = key;
+	else {
+		if (ret != NULL) {
+			*ret = key;
+			key = NULL;
+		}
+		if (pkalgp != NULL) {
+			*pkalgp = pkalg;
+			pkalg = NULL;
+		}
+	}
+	sshkey_free(key);
+	free(pkalg);
+	free(pkblob);
 
 	return (fail ? -1 : 0);
 }
@@ -170,7 +181,7 @@ main(int argc, char **argv)
 	struct passwd *pw;
 	int r, key_fd[NUM_KEYTYPES], i, found, version = 2, fd;
 	u_char *signature, *data, rver;
-	char *host, *fp;
+	char *host, *fp, *pkalg;
 	size_t slen, dlen;
 
 	if (pledge("stdio rpath getpw dns id", NULL) != 0)
@@ -258,7 +269,7 @@ main(int argc, char **argv)
 
 	if ((r = sshbuf_get_string(b, &data, &dlen)) != 0)
 		fatal_r(r, "%s: buffer error", __progname);
-	if (valid_request(pw, host, &key, data, dlen) < 0)
+	if (valid_request(pw, host, &key, &pkalg, data, dlen) < 0)
 		fatal("%s: not a valid request", __progname);
 	free(host);
 
@@ -279,7 +290,7 @@ main(int argc, char **argv)
 	}
 
 	if ((r = sshkey_sign(keys[i], &signature, &slen, data, dlen,
-	    NULL, NULL, NULL, 0)) != 0)
+	    pkalg, NULL, NULL, 0)) != 0)
 		fatal_r(r, "%s: sshkey_sign failed", __progname);
 	free(data);
 

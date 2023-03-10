@@ -166,7 +166,7 @@ choose_dh(int min, int wantbits, int max)
 	struct dhgroup dhg;
 
 	if (FIPS_mode()) {
-		logit("Using arbitrary primes is not allowed in FIPS mode."
+		verbose("Using arbitrary primes is not allowed in FIPS mode."
 		    " Falling back to known groups.");
 		return (dh_new_group_fallback(max));
 	}

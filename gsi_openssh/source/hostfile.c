@@ -642,7 +642,7 @@ hostfile_replace_entries(const char *filename, const char *host, const char *ip,
 	/* Re-add the requested keys */
 	want = HKF_MATCH_HOST | (ip == NULL ? 0 : HKF_MATCH_IP);
 	for (i = 0; i < nkeys; i++) {
-		if ((want & ctx.match_keys[i]) == want)
+		if (keys[i] == NULL || (want & ctx.match_keys[i]) == want)
 			continue;
 		if ((fp = sshkey_fingerprint(keys[i], hash_alg,
 		    SSH_FP_DEFAULT)) == NULL) {

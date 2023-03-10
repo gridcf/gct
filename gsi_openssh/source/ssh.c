@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh.c,v 1.566 2021/08/08 08:49:09 dtucker Exp $ */
+/* $OpenBSD: ssh.c,v 1.569 2021/09/20 04:02:13 dtucker Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -187,7 +187,7 @@ usage(void)
 "           [-i identity_file] [-J [user@]host[:port]] [-L address]\n"
 "           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]\n"
 "           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]\n"
-"           [-w local_tun[:remote_tun]] destination [command]\n"
+"           [-w local_tun[:remote_tun]] destination [command [argument ...]]\n"
 	);
 	exit(255);
 }
@@ -261,6 +261,7 @@ resolve_host(const char *name, int port, int logerr, char *cname, size_t clen)
 		port = default_ssh_port();
 	if (cname != NULL)
 		*cname = '\0';
+	debug3_f("lookup %s:%d", name, port);
 
 	snprintf(strport, sizeof strport, "%d", port);
 	memset(&hints, 0, sizeof(hints));
@@ -384,7 +385,7 @@ check_follow_cname(int direct, char **namep, const char *cname)
 	int i;
 	struct allowed_cname *rule;
 
-	if (*cname == '\0' || options.num_permitted_cnames == 0 ||
+	if (*cname == '\0' || !config_has_permitted_cnames(&options) ||
 	    strcmp(*namep, cname) == 0)
 		return 0;
 	if (options.canonicalize_hostname == SSH_CANONICALISE_NO)
@@ -517,14 +518,22 @@ resolve_canonicalize(char **hostp, int port)
 }
 
 /*
- * Check the result of hostkey loading, ignoring some errors and
- * fatal()ing for others.
+ * Check the result of hostkey loading, ignoring some errors and either
+ * discarding the key or fatal()ing for others.
  */
 static void
-check_load(int r, const char *path, const char *message)
+check_load(int r, struct sshkey **k, const char *path, const char *message)
 {
 	switch (r) {
 	case 0:
+		/* Check RSA keys size and discard if undersized */
+		if (k != NULL && *k != NULL &&
+		    (r = sshkey_check_rsa_length(*k,
+		    options.required_rsa_size)) != 0) {
+			error_r(r, "load %s \"%s\"", message, path);
+			free(*k);
+			*k = NULL;
+		}
 		break;
 	case SSH_ERR_INTERNAL_ERROR:
 	case SSH_ERR_ALLOC_FAIL:
@@ -1234,7 +1243,7 @@ main(int ac, char **av)
 	 */
 	direct = option_clear_or_none(options.proxy_command) &&
 	    options.jump_host == NULL;
-	if (addrs == NULL && options.num_permitted_cnames != 0 && (direct ||
+	if (addrs == NULL && config_has_permitted_cnames(&options) && (direct ||
 	    options.canonicalize_hostname == SSH_CANONICALISE_ALWAYS)) {
 		if ((addrs = resolve_host(host, options.port,
 		    direct, cname, sizeof(cname))) == NULL) {
@@ -1630,12 +1639,13 @@ main(int ac, char **av)
 	if ((o) >= sensitive_data.nkeys) \
 		fatal_f("pubkey out of array bounds"); \
 	check_load(sshkey_load_public(p, &(sensitive_data.keys[o]), NULL), \
-	    p, "pubkey"); \
+	    &(sensitive_data.keys[o]), p, "pubkey"); \
 } while (0)
 #define L_CERT(p,o) do { \
 	if ((o) >= sensitive_data.nkeys) \
 		fatal_f("cert out of array bounds"); \
-	check_load(sshkey_load_cert(p, &(sensitive_data.keys[o])), p, "cert"); \
+	check_load(sshkey_load_cert(p, &(sensitive_data.keys[o])), \
+	    &(sensitive_data.keys[o]), p, "cert"); \
 } while (0)
 
 		if (options.hostbased_authentication == 1) {
@@ -1852,7 +1862,8 @@ ssh_confirm_remote_forward(struct ssh *ssh, int type, u_int32_t seq, void *ctxt)
 				rfwd->allocated_port = (int)port;
 				logit("Allocated port %u for remote "
 				    "forward to %s:%d",
-				    rfwd->allocated_port, rfwd->connect_host,
+				    rfwd->allocated_port, rfwd->connect_path ?
+				    rfwd->connect_path : rfwd->connect_host,
 				    rfwd->connect_port);
 				channel_update_permission(ssh,
 				    rfwd->handle, rfwd->allocated_port);
@@ -2450,7 +2461,7 @@ load_public_identity_files(const struct ssh_conn_info *cinfo)
 		filename = default_client_percent_dollar_expand(cp, cinfo);
 		free(cp);
 		check_load(sshkey_load_public(filename, &public, NULL),
-		    filename, "pubkey");
+		    &public, filename, "pubkey");
 		debug("identity file %s type %d", filename,
 		    public ? public->type : -1);
 		free(options.identity_files[i]);
@@ -2469,7 +2480,7 @@ load_public_identity_files(const struct ssh_conn_info *cinfo)
 			continue;
 		xasprintf(&cp, "%s-cert", filename);
 		check_load(sshkey_load_public(cp, &public, NULL),
-		    filename, "pubkey");
+		    &public, filename, "pubkey");
 		debug("identity file %s type %d", cp,
 		    public ? public->type : -1);
 		if (public == NULL) {
@@ -2500,7 +2511,7 @@ load_public_identity_files(const struct ssh_conn_info *cinfo)
 		free(cp);
 
 		check_load(sshkey_load_public(filename, &public, NULL),
-		    filename, "certificate");
+		    &public, filename, "certificate");
 		debug("certificate file %s type %d", filename,
 		    public ? public->type : -1);
 		free(options.certificate_files[i]);

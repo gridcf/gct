@@ -16,7 +16,7 @@
 
 #include "includes.h"
 
-#ifndef HAVE_CLOSEFROM
+#if (!defined HAVE_CLOSEFROM) || (defined __s390__)
 
 #include <sys/types.h>
 #include <sys/param.h>

@@ -33,8 +33,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: sshd_config.5,v 1.334 2021/08/12 23:59:25 djm Exp $
-.Dd $Mdocdate: August 12 2021 $
+.\" $OpenBSD: sshd_config.5,v 1.335 2021/09/03 05:25:50 dtucker Exp $
+.Dd $Mdocdate: September 3 2021 $
 .Dt SSHD_CONFIG 5
 .Os
 .Sh NAME
@@ -375,7 +375,7 @@ By default, no banner is displayed.
 .It Cm CASignatureAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies which algorithms are allowed for signing of certificates
@@ -448,7 +448,7 @@ indicating not to
 .It Cm Ciphers
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the ciphers allowed.
@@ -700,7 +700,7 @@ needs to be enabled in the server and also used by the client.
 .It Cm GSSAPIKexAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 The list of key exchange algorithms that are accepted by GSSAPI
@@ -815,7 +815,7 @@ environment variable.
 .It Cm HostKeyAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the host key signature algorithms
@@ -968,7 +968,7 @@ The default is
 .It Cm KexAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the available KEX (Key Exchange) algorithms.
@@ -979,11 +979,11 @@ character, then the specified methods will be appended to the built-in
 openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq -
-character, then the specified methods (including wildcards) will be removed
+character, then the specified algorithms (including wildcards) will be removed
 from the built-in openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq ^
-character, then the specified methods will be placed at the head of the
+character, then the specified algorithms will be placed at the head of the
 built-in openssh default set.
 The supported algorithms are:
 .Pp
@@ -1103,7 +1103,7 @@ This option is intended for debugging and no overrides are enabled by default.
 .It Cm MACs
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the available MAC (message authentication code) algorithms.
@@ -1543,7 +1543,7 @@ The default is
 .It Cm PubkeyAcceptedAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
-To see the defaults and how to modify this default, see manual page
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
 .Xr update-crypto-policies 8 .
 .Pp
 Specifies the signature algorithms that will be accepted for public key
@@ -1627,6 +1627,16 @@ is
 .Cm default none ,
 which means that rekeying is performed after the cipher's default amount
 of data has been sent or received and no time based rekeying is done.
+.It Cm RequiredRSASize
+Specifies the minimum RSA key size (in bits) that
+.Xr sshd 8
+will accept.
+User and host-based authentication keys smaller than this limit will be
+refused.
+The default is
+.Cm 1024
+bits.
+Note that this limit may only be raised from the default.
 .It Cm RevokedKeys
 Specifies revoked public keys file, or
 .Cm none

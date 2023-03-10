@@ -31,6 +31,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
+#include <openssl/crypto.h>
+
+#include "fips_mode_replacement.h"
 
 #include "sshkey.h"
 #include "kex.h"
@@ -115,10 +118,20 @@ kex_gen_client(struct ssh *ssh)
 		break;
 #endif
 	case KEX_C25519_SHA256:
-		r = kex_c25519_keypair(kex);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type c25519 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_c25519_keypair(kex);
+		}
 		break;
 	case KEX_KEM_SNTRUP761X25519_SHA512:
-		r = kex_kem_sntrup761x25519_keypair(kex);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type sntrup761 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_kem_sntrup761x25519_keypair(kex);
+		}
 		break;
 	default:
 		r = SSH_ERR_INVALID_ARGUMENT;
@@ -186,11 +199,21 @@ input_kex_gen_reply(int type, u_int32_t seq, struct ssh *ssh)
 		break;
 #endif
 	case KEX_C25519_SHA256:
-		r = kex_c25519_dec(kex, server_blob, &shared_secret);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type c25519 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_c25519_dec(kex, server_blob, &shared_secret);
+		}
 		break;
 	case KEX_KEM_SNTRUP761X25519_SHA512:
-		r = kex_kem_sntrup761x25519_dec(kex, server_blob,
-		    &shared_secret);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type sntrup761 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_kem_sntrup761x25519_dec(kex, server_blob,
+		        &shared_secret);
+		}
 		break;
 	default:
 		r = SSH_ERR_INVALID_ARGUMENT;
@@ -285,12 +308,22 @@ input_kex_gen_init(int type, u_int32_t seq, struct ssh *ssh)
 		break;
 #endif
 	case KEX_C25519_SHA256:
-		r = kex_c25519_enc(kex, client_pubkey, &server_pubkey,
-		    &shared_secret);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type c25519 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_c25519_enc(kex, client_pubkey, &server_pubkey,
+		        &shared_secret);
+		}
 		break;
 	case KEX_KEM_SNTRUP761X25519_SHA512:
-		r = kex_kem_sntrup761x25519_enc(kex, client_pubkey,
-		    &server_pubkey, &shared_secret);
+		if (FIPS_mode()) {
+		    logit_f("Key exchange type sntrup761 is not allowed in FIPS mode");
+		    r = SSH_ERR_INVALID_ARGUMENT;
+		} else {
+		    r = kex_kem_sntrup761x25519_enc(kex, client_pubkey,
+		        &server_pubkey, &shared_secret);
+		}
 		break;
 	default:
 		r = SSH_ERR_INVALID_ARGUMENT;
