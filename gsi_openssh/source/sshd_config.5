@@ -33,8 +33,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: sshd_config.5,v 1.335 2021/09/03 05:25:50 dtucker Exp $
-.Dd $Mdocdate: September 3 2021 $
+.\" $OpenBSD: sshd_config.5,v 1.340 2022/03/31 17:58:44 naddy Exp $
+.Dd $Mdocdate: March 31 2022 $
 .Dt SSHD_CONFIG 5
 .Os
 .Sh NAME
@@ -716,37 +716,25 @@ gss-curve25519-sha256-
 .Ed
 This option only applies to connections using GSSAPI.
 .It Cm HostbasedAcceptedAlgorithms
+The default is handled system-wide by
+.Xr crypto-policies 7 .
+Information about defaults, how to modify the defaults and how to customize existing policies with sub-policies are present in manual page
+.Xr update-crypto-policies 8 .
+.Pp
 Specifies the signature algorithms that will be accepted for hostbased
 authentication as a list of comma-separated patterns.
 Alternately if the specified list begins with a
 .Sq +
 character, then the specified signature algorithms will be appended to
-the default set instead of replacing them.
+the built-in openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq -
 character, then the specified signature algorithms (including wildcards)
-will be removed from the default set instead of replacing them.
+will be removed from the built-in openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq ^
 character, then the specified signature algorithms will be placed at
-the head of the default set.
-The default for this option is:
-.Bd -literal -offset 3n
-ssh-ed25519-cert-v01@openssh.com,
-ecdsa-sha2-nistp256-cert-v01@openssh.com,
-ecdsa-sha2-nistp384-cert-v01@openssh.com,
-ecdsa-sha2-nistp521-cert-v01@openssh.com,
-sk-ssh-ed25519-cert-v01@openssh.com,
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
-rsa-sha2-512-cert-v01@openssh.com,
-rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
-ssh-ed25519,
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-sk-ssh-ed25519@openssh.com,
-sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-.Ed
+the head of the built-in openssh default set.
 .Pp
 The list of available signature algorithms may also be obtained using
 .Qq ssh -Q HostbasedAcceptedAlgorithms .
@@ -820,6 +808,7 @@ Information about defaults, how to modify the defaults and how to customize exis
 .Pp
 Specifies the host key signature algorithms
 that the server offers.
+The default for this option is:
 The list of available signature algorithms may also be obtained using
 .Qq ssh -Q HostKeyAlgorithms .
 .It Cm IgnoreRhosts
@@ -1232,12 +1221,14 @@ Available keywords are
 .Cm AuthorizedPrincipalsCommandUser ,
 .Cm AuthorizedPrincipalsFile ,
 .Cm Banner ,
+.Cm CASignatureAlgorithms ,
 .Cm ChrootDirectory ,
 .Cm ClientAliveCountMax ,
 .Cm ClientAliveInterval ,
 .Cm DenyGroups ,
 .Cm DenyUsers ,
 .Cm DisableForwarding ,
+.Cm ExposeAuthInfo ,
 .Cm ForceCommand ,
 .Cm GatewayPorts ,
 .Cm GSSAPIAuthentication ,
@@ -1263,6 +1254,7 @@ Available keywords are
 .Cm PermitUserRC ,
 .Cm PubkeyAcceptedAlgorithms ,
 .Cm PubkeyAuthentication ,
+.Cm PubkeyAuthOptions ,
 .Cm RekeyLimit ,
 .Cm RevokedKeys ,
 .Cm RDomain ,
@@ -2007,7 +1999,9 @@ This file should be writable by root only, but it is recommended
 .El
 .Sh SEE ALSO
 .Xr sftp-server 8 ,
-.Xr sshd 8
+.Xr sshd 8 ,
+.Xr crypto-policies 7 ,
+.Xr update-crypto-policies 8
 .Sh AUTHORS
 .An -nosplit
 OpenSSH is a derivative of the original and free

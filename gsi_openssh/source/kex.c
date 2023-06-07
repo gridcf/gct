@@ -1,4 +1,4 @@
-/* $OpenBSD: kex.c,v 1.168 2021/04/03 06:18:40 djm Exp $ */
+/* $OpenBSD: kex.c,v 1.172 2022/02/01 23:32:51 djm Exp $ */
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
  *
@@ -77,7 +77,7 @@
 static int kex_choose_conf(struct ssh *);
 static int kex_input_newkeys(int, u_int32_t, struct ssh *);
 
-static const char *proposal_names[PROPOSAL_MAX] = {
+static const char * const proposal_names[PROPOSAL_MAX] = {
 	"KEX algorithms",
 	"host key algorithms",
 	"ciphers ctos",
@@ -502,9 +502,12 @@ kex_send_ext_info(struct ssh *ssh)
 		return SSH_ERR_ALLOC_FAIL;
 	/* XXX filter algs list by allowed pubkey/hostbased types */
 	if ((r = sshpkt_start(ssh, SSH2_MSG_EXT_INFO)) != 0 ||
-	    (r = sshpkt_put_u32(ssh, 1)) != 0 ||
+	    (r = sshpkt_put_u32(ssh, 2)) != 0 ||
 	    (r = sshpkt_put_cstring(ssh, "server-sig-algs")) != 0 ||
 	    (r = sshpkt_put_cstring(ssh, algs)) != 0 ||
+	    (r = sshpkt_put_cstring(ssh,
+	    "publickey-hostbound@openssh.com")) != 0 ||
+	    (r = sshpkt_put_cstring(ssh, "0")) != 0 ||
 	    (r = sshpkt_send(ssh)) != 0) {
 		error_fr(r, "compose");
 		goto out;
@@ -564,6 +567,21 @@ kex_input_ext_info(int type, u_int32_t seq, struct ssh *ssh)
 			debug_f("%s=<%s>", name, val);
 			kex->server_sig_algs = val;
 			val = NULL;
+		} else if (strcmp(name,
+		    "publickey-hostbound@openssh.com") == 0) {
+			/* XXX refactor */
+			/* Ensure no \0 lurking in value */
+			if (memchr(val, '\0', vlen) != NULL) {
+				error_f("nul byte in %s", name);
+				return SSH_ERR_INVALID_FORMAT;
+			}
+			debug_f("%s=<%s>", name, val);
+			if (strcmp(val, "0") == 0)
+				kex->flags |= KEX_HAS_PUBKEY_HOSTBOUND;
+			else {
+				debug_f("unsupported version of %s extension",
+				    name);
+			}
 		} else
 			debug_f("%s (unrecognised)", name);
 		free(name);
@@ -768,6 +786,8 @@ kex_free(struct kex *kex)
 #ifdef GSSAPI
 	free(kex->gss_host);
 #endif /* GSSAPI */
+	sshbuf_free(kex->initial_sig);
+	sshkey_free(kex->initial_hostkey);
 	free(kex->failed_choice);
 	free(kex->hostkey_alg);
 	free(kex->name);

@@ -1,4 +1,4 @@
-/* $OpenBSD: auth2-gss.c,v 1.32 2021/01/27 10:15:08 djm Exp $ */
+/* $OpenBSD: auth2-gss.c,v 1.33 2021/12/19 22:12:07 djm Exp $ */
 
 /*
  * Copyright (c) 2001-2007 Simon Wilkinson. All rights reserved.
@@ -122,7 +122,7 @@ userauth_gsskeyex(struct ssh *ssh)
  * how to check local user kuserok and the like)
  */
 static int
-userauth_gssapi(struct ssh *ssh)
+userauth_gssapi(struct ssh *ssh, const char *method)
 {
 	Authctxt *authctxt = ssh->authctxt;
 	gss_OID_desc goid = {0, NULL};
@@ -470,6 +470,7 @@ Authmethod method_gsskeyex = {
 
 Authmethod method_gssapi = {
 	"gssapi-with-mic",
+	NULL,
 	userauth_gssapi,
 	&options.gss_authentication
 };

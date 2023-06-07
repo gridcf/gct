@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-pkcs11.c,v 1.54 2021/08/11 05:20:17 djm Exp $ */
+/* $OpenBSD: ssh-pkcs11.c,v 1.55 2021/11/18 21:11:01 djm Exp $ */
 /*
  * Copyright (c) 2010 Markus Friedl.  All rights reserved.
  * Copyright (c) 2014 Pedro Martelletto. All rights reserved.
@@ -87,7 +87,7 @@ struct pkcs11_key {
 
 int pkcs11_interactive = 0;
 
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 static void
 ossl_error(const char *msg)
 {
@@ -97,7 +97,7 @@ ossl_error(const char *msg)
 	while ((e = ERR_get_error()) != 0)
 		error_f("libcrypto error: %s", ERR_error_string(e, NULL));
 }
-#endif /* HAVE_EC_KEY_METHOD_NEW */
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
 int
 pkcs11_init(int interactive)
@@ -281,10 +281,10 @@ pkcs11_del_provider_by_uri(struct pkcs11_uri *uri)
 
 static RSA_METHOD *rsa_method;
 static int rsa_idx = 0;
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 static EC_KEY_METHOD *ec_key_method;
 static int ec_key_idx = 0;
-#endif
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
 /*
  * This can't be in the ssh-pkcs11-uri, becase we can not depend on
@@ -657,7 +657,7 @@ pkcs11_rsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 	return (0);
 }
 
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 /* openssl callback doing the actual signing operation */
 static ECDSA_SIG *
 ecdsa_do_sign(const unsigned char *dgst, int dgst_len, const BIGNUM *inv,
@@ -761,9 +761,10 @@ pkcs11_ecdsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 	k11->slotidx = slotidx;
 	/* identify key object on smartcard */
 	k11->keyid_len = keyid_attrib->ulValueLen;
-	k11->keyid = xmalloc(k11->keyid_len);
-	memcpy(k11->keyid, keyid_attrib->pValue, k11->keyid_len);
-
+	if (k11->keyid_len > 0) {
+		k11->keyid = xmalloc(k11->keyid_len);
+		memcpy(k11->keyid, keyid_attrib->pValue, k11->keyid_len);
+	}
 	if (label_attrib->ulValueLen > 0 ) {
 		k11->label = xmalloc(label_attrib->ulValueLen+1);
 		memcpy(k11->label, label_attrib->pValue, label_attrib->ulValueLen);
@@ -775,7 +776,7 @@ pkcs11_ecdsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 
 	return (0);
 }
-#endif /* HAVE_EC_KEY_METHOD_NEW */
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
 /* remove trailing spaces */
 static void
@@ -850,7 +851,7 @@ pkcs11_key_included(struct sshkey ***keysp, int *nkeys, struct sshkey *key)
 	return (0);
 }
 
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 static struct sshkey *
 pkcs11_fetch_ecdsa_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
     CK_OBJECT_HANDLE *obj)
@@ -975,7 +976,7 @@ fail:
 
 	return (key);
 }
-#endif /* HAVE_EC_KEY_METHOD_NEW */
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
 static struct sshkey *
 pkcs11_fetch_rsa_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
@@ -1086,7 +1087,7 @@ pkcs11_fetch_x509_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 #endif
 	struct sshkey		*key = NULL;
 	int			 i;
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 	int			 nid;
 #endif
 	const u_char		*cp;
@@ -1177,7 +1178,7 @@ pkcs11_fetch_x509_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 		key->type = KEY_RSA;
 		key->flags |= SSHKEY_FLAG_EXT;
 		rsa = NULL;	/* now owned by key */
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 	} else if (EVP_PKEY_base_id(evp) == EVP_PKEY_EC) {
 		if (EVP_PKEY_get0_EC_KEY(evp) == NULL) {
 			error("invalid x509; no ec key");
@@ -1208,7 +1209,7 @@ pkcs11_fetch_x509_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 		key->type = KEY_ECDSA;
 		key->flags |= SSHKEY_FLAG_EXT;
 		ec = NULL;	/* now owned by key */
-#endif /* HAVE_EC_KEY_METHOD_NEW */
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 	} else {
 		error("unknown certificate key type");
 		goto out;
@@ -1460,11 +1461,11 @@ pkcs11_fetch_keys(struct pkcs11_provider *p, CK_ULONG slotidx,
 		case CKK_RSA:
 			key = pkcs11_fetch_rsa_pubkey(p, slotidx, &obj);
 			break;
-#ifdef HAVE_EC_KEY_METHOD_NEW
+#if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 		case CKK_ECDSA:
 			key = pkcs11_fetch_ecdsa_pubkey(p, slotidx, &obj);
 			break;
-#endif /* HAVE_EC_KEY_METHOD_NEW */
+#endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 		default:
 			/* XXX print key type? */
 			key = NULL;
