@@ -464,6 +464,7 @@ static void ssh_gssapi_userauth_error(Gssctxt *ctxt, struct ssh *ssh) {
 
 Authmethod method_gsskeyex = {
 	"gssapi-keyex",
+	NULL,
 	userauth_gsskeyex,
 	&options.gss_authentication
 };
