@@ -60,7 +60,7 @@ static int input_gssapi_errtok(int, u_int32_t, struct ssh *);
  * The 'gssapi_keyex' userauth mechanism.
  */
 static int
-userauth_gsskeyex(struct ssh *ssh)
+userauth_gsskeyex(struct ssh *ssh, const char *method)
 {
 	Authctxt *authctxt = ssh->authctxt;
 	int r, authenticated = 0;
