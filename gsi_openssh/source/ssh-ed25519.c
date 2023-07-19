@@ -24,7 +24,6 @@
 
 #include <string.h>
 #include <stdarg.h>
-#include <openssl/crypto.h>
 
 #include "fips_mode_replacement.h"
 

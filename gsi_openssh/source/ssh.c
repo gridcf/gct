@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh.c,v 1.569 2021/09/20 04:02:13 dtucker Exp $ */
+/* $OpenBSD: ssh.c,v 1.574 2022/03/30 04:33:09 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -77,7 +77,6 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #endif
-#include <openssl/crypto.h>
 #include "openbsd-compat/openssl-compat.h"
 #include "openbsd-compat/sys-queue.h"
 #include "fips_mode_replacement.h"
@@ -738,7 +737,7 @@ main(int ac, char **av)
 
  again:
 	while ((opt = getopt(ac, av, "1246ab:c:e:fgi:kl:m:no:p:qstvx"
-	    "AB:CD:E:F:GI:J:KL:MNO:PQ:R:S:TVw:W:XYy")) != -1) {
+	    "AB:CD:E:F:GI:J:KL:MNO:PQ:R:S:TVw:W:XYy")) != -1) { /* HUZdhjruz */
 		switch (opt) {
 		case '1':
 			fatal("SSH protocol v.1 is no longer supported");
@@ -1332,7 +1331,7 @@ main(int ac, char **av)
 		    /* Optional additional jump hosts ",..." */
 		    options.jump_extra == NULL ? "" : " -J ",
 		    options.jump_extra == NULL ? "" : options.jump_extra,
-		    /* Optional "-F" argumment if -F specified */
+		    /* Optional "-F" argument if -F specified */
 		    config == NULL ? "" : " -F ",
 		    config == NULL ? "" : config,
 		    /* Optional "-v" arguments if -v set */
@@ -1402,7 +1401,8 @@ main(int ac, char **av)
 
 	/* Force no tty */
 	if (options.request_tty == REQUEST_TTY_NO ||
-	    (muxclient_command && muxclient_command != SSHMUX_COMMAND_PROXY))
+	    (muxclient_command && muxclient_command != SSHMUX_COMMAND_PROXY) ||
+	    options.session_type == SESSION_TYPE_NONE)
 		tty_flag = 0;
 	/* Do not allocate a tty if stdin is not a tty. */
 	if ((!isatty(fileno(stdin)) || options.stdin_null) &&
@@ -1640,12 +1640,18 @@ main(int ac, char **av)
 		fatal_f("pubkey out of array bounds"); \
 	check_load(sshkey_load_public(p, &(sensitive_data.keys[o]), NULL), \
 	    &(sensitive_data.keys[o]), p, "pubkey"); \
+	if (sensitive_data.keys[o] != NULL) \
+		debug2("hostbased key %d: %s key from \"%s\"", o, \
+		    sshkey_ssh_name(sensitive_data.keys[o]), p); \
 } while (0)
 #define L_CERT(p,o) do { \
 	if ((o) >= sensitive_data.nkeys) \
 		fatal_f("cert out of array bounds"); \
 	check_load(sshkey_load_cert(p, &(sensitive_data.keys[o])), \
 	    &(sensitive_data.keys[o]), p, "cert"); \
+	if (sensitive_data.keys[o] != NULL) \
+		debug2("hostbased key %d: %s cert from \"%s\"", o, \
+		    sshkey_ssh_name(sensitive_data.keys[o]), p); \
 } while (0)
 
 		if (options.hostbased_authentication == 1) {
@@ -1949,7 +1955,7 @@ ssh_init_forward_permissions(struct ssh *ssh, const char *what, char **opens,
 {
 	u_int i;
 	int port;
-	char *addr, *arg, *oarg, ch;
+	char *addr, *arg, *oarg;
 	int where = FORWARD_LOCAL;
 
 	channel_clear_permission(ssh, FORWARD_ADM, where);
@@ -1966,9 +1972,8 @@ ssh_init_forward_permissions(struct ssh *ssh, const char *what, char **opens,
 	/* Otherwise treat it as a list of permitted host:port */
 	for (i = 0; i < num_opens; i++) {
 		oarg = arg = xstrdup(opens[i]);
-		ch = '\0';
-		addr = hpdelim2(&arg, &ch);
-		if (addr == NULL || ch == '/')
+		addr = hpdelim(&arg);
+		if (addr == NULL)
 			fatal_f("missing host in %s", what);
 		addr = cleanhostname(addr);
 		if (arg == NULL || ((port = permitopen_port(arg)) < 0))

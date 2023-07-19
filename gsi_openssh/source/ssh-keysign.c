@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-keysign.c,v 1.67 2021/07/05 01:16:46 dtucker Exp $ */
+/* $OpenBSD: ssh-keysign.c,v 1.70 2022/01/06 22:00:18 djm Exp $ */
 /*
  * Copyright (c) 2002 Markus Friedl.  All rights reserved.
  *
@@ -82,10 +82,13 @@ valid_request(struct passwd *pw, char *host, struct sshkey **ret, char **pkalgp,
 	if ((b = sshbuf_from(data, datalen)) == NULL)
 		fatal_f("sshbuf_from failed");
 
-	/* session id, currently limited to SHA1 (20 bytes) or SHA256 (32) */
+	/* session id */
 	if ((r = sshbuf_get_string(b, NULL, &len)) != 0)
 		fatal_fr(r, "parse session ID");
-	if (len != 20 && len != 32)
+	if (len != 20 && /* SHA1 */
+	    len != 32 && /* SHA256 */
+	    len != 48 && /* SHA384 */
+	    len != 64)   /* SHA512 */
 		fail++;
 
 	if ((r = sshbuf_get_u8(b, &type)) != 0)
@@ -223,6 +226,9 @@ main(int argc, char **argv)
 		fatal("ssh-keysign not enabled in %s",
 		    _PATH_HOST_CONFIG_FILE);
 
+	if (pledge("stdio dns", NULL) != 0)
+		fatal("%s: pledge: %s", __progname, strerror(errno));
+
 	for (i = found = 0; i < NUM_KEYTYPES; i++) {
 		if (key_fd[i] != -1)
 			found = 1;
@@ -247,9 +253,6 @@ main(int argc, char **argv)
 	}
 	if (!found)
 		fatal("no hostkey found");
-
-	if (pledge("stdio dns", NULL) != 0)
-		fatal("%s: pledge: %s", __progname, strerror(errno));
 
 	if ((b = sshbuf_new()) == NULL)
 		fatal("%s: sshbuf_new failed", __progname);

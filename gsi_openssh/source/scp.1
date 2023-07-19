@@ -8,9 +8,9 @@
 .\"
 .\" Created: Sun May  7 00:14:37 1995 ylo
 .\"
-.\" $OpenBSD: scp.1,v 1.105 2021/09/20 06:53:56 djm Exp $
+.\" $OpenBSD: scp.1,v 1.108 2022/02/23 21:21:16 djm Exp $
 .\"
-.Dd $Mdocdate: September 20 2021 $
+.Dd $Mdocdate: February 23 2022 $
 .Dt SCP 1
 .Os
 .Sh NAME
@@ -18,7 +18,7 @@
 .Nd OpenSSH secure file copy
 .Sh SYNOPSIS
 .Nm scp
-.Op Fl 346ABCOpqRrTv
+.Op Fl 346ABCOpqRrsTv
 .Op Fl c Ar cipher
 .Op Fl D Ar sftp_server_path
 .Op Fl F Ar ssh_config
@@ -76,7 +76,7 @@ The options are as follows:
 Copies between two remote hosts are transferred through the local host.
 Without this option the data is copied directly between the two remote
 hosts.
-Note that, when using the original SCP protocol (via the
+Note that, when using the legacy SCP protocol (via the
 .Fl O
 flag), this option
 selects batch mode for the second host as
@@ -111,7 +111,7 @@ This option is directly passed to
 .Xr ssh 1 .
 .It Fl D Ar sftp_server_path
 When using the SFTP protocol support via
-.Fl s ,
+.Fl M ,
 connect directly to a local SFTP server program rather than a
 remote one via
 .Xr ssh 1 .
@@ -143,7 +143,7 @@ This option is directly passed to
 .It Fl l Ar limit
 Limits the used bandwidth, specified in Kbit/s.
 .It Fl O
-Use the original SCP protocol for file transfers instead of the SFTP protocol.
+Use the legacy SCP protocol for file transfers instead of the SFTP protocol.
 Forcing the use of the SCP protocol may be necessary for servers that do
 not implement SFTP, for backwards-compatibility for particular filename
 wildcard patterns and for expanding paths with a
@@ -296,29 +296,22 @@ option), the program will exit.
 .Xr ssh_config 5 ,
 .Xr sftp-server 8 ,
 .Xr sshd 8
-.Sh CAVEATS
-The original scp protocol (selected by the
-.Fl O
-flag) requires execution of the remote user's shell to perform
-.Xr glob 3
-pattern matching.
-This requires careful quoting of any characters that have special meaning to
-the remote shell, such as quote characters.
 .Sh HISTORY
 .Nm
 is based on the rcp program in
 .Bx
 source code from the Regents of the University of California.
 .Pp
-Since OpenSSH 8.8 (8.7 in Red Hat/Fedora builds),
+Since OpenSSH 8.8,
 .Nm
 has use the SFTP protocol for transfers by default.
 .Sh AUTHORS
 .An Timo Rinne Aq Mt tri@iki.fi
 .An Tatu Ylonen Aq Mt ylo@cs.hut.fi
 .Sh CAVEATS
-The original SCP protocol (used by default) requires execution of the
-remote user's shell to perform
+The legacy SCP protocol (selected by the
+.Fl O
+flag) requires execution of the remote user's shell to perform
 .Xr glob 3
 pattern matching.
 This requires careful quoting of any characters that have special meaning to
