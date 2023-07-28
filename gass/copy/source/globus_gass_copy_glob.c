@@ -2053,9 +2053,10 @@ globus_l_gass_copy_cksm_file(
 
     int                                 i;
     int                                 fd;
-    int                                 n;
+    ssize_t                             n;
     globus_off_t                        count;
     globus_off_t                        read_left;
+    globus_gass_copy_glob_stat_t        statbuf;
 
     rc = globus_url_parse_loose(url, &parsed_url);
     if(rc != 0)
@@ -2080,44 +2081,7 @@ globus_l_gass_copy_cksm_file(
                 "[%s]: error parsing url: "
                 "url has no path",
                 myname));
-        goto error_fd;
-    }
-
-    read_left = length;
-    if(length >= 0)
-    {
-        count = (read_left > GASS_COPY_CKSM_BUFSIZE) ?
-            GASS_COPY_CKSM_BUFSIZE : read_left;
-    }
-    else
-    {
-        count = GASS_COPY_CKSM_BUFSIZE;
-    }
-
-    fd = open(parsed_url.url_path, O_RDONLY);
-    if(fd < 0)
-    {
-        result = globus_error_put(
-            globus_error_construct_string(
-                GLOBUS_GASS_COPY_MODULE,
-                GLOBUS_NULL,
-                "[%s]: error opening checksum file %s",
-                myname,
-                parsed_url.url_path));
-        goto error_fd;
-    }
-
-    if (lseek(fd, offset, SEEK_SET) == -1)
-    {
-        result = globus_error_put(
-            globus_error_construct_string(
-                GLOBUS_GASS_COPY_MODULE,
-                GLOBUS_NULL,
-                "[%s]: error (%d) seeking checksum file %s",
-                myname,
-                errno,
-                parsed_url.url_path));
-        goto error_seek;
+        goto error_md;
     }
 
     OpenSSL_add_all_algorithms();
@@ -2143,27 +2107,91 @@ globus_l_gass_copy_cksm_file(
             GLOBUS_NULL,
             "Unable to use checksum algorithm %s",
             algorithm));
-        goto error_seek;
+        goto error_md;
     }
 
     mdctx = EVP_MD_CTX_create();
     EVP_DigestInit_ex(mdctx, md, NULL);
 
-    while((n = read(fd, buf, count)) > 0)
+    /*
+     * A recursive copy may attempt to perform a checksum on directory urls.
+     * To preserve behaviour with previous version return a no-data checksum
+     */
+    result = globus_l_gass_copy_stat_file(url, &statbuf);
+    if (result != GLOBUS_SUCCESS)
     {
+        goto error_fd;
+    }
+
+    if (statbuf.type == GLOBUS_GASS_COPY_GLOB_ENTRY_FILE)
+    {
+        read_left = length;
         if(length >= 0)
         {
-            read_left -= n;
-            count = (read_left > GASS_COPY_CKSM_BUFSIZE) ? GASS_COPY_CKSM_BUFSIZE : read_left;
+            count = (read_left > GASS_COPY_CKSM_BUFSIZE) ?
+                GASS_COPY_CKSM_BUFSIZE : read_left;
+        }
+        else
+        {
+            count = GASS_COPY_CKSM_BUFSIZE;
         }
 
-        EVP_DigestUpdate(mdctx, buf, n);
+        fd = open(parsed_url.url_path, O_RDONLY);
+        if (fd < 0)
+        {
+            result = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_GASS_COPY_MODULE,
+                    GLOBUS_NULL,
+                    "[%s]: error opening checksum file %s",
+                    myname,
+                    parsed_url.url_path));
+            goto error_fd;
+        }
+
+        if (lseek(fd, offset, SEEK_SET) == -1)
+        {
+            result = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_GASS_COPY_MODULE,
+                    GLOBUS_NULL,
+                    "[%s]: error (%d) seeking checksum file %s",
+                    myname,
+                    errno,
+                    parsed_url.url_path));
+            goto error_seek;
+        }
+
+        while ((n = read(fd, buf, count)) > 0)
+        {
+            if (length >= 0)
+            {
+                read_left -= n;
+                count = (read_left > GASS_COPY_CKSM_BUFSIZE) ? GASS_COPY_CKSM_BUFSIZE : read_left;
+            }
+
+            EVP_DigestUpdate(mdctx, buf, n);
+        }
+
+        if (n < 0 && count > 0)
+        {
+            /*
+             * Check for read errors. Otherwise an incorrect checksum is returned
+             * and file-system read errors are mis-reported as corruption
+             */
+            result = globus_error_put(globus_error_construct_string(
+                GLOBUS_GASS_COPY_MODULE,
+                GLOBUS_NULL,
+                "Read error in checksum calculation for file %s read_left=%d count=%d n=%d %s",
+                parsed_url.url_path, read_left, count, n, strerror(errno)));
+            goto error_seek;
+        }
+
+        close(fd);
     }
 
     EVP_DigestFinal_ex(mdctx, md_value, &md_len);
     EVP_MD_CTX_destroy(mdctx);
-
-    close(fd);
 
     cksmptr = cksm_buff;
     for (i = 0; i < md_len; i++)
@@ -2187,8 +2215,9 @@ globus_l_gass_copy_cksm_file(
 error_seek:
     close(fd);
 error_fd:
+    EVP_MD_CTX_destroy(mdctx);
+ error_md:
     globus_url_destroy(&parsed_url);
-
 error_url:
 
     return result;
