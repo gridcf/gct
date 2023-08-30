@@ -2491,7 +2491,7 @@ globus_rsl_param_get(globus_rsl_t * ast_node,
     return(0);
 }
 
-int lvl = 0;
+static int lvl = 0;
 
 /* for printing RSL tree */
 #define INDENT(LVL) { \
