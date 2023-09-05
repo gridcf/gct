@@ -1,3 +1,9 @@
+globus-rsl (11.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make library linking survive -Wl,--as-needed
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 29 Aug 2023 15:21:15 +0200
+
 globus-rsl (11.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Typo fixes
