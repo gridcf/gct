@@ -243,8 +243,6 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 
 	memcpy(&myproposal, &myproposal_default, sizeof(myproposal));
 
-	memcpy(&myproposal, &myproposal_default, sizeof(myproposal));
-
 	xxx_host = host;
 	xxx_hostaddr = hostaddr;
 	xxx_conn_info = cinfo;
