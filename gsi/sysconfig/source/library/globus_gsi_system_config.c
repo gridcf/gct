@@ -1903,7 +1903,7 @@ globus_gsi_sysconfig_get_user_cert_filename_win32(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_KEY_STRING,
-            (_GSSL("The user key could not be found in:\n,"
+            (_GSSL("The user key could not be found in:\n"
              "1) env. var. X509_USER_KEY\n"
              "2) $HOME/.globus/userkey.pem\n"
              "3) $HOME/.globus/usercred.p12\n\n")));
@@ -5275,7 +5275,7 @@ globus_gsi_sysconfig_get_user_cert_filename_unix(
         GLOBUS_GSI_SYSCONFIG_ERROR_RESULT(
             result,
             GLOBUS_GSI_SYSCONFIG_ERROR_GETTING_KEY_STRING,
-            (_GSSL("The user key could not be found in:\n,"
+            (_GSSL("The user key could not be found in:\n"
              "1) env. var. X509_USER_KEY\n"
              "2) $HOME/.globus/userkey.pem\n"
              "3) $HOME/.globus/usercred.p12\n\n")));
