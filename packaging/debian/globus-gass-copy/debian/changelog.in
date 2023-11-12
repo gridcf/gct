@@ -1,3 +1,9 @@
+globus-gass-copy (10.13-1+gct.@distro@) @distro@; urgency=medium
+
+  * Detect checksum calculation errors due to file read errors
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 26 Oct 2023 05:25:00 +0200
+
 globus-gass-copy (10.12-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler and doxygen warnings
