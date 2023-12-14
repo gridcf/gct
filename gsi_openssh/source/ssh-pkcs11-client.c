@@ -225,7 +225,35 @@ ecdsa_do_sign(const unsigned char *dgst, int dgst_len, const BIGNUM *inv,
 static RSA_METHOD	*helper_rsa;
 #if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 static EC_KEY_METHOD	*helper_ecdsa;
+
+int
+is_ecdsa_pkcs11(EC_KEY *ecdsa)
+{
+	const EC_KEY_METHOD *meth;
+	ECDSA_SIG *(*sign_sig)(const unsigned char *dgst, int dgstlen,
+		const BIGNUM *kinv, const BIGNUM *rp, EC_KEY *eckey) = NULL;
+
+	meth = EC_KEY_get_method(ecdsa);
+	EC_KEY_METHOD_get_sign(meth, NULL, NULL, &sign_sig);
+	if (sign_sig == ecdsa_do_sign)
+		return 1;
+	return 0;
+}
 #endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
+
+int
+is_rsa_pkcs11(RSA *rsa)
+{
+	const RSA_METHOD *meth;
+	int (*priv_enc)(int flen, const unsigned char *from,
+        	unsigned char *to, RSA *rsa, int padding) = NULL;
+
+	meth = RSA_get_method(rsa);
+	priv_enc = RSA_meth_get_priv_enc(meth);
+	if (priv_enc == rsa_encrypt)
+		return 1;
+	return 0;
+}
 
 /* redirect private key crypto operations to the ssh-pkcs11-helper */
 static void

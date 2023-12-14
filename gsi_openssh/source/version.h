@@ -1,6 +1,6 @@
-/* $OpenBSD: version.h,v 1.94 2022/04/04 22:45:25 djm Exp $ */
+/* $OpenBSD: version.h,v 1.97 2023/03/15 21:19:57 djm Exp $ */
 
-#define SSH_VERSION	"OpenSSH_9.0"
+#define SSH_VERSION	"OpenSSH_9.3"
 
 #ifdef GSI
 #define GSI_VERSION	" GSI"

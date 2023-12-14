@@ -1,4 +1,4 @@
-/* $OpenBSD: monitor.c,v 1.232 2022/02/25 02:09:27 djm Exp $ */
+/* $OpenBSD: monitor.c,v 1.235 2023/02/17 04:22:50 dtucker Exp $ */
 /*
  * Copyright 2002 Niels Provos <provos@citi.umich.edu>
  * Copyright 2002 Markus Friedl <markus@openbsd.org>
@@ -672,11 +672,12 @@ mm_answer_sign(struct ssh *ssh, int sock, struct sshbuf *m)
 	struct sshkey *key;
 	struct sshbuf *sigbuf = NULL;
 	u_char *p = NULL, *signature = NULL;
-	char *alg = NULL;
+	char *alg = NULL, *effective_alg;
 	size_t datlen, siglen, alglen;
 	int r, is_proof = 0;
 	u_int keyid, compat;
 	const char proof_req[] = "hostkeys-prove-00@openssh.com";
+	const char safe_rsa[]  = "rsa-sha2-256";
 
 	debug3_f("entering");
 
@@ -731,18 +732,30 @@ mm_answer_sign(struct ssh *ssh, int sock, struct sshbuf *m)
 	}
 
 	if ((key = get_hostkey_by_index(keyid)) != NULL) {
-		if ((r = sshkey_sign(key, &signature, &siglen, p, datlen, alg,
+		if (ssh->compat & SSH_RH_RSASIGSHA && strcmp(alg, "ssh-rsa") == 0
+				&& (sshkey_type_plain(key->type) == KEY_RSA)) {
+			effective_alg = safe_rsa;
+		} else {
+			effective_alg = alg;
+		}
+		if ((r = sshkey_sign(key, &signature, &siglen, p, datlen, effective_alg,
 		    options.sk_provider, NULL, compat)) != 0)
 			fatal_fr(r, "sign");
 	} else if ((key = get_hostkey_public_by_index(keyid, ssh)) != NULL &&
 	    auth_sock > 0) {
+		if (ssh->compat & SSH_RH_RSASIGSHA && strcmp(alg, "ssh-rsa") == 0
+				&& (sshkey_type_plain(key->type) == KEY_RSA)) {
+			effective_alg = safe_rsa;
+		} else {
+			effective_alg = alg;
+		}
 		if ((r = ssh_agent_sign(auth_sock, key, &signature, &siglen,
-		    p, datlen, alg, compat)) != 0)
+		    p, datlen, effective_alg, compat)) != 0)
 			fatal_fr(r, "agent sign");
 	} else
 		fatal_f("no hostkey from index %d", keyid);
 
-	debug3_f("%s %s signature len=%zu", alg,
+	debug3_f("%s (effective: %s) %s signature len=%zu", alg, effective_alg,
 	    is_proof ? "hostkey proof" : "KEX", siglen);
 
 	sshbuf_reset(m);
@@ -1186,6 +1199,10 @@ mm_answer_pam_respond(struct ssh *ssh, int sock, struct sshbuf *m)
 	sshpam_authok = NULL;
 	if ((r = sshbuf_get_u32(m, &num)) != 0)
 		fatal("%s: buffer error: %s", __func__, ssh_err(r));
+	if (num > PAM_MAX_NUM_MSG) {
+		fatal_f("Too many PAM messages, got %u, expected <= %u",
+		    num, (unsigned)PAM_MAX_NUM_MSG);
+	}
 	if (num > 0) {
 		resp = xcalloc(num, sizeof(char *));
 		for (i = 0; i < num; ++i) {
@@ -1250,11 +1267,6 @@ mm_answer_keyallowed(struct ssh *ssh, int sock, struct sshbuf *m)
 		fatal_fr(r, "parse");
 
 	if (key != NULL && authctxt->valid) {
-		/* These should not make it past the privsep child */
-		if (sshkey_type_plain(key->type) == KEY_RSA &&
-		    (ssh->compat & SSH_BUG_RSASIGMD5) != 0)
-			fatal_f("passed a SSH_BUG_RSASIGMD5 key");
-
 		switch (type) {
 		case MM_USERKEY:
 			auth_method = "publickey";

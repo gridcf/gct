@@ -137,10 +137,12 @@ fatal_report:
 }
 
 int
-audit_keyusage(struct ssh *ssh, int host_user, char *fp, int rv)
+audit_keyusage(struct ssh *ssh, int host_user, const char *key_fp, const struct sshkey_cert *cert, const char *issuer_fp, int rv)
 {
 	char buf[AUDIT_LOG_SIZE];
 	int audit_fd, rc, saved_errno;
+	const char *rip;
+	u_int i;
 
 	audit_fd = audit_open();
 	if (audit_fd < 0) {
@@ -150,14 +152,44 @@ audit_keyusage(struct ssh *ssh, int host_user, char *fp, int rv)
 		else
 			return 0; /* Must prevent login */
 	}
+	rip = ssh_remote_ipaddr(ssh);
 	snprintf(buf, sizeof(buf), "%s_auth grantors=auth-key", host_user ? "pubkey" : "hostbased");
 	rc = audit_log_acct_message(audit_fd, AUDIT_USER_AUTH, NULL,
-		buf, audit_username(), -1, NULL, ssh_remote_ipaddr(ssh), NULL, rv);
+		buf, audit_username(), -1, NULL, rip, NULL, rv);
 	if ((rc < 0) && ((rc != -1) || (getuid() == 0)))
 		goto out;
-	snprintf(buf, sizeof(buf), "op=negotiate kind=auth-key fp=%s", fp);
+	snprintf(buf, sizeof(buf), "op=negotiate kind=auth-key fp=%s", key_fp);
 	rc = audit_log_user_message(audit_fd, AUDIT_CRYPTO_KEY_USER, buf, NULL,
-		ssh_remote_ipaddr(ssh), NULL, rv);
+		rip, NULL, rv);
+	if ((rc < 0) && ((rc != -1) || (getuid() == 0)))
+		goto out;
+
+	if (cert) {
+		char *pbuf;
+
+		pbuf = audit_encode_nv_string("key_id", cert->key_id, 0);
+		if (pbuf == NULL)
+			goto out;
+		snprintf(buf, sizeof(buf), "cert %s cert_serial=%llu cert_issuer_alg=\"%s\" cert_issuer_fp=\"%s\"",
+			pbuf, (unsigned long long)cert->serial, sshkey_type(cert->signature_key), issuer_fp);
+		free(pbuf);
+		rc = audit_log_acct_message(audit_fd, AUDIT_USER_AUTH, NULL,
+			buf, audit_username(), -1, NULL, rip, NULL, rv);
+		if ((rc < 0) && ((rc != -1) || (getuid() == 0)))
+			goto out;
+
+		for (i = 0; cert->principals != NULL && i < cert->nprincipals; i++) {
+			pbuf = audit_encode_nv_string("cert_principal", cert->principals[i], 0);
+			if (pbuf == NULL)
+				goto out;
+			snprintf(buf, sizeof(buf), "principal %s", pbuf);
+			free(pbuf);
+			rc = audit_log_acct_message(audit_fd, AUDIT_USER_AUTH, NULL,
+				buf, audit_username(), -1, NULL, rip, NULL, rv);
+			if ((rc < 0) && ((rc != -1) || (getuid() == 0)))
+				goto out;
+		}
+	}
 out:
 	saved_errno = errno;
 	audit_close(audit_fd);

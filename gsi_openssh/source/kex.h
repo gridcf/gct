@@ -1,4 +1,4 @@
-/* $OpenBSD: kex.h,v 1.117 2022/01/06 21:55:23 djm Exp $ */
+/* $OpenBSD: kex.h,v 1.118 2023/03/06 12:14:48 dtucker Exp $ */
 
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
@@ -33,6 +33,9 @@
 # include <openssl/bn.h>
 # include <openssl/dh.h>
 # include <openssl/ecdsa.h>
+# include <openssl/evp.h>
+# include <openssl/core_names.h>
+# include <openssl/param_build.h>
 # ifdef OPENSSL_HAS_ECC
 #  include <openssl/ec.h>
 # else /* OPENSSL_HAS_ECC */
@@ -199,6 +202,9 @@ char	*kex_gss_alg_list(char);
 char	*kex_names_cat(const char *, const char *);
 int	 kex_assemble_names(char **, const char *, const char *);
 int	 kex_gss_names_valid(const char *);
+void	 kex_proposal_populate_entries(struct ssh *, char *prop[PROPOSAL_MAX],
+    const char *, const char *, const char *, const char *, const char *);
+void	 kex_proposal_free_entries(char *prop[PROPOSAL_MAX]);
 
 int	 kex_exchange_identification(struct ssh *, int, const char *);
 
@@ -283,6 +289,8 @@ int	kexc25519_shared_key_ext(const u_char key[CURVE25519_SIZE],
     const u_char pub[CURVE25519_SIZE], struct sshbuf *out, int)
 	__attribute__((__bounded__(__minbytes__, 1, CURVE25519_SIZE)))
 	__attribute__((__bounded__(__minbytes__, 2, CURVE25519_SIZE)));
+int	kex_create_evp_dh(EVP_PKEY **, const BIGNUM *, const BIGNUM *,
+    const BIGNUM *, const BIGNUM *, const BIGNUM *);
 
 #if defined(DEBUG_KEX) || defined(DEBUG_KEXDH) || defined(DEBUG_KEXECDH)
 void	dump_digest(const char *, const u_char *, int);

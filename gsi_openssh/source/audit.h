@@ -64,7 +64,7 @@ void	audit_session_close(struct logininfo *);
 int	audit_run_command(struct ssh *, const char *);
 void 	audit_end_command(struct ssh *, int, const char *);
 ssh_audit_event_t audit_classify_auth(const char *);
-int	audit_keyusage(struct ssh *, int, char *, int);
+int	audit_keyusage(struct ssh *, int, const char *, const struct sshkey_cert *, const char *, int);
 void	audit_key(struct ssh *, int, int *, const struct sshkey *);
 void	audit_unsupported(struct ssh *, int);
 void	audit_kex(struct ssh *, int, char *, char *, char *, char *);

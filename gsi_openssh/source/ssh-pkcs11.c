@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-pkcs11.c,v 1.55 2021/11/18 21:11:01 djm Exp $ */
+/* $OpenBSD: ssh-pkcs11.c,v 1.56 2023/03/08 05:33:53 tb Exp $ */
 /*
  * Copyright (c) 2010 Markus Friedl.  All rights reserved.
  * Copyright (c) 2014 Pedro Martelletto. All rights reserved.
@@ -673,7 +673,7 @@ ecdsa_do_sign(const unsigned char *dgst, int dgst_len, const BIGNUM *inv,
 	BIGNUM			*r = NULL, *s = NULL;
 
 	if ((k11 = EC_KEY_get_ex_data(ec, ec_key_idx)) == NULL) {
-		ossl_error("EC_KEY_get_key_method_data failed for ec");
+		ossl_error("EC_KEY_get_ex_data failed for ec");
 		return (NULL);
 	}
 
@@ -695,7 +695,7 @@ ecdsa_do_sign(const unsigned char *dgst, int dgst_len, const BIGNUM *inv,
 		goto done;
 	}
 	if (siglen < 64 || siglen > 132 || siglen % 2) {
-		ossl_error("d2i_ECDSA_SIG failed");
+		error_f("bad signature length: %lu", (u_long)siglen);
 		goto done;
 	}
 	bnlen = siglen/2;
@@ -705,7 +705,7 @@ ecdsa_do_sign(const unsigned char *dgst, int dgst_len, const BIGNUM *inv,
 	}
 	if ((r = BN_bin2bn(sig, bnlen, NULL)) == NULL ||
 	    (s = BN_bin2bn(sig+bnlen, bnlen, NULL)) == NULL) {
-		ossl_error("d2i_ECDSA_SIG failed");
+		ossl_error("BN_bin2bn failed");
 		ECDSA_SIG_free(ret);
 		ret = NULL;
 		goto done;
@@ -776,7 +776,23 @@ pkcs11_ecdsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 
 	return (0);
 }
+
+int
+is_ecdsa_pkcs11(EC_KEY *ecdsa)
+{
+	if (EC_KEY_get_ex_data(ecdsa, ec_key_idx) != NULL)
+		return 1;
+	return 0;
+}
 #endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
+
+int
+is_rsa_pkcs11(RSA *rsa)
+{
+	if (RSA_get_ex_data(rsa, rsa_idx) != NULL)
+		return 1;
+	return 0;
+}
 
 /* remove trailing spaces */
 static void
@@ -1744,10 +1760,8 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 		error("dlopen %s failed: %s", provider_module, dlerror());
 		goto fail;
 	}
-	if ((getfunctionlist = dlsym(handle, "C_GetFunctionList")) == NULL) {
-		error("dlsym(C_GetFunctionList) failed: %s", dlerror());
-		goto fail;
-	}
+	if ((getfunctionlist = dlsym(handle, "C_GetFunctionList")) == NULL)
+		fatal("dlsym(C_GetFunctionList) failed: %s", dlerror());
 
 	p->module->handle = handle;
 	/* setup the pkcs11 callbacks */

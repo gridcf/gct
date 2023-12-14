@@ -213,8 +213,8 @@ ssh_gssapi_krb5_userok(ssh_gssapi_client *client, char *name)
 	/* NOTE: .k5login and .k5users must opened as root, not the user,
 	 * because if they are on a krb5-protected filesystem, user credentials
 	 * to access these files aren't available yet. */
-	if (ssh_krb5_kuserok(krb_context, princ, name, k5login_exists)
-			&& k5login_exists) {
+	if (k5login_exists &&
+	    ssh_krb5_kuserok(krb_context, princ, name, k5login_exists)) {
 		retval = 1;
 		logit("Authorized to %s, krb5 principal %s (krb5_kuserok)",
 		    name, (char *)client->displayname.value);

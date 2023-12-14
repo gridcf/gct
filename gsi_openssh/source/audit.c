@@ -116,12 +116,22 @@ audit_event_lookup(ssh_audit_event_t ev)
 void
 audit_key(struct ssh *ssh, int host_user, int *rv, const struct sshkey *key)
 {
-	char *fp;
+	char *key_fp = NULL;
+	char *issuer_fp = NULL;
+	struct sshkey_cert *cert = NULL;
 
-	fp = sshkey_fingerprint(key, options.fingerprint_hash, SSH_FP_HEX);
-	if (audit_keyusage(ssh, host_user, fp, (*rv == 0)) == 0)
+	key_fp = sshkey_fingerprint(key, options.fingerprint_hash, SSH_FP_HEX);
+	if (sshkey_is_cert(key) && key->cert != NULL && key->cert->signature_key != NULL) {
+		cert = key->cert;
+		issuer_fp = sshkey_fingerprint(cert->signature_key,
+										options.fingerprint_hash, SSH_FP_DEFAULT);
+	}
+	if (audit_keyusage(ssh, host_user, key_fp, cert, issuer_fp, (*rv == 0)) == 0)
 		*rv = -SSH_ERR_INTERNAL_ERROR;
-	free(fp);
+	if (key_fp)
+		free(key_fp);
+	if (issuer_fp)
+		free(issuer_fp);
 }
 
 void

@@ -1,4 +1,4 @@
-/* $OpenBSD: compat.c,v 1.119 2021/09/10 05:46:09 djm Exp $ */
+/* $OpenBSD: compat.c,v 1.126 2023/03/06 12:14:48 dtucker Exp $ */
 /*
  * Copyright (c) 1999, 2000, 2001, 2002 Markus Friedl.  All rights reserved.
  *
@@ -36,13 +36,13 @@
 #include "compat.h"
 #include "log.h"
 #include "match.h"
-#include "kex.h"
 
 /* determine bug flags from SSH protocol banner */
 void
 compat_banner(struct ssh *ssh, const char *version)
 {
 	int i;
+	int forbid_ssh_rsa = 0;
 	static struct {
 		char	*pat;
 		int	bugs;
@@ -77,26 +77,8 @@ compat_banner(struct ssh *ssh, const char *version)
 		{ "3.0.*",		SSH_BUG_DEBUG },
 		{ "3.0 SecureCRT*",	SSH_OLD_SESSIONID },
 		{ "1.7 SecureFX*",	SSH_OLD_SESSIONID },
-		{ "1.2.18*,"
-		  "1.2.19*,"
-		  "1.2.20*,"
-		  "1.2.21*,"
-		  "1.2.22*",		SSH_BUG_IGNOREMSG },
-		{ "1.3.2*",		/* F-Secure */
-					SSH_BUG_IGNOREMSG },
 		{ "Cisco-1.*",		SSH_BUG_DHGEX_LARGE|
 					SSH_BUG_HOSTKEYS },
-		{ "*SSH Compatible Server*",			/* Netscreen */
-					SSH_BUG_PASSWORDPAD },
-		{ "*OSU_0*,"
-		  "OSU_1.0*,"
-		  "OSU_1.1*,"
-		  "OSU_1.2*,"
-		  "OSU_1.3*,"
-		  "OSU_1.4*,"
-		  "OSU_1.5alpha1*,"
-		  "OSU_1.5alpha2*,"
-		  "OSU_1.5alpha3*",	SSH_BUG_PASSWORDPAD },
 		{ "*SSH_Version_Mapper*",
 					SSH_BUG_SCANNER },
 		{ "PuTTY_Local:*,"	/* dev versions < Sep 2014 */
@@ -144,12 +126,15 @@ compat_banner(struct ssh *ssh, const char *version)
 	};
 
 	/* process table, return first match */
+	forbid_ssh_rsa = (ssh->compat & SSH_RH_RSASIGSHA);
 	ssh->compat = 0;
 	for (i = 0; check[i].pat; i++) {
 		if (match_pattern_list(version, check[i].pat, 0) == 1) {
 			debug_f("match: %s pat %s compat 0x%08x",
 			    version, check[i].pat, check[i].bugs);
 			ssh->compat = check[i].bugs;
+	if (forbid_ssh_rsa)
+		ssh->compat |= SSH_RH_RSASIGSHA;
 			/* Check to see if the remote side is OpenSSH and not HPN */
 			/* TODO: See if we can work this into the new method for bug checks */
 			if (strstr(version, "OpenSSH") != NULL) {
@@ -165,41 +150,13 @@ compat_banner(struct ssh *ssh, const char *version)
 		}
 	}
 	debug_f("no match: %s", version);
+	if (forbid_ssh_rsa)
+		ssh->compat |= SSH_RH_RSASIGSHA;
 }
 
 /* Always returns pointer to allocated memory, caller must free. */
 char *
-compat_cipher_proposal(struct ssh *ssh, char *cipher_prop)
-{
-	if (!(ssh->compat & SSH_BUG_BIGENDIANAES))
-		return xstrdup(cipher_prop);
-	debug2_f("original cipher proposal: %s", cipher_prop);
-	if ((cipher_prop = match_filter_denylist(cipher_prop, "aes*")) == NULL)
-		fatal("match_filter_denylist failed");
-	debug2_f("compat cipher proposal: %s", cipher_prop);
-	if (*cipher_prop == '\0')
-		fatal("No supported ciphers found");
-	return cipher_prop;
-}
-
-/* Always returns pointer to allocated memory, caller must free. */
-char *
-compat_pkalg_proposal(struct ssh *ssh, char *pkalg_prop)
-{
-	if (!(ssh->compat & SSH_BUG_RSASIGMD5))
-		return xstrdup(pkalg_prop);
-	debug2_f("original public key proposal: %s", pkalg_prop);
-	if ((pkalg_prop = match_filter_denylist(pkalg_prop, "ssh-rsa")) == NULL)
-		fatal("match_filter_denylist failed");
-	debug2_f("compat public key proposal: %s", pkalg_prop);
-	if (*pkalg_prop == '\0')
-		fatal("No supported PK algorithms found");
-	return pkalg_prop;
-}
-
-/* Always returns pointer to allocated memory, caller must free. */
-char *
-compat_kex_proposal(struct ssh *ssh, char *p)
+compat_kex_proposal(struct ssh *ssh, const char *p)
 {
 	char *cp = NULL, *cp2 = NULL;
 

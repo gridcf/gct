@@ -334,13 +334,14 @@ sshkey_fuzz_tests(void)
 	TEST_DONE();
 
 #ifdef WITH_OPENSSL
+	/* Skip this test, SHA1 signatures are not supported
 	TEST_START("fuzz RSA sig");
 	buf = load_file("rsa_1");
 	ASSERT_INT_EQ(sshkey_parse_private_fileblob(buf, "", &k1, NULL), 0);
 	sshbuf_free(buf);
 	sig_fuzz(k1, "ssh-rsa");
 	sshkey_free(k1);
-	TEST_DONE();
+	TEST_DONE();*/
 
 	TEST_START("fuzz RSA SHA256 sig");
 	buf = load_file("rsa_1");
@@ -358,6 +359,7 @@ sshkey_fuzz_tests(void)
 	sshkey_free(k1);
 	TEST_DONE();
 
+	/* Skip this test, SHA1 signatures are not supported
 	TEST_START("fuzz DSA sig");
 	buf = load_file("dsa_1");
 	ASSERT_INT_EQ(sshkey_parse_private_fileblob(buf, "", &k1, NULL), 0);
@@ -365,6 +367,7 @@ sshkey_fuzz_tests(void)
 	sig_fuzz(k1, NULL);
 	sshkey_free(k1);
 	TEST_DONE();
+	*/
 
 #ifdef OPENSSL_HAS_ECC
 	TEST_START("fuzz ECDSA sig");
