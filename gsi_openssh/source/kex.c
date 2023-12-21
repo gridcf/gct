@@ -1723,6 +1723,7 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 }
 
 #ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 /* 
  * Creates an EVP_PKEY from the given parameters and keys.
  * The private key can be omitted.
@@ -1765,4 +1766,5 @@ out:
 	EVP_PKEY_CTX_free(ctx);
 	return r;
 }
+# endif
 #endif /* WITH_OPENSSL */

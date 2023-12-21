@@ -23,8 +23,10 @@
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+# endif
 #include <openssl/fips.h>
 
 #include "fips_mode_replacement.h"
@@ -41,7 +43,11 @@
 
 #include "openbsd-compat/openssl-compat.h"
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int openssh_RSA_verify(int, const u_char *, size_t, u_char *, size_t, EVP_PKEY *);
+# else
+static int openssh_RSA_verify(int, u_char *, size_t, u_char *, size_t, RSA *);
+# endif
 
 static u_int
 ssh_rsa_size(const struct sshkey *key)
@@ -133,6 +139,7 @@ ssh_rsa_serialize_private(const struct sshkey *key, struct sshbuf *b,
 	return 0;
 }
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 ssh_rsa_generate(struct sshkey *k, int bits)
 {
@@ -185,6 +192,36 @@ ssh_rsa_generate(struct sshkey *k, int bits)
 	BN_free(f4);
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+static int
+ssh_rsa_generate(struct sshkey *k, int bits)
+{
+	RSA *private = NULL;
+	BIGNUM *f4 = NULL;
+	int ret = SSH_ERR_INTERNAL_ERROR;
+
+	if (bits < SSH_RSA_MINIMUM_MODULUS_SIZE ||
+	    bits > SSHBUF_MAX_BIGNUM * 8)
+		return SSH_ERR_KEY_LENGTH;
+	if ((private = RSA_new()) == NULL || (f4 = BN_new()) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if (!BN_set_word(f4, RSA_F4) ||
+	    !RSA_generate_key_ex(private, bits, f4, NULL)) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	k->rsa = private;
+	private = NULL;
+	ret = 0;
+ out:
+	RSA_free(private);
+	BN_free(f4);
+	return ret;
+}
+# endif
 
 static int
 ssh_rsa_copy_public(const struct sshkey *from, struct sshkey *to)
@@ -347,6 +384,23 @@ rsa_hash_id_from_keyname(const char *alg)
 	return -1;
 }
 
+# if OPENSSL_VERSION_NUMBER < 0x30000000L
+static int
+rsa_hash_alg_nid(int type)
+{
+	switch (type) {
+	case SSH_DIGEST_SHA1:
+		return NID_sha1;
+	case SSH_DIGEST_SHA256:
+		return NID_sha256;
+	case SSH_DIGEST_SHA512:
+		return NID_sha512;
+	default:
+		return -1;
+	}
+}
+# endif
+
 int
 ssh_rsa_complete_crt_parameters(struct sshkey *key, const BIGNUM *iqmp)
 {
@@ -401,6 +455,7 @@ ssh_rsa_complete_crt_parameters(struct sshkey *key, const BIGNUM *iqmp)
 	return r;
 }
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 /* RSASSA-PKCS1-v1_5 (PKCS #1 v2.0 signature) with SHA1 */
 static int
 ssh_rsa_sign(struct sshkey *key,
@@ -483,7 +538,94 @@ ssh_rsa_sign(struct sshkey *key,
 	sshbuf_free(b);
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+/* RSASSA-PKCS1-v1_5 (PKCS #1 v2.0 signature) with SHA1 */
+static int
+ssh_rsa_sign(struct sshkey *key,
+    u_char **sigp, size_t *lenp,
+    const u_char *data, size_t datalen,
+    const char *alg, const char *sk_provider, const char *sk_pin, u_int compat)
+{
+	const BIGNUM *rsa_n;
+	u_char digest[SSH_DIGEST_MAX_LENGTH], *sig = NULL;
+	size_t slen = 0;
+	u_int hlen, len;
+	int nid, hash_alg, ret = SSH_ERR_INTERNAL_ERROR;
+	struct sshbuf *b = NULL;
 
+	if (lenp != NULL)
+		*lenp = 0;
+	if (sigp != NULL)
+		*sigp = NULL;
+
+	if (alg == NULL || strlen(alg) == 0)
+		hash_alg = SSH_DIGEST_SHA1;
+	else
+		hash_alg = rsa_hash_id_from_keyname(alg);
+	if (key == NULL || key->rsa == NULL || hash_alg == -1 ||
+	    sshkey_type_plain(key->type) != KEY_RSA)
+		return SSH_ERR_INVALID_ARGUMENT;
+	RSA_get0_key(key->rsa, &rsa_n, NULL, NULL);
+	if (BN_num_bits(rsa_n) < SSH_RSA_MINIMUM_MODULUS_SIZE)
+		return SSH_ERR_KEY_LENGTH;
+	slen = RSA_size(key->rsa);
+	if (slen <= 0 || slen > SSHBUF_MAX_BIGNUM)
+		return SSH_ERR_INVALID_ARGUMENT;
+
+	/* hash the data */
+	nid = rsa_hash_alg_nid(hash_alg);
+	if ((hlen = ssh_digest_bytes(hash_alg)) == 0)
+		return SSH_ERR_INTERNAL_ERROR;
+	if ((ret = ssh_digest_memory(hash_alg, data, datalen,
+	    digest, sizeof(digest))) != 0)
+		goto out;
+
+	if ((sig = malloc(slen)) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+
+	if (RSA_sign(nid, digest, hlen, sig, &len, key->rsa) != 1) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	if (len < slen) {
+		size_t diff = slen - len;
+		memmove(sig + diff, sig, len);
+		explicit_bzero(sig, diff);
+	} else if (len > slen) {
+		ret = SSH_ERR_INTERNAL_ERROR;
+		goto out;
+	}
+	/* encode signature */
+	if ((b = sshbuf_new()) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if ((ret = sshbuf_put_cstring(b, rsa_hash_alg_ident(hash_alg))) != 0 ||
+	    (ret = sshbuf_put_string(b, sig, slen)) != 0)
+		goto out;
+	len = sshbuf_len(b);
+	if (sigp != NULL) {
+		if ((*sigp = malloc(len)) == NULL) {
+			ret = SSH_ERR_ALLOC_FAIL;
+			goto out;
+		}
+		memcpy(*sigp, sshbuf_ptr(b), len);
+	}
+	if (lenp != NULL)
+		*lenp = len;
+	ret = 0;
+ out:
+	explicit_bzero(digest, sizeof(digest));
+	freezero(sig, slen);
+	sshbuf_free(b);
+	return ret;
+}
+# endif
+
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 ssh_rsa_verify(const struct sshkey *key,
     const u_char *sig, size_t siglen,
@@ -568,7 +710,171 @@ ssh_rsa_verify(const struct sshkey *key,
 	explicit_bzero(digest, sizeof(digest));
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+static int
+ssh_rsa_verify(const struct sshkey *key,
+    const u_char *sig, size_t siglen,
+    const u_char *data, size_t dlen, const char *alg, u_int compat,
+    struct sshkey_sig_details **detailsp)
+{
+	const BIGNUM *rsa_n;
+	char *sigtype = NULL;
+	int hash_alg, want_alg, ret = SSH_ERR_INTERNAL_ERROR;
+	size_t len = 0, diff, modlen, hlen;
+	struct sshbuf *b = NULL;
+	u_char digest[SSH_DIGEST_MAX_LENGTH], *osigblob, *sigblob = NULL;
 
+	if (key == NULL || key->rsa == NULL ||
+	    sshkey_type_plain(key->type) != KEY_RSA ||
+	    sig == NULL || siglen == 0)
+		return SSH_ERR_INVALID_ARGUMENT;
+	RSA_get0_key(key->rsa, &rsa_n, NULL, NULL);
+	if (BN_num_bits(rsa_n) < SSH_RSA_MINIMUM_MODULUS_SIZE)
+		return SSH_ERR_KEY_LENGTH;
+
+	if ((b = sshbuf_from(sig, siglen)) == NULL)
+		return SSH_ERR_ALLOC_FAIL;
+	if (sshbuf_get_cstring(b, &sigtype, NULL) != 0) {
+		ret = SSH_ERR_INVALID_FORMAT;
+		goto out;
+	}
+	if ((hash_alg = rsa_hash_id_from_ident(sigtype)) == -1) {
+		ret = SSH_ERR_KEY_TYPE_MISMATCH;
+		goto out;
+	}
+	/*
+	 * Allow ssh-rsa-cert-v01 certs to generate SHA2 signatures for
+	 * legacy reasons, but otherwise the signature type should match.
+	 */
+	if (alg != NULL && strcmp(alg, "ssh-rsa-cert-v01@openssh.com") != 0) {
+		if ((want_alg = rsa_hash_id_from_keyname(alg)) == -1) {
+			ret = SSH_ERR_INVALID_ARGUMENT;
+			goto out;
+		}
+		if (hash_alg != want_alg) {
+			ret = SSH_ERR_SIGNATURE_INVALID;
+			goto out;
+		}
+	}
+	if (sshbuf_get_string(b, &sigblob, &len) != 0) {
+		ret = SSH_ERR_INVALID_FORMAT;
+		goto out;
+	}
+	if (sshbuf_len(b) != 0) {
+		ret = SSH_ERR_UNEXPECTED_TRAILING_DATA;
+		goto out;
+	}
+	/* RSA_verify expects a signature of RSA_size */
+	modlen = RSA_size(key->rsa);
+	if (len > modlen) {
+		ret = SSH_ERR_KEY_BITS_MISMATCH;
+		goto out;
+	} else if (len < modlen) {
+		diff = modlen - len;
+		osigblob = sigblob;
+		if ((sigblob = realloc(sigblob, modlen)) == NULL) {
+			sigblob = osigblob; /* put it back for clear/free */
+			ret = SSH_ERR_ALLOC_FAIL;
+			goto out;
+		}
+		memmove(sigblob + diff, sigblob, len);
+		explicit_bzero(sigblob, diff);
+		len = modlen;
+	}
+	if ((hlen = ssh_digest_bytes(hash_alg)) == 0) {
+		ret = SSH_ERR_INTERNAL_ERROR;
+		goto out;
+	}
+	if ((ret = ssh_digest_memory(hash_alg, data, dlen,
+	    digest, sizeof(digest))) != 0)
+		goto out;
+
+	ret = openssh_RSA_verify(hash_alg, digest, hlen, sigblob, len,
+	    key->rsa);
+ out:
+	freezero(sigblob, len);
+	free(sigtype);
+	sshbuf_free(b);
+	explicit_bzero(digest, sizeof(digest));
+	return ret;
+}
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+
+# if OPENSSL_VERSION_NUMBER < 0x30000000L
+/*
+ * See:
+ * http://www.rsasecurity.com/rsalabs/pkcs/pkcs-1/
+ * ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-1/pkcs-1v2-1.asn
+ */
+
+/*
+ * id-sha1 OBJECT IDENTIFIER ::= { iso(1) identified-organization(3)
+ *	oiw(14) secsig(3) algorithms(2) 26 }
+ */
+static const u_char id_sha1[] = {
+	0x30, 0x21, /* type Sequence, length 0x21 (33) */
+	0x30, 0x09, /* type Sequence, length 0x09 */
+	0x06, 0x05, /* type OID, length 0x05 */
+	0x2b, 0x0e, 0x03, 0x02, 0x1a, /* id-sha1 OID */
+	0x05, 0x00, /* NULL */
+	0x04, 0x14  /* Octet string, length 0x14 (20), followed by sha1 hash */
+};
+
+/*
+ * See http://csrc.nist.gov/groups/ST/crypto_apps_infra/csor/algorithms.html
+ * id-sha256 OBJECT IDENTIFIER ::= { joint-iso-itu-t(2) country(16) us(840)
+ *      organization(1) gov(101) csor(3) nistAlgorithm(4) hashAlgs(2)
+ *      id-sha256(1) }
+ */
+static const u_char id_sha256[] = {
+	0x30, 0x31, /* type Sequence, length 0x31 (49) */
+	0x30, 0x0d, /* type Sequence, length 0x0d (13) */
+	0x06, 0x09, /* type OID, length 0x09 */
+	0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01, /* id-sha256 */
+	0x05, 0x00, /* NULL */
+	0x04, 0x20  /* Octet string, length 0x20 (32), followed by sha256 hash */
+};
+
+/*
+ * See http://csrc.nist.gov/groups/ST/crypto_apps_infra/csor/algorithms.html
+ * id-sha512 OBJECT IDENTIFIER ::= { joint-iso-itu-t(2) country(16) us(840)
+ *      organization(1) gov(101) csor(3) nistAlgorithm(4) hashAlgs(2)
+ *      id-sha256(3) }
+ */
+static const u_char id_sha512[] = {
+	0x30, 0x51, /* type Sequence, length 0x51 (81) */
+	0x30, 0x0d, /* type Sequence, length 0x0d (13) */
+	0x06, 0x09, /* type OID, length 0x09 */
+	0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x03, /* id-sha512 */
+	0x05, 0x00, /* NULL */
+	0x04, 0x40  /* Octet string, length 0x40 (64), followed by sha512 hash */
+};
+
+static int
+rsa_hash_alg_oid(int hash_alg, const u_char **oidp, size_t *oidlenp)
+{
+	switch (hash_alg) {
+	case SSH_DIGEST_SHA1:
+		*oidp = id_sha1;
+		*oidlenp = sizeof(id_sha1);
+		break;
+	case SSH_DIGEST_SHA256:
+		*oidp = id_sha256;
+		*oidlenp = sizeof(id_sha256);
+		break;
+	case SSH_DIGEST_SHA512:
+		*oidp = id_sha512;
+		*oidlenp = sizeof(id_sha512);
+		break;
+	default:
+		return SSH_ERR_INVALID_ARGUMENT;
+	}
+	return 0;
+}
+# endif /* OPENSSL_VERSION_NUMBER < 0x30000000L */
+
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 openssh_RSA_verify(int hash_alg, const u_char *data, size_t datalen,
     u_char *sigbuf, size_t siglen, EVP_PKEY *pkey)
@@ -589,7 +895,58 @@ openssh_RSA_verify(int hash_alg, const u_char *data, size_t datalen,
 done:
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+static int
+openssh_RSA_verify(int hash_alg, u_char *hash, size_t hashlen,
+    u_char *sigbuf, size_t siglen, RSA *rsa)
+{
+	size_t rsasize = 0, oidlen = 0, hlen = 0;
+	int ret, len, oidmatch, hashmatch;
+	const u_char *oid = NULL;
+	u_char *decrypted = NULL;
 
+	if ((ret = rsa_hash_alg_oid(hash_alg, &oid, &oidlen)) != 0)
+		return ret;
+	ret = SSH_ERR_INTERNAL_ERROR;
+	hlen = ssh_digest_bytes(hash_alg);
+	if (hashlen != hlen) {
+		ret = SSH_ERR_INVALID_ARGUMENT;
+		goto done;
+	}
+	rsasize = RSA_size(rsa);
+	if (rsasize <= 0 || rsasize > SSHBUF_MAX_BIGNUM ||
+	    siglen == 0 || siglen > rsasize) {
+		ret = SSH_ERR_INVALID_ARGUMENT;
+		goto done;
+	}
+	if ((decrypted = malloc(rsasize)) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto done;
+	}
+	if ((len = RSA_public_decrypt(siglen, sigbuf, decrypted, rsa,
+	    RSA_PKCS1_PADDING)) < 0) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto done;
+	}
+	if (len < 0 || (size_t)len != hlen + oidlen) {
+		ret = SSH_ERR_INVALID_FORMAT;
+		goto done;
+	}
+	oidmatch = timingsafe_bcmp(decrypted, oid, oidlen) == 0;
+	hashmatch = timingsafe_bcmp(decrypted + oidlen, hash, hlen) == 0;
+	if (!oidmatch || !hashmatch) {
+		ret = SSH_ERR_SIGNATURE_INVALID;
+		goto done;
+	}
+	ret = 0;
+done:
+	freezero(decrypted, rsasize);
+	return ret;
+}
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 ssh_create_evp_rsa(const struct sshkey *k, EVP_PKEY **pkey)
 {
@@ -672,6 +1029,7 @@ out:
   	EVP_PKEY_CTX_free(ctx);
   	return ret;
 }
+# endif
 
 static const struct sshkey_impl_funcs sshkey_rsa_funcs = {
 	/* .size = */		ssh_rsa_size,

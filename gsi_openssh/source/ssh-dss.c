@@ -32,8 +32,10 @@
 #include <openssl/bn.h>
 #include <openssl/dsa.h>
 #include <openssl/evp.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+# endif
 
 #include <stdarg.h>
 #include <string.h>
@@ -257,6 +259,7 @@ ssh_dss_deserialize_private(const char *ktype, struct sshbuf *b,
 	return 0;
 }
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 ssh_dss_sign(struct sshkey *key,
     u_char **sigp, size_t *lenp,
@@ -336,7 +339,80 @@ ssh_dss_sign(struct sshkey *key,
 	sshbuf_free(b);
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+static int
+ssh_dss_sign(struct sshkey *key,
+    u_char **sigp, size_t *lenp,
+    const u_char *data, size_t datalen,
+    const char *alg, const char *sk_provider, const char *sk_pin, u_int compat)
+{
+	DSA_SIG *sig = NULL;
+	const BIGNUM *sig_r, *sig_s;
+	u_char digest[SSH_DIGEST_MAX_LENGTH], sigblob[SIGBLOB_LEN];
+	size_t rlen, slen, len, dlen = ssh_digest_bytes(SSH_DIGEST_SHA1);
+	struct sshbuf *b = NULL;
+	int ret = SSH_ERR_INVALID_ARGUMENT;
 
+	if (lenp != NULL)
+		*lenp = 0;
+	if (sigp != NULL)
+		*sigp = NULL;
+
+	if (key == NULL || key->dsa == NULL ||
+	    sshkey_type_plain(key->type) != KEY_DSA)
+		return SSH_ERR_INVALID_ARGUMENT;
+	if (dlen == 0)
+		return SSH_ERR_INTERNAL_ERROR;
+
+	if ((ret = ssh_digest_memory(SSH_DIGEST_SHA1, data, datalen,
+	    digest, sizeof(digest))) != 0)
+		goto out;
+
+	if ((sig = DSA_do_sign(digest, dlen, key->dsa)) == NULL) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+
+	DSA_SIG_get0(sig, &sig_r, &sig_s);
+	rlen = BN_num_bytes(sig_r);
+	slen = BN_num_bytes(sig_s);
+	if (rlen > INTBLOB_LEN || slen > INTBLOB_LEN) {
+		ret = SSH_ERR_INTERNAL_ERROR;
+		goto out;
+	}
+	explicit_bzero(sigblob, SIGBLOB_LEN);
+	BN_bn2bin(sig_r, sigblob + SIGBLOB_LEN - INTBLOB_LEN - rlen);
+	BN_bn2bin(sig_s, sigblob + SIGBLOB_LEN - slen);
+
+	if ((b = sshbuf_new()) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if ((ret = sshbuf_put_cstring(b, "ssh-dss")) != 0 ||
+	    (ret = sshbuf_put_string(b, sigblob, SIGBLOB_LEN)) != 0)
+		goto out;
+
+	len = sshbuf_len(b);
+	if (sigp != NULL) {
+		if ((*sigp = malloc(len)) == NULL) {
+			ret = SSH_ERR_ALLOC_FAIL;
+			goto out;
+		}
+		memcpy(*sigp, sshbuf_ptr(b), len);
+	}
+	if (lenp != NULL)
+		*lenp = len;
+	ret = 0;
+ out:
+	explicit_bzero(digest, sizeof(digest));
+	DSA_SIG_free(sig);
+	sshbuf_free(b);
+	return ret;
+}
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 ssh_dss_verify(const struct sshkey *key,
     const u_char *sig, size_t siglen,
@@ -429,7 +505,100 @@ ssh_dss_verify(const struct sshkey *key,
 		freezero(sigblob, len);
 	return ret;
 }
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
+static int
+ssh_dss_verify(const struct sshkey *key,
+    const u_char *sig, size_t siglen,
+    const u_char *data, size_t dlen, const char *alg, u_int compat,
+    struct sshkey_sig_details **detailsp)
+{
+	DSA_SIG *dsig = NULL;
+	BIGNUM *sig_r = NULL, *sig_s = NULL;
+	u_char digest[SSH_DIGEST_MAX_LENGTH], *sigblob = NULL;
+	size_t len, hlen = ssh_digest_bytes(SSH_DIGEST_SHA1);
+	int ret = SSH_ERR_INTERNAL_ERROR;
+	struct sshbuf *b = NULL;
+	char *ktype = NULL;
 
+	if (key == NULL || key->dsa == NULL ||
+	    sshkey_type_plain(key->type) != KEY_DSA ||
+	    sig == NULL || siglen == 0)
+		return SSH_ERR_INVALID_ARGUMENT;
+	if (hlen == 0)
+		return SSH_ERR_INTERNAL_ERROR;
+
+	/* fetch signature */
+	if ((b = sshbuf_from(sig, siglen)) == NULL)
+		return SSH_ERR_ALLOC_FAIL;
+	if (sshbuf_get_cstring(b, &ktype, NULL) != 0 ||
+	    sshbuf_get_string(b, &sigblob, &len) != 0) {
+		ret = SSH_ERR_INVALID_FORMAT;
+		goto out;
+	}
+	if (strcmp("ssh-dss", ktype) != 0) {
+		ret = SSH_ERR_KEY_TYPE_MISMATCH;
+		goto out;
+	}
+	if (sshbuf_len(b) != 0) {
+		ret = SSH_ERR_UNEXPECTED_TRAILING_DATA;
+		goto out;
+	}
+
+	if (len != SIGBLOB_LEN) {
+		ret = SSH_ERR_INVALID_FORMAT;
+		goto out;
+	}
+
+	/* parse signature */
+	if ((dsig = DSA_SIG_new()) == NULL ||
+	    (sig_r = BN_new()) == NULL ||
+	    (sig_s = BN_new()) == NULL) {
+		ret = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if ((BN_bin2bn(sigblob, INTBLOB_LEN, sig_r) == NULL) ||
+	    (BN_bin2bn(sigblob + INTBLOB_LEN, INTBLOB_LEN, sig_s) == NULL)) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	if (!DSA_SIG_set0(dsig, sig_r, sig_s)) {
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	sig_r = sig_s = NULL; /* transferred */
+
+	/* sha1 the data */
+	if ((ret = ssh_digest_memory(SSH_DIGEST_SHA1, data, dlen,
+	    digest, sizeof(digest))) != 0)
+		goto out;
+
+	switch (DSA_do_verify(digest, hlen, dsig, key->dsa)) {
+	case 1:
+		ret = 0;
+		break;
+	case 0:
+		ret = SSH_ERR_SIGNATURE_INVALID;
+		goto out;
+	default:
+		ret = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+
+ out:
+	explicit_bzero(digest, sizeof(digest));
+	DSA_SIG_free(dsig);
+	BN_clear_free(sig_r);
+	BN_clear_free(sig_s);
+	sshbuf_free(b);
+	free(ktype);
+	if (sigblob != NULL)
+		freezero(sigblob, len);
+	return ret;
+}
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 ssh_create_evp_dss(const struct sshkey *k, EVP_PKEY **pkey)
 {
@@ -488,6 +657,7 @@ out:
   	EVP_PKEY_CTX_free(ctx);
   	return ret;
 }
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 static const struct sshkey_impl_funcs sshkey_dss_funcs = {
 	/* .size = */		ssh_dss_size,

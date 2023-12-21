@@ -34,8 +34,10 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+# endif
 #include <openssl/fips.h>
 #endif
 #include "fips_mode_replacement.h"
@@ -592,6 +594,7 @@ sshkey_type_certified(int type)
 }
 
 #ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 sshkey_calculate_signature(EVP_PKEY *pkey, int hash_alg, u_char **sigp,
     int *lenp, const u_char *data, size_t datalen)
@@ -671,6 +674,7 @@ done:
 	EVP_MD_CTX_free(ctx);
 	return ret;
 }
+# endif
 
 /* XXX: these are really begging for a table-driven approach */
 int
@@ -3885,6 +3889,7 @@ sshkey_set_filename(struct sshkey *k, const char *filename)
 #endif /* WITH_XMSS */
 
 #ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 EVP_PKEY *
 sshkey_create_evp(OSSL_PARAM_BLD *param_bld, EVP_PKEY_CTX *ctx)
 {
@@ -3906,4 +3911,5 @@ sshkey_create_evp(OSSL_PARAM_BLD *param_bld, EVP_PKEY_CTX *ctx)
   	}
   	return ret;
 }
+# endif
 #endif /* WITH_OPENSSL */

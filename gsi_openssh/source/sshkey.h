@@ -32,8 +32,10 @@
 #include <openssl/rsa.h>
 #include <openssl/dsa.h>
 #include <openssl/evp.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/param_build.h>
 #include <openssl/core_names.h>
+# endif
 # ifdef OPENSSL_HAS_ECC
 #  include <openssl/ec.h>
 #  include <openssl/ecdsa.h>
@@ -332,10 +334,12 @@ int	 sshkey_private_serialize_maxsign(struct sshkey *key,
 void	 sshkey_sig_details_free(struct sshkey_sig_details *);
 
 #ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 EVP_PKEY  *sshkey_create_evp(OSSL_PARAM_BLD *, EVP_PKEY_CTX *);
 int   ssh_create_evp_dss(const struct sshkey *, EVP_PKEY **);
 int   ssh_create_evp_rsa(const struct sshkey *, EVP_PKEY **);
 int   ssh_create_evp_ec(EC_KEY *, int, EVP_PKEY **);
+# endif
 #endif /* WITH_OPENSSL */
 
 #ifdef SSHKEY_INTERNAL
