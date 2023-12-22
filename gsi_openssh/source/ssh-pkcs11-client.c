@@ -241,6 +241,20 @@ is_ecdsa_pkcs11(EC_KEY *ecdsa)
 }
 #endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
+#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+static int (*RSA_meth_get_priv_enc(const RSA_METHOD *meth)) (int flen,
+                                                      const unsigned char *from,
+                                                      unsigned char *to,
+                                                      RSA *rsa, int padding);
+
+static int (*RSA_meth_get_priv_enc(const RSA_METHOD *meth))
+    (int flen, const unsigned char *from,
+     unsigned char *to, RSA *rsa, int padding)
+{
+    return meth->rsa_priv_enc;
+}
+#endif
+
 int
 is_rsa_pkcs11(RSA *rsa)
 {

@@ -584,6 +584,31 @@ dh_estimate(int bits)
 	return 8192;
 }
 
+# if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+/*
+ * taken from
+ * https://github.com/openssl/openssl/blob/OpenSSL_1_1_1-stable/crypto/dh/dh_lib.c
+ */
+void DH_get0_pqg(const DH *dh,
+                 const BIGNUM **p, const BIGNUM **q, const BIGNUM **g)
+{
+    if (p != NULL)
+        *p = dh->p;
+    if (q != NULL)
+        *q = dh->q;
+    if (g != NULL)
+        *g = dh->g;
+}
+
+void DH_get0_key(const DH *dh, const BIGNUM **pub_key, const BIGNUM **priv_key)
+{
+    if (pub_key != NULL)
+        *pub_key = dh->pub_key;
+    if (priv_key != NULL)
+        *priv_key = dh->priv_key;
+}
+# endif
+
 /*
  * Compares the received DH parameters with known-good groups,
  * which might be either from group14, group16 or group18.

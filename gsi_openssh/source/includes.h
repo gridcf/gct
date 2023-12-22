@@ -165,6 +165,10 @@
 
 #ifdef WITH_OPENSSL
 #include <openssl/opensslv.h> /* For OPENSSL_VERSION_NUMBER */
+# if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+#define HAVE_DH_GET0_PQG
+#define HAVE_DH_GET0_KEY
+# endif
 #endif
 
 #include "defines.h"
