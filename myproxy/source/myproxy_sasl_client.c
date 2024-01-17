@@ -1,6 +1,6 @@
 #if defined(HAVE_LIBSASL2)
 
-#include "myproxy_common.h"	/* all needed headers included here */
+#include "myproxy_common.h"     /* all needed headers included here */
 
 static sasl_conn_t *conn = NULL;
 static char *prompt = NULL;
@@ -15,7 +15,7 @@ send_response_sasl_data(myproxy_socket_attrs_t *attrs,
     unsigned len;
 
     authorization_data_t*  auth_data;
-	
+
     result = sasl_encode64(data, data_len, buf, SASL_BUFFER_SIZE, &len);
     assert(len < SASL_BUFFER_SIZE);
     buf[len] = '\0';
@@ -41,14 +41,14 @@ send_response_sasl_data(myproxy_socket_attrs_t *attrs,
         verror_put_string("Internal buffer too small send_response_sasl_data");
         return -1;
     }
-    
+
     (*client_buffer) = AUTHORIZETYPE_SASL;
     bufferlen = auth_data->client_data_len + sizeof(int);
 
     memcpy(client_buffer + sizeof(int), auth_data->client_data,
            auth_data->client_data_len);
-	 
-    if (myproxy_send(attrs, client_buffer, bufferlen) < 0) 
+
+    if (myproxy_send(attrs, client_buffer, bufferlen) < 0)
         return -1;
     return 0;
 }
@@ -63,18 +63,18 @@ recv_response_sasl_data(myproxy_socket_attrs_t *attrs,
     int result;
     unsigned len;
     authorization_data_t*  auth_data;
-    
-    if (myproxy_recv_response(attrs, server_response) < 0) 
+
+    if (myproxy_recv_response(attrs, server_response) < 0)
         return -1;
-	
+
     auth_data = authorization_create_response(
                                               server_response->authorization_data,
                                               AUTHORIZETYPE_SASL,
                                               NULL,
                                               0);
-    
+
     response_data = auth_data->server_data;
-    result = sasl_decode64(response_data, strlen(response_data), 
+    result = sasl_decode64(response_data, strlen(response_data),
                            data, SASL_BUFFER_SIZE, &len);
     if (result != SASL_OK) {
         verror_put_string("Decoding data from base64 failed.\n");
@@ -115,12 +115,12 @@ sasl_secret_callback(sasl_conn_t *conn,
 
     if (! conn || ! psecret || id != SASL_CB_PASS)
         return SASL_BADPARAM;
-    
+
     if (!prompt) prompt = strdup("Password: ");
     if (myproxy_read_passphrase(password, MAX_PASS_LEN, prompt) < 0){
         return SASL_FAIL;
     }
-	
+
     len = strlen(password);
 
     *psecret = (sasl_secret_t *) malloc(sizeof(sasl_secret_t) + len);
@@ -219,10 +219,10 @@ auth_sasl_negotiate_client(myproxy_socket_attrs_t *attrs,
         myproxy_debug("$SASL_PATH is %s", getenv("SASL_PATH"));
     } else {
         myproxy_debug("$SASL_PATH isn't set. Using /usr/lib/sasl2.");
-    }	
+    }
 
     fqdn = GSI_SOCKET_get_peer_hostname(attrs->gsi_socket);
-   
+
     memset(server_buffer, 0, sizeof(*server_buffer));
 
     if (prompt) free(prompt);
@@ -337,7 +337,7 @@ auth_sasl_negotiate_client(myproxy_socket_attrs_t *attrs,
 
         authorization_data_free(server_response.authorization_data);
         server_response.authorization_data = NULL;
-    } 
+    }
 
     myproxy_debug("SASL negotiation finished.");
 
@@ -354,7 +354,7 @@ auth_sasl_negotiate_client(myproxy_socket_attrs_t *attrs,
         conn = NULL;
     }
     sasl_done();
-    
+
     return result;
 }
 
