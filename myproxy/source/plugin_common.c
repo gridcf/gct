@@ -346,7 +346,8 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
     }
 
     /* Try to get the callback... */
-    ret = utils->getcallback(utils->conn, id, &simple_cb, &simple_context);
+    ret = utils->getcallback(utils->conn, id,
+                             (int (**)(void)) (&simple_cb), &simple_context);
 
     if (ret == SASL_FAIL && !required)
         return SASL_OK;
@@ -408,7 +409,7 @@ int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, SASL_CB_PASS,
-                             &pass_cb, &pass_context);
+                             (int (**)(void)) (&pass_cb), &pass_context);
 
     if (ret == SASL_OK && pass_cb) {
         ret = pass_cb(utils->conn, pass_context, SASL_CB_PASS, password);
@@ -454,7 +455,7 @@ int _plug_challenge_prompt(const sasl_utils_t *utils, unsigned int id,
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, id,
-                             &chalprompt_cb, &chalprompt_context);
+                             (int (**)(void)) (&chalprompt_cb), &chalprompt_context);
 
     if (ret == SASL_OK && chalprompt_cb) {
         ret = chalprompt_cb(chalprompt_context, id,
@@ -500,7 +501,7 @@ int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, SASL_CB_GETREALM,
-                             &realm_cb, &realm_context);
+                             (int (**)(void)) (&realm_cb), &realm_context);
 
     if (ret == SASL_OK && realm_cb) {
         ret = realm_cb(realm_context, SASL_CB_GETREALM, availrealms, realm);

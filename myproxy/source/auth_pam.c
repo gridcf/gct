@@ -92,7 +92,7 @@ static int                              /* R: PAM return code */
 saslauthd_pam_conv (
   /* PARAMETERS */
   int num_msg,                          /* I: number of messages */
-  struct pam_message **msg,             /* I: pointer to array of messages */
+  const struct pam_message **msg,       /* I: pointer to array of messages */
   struct pam_response **resp,           /* O: pointer to pointer of response */
   void *appdata_ptr                     /* I: pointer to app specific data */
   /* END PARAMETERS */

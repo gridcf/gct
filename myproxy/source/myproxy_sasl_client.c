@@ -197,11 +197,13 @@ auth_sasl_negotiate_client(myproxy_socket_attrs_t *attrs,
     myproxy_response_t server_response = {0};
 
     sasl_callback_t callbacks[] = {
-        { SASL_CB_USER, &sasl_string_callback, client_request->username },
-        { SASL_CB_AUTHNAME, &sasl_string_callback, client_request->username },
-        { SASL_CB_PASS, &sasl_secret_callback, NULL },
-        { SASL_CB_ECHOPROMPT, &sasl_prompt_callback, NULL },
-        { SASL_CB_NOECHOPROMPT, &sasl_prompt_callback, NULL },
+        { SASL_CB_USER, (int(*)(void)) (&sasl_string_callback),
+          client_request->username },
+        { SASL_CB_AUTHNAME, (int(*)(void)) (&sasl_string_callback),
+          client_request->username },
+        { SASL_CB_PASS, (int(*)(void)) (&sasl_secret_callback), NULL },
+        { SASL_CB_ECHOPROMPT, (int(*)(void)) (&sasl_prompt_callback), NULL },
+        { SASL_CB_NOECHOPROMPT, (int(*)(void)) (&sasl_prompt_callback), NULL },
         { SASL_CB_LIST_END, NULL, NULL }
     };
 

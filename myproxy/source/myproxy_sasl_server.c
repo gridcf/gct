@@ -47,7 +47,7 @@ sasl_my_log(void *context __attribute__((unused)),
 
 static sasl_callback_t callbacks[] = {
   {
-    SASL_CB_LOG, &sasl_my_log, NULL
+    SASL_CB_LOG, (int(*)(void)) (&sasl_my_log), NULL
   }, {
     SASL_CB_LIST_END, NULL, NULL
   }
