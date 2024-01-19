@@ -3,7 +3,7 @@
  * Rob Siemborski
  * $Id: plugin_common.c,v 1.20 2004/06/23 18:43:37 rjs3 Exp $
  */
-/* 
+/*
  * Copyright (c) 1998-2003 Carnegie Mellon University.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -21,7 +21,7 @@
  * 3. The name "Carnegie Mellon University" must not be used to
  *    endorse or promote products derived from this software without
  *    prior written permission. For permission or any other legal
- *    details, please contact  
+ *    details, please contact
  *      Office of Technology Transfer
  *      Carnegie Mellon University
  *      5000 Forbes Avenue
@@ -92,10 +92,10 @@ static void sockaddr_unmapped(
     int port;
 
     if (sa->sa_family != AF_INET6)
-	return;
+        return;
     sin6 = (struct sockaddr_in6 *)sa;
     if (!IN6_IS_ADDR_V4MAPPED((&sin6->sin6_addr)))
-	return;
+        return;
     sin4 = (struct sockaddr_in *)sa;
     addr = *(uint32_t *)&sin6->sin6_addr.s6_addr[12];
     port = sin6->sin6_port;
@@ -113,46 +113,46 @@ static void sockaddr_unmapped(
 }
 
 int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
-		       struct sockaddr *out, socklen_t outlen) 
+                       struct sockaddr *out, socklen_t outlen)
 {
     int i, j;
     socklen_t len;
     struct sockaddr_storage ss;
     struct addrinfo hints, *ai = NULL;
     char hbuf[NI_MAXHOST];
-    
+
     if(!utils || !addr || !out) {
-	if(utils) PARAMERROR( utils );
-	return SASL_BADPARAM;
+        if(utils) PARAMERROR( utils );
+        return SASL_BADPARAM;
     }
 
     /* Parse the address */
     for (i = 0; addr[i] != '\0' && addr[i] != ';'; i++) {
-	if (i >= NI_MAXHOST) {
-	    if(utils) PARAMERROR( utils );
-	    return SASL_BADPARAM;
-	}
-	hbuf[i] = addr[i];
+        if (i >= NI_MAXHOST) {
+            if(utils) PARAMERROR( utils );
+            return SASL_BADPARAM;
+        }
+        hbuf[i] = addr[i];
     }
     hbuf[i] = '\0';
 
     if (addr[i] == ';')
-	i++;
+        i++;
     /* XXX/FIXME: Do we need this check? */
     for (j = i; addr[j] != '\0'; j++)
-	if (!isdigit((int)(addr[j]))) {
-	    PARAMERROR( utils );
-	    return SASL_BADPARAM;
-	}
+        if (!isdigit((int)(addr[j]))) {
+            PARAMERROR( utils );
+            return SASL_BADPARAM;
+        }
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE | AI_NUMERICHOST;
 
-    if (getaddrinfo(hbuf, &addr[i], &hints, &ai) != 0) {	
-	PARAMERROR( utils );
-	return SASL_BADPARAM;
+    if (getaddrinfo(hbuf, &addr[i], &hints, &ai) != 0) {
+        PARAMERROR( utils );
+        return SASL_BADPARAM;
     }
 
     len = ai->ai_addrlen;
@@ -160,8 +160,8 @@ int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
     freeaddrinfo(ai);
     sockaddr_unmapped((struct sockaddr *)&ss, &len);
     if (outlen < len) {
-	PARAMERROR( utils );
-	return SASL_BUFOVER;
+        PARAMERROR( utils );
+        return SASL_BUFOVER;
     }
 
     memcpy(out, &ss, len);
@@ -170,7 +170,7 @@ int _plug_ipfromstring(const sasl_utils_t *utils, const char *addr,
 }
 
 int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
-		       unsigned numiov, buffer_info_t **output) 
+                       unsigned numiov, buffer_info_t **output)
 {
     unsigned i;
     int ret;
@@ -178,38 +178,38 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
     char *pos;
 
     if(!utils || !vec || !output) {
-	if(utils) PARAMERROR( utils );
-	return SASL_BADPARAM;
+        if(utils) PARAMERROR( utils );
+        return SASL_BADPARAM;
     }
-    
+
     if(!(*output)) {
-	*output = utils->malloc(sizeof(buffer_info_t));
-	if(!*output) {
-	    MEMERROR(utils);
-	    return SASL_NOMEM;
-	}
-	memset(*output,0,sizeof(buffer_info_t));
+        *output = utils->malloc(sizeof(buffer_info_t));
+        if(!*output) {
+            MEMERROR(utils);
+            return SASL_NOMEM;
+        }
+        memset(*output,0,sizeof(buffer_info_t));
     }
 
     out = *output;
-    
+
     out->curlen = 0;
     for(i=0; i<numiov; i++)
-	out->curlen += vec[i].iov_len;
+        out->curlen += vec[i].iov_len;
 
     ret = _plug_buf_alloc(utils, &out->data, &out->reallen, out->curlen);
 
     if(ret != SASL_OK) {
-	MEMERROR(utils);
-	return SASL_NOMEM;
+        MEMERROR(utils);
+        return SASL_NOMEM;
     }
-    
+
     memset(out->data, 0, out->reallen);
     pos = out->data;
-    
+
     for(i=0; i<numiov; i++) {
-	memcpy(pos, vec[i].iov_base, vec[i].iov_len);
-	pos += vec[i].iov_len;
+        memcpy(pos, vec[i].iov_base, vec[i].iov_len);
+        pos += vec[i].iov_len;
     }
 
     return SASL_OK;
@@ -217,42 +217,42 @@ int _plug_iovec_to_buf(const sasl_utils_t *utils, const struct iovec *vec,
 
 /* Basically a conditional call to realloc(), if we need more */
 int _plug_buf_alloc(const sasl_utils_t *utils, char **rwbuf,
-		    unsigned *curlen, unsigned newlen) 
+                    unsigned *curlen, unsigned newlen)
 {
     if(!utils || !rwbuf || !curlen) {
-	PARAMERROR(utils);
-	return SASL_BADPARAM;
+        PARAMERROR(utils);
+        return SASL_BADPARAM;
     }
 
     if(!(*rwbuf)) {
-	*rwbuf = utils->malloc(newlen);
-	if (*rwbuf == NULL) {
-	    *curlen = 0;
-	    MEMERROR(utils);
-	    return SASL_NOMEM;
-	}
-	*curlen = newlen;
+        *rwbuf = utils->malloc(newlen);
+        if (*rwbuf == NULL) {
+            *curlen = 0;
+            MEMERROR(utils);
+            return SASL_NOMEM;
+        }
+        *curlen = newlen;
     } else if(*rwbuf && *curlen < newlen) {
-	size_t needed = 2*(*curlen);
+        size_t needed = 2*(*curlen);
 
-	while(needed < newlen)
-	    needed *= 2;
+        while(needed < newlen)
+            needed *= 2;
 
-	*rwbuf = utils->realloc(*rwbuf, needed);
-	if (*rwbuf == NULL) {
-	    *curlen = 0;
-	    MEMERROR(utils);
-	    return SASL_NOMEM;
-	}
-	*curlen = needed;
-    } 
+        *rwbuf = utils->realloc(*rwbuf, needed);
+        if (*rwbuf == NULL) {
+            *curlen = 0;
+            MEMERROR(utils);
+            return SASL_NOMEM;
+        }
+        *curlen = needed;
+    }
 
     return SASL_OK;
 }
 
 /* copy a string */
 int _plug_strdup(const sasl_utils_t * utils, const char *in,
-		 char **out, int *outlen)
+                 char **out, int *outlen)
 {
   size_t len = strlen(in);
 
@@ -289,7 +289,7 @@ void _plug_free_string(const sasl_utils_t *utils, char **str)
   *str=NULL;
 }
 
-void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret) 
+void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret)
 {
     if(!utils || !secret || !(*secret)) return;
 
@@ -298,20 +298,20 @@ void _plug_free_secret(const sasl_utils_t *utils, sasl_secret_t **secret)
     *secret = NULL;
 }
 
-/* 
+/*
  * Trys to find the prompt with the lookingfor id in the prompt list
  * Returns it if found. NULL otherwise
  */
 sasl_interact_t *_plug_find_prompt(sasl_interact_t **promptlist,
-				   unsigned int lookingfor)
+                                   unsigned int lookingfor)
 {
     sasl_interact_t *prompt;
 
     if (promptlist && *promptlist) {
-	for (prompt = *promptlist; prompt->id != SASL_CB_LIST_END; ++prompt) {
-	    if (prompt->id==lookingfor)
-		return prompt;
-	}
+        for (prompt = *promptlist; prompt->id != SASL_CB_LIST_END; ++prompt) {
+            if (prompt->id==lookingfor)
+                return prompt;
+        }
     }
 
     return NULL;
@@ -321,7 +321,7 @@ sasl_interact_t *_plug_find_prompt(sasl_interact_t **promptlist,
  * Retrieve the simple string given by the callback id.
  */
 int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
-		     const char **result, sasl_interact_t **prompt_need)
+                     const char **result, sasl_interact_t **prompt_need)
 {
 
     int ret = SASL_FAIL;
@@ -334,34 +334,35 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
     /* see if we were given the result in the prompt */
     prompt = _plug_find_prompt(prompt_need, id);
     if (prompt != NULL) {
-	/* We prompted, and got.*/
-	
-	if (required && !prompt->result) {
-	    SETERROR(utils, "Unexpectedly missing a prompt result");
-	    return SASL_BADPARAM;
-	}
+        /* We prompted, and got.*/
 
-	*result = prompt->result;
-	return SASL_OK;
+        if (required && !prompt->result) {
+            SETERROR(utils, "Unexpectedly missing a prompt result");
+            return SASL_BADPARAM;
+        }
+
+        *result = prompt->result;
+        return SASL_OK;
     }
-  
+
     /* Try to get the callback... */
-    ret = utils->getcallback(utils->conn, id, &simple_cb, &simple_context);
+    ret = utils->getcallback(utils->conn, id,
+                             (int (**)(void)) (&simple_cb), &simple_context);
 
     if (ret == SASL_FAIL && !required)
-	return SASL_OK;
+        return SASL_OK;
 
     if (ret == SASL_OK && simple_cb) {
-	ret = simple_cb(simple_context, id, result, NULL);
-	if (ret != SASL_OK)
-	    return ret;
+        ret = simple_cb(simple_context, id, result, NULL);
+        if (ret != SASL_OK)
+            return ret;
 
-	if (required && !*result) {
-	    PARAMERROR(utils);
-	    return SASL_BADPARAM;
-	}
+        if (required && !*result) {
+            PARAMERROR(utils);
+            return SASL_BADPARAM;
+        }
     }
-  
+
     return ret;
 }
 
@@ -369,7 +370,7 @@ int _plug_get_simple(const sasl_utils_t *utils, unsigned int id, int required,
  * Retrieve the user password.
  */
 int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
-		       unsigned int *iscopy, sasl_interact_t **prompt_need)
+                       unsigned int *iscopy, sasl_interact_t **prompt_need)
 {
     int ret = SASL_FAIL;
     sasl_getsecret_t *pass_cb;
@@ -382,43 +383,43 @@ int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
     /* see if we were given the password in the prompt */
     prompt = _plug_find_prompt(prompt_need, SASL_CB_PASS);
     if (prompt != NULL) {
-	/* We prompted, and got.*/
-	
-	if (!prompt->result) {
-	    SETERROR(utils, "Unexpectedly missing a prompt result");
-	    return SASL_BADPARAM;
-	}
-      
-	/* copy what we got into a secret_t */
-	*password = (sasl_secret_t *) utils->malloc(sizeof(sasl_secret_t) +
-						    prompt->len + 1);
-	if (!*password) {
-	    MEMERROR(utils);
-	    return SASL_NOMEM;
-	}
-      
-	(*password)->len=prompt->len;
-	memcpy((*password)->data, prompt->result, prompt->len);
-	(*password)->data[(*password)->len]=0;
+        /* We prompted, and got.*/
 
-	*iscopy = 1;
+        if (!prompt->result) {
+            SETERROR(utils, "Unexpectedly missing a prompt result");
+            return SASL_BADPARAM;
+        }
 
-	return SASL_OK;
+        /* copy what we got into a secret_t */
+        *password = (sasl_secret_t *) utils->malloc(sizeof(sasl_secret_t) +
+                                                    prompt->len + 1);
+        if (!*password) {
+            MEMERROR(utils);
+            return SASL_NOMEM;
+        }
+
+        (*password)->len=prompt->len;
+        memcpy((*password)->data, prompt->result, prompt->len);
+        (*password)->data[(*password)->len]=0;
+
+        *iscopy = 1;
+
+        return SASL_OK;
     }
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, SASL_CB_PASS,
-			     &pass_cb, &pass_context);
+                             (int (**)(void)) (&pass_cb), &pass_context);
 
     if (ret == SASL_OK && pass_cb) {
-	ret = pass_cb(utils->conn, pass_context, SASL_CB_PASS, password);
-	if (ret != SASL_OK)
-	    return ret;
+        ret = pass_cb(utils->conn, pass_context, SASL_CB_PASS, password);
+        if (ret != SASL_OK)
+            return ret;
 
-	if (!*password) {
-	    PARAMERROR(utils);
-	    return SASL_BADPARAM;
-	}
+        if (!*password) {
+            PARAMERROR(utils);
+            return SASL_BADPARAM;
+        }
     }
 
     return ret;
@@ -428,8 +429,8 @@ int _plug_get_password(const sasl_utils_t *utils, sasl_secret_t **password,
  * Retrieve the string given by the challenge prompt id.
  */
 int _plug_challenge_prompt(const sasl_utils_t *utils, unsigned int id,
-			   const char *challenge, const char *promptstr,
-			   const char **result, sasl_interact_t **prompt_need)
+                           const char *challenge, const char *promptstr,
+                           const char **result, sasl_interact_t **prompt_need)
 {
     int ret = SASL_FAIL;
     sasl_chalprompt_t *chalprompt_cb;
@@ -441,31 +442,31 @@ int _plug_challenge_prompt(const sasl_utils_t *utils, unsigned int id,
     /* see if we were given the password in the prompt */
     prompt = _plug_find_prompt(prompt_need, id);
     if (prompt != NULL) {
-	/* We prompted, and got.*/
-	
-	if (!prompt->result) {
-	    SETERROR(utils, "Unexpectedly missing a prompt result");
-	    return SASL_BADPARAM;
-	}
-      
-	*result = prompt->result;
-	return SASL_OK;
+        /* We prompted, and got.*/
+
+        if (!prompt->result) {
+            SETERROR(utils, "Unexpectedly missing a prompt result");
+            return SASL_BADPARAM;
+        }
+
+        *result = prompt->result;
+        return SASL_OK;
     }
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, id,
-			     &chalprompt_cb, &chalprompt_context);
+                             (int (**)(void)) (&chalprompt_cb), &chalprompt_context);
 
     if (ret == SASL_OK && chalprompt_cb) {
-	ret = chalprompt_cb(chalprompt_context, id,
-			    challenge, promptstr, NULL, result, NULL);
-	if (ret != SASL_OK)
-	    return ret;
+        ret = chalprompt_cb(chalprompt_context, id,
+                            challenge, promptstr, NULL, result, NULL);
+        if (ret != SASL_OK)
+            return ret;
 
-	if (!*result) {
-	    PARAMERROR(utils);
-	    return SASL_BADPARAM;
-	}
+        if (!*result) {
+            PARAMERROR(utils);
+            return SASL_BADPARAM;
+        }
     }
 
     return ret;
@@ -475,7 +476,7 @@ int _plug_challenge_prompt(const sasl_utils_t *utils, unsigned int id,
  * Retrieve the client realm.
  */
 int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
-		    const char **realm, sasl_interact_t **prompt_need)
+                    const char **realm, sasl_interact_t **prompt_need)
 {
     int ret = SASL_FAIL;
     sasl_getrealm_t *realm_cb;
@@ -487,32 +488,32 @@ int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
     /* see if we were given the result in the prompt */
     prompt = _plug_find_prompt(prompt_need, SASL_CB_GETREALM);
     if (prompt != NULL) {
-	/* We prompted, and got.*/
-	
-	if (!prompt->result) {
-	    SETERROR(utils, "Unexpectedly missing a prompt result");
-	    return SASL_BADPARAM;
-	}
+        /* We prompted, and got.*/
 
-	*realm = prompt->result;
-	return SASL_OK;
+        if (!prompt->result) {
+            SETERROR(utils, "Unexpectedly missing a prompt result");
+            return SASL_BADPARAM;
+        }
+
+        *realm = prompt->result;
+        return SASL_OK;
     }
 
     /* Try to get the callback... */
     ret = utils->getcallback(utils->conn, SASL_CB_GETREALM,
-			     &realm_cb, &realm_context);
+                             (int (**)(void)) (&realm_cb), &realm_context);
 
     if (ret == SASL_OK && realm_cb) {
-	ret = realm_cb(realm_context, SASL_CB_GETREALM, availrealms, realm);
-	if (ret != SASL_OK)
-	    return ret;
+        ret = realm_cb(realm_context, SASL_CB_GETREALM, availrealms, realm);
+        if (ret != SASL_OK)
+            return ret;
 
-	if (!*realm) {
-	    PARAMERROR(utils);
-	    return SASL_BADPARAM;
-	}
+        if (!*realm) {
+            PARAMERROR(utils);
+            return SASL_BADPARAM;
+        }
     }
-  
+
     return ret;
 }
 
@@ -520,14 +521,14 @@ int _plug_get_realm(const sasl_utils_t *utils, const char **availrealms,
  * Make the requested prompts. (prompt==NULL means we don't want it)
  */
 int _plug_make_prompts(const sasl_utils_t *utils,
-		       sasl_interact_t **prompts_res,
-		       const char *user_prompt, const char *user_def,
-		       const char *auth_prompt, const char *auth_def,
-		       const char *pass_prompt, const char *pass_def,
-		       const char *echo_chal,
-		       const char *echo_prompt, const char *echo_def,
-		       const char *realm_chal,
-		       const char *realm_prompt, const char *realm_def)
+                       sasl_interact_t **prompts_res,
+                       const char *user_prompt, const char *user_def,
+                       const char *auth_prompt, const char *auth_def,
+                       const char *pass_prompt, const char *pass_def,
+                       const char *echo_chal,
+                       const char *echo_prompt, const char *echo_def,
+                       const char *realm_chal,
+                       const char *realm_prompt, const char *realm_def)
 {
     int num = 1;
     int alloc_size;
@@ -540,63 +541,63 @@ int _plug_make_prompts(const sasl_utils_t *utils,
     if (realm_prompt) num++;
 
     if (num == 1) {
-	SETERROR( utils, "make_prompts() called with no actual prompts" );
-	return SASL_FAIL;
+        SETERROR( utils, "make_prompts() called with no actual prompts" );
+        return SASL_FAIL;
     }
 
     alloc_size = sizeof(sasl_interact_t)*num;
     prompts = utils->malloc(alloc_size);
     if (!prompts) {
-	MEMERROR( utils );
-	return SASL_NOMEM;
+        MEMERROR( utils );
+        return SASL_NOMEM;
     }
     memset(prompts, 0, alloc_size);
-  
+
     *prompts_res = prompts;
 
     if (user_prompt) {
-	(prompts)->id = SASL_CB_USER;
-	(prompts)->challenge = "Authorization Name";
-	(prompts)->prompt = user_prompt;
-	(prompts)->defresult = user_def;
+        (prompts)->id = SASL_CB_USER;
+        (prompts)->challenge = "Authorization Name";
+        (prompts)->prompt = user_prompt;
+        (prompts)->defresult = user_def;
 
-	prompts++;
+        prompts++;
     }
 
     if (auth_prompt) {
-	(prompts)->id = SASL_CB_AUTHNAME;
-	(prompts)->challenge = "Authentication Name";
-	(prompts)->prompt = auth_prompt;
-	(prompts)->defresult = auth_def;
+        (prompts)->id = SASL_CB_AUTHNAME;
+        (prompts)->challenge = "Authentication Name";
+        (prompts)->prompt = auth_prompt;
+        (prompts)->defresult = auth_def;
 
-	prompts++;
+        prompts++;
     }
 
     if (pass_prompt) {
-	(prompts)->id = SASL_CB_PASS;
-	(prompts)->challenge = "Password";
-	(prompts)->prompt = pass_prompt;
-	(prompts)->defresult = pass_def;
+        (prompts)->id = SASL_CB_PASS;
+        (prompts)->challenge = "Password";
+        (prompts)->prompt = pass_prompt;
+        (prompts)->defresult = pass_def;
 
-	prompts++;
+        prompts++;
     }
 
     if (echo_prompt) {
-	(prompts)->id = SASL_CB_ECHOPROMPT;
-	(prompts)->challenge = echo_chal;
-	(prompts)->prompt = echo_prompt;
-	(prompts)->defresult = echo_def;
+        (prompts)->id = SASL_CB_ECHOPROMPT;
+        (prompts)->challenge = echo_chal;
+        (prompts)->prompt = echo_prompt;
+        (prompts)->defresult = echo_def;
 
-	prompts++;
+        prompts++;
     }
 
     if (realm_prompt) {
-	(prompts)->id = SASL_CB_GETREALM;
-	(prompts)->challenge = realm_chal;
-	(prompts)->prompt = realm_prompt;
-	(prompts)->defresult = realm_def;
+        (prompts)->id = SASL_CB_GETREALM;
+        (prompts)->challenge = realm_chal;
+        (prompts)->prompt = realm_prompt;
+        (prompts)->defresult = realm_def;
 
-	prompts++;
+        prompts++;
     }
 
     /* add the ending one */
@@ -609,7 +610,7 @@ int _plug_make_prompts(const sasl_utils_t *utils,
 }
 
 void _plug_decode_init(decode_context_t *text,
-		       const sasl_utils_t *utils, unsigned int in_maxbuf)
+                       const sasl_utils_t *utils, unsigned int in_maxbuf)
 {
     memset(text, 0, sizeof(decode_context_t));
 
@@ -623,93 +624,93 @@ void _plug_decode_init(decode_context_t *text,
  * using decode_pkt() to decode individual packets.
  */
 int _plug_decode(decode_context_t *text,
-		 const char *input, unsigned inputlen,
-		 char **output,		/* output buffer */
-		 unsigned *outputsize,	/* current size of output buffer */
-		 unsigned *outputlen,	/* length of data in output buffer */
-		 int (*decode_pkt)(void *rock,
-				   const char *input, unsigned inputlen,
-				   char **output, unsigned *outputlen),
-		 void *rock)
+                 const char *input, unsigned inputlen,
+                 char **output,         /* output buffer */
+                 unsigned *outputsize,  /* current size of output buffer */
+                 unsigned *outputlen,   /* length of data in output buffer */
+                 int (*decode_pkt)(void *rock,
+                                   const char *input, unsigned inputlen,
+                                   char **output, unsigned *outputlen),
+                 void *rock)
 {
     unsigned int tocopy;
     unsigned diff;
     char *tmp;
     unsigned tmplen;
     int ret;
-    
+
     *outputlen = 0;
 
     while (inputlen) { /* more input */
-	if (text->needsize) { /* need to get the rest of the 4-byte size */
+        if (text->needsize) { /* need to get the rest of the 4-byte size */
 
-	    /* copy as many bytes (up to 4) as we have into size buffer */
-	    tocopy = (inputlen > text->needsize) ? text->needsize : inputlen;
-	    memcpy(text->sizebuf + 4 - text->needsize, input, tocopy);
-	    text->needsize -= tocopy;
-	
-	    input += tocopy;
-	    inputlen -= tocopy;
-	
-	    if (!text->needsize) { /* we have the entire 4-byte size */
-		memcpy(&(text->size), text->sizebuf, 4);
-		text->size = ntohl(text->size);
-	
-		if (!text->size) /* should never happen */
-		    return SASL_FAIL;
-	    
-		if (text->size > text->in_maxbuf) {
-		    text->utils->log(NULL, SASL_LOG_ERR, 
-				     "encoded packet size too big (%d > %d)",
-				     text->size, text->in_maxbuf);
-		    return SASL_FAIL;
-		}
-	    
-		if (!text->buffer)
-		    text->buffer = text->utils->malloc(text->in_maxbuf);
-		if (text->buffer == NULL) return SASL_NOMEM;
+            /* copy as many bytes (up to 4) as we have into size buffer */
+            tocopy = (inputlen > text->needsize) ? text->needsize : inputlen;
+            memcpy(text->sizebuf + 4 - text->needsize, input, tocopy);
+            text->needsize -= tocopy;
 
-		text->cursize = 0;
-	    } else {
-		/* We do NOT have the entire 4-byte size...
-		 * wait for more data */
-		return SASL_OK;
-	    }
-	}
+            input += tocopy;
+            inputlen -= tocopy;
 
-	diff = text->size - text->cursize; /* bytes needed for full packet */
+            if (!text->needsize) { /* we have the entire 4-byte size */
+                memcpy(&(text->size), text->sizebuf, 4);
+                text->size = ntohl(text->size);
 
-	if (inputlen < diff) {	/* not a complete packet, need more input */
-	    memcpy(text->buffer + text->cursize, input, inputlen);
-	    text->cursize += inputlen;
-	    return SASL_OK;
-	}
+                if (!text->size) /* should never happen */
+                    return SASL_FAIL;
 
-	/* copy the rest of the packet */
-	memcpy(text->buffer + text->cursize, input, diff);
-	input += diff;
-	inputlen -= diff;
+                if (text->size > text->in_maxbuf) {
+                    text->utils->log(NULL, SASL_LOG_ERR,
+                                     "encoded packet size too big (%d > %d)",
+                                     text->size, text->in_maxbuf);
+                    return SASL_FAIL;
+                }
 
-	/* decode the packet (no need to free tmp) */
-	ret = decode_pkt(rock, text->buffer, text->size, &tmp, &tmplen);
-	if (ret != SASL_OK) return ret;
+                if (!text->buffer)
+                    text->buffer = text->utils->malloc(text->in_maxbuf);
+                if (text->buffer == NULL) return SASL_NOMEM;
 
-	/* append the decoded packet to the output */
-	ret = _plug_buf_alloc(text->utils, output, outputsize,
-			      *outputlen + tmplen + 1); /* +1 for NUL */
-	if (ret != SASL_OK) return ret;
+                text->cursize = 0;
+            } else {
+                /* We do NOT have the entire 4-byte size...
+                 * wait for more data */
+                return SASL_OK;
+            }
+        }
 
-	memcpy(*output + *outputlen, tmp, tmplen);
-	*outputlen += tmplen;
+        diff = text->size - text->cursize; /* bytes needed for full packet */
 
-	/* protect stupid clients */
-	*(*output + *outputlen) = '\0';
+        if (inputlen < diff) {  /* not a complete packet, need more input */
+            memcpy(text->buffer + text->cursize, input, inputlen);
+            text->cursize += inputlen;
+            return SASL_OK;
+        }
 
-	/* reset for the next packet */
-	text->needsize = 4;
+        /* copy the rest of the packet */
+        memcpy(text->buffer + text->cursize, input, diff);
+        input += diff;
+        inputlen -= diff;
+
+        /* decode the packet (no need to free tmp) */
+        ret = decode_pkt(rock, text->buffer, text->size, &tmp, &tmplen);
+        if (ret != SASL_OK) return ret;
+
+        /* append the decoded packet to the output */
+        ret = _plug_buf_alloc(text->utils, output, outputsize,
+                              *outputlen + tmplen + 1); /* +1 for NUL */
+        if (ret != SASL_OK) return ret;
+
+        memcpy(*output + *outputlen, tmp, tmplen);
+        *outputlen += tmplen;
+
+        /* protect stupid clients */
+        *(*output + *outputlen) = '\0';
+
+        /* reset for the next packet */
+        text->needsize = 4;
     }
 
-    return SASL_OK;    
+    return SASL_OK;
 }
 
 void _plug_decode_free(decode_context_t *text)
@@ -719,61 +720,61 @@ void _plug_decode_free(decode_context_t *text)
 
 /* returns the realm we should pretend to be in */
 int _plug_parseuser(const sasl_utils_t *utils,
-		    char **user, char **realm, const char *user_realm, 
-		    const char *serverFQDN, const char *input)
+                    char **user, char **realm, const char *user_realm,
+                    const char *serverFQDN, const char *input)
 {
     int ret;
     char *r;
 
     if(!user || !serverFQDN) {
-	PARAMERROR( utils );
-	return SASL_BADPARAM;
+        PARAMERROR( utils );
+        return SASL_BADPARAM;
     }
 
     r = strchr(input, '@');
     if (!r) {
-	/* hmmm, the user didn't specify a realm */
-	if(user_realm && user_realm[0]) {
-	    ret = _plug_strdup(utils, user_realm, realm, NULL);
-	} else {
-	    /* Default to serverFQDN */
-	    ret = _plug_strdup(utils, serverFQDN, realm, NULL);
-	}
-	
-	if (ret == SASL_OK) {
-	    ret = _plug_strdup(utils, input, user, NULL);
-	}
+        /* hmmm, the user didn't specify a realm */
+        if(user_realm && user_realm[0]) {
+            ret = _plug_strdup(utils, user_realm, realm, NULL);
+        } else {
+            /* Default to serverFQDN */
+            ret = _plug_strdup(utils, serverFQDN, realm, NULL);
+        }
+
+        if (ret == SASL_OK) {
+            ret = _plug_strdup(utils, input, user, NULL);
+        }
     } else {
-	r++;
-	ret = _plug_strdup(utils, r, realm, NULL);
-	*--r = '\0';
-	*user = utils->malloc(r - input + 1);
-	if (*user) {
-	    strncpy(*user, input, r - input +1);
-	} else {
-	    MEMERROR( utils );
-	    ret = SASL_NOMEM;
-	}
-	*r = '@';
+        r++;
+        ret = _plug_strdup(utils, r, realm, NULL);
+        *--r = '\0';
+        *user = utils->malloc(r - input + 1);
+        if (*user) {
+            strncpy(*user, input, r - input +1);
+        } else {
+            MEMERROR( utils );
+            ret = SASL_NOMEM;
+        }
+        *r = '@';
     }
 
     return ret;
 }
 
 int _plug_make_fulluser(const sasl_utils_t *utils,
-			char **fulluser,
-			const char * useronly,
-			const char *realm)
+                        char **fulluser,
+                        const char * useronly,
+                        const char *realm)
 {
     if(!fulluser || !useronly || !realm) {
-	PARAMERROR( utils );
-	return (SASL_BADPARAM);
+        PARAMERROR( utils );
+        return (SASL_BADPARAM);
     }
 
     *fulluser = utils->malloc (strlen(useronly) + strlen(realm) + 2);
     if (*fulluser == NULL) {
-	MEMERROR( utils );
-	return (SASL_NOMEM);
+        MEMERROR( utils );
+        return (SASL_NOMEM);
     }
 
     strcpy (*fulluser, useronly);
@@ -785,36 +786,36 @@ int _plug_make_fulluser(const sasl_utils_t *utils,
 
 char * _plug_get_error_message (const sasl_utils_t *utils,
 #ifdef WIN32
-				DWORD error
+                                DWORD error
 #else
-				int error
+                                int error
 #endif
-				)
+                                )
 {
     char * return_value;
 #ifdef WIN32
     LPVOID lpMsgBuf;
 
-    FormatMessage( 
-	FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-	FORMAT_MESSAGE_FROM_SYSTEM | 
-	FORMAT_MESSAGE_IGNORE_INSERTS,
-	NULL,
-	error,
-	MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), /* Default language */
-	(LPTSTR) &lpMsgBuf,
-	0,
-	NULL 
+    FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
+        FORMAT_MESSAGE_FROM_SYSTEM |
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        error,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), /* Default language */
+        (LPTSTR) &lpMsgBuf,
+        0,
+        NULL
     );
 
     if (_plug_strdup (utils, lpMsgBuf, &return_value, NULL) != SASL_OK) {
-	return_value = NULL;
+        return_value = NULL;
     }
 
     LocalFree( lpMsgBuf );
 #else /* !WIN32 */
     if (_plug_strdup (utils, strerror(error), &return_value, NULL) != SASL_OK) {
-	return_value = NULL;
+        return_value = NULL;
     }
 #endif /* WIN32 */
     return (return_value);
@@ -827,10 +828,10 @@ void _plug_snprintf_os_info (char * osbuf, int osbuf_len)
     char *sysname;
 
 /* :
-  DWORD dwOSVersionInfoSize; 
-  DWORD dwMajorVersion; 
-  DWORD dwMinorVersion; 
-  DWORD dwBuildNumber; 
+  DWORD dwOSVersionInfoSize;
+  DWORD dwMajorVersion;
+  DWORD dwMinorVersion;
+  DWORD dwBuildNumber;
   TCHAR szCSDVersion[ 128 ];
 //Only NT SP 6 and later
   WORD wServicePackMajor;
@@ -843,68 +844,68 @@ void _plug_snprintf_os_info (char * osbuf, int osbuf_len)
     sysname = "Unknown Windows";
 
     if (GetVersionEx ((OSVERSIONINFO *) &versioninfo) == FALSE) {
-	snprintf(osbuf, osbuf_len, "%s", sysname);
-	goto SKIP_OS_INFO;
+        snprintf(osbuf, osbuf_len, "%s", sysname);
+        goto SKIP_OS_INFO;
     }
 
     switch (versioninfo.dwPlatformId) {
-	case VER_PLATFORM_WIN32s: /* Win32s on Windows 3.1 */
-	    sysname = "Win32s on Windows 3.1";
+        case VER_PLATFORM_WIN32s: /* Win32s on Windows 3.1 */
+            sysname = "Win32s on Windows 3.1";
 /* I can't test if dwBuildNumber has any meaning on Win32s */
-	    break;
+            break;
 
-	case VER_PLATFORM_WIN32_WINDOWS: /* 95/98/ME */
-	    switch (versioninfo.dwMinorVersion) {
-		case 0:
-		    sysname = "Windows 95";
-		    break;
-		case 10:
-		    sysname = "Windows 98";
-		    break;
-		case 90:
-		    sysname = "Windows Me";
-		    break;
-		default:
-		    sysname = "Unknown Windows 9X/ME series";
-		    break;
-	    }
+        case VER_PLATFORM_WIN32_WINDOWS: /* 95/98/ME */
+            switch (versioninfo.dwMinorVersion) {
+                case 0:
+                    sysname = "Windows 95";
+                    break;
+                case 10:
+                    sysname = "Windows 98";
+                    break;
+                case 90:
+                    sysname = "Windows Me";
+                    break;
+                default:
+                    sysname = "Unknown Windows 9X/ME series";
+                    break;
+            }
 /* Clear the high order word, as it contains major/minor version */
-	    versioninfo.dwBuildNumber &= 0xFFFF;
-	    break;
+            versioninfo.dwBuildNumber &= 0xFFFF;
+            break;
 
-	case VER_PLATFORM_WIN32_NT: /* NT/2000/XP/.NET */
-	    if (versioninfo.dwMinorVersion > 99) {
-	    } else {
-		switch (versioninfo.dwMajorVersion * 100 + versioninfo.dwMinorVersion) {
-		    case 351:
-			sysname = "Windows NT 3.51";
-			break;
-		    case 400:
-			sysname = "Windows NT 4.0";
-			break;
-		    case 500:
-			sysname = "Windows 2000";
-			break;
-		    case 501:
-			sysname = "Windows XP/.NET"; /* or Windows .NET Server */
-			break;
-		    default:
-			sysname = "Unknown Windows NT series";
-			break;
-		}
-	    }
-	    break;
+        case VER_PLATFORM_WIN32_NT: /* NT/2000/XP/.NET */
+            if (versioninfo.dwMinorVersion > 99) {
+            } else {
+                switch (versioninfo.dwMajorVersion * 100 + versioninfo.dwMinorVersion) {
+                    case 351:
+                        sysname = "Windows NT 3.51";
+                        break;
+                    case 400:
+                        sysname = "Windows NT 4.0";
+                        break;
+                    case 500:
+                        sysname = "Windows 2000";
+                        break;
+                    case 501:
+                        sysname = "Windows XP/.NET"; /* or Windows .NET Server */
+                        break;
+                    default:
+                        sysname = "Unknown Windows NT series";
+                        break;
+                }
+            }
+            break;
 
-	default:
-	    break;
+        default:
+            break;
     }
 
     snprintf(osbuf, osbuf_len,
-	     "%s %s (Build %u)",
-	     sysname,
-	     versioninfo.szCSDVersion,
-	     versioninfo.dwBuildNumber
-	     );
+             "%s %s (Build %u)",
+             sysname,
+             versioninfo.szCSDVersion,
+             versioninfo.dwBuildNumber
+             );
 
 SKIP_OS_INFO:
     ;

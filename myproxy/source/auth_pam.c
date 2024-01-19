@@ -73,14 +73,14 @@
 /* Structure for application specific data passed through PAM
  * to our conv call-back routine saslauthd_pam_conv. */
 typedef struct {
-    const char *login;			/* plaintext authenticator */
-    const char *password;		/* plaintext password */
-    pam_handle_t *pamh;			/* pointer to PAM handle */
+    const char *login;                  /* plaintext authenticator */
+    const char *password;               /* plaintext password */
+    pam_handle_t *pamh;                 /* pointer to PAM handle */
 } pam_appdata;
 
 # define RETURN(x) return strdup(x)
 
-
+
 /* FUNCTION: saslauthd_pam_conv */
 
 /* SYNOPSIS
@@ -88,82 +88,82 @@ typedef struct {
  * received message expects a response, pointed to by resp.
  * END SYNOPSIS */
 
-static int				/* R: PAM return code */
+static int                              /* R: PAM return code */
 saslauthd_pam_conv (
   /* PARAMETERS */
-  int num_msg,				/* I: number of messages */
-  struct pam_message **msg,		/* I: pointer to array of messages */
-  struct pam_response **resp,		/* O: pointer to pointer of response */
-  void *appdata_ptr			/* I: pointer to app specific data */
+  int num_msg,                          /* I: number of messages */
+  const struct pam_message **msg,       /* I: pointer to array of messages */
+  struct pam_response **resp,           /* O: pointer to pointer of response */
+  void *appdata_ptr                     /* I: pointer to app specific data */
   /* END PARAMETERS */
   )
 {
     /* VARIABLES */
-    pam_appdata *my_appdata;		/* application specific data */
-    struct pam_response *my_resp;	/* response created by this func */
-    int i;				/* loop counter */
-    const char *login_prompt;		/* string prompting for user-name */
-    int rc;				/* return code holder */
+    pam_appdata *my_appdata;            /* application specific data */
+    struct pam_response *my_resp;       /* response created by this func */
+    int i;                              /* loop counter */
+    const char *login_prompt;           /* string prompting for user-name */
+    int rc;                             /* return code holder */
     /* END VARIABLES */
 
     my_appdata = appdata_ptr;
 
     my_resp = malloc(sizeof(struct pam_response) * num_msg);
     if (my_resp == NULL)
-	return PAM_CONV_ERR;
+        return PAM_CONV_ERR;
 
     for (i = 0; i < num_msg; i++)
-	switch (msg[i]->msg_style) {
-	/*
-	 * We assume PAM_PROMPT_ECHO_OFF to be a request for password.
-	 * This assumption might be unsafe.
-	 *
-	 * For PAM_PROMPT_ECHO_ON we first check whether the provided
-	 * request string matches PAM_USER_PROMPT and, only if they do
-	 * match, assume it to be a request for the login.
-	 */
-	case PAM_PROMPT_ECHO_OFF:	/* password */
-	    my_resp[i].resp = strdup(my_appdata->password);
-	    if (my_resp[i].resp == NULL) {
-		myproxy_log("saslauthd_pam_conv: strdup failed");
-		goto ret_error;
-	    }
-	    my_resp[i].resp_retcode = PAM_SUCCESS;
-	    break;
+        switch (msg[i]->msg_style) {
+        /*
+         * We assume PAM_PROMPT_ECHO_OFF to be a request for password.
+         * This assumption might be unsafe.
+         *
+         * For PAM_PROMPT_ECHO_ON we first check whether the provided
+         * request string matches PAM_USER_PROMPT and, only if they do
+         * match, assume it to be a request for the login.
+         */
+        case PAM_PROMPT_ECHO_OFF:       /* password */
+            my_resp[i].resp = strdup(my_appdata->password);
+            if (my_resp[i].resp == NULL) {
+                myproxy_log("saslauthd_pam_conv: strdup failed");
+                goto ret_error;
+            }
+            my_resp[i].resp_retcode = PAM_SUCCESS;
+            break;
 
-	case PAM_PROMPT_ECHO_ON:	/* username? */
-	    /* Recheck setting each time, as it might have been changed
-	       in the mean-while. */
-	    rc = pam_get_item(my_appdata->pamh, PAM_USER_PROMPT,
-			      (void *) &login_prompt);
-	    if (rc != PAM_SUCCESS) {
-		myproxy_log("saslauthd_pam_conv: unable to read "
-		       "login prompt string: %s",
-		       pam_strerror(my_appdata->pamh, rc));
-		goto ret_error;
-	    }
+        case PAM_PROMPT_ECHO_ON:        /* username? */
+            /* Recheck setting each time, as it might have been changed
+               in the mean-while. */
+            rc = pam_get_item(my_appdata->pamh, PAM_USER_PROMPT,
+                              (void *) &login_prompt);
+            if (rc != PAM_SUCCESS) {
+                myproxy_log("saslauthd_pam_conv: unable to read "
+                            "login prompt string: %s",
+                            pam_strerror(my_appdata->pamh, rc));
+                goto ret_error;
+            }
 
-	    if (strcmp(msg[i]->msg, login_prompt) == 0) {
-		my_resp[i].resp = strdup(my_appdata->login);
-		my_resp[i].resp_retcode = PAM_SUCCESS;
-	    } else {			/* ignore */
-		myproxy_log("saslauthd_pam_conv: unknown prompt "
-		       "string: %s", msg[i]->msg);
-		my_resp[i].resp = NULL;
-		my_resp[i].resp_retcode = PAM_SUCCESS;
-	    }
-	    break;
+            if (strcmp(msg[i]->msg, login_prompt) == 0) {
+                my_resp[i].resp = strdup(my_appdata->login);
+                my_resp[i].resp_retcode = PAM_SUCCESS;
+            } else {                    /* ignore */
+                myproxy_log("saslauthd_pam_conv: unknown prompt "
+                            "string: %s", msg[i]->msg);
+                my_resp[i].resp = NULL;
+                my_resp[i].resp_retcode = PAM_SUCCESS;
+            }
+            break;
 
-	case PAM_ERROR_MSG:		/* ignore */
-	case PAM_TEXT_INFO:		/* ignore */
-        myproxy_log("PAM: %s", msg[i]->msg);
-	    my_resp[i].resp = NULL;
-	    my_resp[i].resp_retcode = PAM_SUCCESS;
-	    break;
+        case PAM_ERROR_MSG:             /* ignore */
+        case PAM_TEXT_INFO:             /* ignore */
+            myproxy_log("PAM: %s", msg[i]->msg);
+            my_resp[i].resp = NULL;
+            my_resp[i].resp_retcode = PAM_SUCCESS;
+            break;
 
-	default:			/* error */
-	    goto ret_error;
-	}
+        default:                        /* error */
+            goto ret_error;
+        }
     *resp = my_resp;
     return PAM_SUCCESS;
 
@@ -173,35 +173,35 @@ ret_error:
      * isn't initialised yet.
      */
     {
-	int y;
+        int y;
 
-	for (y = 0; y < i; y++)
-	    if (my_resp[y].resp != NULL)
-		free(my_resp[y].resp);
-	free(my_resp);
+        for (y = 0; y < i; y++)
+            if (my_resp[y].resp != NULL)
+                free(my_resp[y].resp);
+        free(my_resp);
     }
     return PAM_CONV_ERR;
 }
 
 /* END FUNCTION: saslauthd_pam_conv */
-
+
 /* FUNCTION: auth_pam */
 
-char *					/* R: allocated response string */
+char *                                  /* R: allocated response string */
 auth_pam (
   /* PARAMETERS */
-  const char *login,			/* I: plaintext authenticator */
-  const char *password,			/* I: plaintext password */
-  const char *service,			/* I: service name */
+  const char *login,                    /* I: plaintext authenticator */
+  const char *password,                 /* I: plaintext password */
+  const char *service,                  /* I: service name */
   const char *realm
   /* END PARAMETERS */
   )
 {
     /* VARIABLES */
-    pam_appdata my_appdata;		/* application specific data */
-    struct pam_conv my_conv;		/* pam conversion data */
-    pam_handle_t *pamh;			/* pointer to PAM handle */
-    int rc;				/* return code holder */
+    pam_appdata my_appdata;             /* application specific data */
+    struct pam_conv my_conv;            /* pam conversion data */
+    pam_handle_t *pamh;                 /* pointer to PAM handle */
+    int rc;                             /* return code holder */
     char result[200];
     /* END VARIABLES */
 
@@ -250,7 +250,7 @@ auth_pam (
     if (rc == PAM_AUTH_ERR) {
         RETURN("NO invalid password");
     }
-	snprintf(result, sizeof(result), "NO PAM authentication failed: %s",
+    snprintf(result, sizeof(result), "NO PAM authentication failed: %s",
              pam_strerror(pamh, rc));
     RETURN(result);
 }
