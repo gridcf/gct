@@ -50,6 +50,13 @@ int	 dh_is_known_group(const DH *);
 u_int	 dh_estimate(int);
 void	 dh_set_moduli_file(const char *);
 
+# if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+void DH_get0_pqg(const DH *dh, const BIGNUM **p,
+                 const BIGNUM **q, const BIGNUM **g);
+void DH_get0_key(const DH *dh, const BIGNUM **pub_key,
+                 const BIGNUM **priv_key);
+# endif
+
 /*
  * Max value from RFC4419.
  * Min value from RFC8270.

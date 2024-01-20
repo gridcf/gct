@@ -1,4 +1,4 @@
-/* $OpenBSD: kex.c,v 1.172 2022/02/01 23:32:51 djm Exp $ */
+/* $OpenBSD: kex.c,v 1.178 2023/03/12 10:40:39 dtucker Exp $ */
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
  *
@@ -39,6 +39,7 @@
 
 #ifdef WITH_OPENSSL
 #include <openssl/crypto.h>
+#include <openssl/fips.h>
 #include <openssl/dh.h>
 # ifdef HAVE_EVP_KDF_CTX_NEW_ID
 # include <openssl/kdf.h>
@@ -61,12 +62,13 @@
 #include "misc.h"
 #include "dispatch.h"
 #include "monitor.h"
-#include "xmalloc.h"
+#include "myproposal.h"
 
 #include "ssherr.h"
 #include "sshbuf.h"
 #include "canohost.h"
 #include "digest.h"
+#include "xmalloc.h"
 #include "audit.h"
 
 #ifdef GSSAPI
@@ -383,6 +385,61 @@ kex_gss_names_valid(const char *names)
 	return 1;
 }
 
+/*
+ * Fill out a proposal array with dynamically allocated values, which may
+ * be modified as required for compatibility reasons.
+ * Any of the options may be NULL, in which case the default is used.
+ * Array contents must be freed by calling kex_proposal_free_entries.
+ */
+void
+kex_proposal_populate_entries(struct ssh *ssh, char *prop[PROPOSAL_MAX],
+    const char *kexalgos, const char *ciphers, const char *macs,
+    const char *comp, const char *hkalgs)
+{
+	const char *defpropserver[PROPOSAL_MAX] = { KEX_SERVER };
+	const char *defpropclient[PROPOSAL_MAX] = { KEX_CLIENT };
+	const char **defprop = ssh->kex->server ? defpropserver : defpropclient;
+	u_int i;
+
+	if (prop == NULL)
+		fatal_f("proposal missing");
+
+	for (i = 0; i < PROPOSAL_MAX; i++) {
+		switch(i) {
+		case PROPOSAL_KEX_ALGS:
+			prop[i] = compat_kex_proposal(ssh,
+			    kexalgos ? kexalgos : defprop[i]);
+			break;
+		case PROPOSAL_ENC_ALGS_CTOS:
+		case PROPOSAL_ENC_ALGS_STOC:
+			prop[i] = xstrdup(ciphers ? ciphers : defprop[i]);
+			break;
+		case PROPOSAL_MAC_ALGS_CTOS:
+		case PROPOSAL_MAC_ALGS_STOC:
+			prop[i]  = xstrdup(macs ? macs : defprop[i]);
+			break;
+		case PROPOSAL_COMP_ALGS_CTOS:
+		case PROPOSAL_COMP_ALGS_STOC:
+			prop[i] = xstrdup(comp ? comp : defprop[i]);
+			break;
+		case PROPOSAL_SERVER_HOST_KEY_ALGS:
+			prop[i] = xstrdup(hkalgs ? hkalgs : defprop[i]);
+			break;
+		default:
+			prop[i] = xstrdup(defprop[i]);
+		}
+	}
+}
+
+void
+kex_proposal_free_entries(char *prop[PROPOSAL_MAX])
+{
+	u_int i;
+
+	for (i = 0; i < PROPOSAL_MAX; i++)
+		free(prop[i]);
+}
+
 /* put algorithm proposal into buffer */
 int
 kex_prop2buf(struct sshbuf *b, char *proposal[PROPOSAL_MAX])
@@ -470,7 +527,6 @@ kex_prop_free(char **proposal)
 	free(proposal);
 }
 
-/* ARGSUSED */
 int
 kex_protocol_error(int type, u_int32_t seq, struct ssh *ssh)
 {
@@ -551,6 +607,11 @@ kex_input_ext_info(int type, u_int32_t seq, struct ssh *ssh)
 	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, &kex_protocol_error);
 	if ((r = sshpkt_get_u32(ssh, &ninfo)) != 0)
 		return r;
+	if (ninfo >= 1024) {
+		error("SSH2_MSG_EXT_INFO with too many entries, expected "
+		    "<=1024, received %u", ninfo);
+		return SSH_ERR_INVALID_FORMAT;
+	}
 	for (i = 0; i < ninfo; i++) {
 		if ((r = sshpkt_get_cstring(ssh, &name, NULL)) != 0)
 			return r;
@@ -651,7 +712,6 @@ kex_send_kexinit(struct ssh *ssh)
 	return 0;
 }
 
-/* ARGSUSED */
 int
 kex_input_kexinit(int type, u_int32_t seq, struct ssh *ssh)
 {
@@ -1454,7 +1514,7 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
     const char *version_addendum)
 {
 	int remote_major, remote_minor, mismatch, oerrno = 0;
-	size_t len, i, n;
+	size_t len, n;
 	int r, expect_nl;
 	u_char c;
 	struct sshbuf *our_version = ssh->kex->server ?
@@ -1510,7 +1570,7 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 		}
 		sshbuf_reset(peer_version);
 		expect_nl = 0;
-		for (i = 0; ; i++) {
+		for (;;) {
 			if (timeout_ms > 0) {
 				r = waitrfd(ssh_packet_get_connection_in(ssh),
 				    &timeout_ms);
@@ -1584,7 +1644,7 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 	}
 	peer_version_string = sshbuf_dup_string(peer_version);
 	if (peer_version_string == NULL)
-		error_f("sshbuf_dup_string failed");
+		fatal_f("sshbuf_dup_string failed");
 	/* XXX must be same size for sscanf */
 	if ((remote_version = calloc(1, sshbuf_len(peer_version))) == NULL) {
 		error_f("calloc failed");
@@ -1651,10 +1711,6 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 		r = SSH_ERR_CONN_CLOSED; /* XXX */
 		goto out;
 	}
-	if ((ssh->compat & SSH_BUG_RSASIGMD5) != 0) {
-		logit("Remote version \"%.100s\" uses unsafe RSA signature "
-		    "scheme; disabling use of RSA keys", remote_version);
-	}
 	/* success */
 	r = 0;
  out:
@@ -1666,3 +1722,49 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 	return r;
 }
 
+#ifdef WITH_OPENSSL
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+/* 
+ * Creates an EVP_PKEY from the given parameters and keys.
+ * The private key can be omitted.
+ */
+int
+kex_create_evp_dh(EVP_PKEY **pkey, const BIGNUM *p, const BIGNUM *q,
+    const BIGNUM *g, const BIGNUM *pub, const BIGNUM *priv)
+{
+	OSSL_PARAM_BLD *param_bld = NULL;
+	EVP_PKEY_CTX *ctx = NULL;
+	int r = 0;
+
+	/* create EVP_PKEY-DH key */
+	if ((ctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL)) == NULL ||
+	    (param_bld = OSSL_PARAM_BLD_new()) == NULL) {
+		error_f("EVP_PKEY_CTX or PARAM_BLD init failed");
+		r = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if (OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_P, p) != 1 ||
+	    OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_Q, q) != 1 ||
+	    OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_G, g) != 1 ||
+	    OSSL_PARAM_BLD_push_BN(param_bld,
+	        OSSL_PKEY_PARAM_PUB_KEY, pub) != 1) {
+		error_f("Failed pushing params to OSSL_PARAM_BLD");
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	if (priv != NULL &&
+	    OSSL_PARAM_BLD_push_BN(param_bld,
+	        OSSL_PKEY_PARAM_PRIV_KEY, priv) != 1) {
+		error_f("Failed pushing private key to OSSL_PARAM_BLD");
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	if ((*pkey = sshkey_create_evp(param_bld, ctx)) == NULL)
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+out:
+	OSSL_PARAM_BLD_free(param_bld);
+	EVP_PKEY_CTX_free(ctx);
+	return r;
+}
+# endif
+#endif /* WITH_OPENSSL */

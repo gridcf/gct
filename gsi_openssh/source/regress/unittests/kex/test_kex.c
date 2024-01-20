@@ -96,7 +96,8 @@ do_kex_with_key(char *kex, int keytype, int bits)
 	memcpy(kex_params.proposal, myproposal, sizeof(myproposal));
 	if (kex != NULL)
 		kex_params.proposal[PROPOSAL_KEX_ALGS] = kex;
-	keyname = strdup(sshkey_ssh_name(private));
+	keyname = (strcmp(sshkey_ssh_name(private), "ssh-rsa")) ?
+		strdup(sshkey_ssh_name(private)) : strdup("rsa-sha2-256");
 	ASSERT_PTR_NE(keyname, NULL);
 	kex_params.proposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = keyname;
 	ASSERT_INT_EQ(ssh_init(&client, 0, &kex_params), 0);
@@ -179,7 +180,7 @@ do_kex(char *kex)
 {
 #ifdef WITH_OPENSSL
 	do_kex_with_key(kex, KEY_RSA, 2048);
-	do_kex_with_key(kex, KEY_DSA, 1024);
+	/* do_kex_with_key(kex, KEY_DSA, 1024); */
 #ifdef OPENSSL_HAS_ECC
 	do_kex_with_key(kex, KEY_ECDSA, 256);
 #endif /* OPENSSL_HAS_ECC */

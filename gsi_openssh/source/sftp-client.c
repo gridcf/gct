@@ -1,4 +1,4 @@
-/* $OpenBSD: sftp-client.c,v 1.162 2022/03/31 03:07:03 djm Exp $ */
+/* $OpenBSD: sftp-client.c,v 1.169 2023/03/08 04:43:12 guenther Exp $ */
 /*
  * Copyright (c) 2001-2004 Damien Miller <djm@openbsd.org>
  *
@@ -68,10 +68,10 @@
 extern volatile sig_atomic_t interrupted;
 extern int showprogress;
 
-/* Default size of buffer for up/download */
+/* Default size of buffer for up/download (fix sftp.1 scp.1 if changed) */
 #define DEFAULT_COPY_BUFLEN	32768
 
-/* Default number of concurrent outstanding requests */
+/* Default number of concurrent xfer requests (fix sftp.1 scp.1 if changed) */
 #define DEFAULT_NUM_REQUESTS	256
 
 /* Minimum amount of data to read at a time */
@@ -95,15 +95,16 @@ struct sftp_conn {
 	u_int num_requests;
 	u_int version;
 	u_int msg_id;
-#define SFTP_EXT_POSIX_RENAME	0x00000001
-#define SFTP_EXT_STATVFS	0x00000002
-#define SFTP_EXT_FSTATVFS	0x00000004
-#define SFTP_EXT_HARDLINK	0x00000008
-#define SFTP_EXT_FSYNC		0x00000010
-#define SFTP_EXT_LSETSTAT	0x00000020
-#define SFTP_EXT_LIMITS		0x00000040
-#define SFTP_EXT_PATH_EXPAND	0x00000080
-#define SFTP_EXT_COPY_DATA	0x00000100
+#define SFTP_EXT_POSIX_RENAME		0x00000001
+#define SFTP_EXT_STATVFS		0x00000002
+#define SFTP_EXT_FSTATVFS		0x00000004
+#define SFTP_EXT_HARDLINK		0x00000008
+#define SFTP_EXT_FSYNC			0x00000010
+#define SFTP_EXT_LSETSTAT		0x00000020
+#define SFTP_EXT_LIMITS			0x00000040
+#define SFTP_EXT_PATH_EXPAND		0x00000080
+#define SFTP_EXT_COPY_DATA		0x00000100
+#define SFTP_EXT_GETUSERSGROUPS_BY_ID	0x00000200
 	u_int exts;
 	u_int64_t limit_kbps;
 	struct bwlimit bwlimit_in, bwlimit_out;
@@ -148,7 +149,6 @@ request_find(struct requests *requests, u_int id)
 	return req;
 }
 
-/* ARGSUSED */
 static int
 sftpio(void *_bwlimit, size_t amount)
 {
@@ -539,6 +539,11 @@ do_init(int fd_in, int fd_out, u_int transfer_buflen, u_int num_requests,
 		    strcmp((char *)value, "1") == 0) {
 			ret->exts |= SFTP_EXT_COPY_DATA;
 			known = 1;
+		} else if (strcmp(name,
+		    "users-groups-by-id@openssh.com") == 0 &&
+		    strcmp((char *)value, "1") == 0) {
+			ret->exts |= SFTP_EXT_GETUSERSGROUPS_BY_ID;
+			known = 1;
 		}
 		if (known) {
 			debug2("Server supports extension \"%s\" revision %s",
@@ -560,17 +565,26 @@ do_init(int fd_in, int fd_out, u_int transfer_buflen, u_int num_requests,
 
 		/* If the caller did not specify, find a good value */
 		if (transfer_buflen == 0) {
-			ret->download_buflen = limits.read_length;
-			ret->upload_buflen = limits.write_length;
-			debug("Using server download size %u", ret->download_buflen);
-			debug("Using server upload size %u", ret->upload_buflen);
+			ret->download_buflen = MINIMUM(limits.read_length,
+			    SFTP_MAX_MSG_LENGTH - 1024);
+			ret->upload_buflen = MINIMUM(limits.write_length,
+			    SFTP_MAX_MSG_LENGTH - 1024);
+			ret->download_buflen = MAXIMUM(ret->download_buflen, 64);
+			ret->upload_buflen = MAXIMUM(ret->upload_buflen, 64);
+			debug3("server upload/download buffer sizes "
+			    "%llu / %llu; using %u / %u",
+			    (unsigned long long)limits.write_length,
+			    (unsigned long long)limits.read_length,
+			    ret->upload_buflen, ret->download_buflen);
 		}
 
 		/* Use the server limit to scale down our value only */
 		if (num_requests == 0 && limits.open_handles) {
 			ret->num_requests =
 			    MINIMUM(DEFAULT_NUM_REQUESTS, limits.open_handles);
-			debug("Server handle limit %llu; using %u",
+			if (ret->num_requests == 0)
+				ret->num_requests = 1;
+			debug3("server handle limit %llu; using %u",
 			    (unsigned long long)limits.open_handles,
 			    ret->num_requests);
 		}
@@ -2326,7 +2340,7 @@ upload_dir_internal(struct sftp_conn *conn, const char *src, const char *dst,
 int
 upload_dir(struct sftp_conn *conn, const char *src, const char *dst,
     int preserve_flag, int print_flag, int resume, int fsync_flag,
-    int follow_link_flag, int create_dir, int inplace_flag)
+    int follow_link_flag, int inplace_flag, int create_dir)
 {
 	char *dst_canon;
 	int ret;
@@ -2782,6 +2796,120 @@ crossload_dir(struct sftp_conn *from, struct sftp_conn *to,
 	    dirattrib, preserve_flag, print_flag, follow_link_flag);
 	free(from_path_canon);
 	return ret;
+}
+
+int
+can_get_users_groups_by_id(struct sftp_conn *conn)
+{
+	return (conn->exts & SFTP_EXT_GETUSERSGROUPS_BY_ID) != 0;
+}
+
+int
+do_get_users_groups_by_id(struct sftp_conn *conn,
+    const u_int *uids, u_int nuids,
+    const u_int *gids, u_int ngids,
+    char ***usernamesp, char ***groupnamesp)
+{
+	struct sshbuf *msg, *uidbuf, *gidbuf;
+	u_int i, expected_id, id;
+	char *name, **usernames = NULL, **groupnames = NULL;
+	u_char type;
+	int r;
+
+	*usernamesp = *groupnamesp = NULL;
+	if (!can_get_users_groups_by_id(conn))
+		return SSH_ERR_FEATURE_UNSUPPORTED;
+
+	if ((msg = sshbuf_new()) == NULL ||
+	    (uidbuf = sshbuf_new()) == NULL ||
+	    (gidbuf = sshbuf_new()) == NULL)
+		fatal_f("sshbuf_new failed");
+	expected_id = id = conn->msg_id++;
+	debug2("Sending SSH2_FXP_EXTENDED(users-groups-by-id@openssh.com)");
+	for (i = 0; i < nuids; i++) {
+		if ((r = sshbuf_put_u32(uidbuf, uids[i])) != 0)
+			fatal_fr(r, "compose uids");
+	}
+	for (i = 0; i < ngids; i++) {
+		if ((r = sshbuf_put_u32(gidbuf, gids[i])) != 0)
+			fatal_fr(r, "compose gids");
+	}
+	if ((r = sshbuf_put_u8(msg, SSH2_FXP_EXTENDED)) != 0 ||
+	    (r = sshbuf_put_u32(msg, id)) != 0 ||
+	    (r = sshbuf_put_cstring(msg,
+	    "users-groups-by-id@openssh.com")) != 0 ||
+	    (r = sshbuf_put_stringb(msg, uidbuf)) != 0 ||
+	    (r = sshbuf_put_stringb(msg, gidbuf)) != 0)
+		fatal_fr(r, "compose");
+	send_msg(conn, msg);
+	get_msg(conn, msg);
+	if ((r = sshbuf_get_u8(msg, &type)) != 0 ||
+	    (r = sshbuf_get_u32(msg, &id)) != 0)
+		fatal_fr(r, "parse");
+	if (id != expected_id)
+		fatal("ID mismatch (%u != %u)", id, expected_id);
+	if (type == SSH2_FXP_STATUS) {
+		u_int status;
+		char *errmsg;
+
+		if ((r = sshbuf_get_u32(msg, &status)) != 0 ||
+		    (r = sshbuf_get_cstring(msg, &errmsg, NULL)) != 0)
+			fatal_fr(r, "parse status");
+		error("users-groups-by-id %s",
+		    *errmsg == '\0' ? fx2txt(status) : errmsg);
+		free(errmsg);
+		sshbuf_free(msg);
+		sshbuf_free(uidbuf);
+		sshbuf_free(gidbuf);
+		return -1;
+	} else if (type != SSH2_FXP_EXTENDED_REPLY)
+		fatal("Expected SSH2_FXP_EXTENDED_REPLY(%u) packet, got %u",
+		    SSH2_FXP_EXTENDED_REPLY, type);
+
+	/* reuse */
+	sshbuf_free(uidbuf);
+	sshbuf_free(gidbuf);
+	uidbuf = gidbuf = NULL;
+	if ((r = sshbuf_froms(msg, &uidbuf)) != 0 ||
+	    (r = sshbuf_froms(msg, &gidbuf)) != 0)
+		fatal_fr(r, "parse response");
+	if (nuids > 0) {
+		usernames = xcalloc(nuids, sizeof(*usernames));
+		for (i = 0; i < nuids; i++) {
+			if ((r = sshbuf_get_cstring(uidbuf, &name, NULL)) != 0)
+				fatal_fr(r, "parse user name");
+			/* Handle unresolved names */
+			if (*name == '\0') {
+				free(name);
+				name = NULL;
+			}
+			usernames[i] = name;
+		}
+	}
+	if (ngids > 0) {
+		groupnames = xcalloc(ngids, sizeof(*groupnames));
+		for (i = 0; i < ngids; i++) {
+			if ((r = sshbuf_get_cstring(gidbuf, &name, NULL)) != 0)
+				fatal_fr(r, "parse user name");
+			/* Handle unresolved names */
+			if (*name == '\0') {
+				free(name);
+				name = NULL;
+			}
+			groupnames[i] = name;
+		}
+	}
+	if (sshbuf_len(uidbuf) != 0)
+		fatal_f("unexpected extra username data");
+	if (sshbuf_len(gidbuf) != 0)
+		fatal_f("unexpected extra groupname data");
+	sshbuf_free(uidbuf);
+	sshbuf_free(gidbuf);
+	sshbuf_free(msg);
+	/* success */
+	*usernamesp = usernames;
+	*groupnamesp = groupnames;
+	return 0;
 }
 
 char *

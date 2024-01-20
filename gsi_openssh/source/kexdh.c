@@ -35,6 +35,12 @@
 
 #include "openbsd-compat/openssl-compat.h"
 #include <openssl/dh.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#include <openssl/core_names.h>
+#include <openssl/param_build.h>
+# endif
 
 #include "sshkey.h"
 #include "kex.h"
@@ -79,6 +85,88 @@ kex_dh_keygen(struct kex *kex)
 	return (dh_gen_key(kex->dh, kex->we_need * 8));
 }
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+int
+kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
+{
+	BIGNUM *shared_secret = NULL;
+	const BIGNUM *pub, *priv, *p, *q, *g;
+	EVP_PKEY *pkey = NULL, *dh_pkey = NULL;
+	EVP_PKEY_CTX *ctx = NULL;
+	u_char *kbuf = NULL;
+	size_t klen = 0;
+	int kout, r = 0;
+
+#ifdef DEBUG_KEXDH
+	fprintf(stderr, "dh_pub= ");
+	BN_print_fp(stderr, dh_pub);
+	fprintf(stderr, "\n");
+	debug("bits %d", BN_num_bits(dh_pub));
+	DHparams_print_fp(stderr, kex->dh);
+	fprintf(stderr, "\n");
+#endif
+
+	if (!dh_pub_is_valid(kex->dh, dh_pub)) {
+		r = SSH_ERR_MESSAGE_INCOMPLETE;
+		goto out;
+	}
+
+	DH_get0_key(kex->dh, &pub, &priv);
+	DH_get0_pqg(kex->dh, &p, &q, &g);
+	/* import key */
+	r = kex_create_evp_dh(&pkey, p, q, g, pub, priv);
+	if (r != 0) {
+		error_f("Could not create EVP_PKEY for dh");
+		ERR_print_errors_fp(stderr);
+		goto out;
+	}
+	/* import peer key 
+	 * the parameters should be the same as with pkey
+	 */
+	r = kex_create_evp_dh(&dh_pkey, p, q, g, dh_pub, NULL);
+	if (r != 0) {
+		error_f("Could not import peer key for dh");
+		ERR_print_errors_fp(stderr);
+		goto out;
+	}
+
+	if ((ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL)) == NULL) {
+		error_f("Could not init EVP_PKEY_CTX for dh");
+		r = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if (EVP_PKEY_derive_init(ctx) != 1 ||
+	    EVP_PKEY_derive_set_peer(ctx, dh_pkey) != 1 ||
+	    EVP_PKEY_derive(ctx, NULL, &klen) != 1) {
+		error_f("Could not get key size");
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+	if ((kbuf = malloc(klen)) == NULL ||
+	    (shared_secret = BN_new()) == NULL) {
+		r = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if (EVP_PKEY_derive(ctx, kbuf, &klen) != 1 ||
+	    BN_bin2bn(kbuf, klen, shared_secret) == NULL) {
+		error_f("Could not derive key");
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+#ifdef DEBUG_KEXDH
+	dump_digest("shared secret", kbuf, klen);
+#endif
+	r = sshbuf_put_bignum2(out, shared_secret);
+ out:
+	freezero(kbuf, klen);
+	BN_clear_free(shared_secret);
+	EVP_PKEY_free(pkey);
+	EVP_PKEY_free(dh_pkey);
+	EVP_PKEY_CTX_free(ctx);
+	return r;
+}
+# else
+/* Original function in OpenSSH Portable 9.3p1 */
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 {
@@ -120,6 +208,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	BN_clear_free(shared_secret);
 	return r;
 }
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 int
 kex_dh_keypair(struct kex *kex)

@@ -1,0 +1,7 @@
+# This system is following system-wide crypto policy. The changes to
+# crypto properties (Ciphers, MACs, ...) will not have any effect in
+# this or following included files. To override some configuration option,
+# write it before this block or include it before this file.
+# Please, see manual pages for update-crypto-policies(8) and sshd_config(5).
+Include /etc/crypto-policies/back-ends/opensshserver.config
+

@@ -103,9 +103,11 @@ tests(void)
 	check_sig("rsa.pub", "rsa.sig", msg, namespace);
 	TEST_DONE();
 
+	/* Skip this test, SHA1 signatures are not supported
 	TEST_START("check DSA signature");
 	check_sig("dsa.pub", "dsa.sig", msg, namespace);
 	TEST_DONE();
+	*/
 
 #ifdef OPENSSL_HAS_ECC
 	TEST_START("check ECDSA signature");

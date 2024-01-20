@@ -608,4 +608,5 @@ out:
 	sshbuf_free(server_host_key_blob);
 	return r;
 }
+
 #endif /* defined(GSSAPI) && defined(WITH_OPENSSL) */

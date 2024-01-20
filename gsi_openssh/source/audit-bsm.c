@@ -405,7 +405,7 @@ audit_session_close(struct logininfo *li)
 }
 
 int
-audit_keyusage(struct ssh *ssh, int host_user, char *fp, int rv)
+audit_keyusage(struct ssh *ssh, int host_user, char *key_fp, const struct sshkey_cert *cert, const char *issuer_fp, int rv)
 {
 	/* not implemented */
 }

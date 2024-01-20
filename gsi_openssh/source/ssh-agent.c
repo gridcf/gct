@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-agent.c,v 1.287 2022/01/14 03:43:48 djm Exp $ */
+/* $OpenBSD: ssh-agent.c,v 1.297 2023/03/09 21:06:24 jcs Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -80,14 +80,12 @@
 #include "sshbuf.h"
 #include "sshkey.h"
 #include "authfd.h"
-#include "compat.h"
 #include "log.h"
 #include "misc.h"
 #include "digest.h"
 #include "ssherr.h"
 #include "match.h"
 #include "msg.h"
-#include "ssherr.h"
 #include "pathnames.h"
 #include "ssh-pkcs11.h"
 #include "sk-api.h"
@@ -170,6 +168,12 @@ char socket_dir[PATH_MAX];
 
 /* Pattern-list of allowed PKCS#11/Security key paths */
 static char *allowed_providers;
+
+/*
+ * Allows PKCS11 providers or SK keys that use non-internal providers to
+ * be added over a remote connection (identified by session-bind@openssh.com).
+ */
+static int remote_add_provider;
 
 /* locking */
 #define LOCK_SIZE	32
@@ -808,21 +812,13 @@ process_sign_request2(SocketEntry *e)
 		goto send;
 	}
 	if (sshkey_is_sk(id->key)) {
-		if (strncmp(id->key->sk_application, "ssh:", 4) != 0 &&
+		if (restrict_websafe &&
+		    strncmp(id->key->sk_application, "ssh:", 4) != 0 &&
 		    !check_websafe_message_contents(key, data)) {
 			/* error already logged */
 			goto send;
 		}
-		if ((id->key->sk_flags & SSH_SK_USER_VERIFICATION_REQD)) {
-			/* XXX include sig_dest */
-			xasprintf(&prompt, "Enter PIN%sfor %s key %s: ",
-			    (id->key->sk_flags & SSH_SK_USER_PRESENCE_REQD) ?
-			    " and confirm user presence " : " ",
-			    sshkey_type(id->key), fp);
-			pin = read_passphrase(prompt, RP_USE_ASKPASS);
-			free(prompt);
-			prompt = NULL;
-		} else if ((id->key->sk_flags & SSH_SK_USER_PRESENCE_REQD)) {
+		if (id->key->sk_flags & SSH_SK_USER_PRESENCE_REQD) {
 			notifier = notify_start(0,
 			    "Confirm user presence for key %s %s%s%s",
 			    sshkey_type(id->key), fp,
@@ -837,10 +833,8 @@ process_sign_request2(SocketEntry *e)
 		debug_fr(r, "sshkey_sign");
 		if (pin == NULL && !retried && sshkey_is_sk(id->key) &&
 		    r == SSH_ERR_KEY_WRONG_PASSPHRASE) {
-			if (notifier) {
-				notify_complete(notifier, NULL);
-				notifier = NULL;
-			}
+			notify_complete(notifier, NULL);
+			notifier = NULL;
 			/* XXX include sig_dest */
 			xasprintf(&prompt, "Enter PIN%sfor %s key %s: ",
 			    (id->key->sk_flags & SSH_SK_USER_PRESENCE_REQD) ?
@@ -856,6 +850,7 @@ process_sign_request2(SocketEntry *e)
 	/* Success */
 	ok = 0;
  send:
+	debug_f("good signature");
 	notify_complete(notifier, "User presence confirmed");
 
 	if (ok == 0) {
@@ -1034,8 +1029,8 @@ parse_dest_constraint(struct sshbuf *m, struct dest_constraint *dc)
 		error_fr(r, "parse");
 		goto out;
 	}
-	if ((r = parse_dest_constraint_hop(frombuf, &dc->from) != 0) ||
-	    (r = parse_dest_constraint_hop(tobuf, &dc->to) != 0))
+	if ((r = parse_dest_constraint_hop(frombuf, &dc->from)) != 0 ||
+	    (r = parse_dest_constraint_hop(tobuf, &dc->to)) != 0)
 		goto out; /* already logged */
 	if (elen != 0) {
 		error_f("unsupported extensions (len %zu)", elen);
@@ -1239,6 +1234,12 @@ process_add_identity(SocketEntry *e)
 		if (strcasecmp(sk_provider, "internal") == 0) {
 			debug_f("internal provider");
 		} else {
+			if (e->nsession_ids != 0 && !remote_add_provider) {
+				verbose("failed add of SK provider \"%.100s\": "
+				    "remote addition of providers is disabled",
+				    sk_provider);
+				goto out;
+			}
 			if (realpath(sk_provider, canonical_provider) == NULL) {
 				verbose("failed provider \"%.100s\": "
 				    "realpath: %s", sk_provider,
@@ -1379,7 +1380,7 @@ no_identities(SocketEntry *e)
 
 #ifdef ENABLE_PKCS11
 static char *
-sanitize_pkcs11_provider(const char *provider)
+sanitize_pkcs11_provider(SocketEntry *e, const char *provider)
 {
 	struct pkcs11_uri *uri = NULL;
 	char *sane_uri, *module_path = NULL; /* default path */
@@ -1410,6 +1411,11 @@ sanitize_pkcs11_provider(const char *provider)
 		module_path = strdup(provider); /* simple path */
 
 	if (module_path != NULL) { /* do not validate default NULL path in URI */
+		if (e->nsession_ids != 0 && !remote_add_provider) {
+			verbose("failed PKCS#11 add of \"%.100s\": remote addition of "
+			    "providers is disabled", provider);
+			return NULL;
+		}
 		if (realpath(module_path, canonical_provider) == NULL) {
 			verbose("failed PKCS#11 provider \"%.100s\": realpath: %s",
 			    module_path, strerror(errno));
@@ -1466,7 +1472,7 @@ process_add_smartcard_key(SocketEntry *e)
 		goto send;
 	}
 
-	sane_uri = sanitize_pkcs11_provider(provider);
+	sane_uri = sanitize_pkcs11_provider(e, provider);
 	if (sane_uri == NULL)
 		goto send;
 
@@ -1527,7 +1533,7 @@ process_remove_smartcard_key(SocketEntry *e)
 	}
 	free(pin);
 
-	sane_uri = sanitize_pkcs11_provider(provider);
+	sane_uri = sanitize_pkcs11_provider(e, provider);
 	if (sane_uri == NULL)
 		goto send;
 
@@ -1628,6 +1634,7 @@ process_ext_session_bind(SocketEntry *e)
 	/* success */
 	r = 0;
  out:
+	free(fp);
 	sshkey_free(key);
 	sshbuf_free(sid);
 	sshbuf_free(sig);
@@ -2028,7 +2035,6 @@ cleanup_exit(int i)
 	_exit(i);
 }
 
-/*ARGSUSED*/
 static void
 cleanup_handler(int sig)
 {
@@ -2058,9 +2064,9 @@ usage(void)
 {
 	fprintf(stderr,
 	    "usage: ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]\n"
-	    "                 [-P allowed_providers] [-t life]\n"
-	    "       ssh-agent [-a bind_address] [-E fingerprint_hash] [-P allowed_providers]\n"
-	    "                 [-t life] command [arg ...]\n"
+	    "                 [-O option] [-P allowed_providers] [-t life]\n"
+	    "       ssh-agent [-a bind_address] [-E fingerprint_hash] [-O option]\n"
+	    "                 [-P allowed_providers] [-t life] command [arg ...]\n"
 	    "       ssh-agent [-c | -s] -k\n");
 	exit(1);
 }
@@ -2119,7 +2125,9 @@ main(int ac, char **av)
 			break;
 		case 'O':
 			if (strcmp(optarg, "no-restrict-websafe") == 0)
-				restrict_websafe  = 0;
+				restrict_websafe = 0;
+			else if (strcmp(optarg, "allow-remote-pkcs11") == 0)
+				remote_add_provider = 1;
 			else
 				fatal("Unknown -O option");
 			break;

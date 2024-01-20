@@ -1,4 +1,4 @@
-/* 	$OpenBSD: test_sshkey.c,v 1.22 2021/12/14 21:25:27 deraadt Exp $ */
+/* 	$OpenBSD: test_sshkey.c,v 1.23 2023/01/04 22:48:57 tb Exp $ */
 /*
  * Regress test for sshkey.h key management API
  *
@@ -61,6 +61,9 @@ build_cert(struct sshbuf *b, struct sshkey *k, const char *type,
 	u_char *sigblob;
 	size_t siglen;
 
+	/* ssh-rsa implies SHA1, forbidden in DEFAULT cp */
+	int expected = (sig_alg == NULL || strcmp(sig_alg, "ssh-rsa") == 0) ? SSH_ERR_LIBCRYPTO_ERROR : 0;
+
 	ca_buf = sshbuf_new();
 	ASSERT_PTR_NE(ca_buf, NULL);
 	ASSERT_INT_EQ(sshkey_putb(ca_key, ca_buf), 0);
@@ -102,8 +105,9 @@ build_cert(struct sshbuf *b, struct sshkey *k, const char *type,
 	ASSERT_INT_EQ(sshbuf_put_string(b, NULL, 0), 0); /* reserved */
 	ASSERT_INT_EQ(sshbuf_put_stringb(b, ca_buf), 0); /* signature key */
 	ASSERT_INT_EQ(sshkey_sign(sign_key, &sigblob, &siglen,
-	    sshbuf_ptr(b), sshbuf_len(b), sig_alg, NULL, NULL, 0), 0);
-	ASSERT_INT_EQ(sshbuf_put_string(b, sigblob, siglen), 0); /* signature */
+	    sshbuf_ptr(b), sshbuf_len(b), sig_alg, NULL, NULL, 0), expected);
+	if (expected == 0)
+		ASSERT_INT_EQ(sshbuf_put_string(b, sigblob, siglen), 0); /* signature */
 
 	free(sigblob);
 	sshbuf_free(ca_buf);
@@ -120,16 +124,22 @@ signature_test(struct sshkey *k, struct sshkey *bad, const char *sig_alg,
 {
 	size_t len;
 	u_char *sig;
+	/* ssh-rsa implies SHA1, forbidden in DEFAULT cp */
+	int expected = (sig_alg && strcmp(sig_alg, "ssh-rsa") == 0) ? SSH_ERR_LIBCRYPTO_ERROR : 0;
+	if (k && (sshkey_type_plain(k->type) == KEY_DSA || sshkey_type_plain(k->type) == KEY_DSA_CERT))
+		expected = SSH_ERR_LIBCRYPTO_ERROR;
 
 	ASSERT_INT_EQ(sshkey_sign(k, &sig, &len, d, l, sig_alg,
-	    NULL, NULL, 0), 0);
-	ASSERT_SIZE_T_GT(len, 8);
-	ASSERT_PTR_NE(sig, NULL);
-	ASSERT_INT_EQ(sshkey_verify(k, sig, len, d, l, NULL, 0, NULL), 0);
-	ASSERT_INT_NE(sshkey_verify(bad, sig, len, d, l, NULL, 0, NULL), 0);
-	/* Fuzz test is more comprehensive, this is just a smoke test */
-	sig[len - 5] ^= 0x10;
-	ASSERT_INT_NE(sshkey_verify(k, sig, len, d, l, NULL, 0, NULL), 0);
+	    NULL, NULL, 0), expected);
+	if (expected == 0) {
+		ASSERT_SIZE_T_GT(len, 8);
+		ASSERT_PTR_NE(sig, NULL);
+		ASSERT_INT_EQ(sshkey_verify(k, sig, len, d, l, NULL, 0, NULL), 0);
+		ASSERT_INT_NE(sshkey_verify(bad, sig, len, d, l, NULL, 0, NULL), 0);
+		/* Fuzz test is more comprehensive, this is just a smoke test */
+		sig[len - 5] ^= 0x10;
+		ASSERT_INT_NE(sshkey_verify(k, sig, len, d, l, NULL, 0, NULL), 0);
+	}
 	free(sig);
 }
 
@@ -144,7 +154,7 @@ banana(u_char *s, size_t l)
 			memcpy(s + o, "nanananana", l - o);
 			break;
 		}
-		memcpy(s + o, banana, sizeof(the_banana));
+		memcpy(s + o, the_banana, sizeof(the_banana));
 	}
 }
 
@@ -515,7 +525,7 @@ sshkey_tests(void)
 	ASSERT_INT_EQ(sshkey_load_public(test_data_file("rsa_1.pub"), &k2,
 	    NULL), 0);
 	k3 = get_private("rsa_1");
-	build_cert(b, k2, "ssh-rsa-cert-v01@openssh.com", k3, k1, NULL);
+	build_cert(b, k2, "ssh-rsa-cert-v01@openssh.com", k3, k1, "rsa-sha2-256");
 	ASSERT_INT_EQ(sshkey_from_blob(sshbuf_ptr(b), sshbuf_len(b), &k4),
 	    SSH_ERR_KEY_CERT_INVALID_SIGN_KEY);
 	ASSERT_PTR_EQ(k4, NULL);
