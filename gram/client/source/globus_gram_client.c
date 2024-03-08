@@ -1995,7 +1995,7 @@ error_exit:
  *
  * @return
  *     Upon success, globus_gram_client_job_register_signal() returns
- *     GLOBUS_SUCCESS after beginnning to send the signal to the GRAM job and
+ *     GLOBUS_SUCCESS after beginning to send the signal to the GRAM job and
  *     registers the @a register_callback function to be called once that
  *     has completed. If an error occurs, this function returns an integer
  *     error code indicating why the client could not signal the job.
