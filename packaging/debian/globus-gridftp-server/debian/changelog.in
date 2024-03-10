@@ -1,3 +1,9 @@
+globus-gridftp-server (13.26-1+gct.@distro@) @distro@; urgency=medium
+
+  * Correct spelling error found by lintian
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 08 Mar 2024 14:49:44 +0100
+
 globus-gridftp-server (13.25-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix buffer overflow in test

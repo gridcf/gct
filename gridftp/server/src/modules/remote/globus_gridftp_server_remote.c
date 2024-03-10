@@ -270,7 +270,7 @@ globus_l_gfs_remote_node_request_kickout(
             globus_i_gfs_brain_node_t **    brain_node_array;
             globus_gfs_log_result(
                 GLOBUS_GFS_LOG_WARN, 
-                "could not get intially requested node, trying another",
+                "could not get initially requested node, trying another",
                 result);
             /* select a new set of nodes */
             result = globus_gfs_brain_select_nodes(
