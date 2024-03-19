@@ -55,8 +55,8 @@ test_parse_args(int argc,
     globus_abstime_t deadline_time;
     globus_reltime_t interval_time;
     int max_retries;
-    long interval;
-    long deadline;
+    long long interval;
+    long long deadline;
     char * subject;
 
     *src = GLOBUS_NULL;
@@ -213,7 +213,7 @@ test_parse_args(int argc,
 	    break;
 	case 'f':
 	    globus_module_activate(GLOBUS_FTP_CLIENT_RESTART_PLUGIN_MODULE);
-	    sscanf(optarg, "%d,%ld,%ld", &max_retries, &interval, &deadline);
+	    sscanf(optarg, "%d,%lld,%lld", &max_retries, &interval, &deadline);
 
 	    if(interval < 0.1)
 	    {

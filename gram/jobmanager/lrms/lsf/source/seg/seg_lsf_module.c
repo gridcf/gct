@@ -628,6 +628,7 @@ globus_l_lsf_find_logfile(
     const char                          lsf_idx_name[] = "lsb.events.1";
     int                                 i;
     time_t                              most_recent_event;
+    long long                           tmp_most_recent_event;
     GlobusFuncName(globus_l_lsf_find_logfile);
 
     SEGLsfEnter();
@@ -683,7 +684,8 @@ globus_l_lsf_find_logfile(
             }
             else
             {
-                fscanf(state->fp, "#%ld", &most_recent_event);
+                fscanf(state->fp, "#%lld", &tmp_most_recent_event);
+                most_recent_event = tmp_most_recent_event;
                 fclose(state->fp);
                 state->fp = NULL;
             }
@@ -805,6 +807,7 @@ globus_l_lsf_parse_events(
 {
     char *                              eol;
     time_t                              event_timestamp;
+    long long                           tmp_timestamp;
     char                                event_type_buffer[64];
     char                                job_id_buffer[32];
     int                                 rc;
@@ -848,15 +851,17 @@ globus_l_lsf_parse_events(
                  * the parsing timestamp to match that when we hit EOF.
                  */
                 sscanf(state->buffer + state->buffer_point + 1,
-                    "%ld", &state->end_of_file_timestamp);
+                    "%lld", &tmp_timestamp);
+                state->end_of_file_timestamp = tmp_timestamp;
                 goto next_line;
             }
         }
         sscanf(state->buffer + state->buffer_point,
-                "\"%[^\"]\" \"%*[^\"]\" %ld %s",
+                "\"%[^\"]\" \"%*[^\"]\" %lld %s",
                 event_type_buffer,
-                &event_timestamp,
+                &tmp_timestamp,
                 job_id_buffer);
+        event_timestamp = tmp_timestamp;
 
         if (event_timestamp < state->start_timestamp)
         {
@@ -895,8 +900,8 @@ globus_l_lsf_parse_events(
                  */
 
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in PEND state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in PEND state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_PSUSP:
                 /*
@@ -904,16 +909,16 @@ globus_l_lsf_parse_events(
                  * the LSF administrator, while pending.
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in PSUSP state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in PSUSP state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_RUN:
                 /*
                  * the job is currently running.
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in RUN state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in RUN state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
 
             case JOB_STAT_SSUSP:
@@ -928,8 +933,8 @@ globus_l_lsf_parse_events(
                  *   bqueues(1),
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in SSUSP state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in SSUSP state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_USUSP:
                 /*
@@ -937,8 +942,8 @@ globus_l_lsf_parse_events(
                  * the  LSF administrator, while running.
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in SSUSP state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in SSUSP state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_EXIT:
                 /*
@@ -1000,16 +1005,16 @@ globus_l_lsf_parse_events(
                  * Post job process done successfully
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in PDONE state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in PDONE state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_PERR:
                 /*
                  * Post job process has error
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in PERR state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in PERR state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_WAIT:
                 /*
@@ -1017,19 +1022,19 @@ globus_l_lsf_parse_events(
                  * chunk job that are waiting to run.
                  */
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in WAIT state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in WAIT state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_UNKWN:
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
                         ("ignoring JOB_STATUS: job %s in UNKNWN state "
-                                "(%ld)\n",
-                        job_id_buffer, event_timestamp));
+                                "(%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             case JOB_STAT_NULL:
                 SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
-                        ("ignoring JOB_STATUS: job %s in NULL state (%ld)\n",
-                        job_id_buffer, event_timestamp));
+                        ("ignoring JOB_STATUS: job %s in NULL state (%lld)\n",
+                        job_id_buffer, (long long) event_timestamp));
                 break;
             }
         }

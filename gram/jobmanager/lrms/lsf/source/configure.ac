@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager_lsf],[3.0],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager_lsf],[3.1],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -29,11 +29,11 @@ fi
 
 AC_ARG_WITH([lsf-profile],
     AC_HELP_STRING(
-	[--with-lsf-profile=FILE],
+        [--with-lsf-profile=FILE],
         [Use LSF profile located at PATH ${LSF_ENVDIR:-/etc}/profile.lsf]),
-        [LSF_PROFILE=$withval],
-	[LSF_PROFILE="${LSF_ENVDIR:-/etc}/profile.lsf"
-         AC_MSG_WARN([Using default lsf profile of $LSF_PROFILE])])
+    [LSF_PROFILE=$withval],
+    [LSF_PROFILE="${LSF_ENVDIR:-/etc}/profile.lsf"
+        AC_MSG_WARN([Using default lsf profile of $LSF_PROFILE])])
 
 AC_SUBST(LSF_PROFILE)
 
@@ -88,11 +88,11 @@ AC_ARG_WITH(log-path,
 AC_SUBST(LSF_LOG_PATH)
 
 AC_ARG_WITH(globus-state-dir,
-	AC_HELP_STRING(
-		[--with-globus-state-dir=PATH],
-		[Path to Globus state files]),
-	globusstatedir="$withval",
-	globusstatedir=$localstatedir)
+    AC_HELP_STRING(
+        [--with-globus-state-dir=PATH],
+        [Path to Globus state files]),
+    globusstatedir="$withval",
+    globusstatedir=$localstatedir)
 
 # GRAM-333: SEG config in installer has variables that aren't resolved at
 # runtime
@@ -100,18 +100,18 @@ globusstatedir="`eval echo $globusstatedir`"
 AC_SUBST(globusstatedir)
 
 AC_ARG_WITH(seg,
-	AC_HELP_STRING(
-		[--with-seg=yes|no],
-		[Enable GRAM configuration with the SEG module]),
-	SEG_ENABLED="$withval",
-	SEG_ENABLED="no")
+    AC_HELP_STRING(
+        [--with-seg=yes|no],
+        [Enable GRAM configuration with the SEG module]),
+    SEG_ENABLED="$withval",
+    SEG_ENABLED="no")
 case "$SEG_ENABLED" in
-	yes|no)
+    yes|no)
             :
             ;;
-	*)
-	    AC_MSG_ERROR([Invalid argument to --with-seg])
-	    ;;
+    *)
+        AC_MSG_ERROR([Invalid argument to --with-seg])
+        ;;
 esac
 
 AC_ARG_WITH([perlmoduledir],
@@ -137,5 +137,5 @@ AC_CONFIG_FILES(
         globus-lsf.conf
         Makefile
         seg/Makefile
-	version.h)
+        version.h)
 AC_OUTPUT

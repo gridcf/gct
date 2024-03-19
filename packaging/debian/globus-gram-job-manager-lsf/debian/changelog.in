@@ -1,3 +1,9 @@
+globus-gram-job-manager-lsf (3.1-1+gct.@distro@) @distro@; urgency=medium
+
+  * Handle 64 bit time_t on 32 bit systems
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sun, 10 Mar 2024 20:41:04 +0100
+
 globus-gram-job-manager-lsf (3.0-1+gct.@distro@) @distro@; urgency=medium
 
   * First Grid Community Toolkit release

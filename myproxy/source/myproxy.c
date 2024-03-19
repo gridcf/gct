@@ -1753,7 +1753,7 @@ myproxy_serialize_response_ex(const myproxy_response_t *response,
                 if (len == -1)
                     goto error;
             }
-            sprintf(date, "%lu",  cred->start_time);
+            sprintf(date, "%lld", (long long) cred->start_time);
             if (first_cred) {
                 len = my_append(data, MYPROXY_CRED_PREFIX,
                                 "_", MYPROXY_START_TIME_STRING,
@@ -1766,7 +1766,7 @@ myproxy_serialize_response_ex(const myproxy_response_t *response,
             }
             if (len == -1)
                 goto error;
-            sprintf(date, "%lu", cred->end_time);
+            sprintf(date, "%lld", (long long) cred->end_time);
             if (first_cred) {
                 len = my_append(data, MYPROXY_CRED_PREFIX,
                                 "_", MYPROXY_END_TIME_STRING,

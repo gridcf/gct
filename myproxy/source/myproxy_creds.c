@@ -2000,7 +2000,7 @@ myproxy_install_trusted_cert_files(myproxy_certs_t *trusted_certs)
                               tmp_path, file_path);
             goto error;
         }
-        fprintf(log_file, "%ld: %s\n", time(NULL), file_path);
+        fprintf(log_file, "%lld: %s\n", (long long) time(NULL), file_path);
         free(file_path);
         file_path = NULL;
         free(tmp_path);

@@ -96,32 +96,32 @@ globus_scheduler_event_generator_stdout_handler(
     {
     case GLOBUS_SCHEDULER_EVENT_PENDING:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_PENDING,
                 0);
 
     case GLOBUS_SCHEDULER_EVENT_ACTIVE:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_ACTIVE,
                 0);
 
     case GLOBUS_SCHEDULER_EVENT_DONE:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_DONE,
                 event->exit_code);
 
     case GLOBUS_SCHEDULER_EVENT_FAILED:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_DONE,
                 event->failure_code);
