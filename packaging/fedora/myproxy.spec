@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.16
+Version:        6.2.17
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -387,6 +387,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sun Mar 17 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.17-1
+- Handle 64 bit time_t on 32 bit systems
+
 * Wed Jan 17 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.16-1
 - Fix compilation errors from stricter type checking
 

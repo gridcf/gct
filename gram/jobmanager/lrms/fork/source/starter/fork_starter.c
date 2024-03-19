@@ -1230,8 +1230,8 @@ globus_l_fork_log_state_change(
         return;
     }
     fprintf(logfile,
-            "001;%lu;%s:%lu;%d;%d\n",
-            (unsigned long) now,
+            "001;%lld;%s:%lu;%d;%d\n",
+            (long long) now,
             task->jobid_prefix,
             (unsigned long) pid,
             (int) job_state,

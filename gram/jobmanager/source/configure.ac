@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager],[15.8],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager],[15.9],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -135,10 +135,10 @@ AC_PATH_PROGS([A2X], [a2x a2x.py])
 AM_CONDITIONAL(BUILD_MANPAGES, [test x"$A2X" != x])
 
 AC_CONFIG_FILES([
-	globus-gram-job-manager-uninstalled.pc
-	globus-gram-job-manager.pc
-	scripts/Makefile
-	rvf/globus-rvf-edit
+        globus-gram-job-manager-uninstalled.pc
+        globus-gram-job-manager.pc
+        scripts/Makefile
+        rvf/globus-rvf-edit
         rvf/Makefile
         seg/Makefile
         test/Makefile

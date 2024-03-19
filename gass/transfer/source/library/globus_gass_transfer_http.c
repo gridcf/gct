@@ -4653,7 +4653,7 @@ globus_l_gass_transfer_http_construct_request(
 
 	    sprintf(cmd + strlen(cmd),
 		    GLOBUS_L_CONTENT_LENGTH_HEADER,
-		    length);
+		    (long) length);
 	}
 	else
 	{
@@ -4743,7 +4743,7 @@ globus_l_gass_transfer_http_construct_request(
 		    proto->url.host);
 	    sprintf((char *) cmd + strlen(cmd),
 		    GLOBUS_L_CONTENT_LENGTH_HEADER,
-		    length);
+		    (long) length);
 	}
 	else
 	{

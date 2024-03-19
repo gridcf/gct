@@ -1,3 +1,10 @@
+globus-ftp-client (9.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix format warnings on 32 bit systems
+  * Handle 64 bit time_t on 32 bit systems
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 01 Mar 2024 11:13:14 +0100
+
 globus-ftp-client (9.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler and doxygen warnings

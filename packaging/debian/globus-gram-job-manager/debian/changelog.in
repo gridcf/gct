@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Handle 64 bit time_t on 32 bit systems
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 01 Mar 2024 11:34:58 +0100
+
 globus-gram-job-manager (15.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler warnings

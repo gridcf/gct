@@ -199,18 +199,17 @@ globus_gram_job_manager_state_file_write(
     {
         goto error_exit;
     }
-    rc = fprintf(fp, "%lu\n",
-                 (unsigned long) request->seg_last_timestamp);
+    rc = fprintf(fp, "%lld\n", (long long) request->seg_last_timestamp);
     if (rc < 0)
     {
         goto error_exit;
     }
-    rc = fprintf(fp, "%lu\n", (unsigned long) request->creation_time);
+    rc = fprintf(fp, "%lld\n", (long long) request->creation_time);
     if (rc < 0)
     {
         goto error_exit;
     }
-    rc = fprintf(fp, "%lu\n", (unsigned long) request->queued_time);
+    rc = fprintf(fp, "%lld\n", (long long) request->queued_time);
     if (rc < 0)
     {
         goto error_exit;
@@ -237,22 +236,22 @@ globus_gram_job_manager_state_file_write(
         goto error_exit;
     }
     rc = fprintf(fp,
-            "%ld.%09ld %ld.%09ld %ld.%09ld "
-            "%ld.%09ld %ld.%09ld %ld.%09ld %ld.%09ld "
+            "%lld.%09ld %lld.%09ld %lld.%09ld "
+            "%lld.%09ld %lld.%09ld %lld.%09ld %lld.%09ld "
             "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-            request->job_stats.unsubmitted_timestamp.tv_sec,
+            (long long) request->job_stats.unsubmitted_timestamp.tv_sec,
             request->job_stats.unsubmitted_timestamp.tv_nsec,
-            request->job_stats.file_stage_in_timestamp.tv_sec,
+            (long long) request->job_stats.file_stage_in_timestamp.tv_sec,
             request->job_stats.file_stage_in_timestamp.tv_nsec,
-            request->job_stats.pending_timestamp.tv_sec,
+            (long long) request->job_stats.pending_timestamp.tv_sec,
             request->job_stats.pending_timestamp.tv_nsec,
-            request->job_stats.active_timestamp.tv_sec,
+            (long long) request->job_stats.active_timestamp.tv_sec,
             request->job_stats.active_timestamp.tv_nsec,
-            request->job_stats.failed_timestamp.tv_sec,
+            (long long) request->job_stats.failed_timestamp.tv_sec,
             request->job_stats.failed_timestamp.tv_nsec,
-            request->job_stats.file_stage_out_timestamp.tv_sec,
+            (long long) request->job_stats.file_stage_out_timestamp.tv_sec,
             request->job_stats.file_stage_out_timestamp.tv_nsec,
-            request->job_stats.done_timestamp.tv_sec,
+            (long long) request->job_stats.done_timestamp.tv_sec,
             request->job_stats.done_timestamp.tv_nsec,
             request->job_stats.restart_count,
             request->job_stats.callback_count,
@@ -406,7 +405,15 @@ globus_gram_job_manager_state_file_read(
     struct stat                         statbuf;
     int                                 rc = GLOBUS_SUCCESS;
     int                                 i;
-    unsigned long                       tmp_timestamp;
+    long long                           tmp_timestamp;
+
+    long long                           tmp_unsubmitted_timestamp;
+    long long                           tmp_file_stage_in_timestamp;
+    long long                           tmp_pending_timestamp;
+    long long                           tmp_active_timestamp;
+    long long                           tmp_failed_timestamp;
+    long long                           tmp_file_stage_out_timestamp;
+    long long                           tmp_done_timestamp;
 
     request->old_job_contact = NULL;
 
@@ -615,7 +622,7 @@ globus_gram_job_manager_state_file_read(
         goto free_scratchdir;
     }
     buffer[strlen(buffer)-1] = '\0';
-    sscanf(buffer, "%lu", &tmp_timestamp);
+    sscanf(buffer, "%lld", &tmp_timestamp);
     request->seg_last_timestamp = (time_t) tmp_timestamp;
 
     if (fgets( buffer, file_len, fp ) == NULL)
@@ -623,14 +630,14 @@ globus_gram_job_manager_state_file_read(
         goto free_scratchdir;
     }
     buffer[strlen(buffer)-1] = '\0';
-    sscanf(buffer, "%lu", &tmp_timestamp);
+    sscanf(buffer, "%lld", &tmp_timestamp);
     request->creation_time = (time_t) tmp_timestamp;
     if (fgets( buffer, file_len, fp ) == NULL)
     {
         goto free_scratchdir;
     }
     buffer[strlen(buffer)-1] = '\0';
-    sscanf(buffer, "%lu", &tmp_timestamp);
+    sscanf(buffer, "%lld", &tmp_timestamp);
     request->queued_time = (time_t) tmp_timestamp;
 
     request->stage_in_todo = NULL;
@@ -674,23 +681,24 @@ globus_gram_job_manager_state_file_read(
         goto free_gateway_user;
     }
     buffer[strlen(buffer)-1] = 0;
+
     sscanf(buffer,
-            "%ld.%09ld %ld.%09ld %ld.%09ld "
-            "%ld.%09ld %ld.%09ld %ld.%09ld %ld.%09ld "
+            "%lld.%09ld %lld.%09ld %lld.%09ld "
+            "%lld.%09ld %lld.%09ld %lld.%09ld %lld.%09ld "
             "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-            &request->job_stats.unsubmitted_timestamp.tv_sec,
+            &tmp_unsubmitted_timestamp,
             &request->job_stats.unsubmitted_timestamp.tv_nsec,
-            &request->job_stats.file_stage_in_timestamp.tv_sec,
+            &tmp_file_stage_in_timestamp,
             &request->job_stats.file_stage_in_timestamp.tv_nsec,
-            &request->job_stats.pending_timestamp.tv_sec,
+            &tmp_pending_timestamp,
             &request->job_stats.pending_timestamp.tv_nsec,
-            &request->job_stats.active_timestamp.tv_sec,
+            &tmp_active_timestamp,
             &request->job_stats.active_timestamp.tv_nsec,
-            &request->job_stats.failed_timestamp.tv_sec,
+            &tmp_failed_timestamp,
             &request->job_stats.failed_timestamp.tv_nsec,
-            &request->job_stats.file_stage_out_timestamp.tv_sec,
+            &tmp_file_stage_out_timestamp,
             &request->job_stats.file_stage_out_timestamp.tv_nsec,
-            &request->job_stats.done_timestamp.tv_sec,
+            &tmp_done_timestamp,
             &request->job_stats.done_timestamp.tv_nsec,
             &request->job_stats.restart_count,
             &request->job_stats.callback_count,
@@ -712,6 +720,18 @@ globus_gram_job_manager_state_file_read(
             &request->job_stats.file_stage_out_https_count,
             &request->job_stats.file_stage_out_ftp_count,
             &request->job_stats.file_stage_out_gsiftp_count);
+
+    request->job_stats.unsubmitted_timestamp.tv_sec =
+      tmp_unsubmitted_timestamp;
+    request->job_stats.file_stage_in_timestamp.tv_sec =
+      tmp_file_stage_in_timestamp;
+    request->job_stats.pending_timestamp.tv_sec = tmp_pending_timestamp;
+    request->job_stats.active_timestamp.tv_sec = tmp_active_timestamp;
+    request->job_stats.failed_timestamp.tv_sec = tmp_failed_timestamp;
+    request->job_stats.file_stage_out_timestamp.tv_sec =
+      tmp_file_stage_out_timestamp;
+    request->job_stats.done_timestamp.tv_sec = tmp_done_timestamp;
+
     if (fgets( buffer, file_len, fp ) == NULL)
     {
         goto free_gateway_user;

@@ -1,3 +1,9 @@
+globus-gass-transfer (9.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix format warnings on 32 bit systems
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 01 Mar 2024 11:09:20 +0100
+
 globus-gass-transfer (9.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler and doxygen warnings
