@@ -60,7 +60,7 @@ intermediate_cb(
     globus_off_t				offset,
     globus_bool_t				eof)
 {
-    printf("intermediate cb: [%"GLOBUS_OFF_T_FORMAT",%ld]\n", offset, length);
+    printf("intermediate cb: [%"GLOBUS_OFF_T_FORMAT",%zu]\n", offset, length);
     fwrite(buffer, 1, length, stdout);
 }
 static
@@ -74,7 +74,7 @@ data_cb(
     globus_off_t				offset,
     globus_bool_t				eof)
 {
-    printf("[%"GLOBUS_OFF_T_FORMAT",%ld]\n", offset, length);
+    printf("[%"GLOBUS_OFF_T_FORMAT",%zu]\n", offset, length);
     fwrite(buffer, 1, length, stdout);
 }
 
