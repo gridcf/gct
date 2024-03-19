@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gass_transfer],[9.4],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gass_transfer],[9.5],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -25,6 +25,6 @@ AC_CONFIG_FILES(
         globus-gass-transfer.pc
         Makefile
         library/Doxyfile
-	library/Makefile
-	version.h)
+        library/Makefile
+        version.h)
 AC_OUTPUT

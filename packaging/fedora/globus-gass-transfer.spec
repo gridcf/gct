@@ -3,7 +3,7 @@
 Name:		globus-gass-transfer
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.4
+Version:	9.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Transfer
 
@@ -131,6 +131,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 01 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.5-1
+- Fix format warnings on 32 bit systems
+
 * Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.4-1
 - Fix some compiler and doxygen warnings
 
