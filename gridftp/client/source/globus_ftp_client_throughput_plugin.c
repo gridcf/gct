@@ -103,7 +103,7 @@ throughput_plugin_begin_cb(
 {
     throughput_plugin_info_t *                  info;
     globus_abstime_t                            timebuf;
-    long                                        secs;
+    time_t                                      secs;
     long                                        usecs;
     globus_ftp_client_restart_marker_t          marker;
     globus_off_t                                total_bytes;
@@ -157,7 +157,7 @@ void
 throughput_plugin_marker_cb(
     void *                                      user_specific,
     globus_ftp_client_handle_t *                handle,
-    long                                        time_stamp_int,
+    time_t                                      time_stamp_int,
     char                                        time_stamp_tenth,
     int                                         stripe_ndx,
     int                                         num_stripes,

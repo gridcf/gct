@@ -102,32 +102,32 @@ globus_scheduler_event_generator_stdout_handler(
     {
     case GLOBUS_SCHEDULER_EVENT_PENDING:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_PENDING,
                 0);
 
     case GLOBUS_SCHEDULER_EVENT_ACTIVE:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_ACTIVE,
                 0);
 
     case GLOBUS_SCHEDULER_EVENT_DONE:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_DONE,
                 event->exit_code);
 
     case GLOBUS_SCHEDULER_EVENT_FAILED:
         return globus_l_stdout_scheduler_event(
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_FAILED,
                 event->failure_code);
@@ -455,7 +455,7 @@ globus_l_xio_read_eof_callback(
 {
     globus_byte_t *                     tmp;
     ptrdiff_t                           offset;
-    unsigned long                       stamp;
+    long long                           stamp;
     globus_byte_t                      *next, *prev, *end;
 
     if (nbytes == len)
@@ -481,7 +481,7 @@ globus_l_xio_read_eof_callback(
     while (NULL != (next = (globus_byte_t *) strchr((char *) next, '\n')))
     {
         *next = '\0';
-        if (sscanf((char *) prev, "200 %lu", &stamp) == 1)
+        if (sscanf((char *) prev, "200 %lld", &stamp) == 1)
         {
             globus_scheduler_event_generator_set_timestamp((time_t) stamp);
         }

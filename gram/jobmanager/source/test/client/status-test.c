@@ -150,9 +150,9 @@ destroy_callback_contact:
         GlobusTimeAbstimeDiff(delta, start_time, stop_time);
 
         fprintf(stderr,
-                "Made %d calls to status in %ld.%06ld seconds\n",
+                "Made %d calls to status in %lld.%06ld seconds\n",
                 calls,
-                (long) delta.tv_sec,
+                (long long) delta.tv_sec,
                 (long) delta.tv_usec);
     }
     globus_mutex_unlock(&monitor.mutex);

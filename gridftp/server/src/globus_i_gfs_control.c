@@ -1061,11 +1061,11 @@ globus_l_gfs_data_command_cb(
                 gettimeofday(&now, NULL);
                 msg = globus_common_create_string(
                     "%d-Status Marker\r\n"
-                    " Timestamp: %ld.%01ld\r\n"
+                    " Timestamp: %lld.%01d\r\n"
                     " Bytes Processed: %s\r\n"
                     "%d End.\r\n",
                     reply->code,
-                    now.tv_sec, now.tv_usec / 100000,
+                    (long long) now.tv_sec, (int) (now.tv_usec / 100000),
                     reply->info.command.checksum,
                     reply->code);
                 globus_i_gsc_cmd_intermediate_reply(op, msg);
@@ -1098,12 +1098,12 @@ globus_l_gfs_data_command_cb(
                   case 112:
                     msg = globus_common_create_string(
                         "112-Perf Marker\r\n"
-                        " Timestamp:  %ld.%01ld\r\n"
+                        " Timestamp: %lld.%01d\r\n"
                         " Stripe Index: 0\r\n"
                         " Stripe Bytes Transferred: %s\r\n"
                         " Total Stripe Count: 1\r\n"
                         "112 End.\r\n",
-                        now.tv_sec, now.tv_usec / 100000,
+                        (long long) now.tv_sec, (int) (now.tv_usec / 100000),
                         reply->info.command.checksum);
                         break;
                   default:

@@ -177,7 +177,7 @@ perf_plugin_response_cb(
     char *                                      buffer;
     char *                                      tmp_ptr;
     int                                         count;
-    long                                        time_stamp_int;
+    time_t                                      time_stamp_int;
     char                                        time_stamp_tenth;
     int                                         stripe_ndx;
     int                                         num_stripes;
@@ -301,7 +301,7 @@ perf_plugin_data_cb(
 {
     perf_plugin_info_t *                        ps;
     globus_abstime_t                            timebuf;
-    long                                        secs;
+    time_t                                      secs;
     long                                        usecs;
     double                                      time_now;
 

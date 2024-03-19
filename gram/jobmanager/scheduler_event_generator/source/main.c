@@ -61,6 +61,7 @@ main(int argc, char *argv[])
     int rc;
     char * module = NULL;
     time_t timestamp = 0;
+    long long tmp_timestamp;
     globus_result_t result = GLOBUS_SUCCESS;
     globus_bool_t background = GLOBUS_FALSE;
     char * directory = NULL;
@@ -109,13 +110,14 @@ main(int argc, char *argv[])
             break;
 
         case 't':
-            rc = sscanf(optarg, "%lu", (unsigned long*) &timestamp);
+            rc = sscanf(optarg, "%lld", &tmp_timestamp);
             if (rc < 1)
             {
                 fprintf(stderr, "Invalid timestamp [%s]\n", optarg);
                 goto deactivate_error;
 
             }
+            timestamp = (time_t) tmp_timestamp;
             break;
 
         case 'd':
@@ -427,32 +429,32 @@ globus_l_directory_write_event_handler(
     {
     case GLOBUS_SCHEDULER_EVENT_PENDING:
         fprintf(directory_write_fh,
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_PENDING,
                 0);
         break;
     case GLOBUS_SCHEDULER_EVENT_ACTIVE:
         fprintf(directory_write_fh,
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_ACTIVE,
                 0);
         break;
     case GLOBUS_SCHEDULER_EVENT_FAILED:
         fprintf(directory_write_fh,
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_FAILED,
                 event->failure_code);
         break;
     case GLOBUS_SCHEDULER_EVENT_DONE:
         fprintf(directory_write_fh,
-                "001;%lu;%s;%d;%d\n",
-                event->timestamp,
+                "001;%lld;%s;%d;%d\n",
+                (long long) event->timestamp,
                 event->job_id,
                 GLOBUS_GRAM_PROTOCOL_JOB_STATE_DONE,
                 event->exit_code);

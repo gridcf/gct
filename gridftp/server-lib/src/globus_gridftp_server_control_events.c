@@ -339,12 +339,12 @@ globus_l_gsc_send_perf(
     gettimeofday(&now, NULL);
     msg = globus_common_create_string(
         "112-Perf Marker\r\n"
-        " Timestamp:  %ld.%01ld\r\n"
+        " Timestamp: %lld.%01d\r\n"
         " Stripe Index: %d\r\n"
         " Stripe Bytes Transferred: %"GLOBUS_OFF_T_FORMAT"\r\n"
         " Total Stripe Count: %d\r\n"
         "112 End.\r\n",
-            now.tv_sec, now.tv_usec / 100000,
+            (long long) now.tv_sec, (int) (now.tv_usec / 100000),
             stripe_ndx,
             nbytes,
             stripe_count);

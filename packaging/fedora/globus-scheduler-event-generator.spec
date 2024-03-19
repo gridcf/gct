@@ -3,7 +3,7 @@
 Name:		globus-scheduler-event-generator
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.5
+Version:	6.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Scheduler Event Generator
 
@@ -239,6 +239,9 @@ fi
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Fri Mar 01 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.6-1
+- Handle 64 bit time_t on 32 bit systems
+
 * Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.5-1
 - Fix some compiler warnings
 

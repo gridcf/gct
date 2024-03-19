@@ -171,6 +171,7 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %changelog
 * Fri Mar 01 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.9-1
 - Fix format warnings on 32 bit systems
+- Handle 64 bit time_t on 32 bit systems
 
 * Wed Mar 09 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.8-1
 - Fix some compiler and doxygen warnings

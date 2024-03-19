@@ -2,8 +2,8 @@
 
 Name:		globus-gram-job-manager-lsf
 %global _name %(echo %{name} | tr - _)
-Version:	3.0
-Release:	2%{?dist}
+Version:	3.1
+Release:	1%{?dist}
 Summary:	Grid Community Toolkit - LSF Job Manager Support
 
 Group:		Applications/Internet
@@ -170,6 +170,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/lsf
 
 %changelog
+* Sun Mar 10 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.1-1
+- Handle 64 bit time_t on 32 bit systems
+
 * Thu Mar 12 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.0-2
 - Add BuildRequires perl-interpreter
 

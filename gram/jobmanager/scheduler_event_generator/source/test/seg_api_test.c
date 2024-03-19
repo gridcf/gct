@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    
     rc = globus_module_activate(GLOBUS_SCHEDULER_EVENT_GENERATOR_MODULE);
 
     if (rc != GLOBUS_SUCCESS)
@@ -76,13 +75,14 @@ int main(int argc, char *argv[])
     {
         int protocol_msg_type;
         time_t stamp;
+        long long tmp_stamp;
         char jobid[80];
         int state;
         int exit_code;
 
-        rc = sscanf(line, "%d;%ld;%[^;];%d;%d\n", 
+        rc = sscanf(line, "%d;%lld;%[^;];%d;%d\n",
             &protocol_msg_type,
-            &stamp,
+            &tmp_stamp,
             jobid,
             &state,
             &exit_code);
@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
         {
             goto close_error;
         }
+        stamp = (time_t) tmp_stamp;
 
         if (protocol_msg_type != 1)
         {

@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gridftp_server_control],[9.3],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gridftp_server_control],[9.4],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -21,6 +21,6 @@ AC_CONFIG_FILES(
         globus-gridftp-server-control.pc
         globus-gridftp-server-control-uninstalled.pc
         Makefile
-	version.h
+        version.h
         test/Makefile)
 AC_OUTPUT

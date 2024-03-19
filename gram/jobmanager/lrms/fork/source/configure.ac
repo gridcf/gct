@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gram_job_manager_fork],[3.3],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gram_job_manager_fork],[3.4],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -38,11 +38,11 @@ AC_ARG_WITH(softenv-dir,
 AC_SUBST(SOFTENV_DIR)
 
 AC_ARG_WITH(globus-state-dir,
-	AC_HELP_STRING(
-		[--with-globus-state-dir=PATH],
-		[Path to Globus state files]),
-	globusstatedir="$withval",
-	globusstatedir=$localstatedir)
+    AC_HELP_STRING(
+        [--with-globus-state-dir=PATH],
+        [Path to Globus state files]),
+    globusstatedir="$withval",
+    globusstatedir=$localstatedir)
 
 # GRAM-333: SEG config in installer has variables that aren't resolved at
 # runtime
@@ -50,21 +50,21 @@ globusstatedir="`eval echo $globusstatedir`"
 AC_SUBST(globusstatedir)
 
 AC_ARG_WITH(seg,
-	AC_HELP_STRING(
-		[--with-seg=yes|no],
-		[Enable GRAM configuration with the SEG module]),
-	SEG_ENABLED="$withval",
-	SEG_ENABLED="no")
+    AC_HELP_STRING(
+        [--with-seg=yes|no],
+        [Enable GRAM configuration with the SEG module]),
+    SEG_ENABLED="$withval",
+    SEG_ENABLED="no")
 case "$SEG_ENABLED" in
-	yes)
-	    SEG_CLAUSE="-seg-module fork"
-	    ;;
-	no)
-	    SEG_CLAUSE=""
-	    ;;
-	*)
-	    AC_MSG_ERROR([Invalid argument to --with-seg])
-	    ;;
+    yes)
+        SEG_CLAUSE="-seg-module fork"
+        ;;
+    no)
+        SEG_CLAUSE=""
+        ;;
+    *)
+        AC_MSG_ERROR([Invalid argument to --with-seg])
+        ;;
 esac
 
 AC_SUBST(SEG_CLAUSE)
@@ -89,9 +89,9 @@ AC_SUBST(perlmoduledir)
 AC_CONFIG_FILES(
         globus-gram-job-manager-fork-uninstalled.pc
         globus-gram-job-manager-fork.pc
-	Makefile
-	globus-fork.conf
-	starter/Makefile
-	seg/Makefile
-	version.h)
+        Makefile
+        globus-fork.conf
+        starter/Makefile
+        seg/Makefile
+        version.h)
 AC_OUTPUT

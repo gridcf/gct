@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-fork
 %global _name %(echo %{name} | tr - _)
-Version:	3.3
+Version:	3.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Fork Job Manager Support
 
@@ -173,6 +173,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/fork
 
 %changelog
+* Fri Mar 01 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.4-1
+- Handle 64 bit time_t on 32 bit systems
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.3-1
 - Fix some compiler warnings
 
