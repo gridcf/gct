@@ -1025,14 +1025,6 @@ globus_gsi_cred_read_proxy_bio(
                 goto exit;
             }
         }
-        else
-        {
-            GLOBUS_GSI_CRED_OPENSSL_ERROR_RESULT(
-                result,
-                GLOBUS_GSI_CRED_ERROR_READING_PROXY_CRED,
-                (_GCRSL("Unhandled PEM sequence: %s"), name));
-            goto exit;
-        }
         if (save_data)
         {
             OPENSSL_free(save_data);
