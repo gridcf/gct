@@ -1,3 +1,9 @@
+globus-gridftp-server-control (9.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Handle 64 bit time_t on 32 bit systems
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 16 Mar 2024 03:38:32 +0100
+
 globus-gridftp-server-control (9.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix some compiler warnings

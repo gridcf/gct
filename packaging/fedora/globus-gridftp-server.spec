@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.26
+Version:	13.27
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -223,6 +223,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Mar 16 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.27-1
+- Handle 64 bit time_t on 32 bit systems
+
 * Fri Mar 08 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.26-1
 - Correct spelling error found by lintian
 

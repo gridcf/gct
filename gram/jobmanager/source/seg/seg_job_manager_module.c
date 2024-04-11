@@ -719,6 +719,7 @@ globus_l_job_manager_parse_events(
     int                                 rc;
     int                                 protocol_msg_type;
     time_t                              stamp;
+    long long                           tmp_stamp;
     char                                jobid[129];
     char                                nl[2];
     int                                 job_state;
@@ -731,14 +732,15 @@ globus_l_job_manager_parse_events(
 
 
     fgetpos(state->fp, &pos);
-    while ((rc = fscanf(state->fp, "%d;%ld;%128[^;];%d;%d%1[\n]",
+    while ((rc = fscanf(state->fp, "%d;%lld;%128[^;];%d;%d%1[\n]",
                     &protocol_msg_type,
-                    &stamp,
+                    &tmp_stamp,
                     jobid,
                     &job_state,
                     &exit_code,
                     nl)) > 4)
     {
+        stamp = tmp_stamp;
         if (rc == 4 && fscanf(state->fp, "%1[\n]", nl) != 1)
         {
             goto bad_line;

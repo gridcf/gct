@@ -128,7 +128,7 @@ static char * globus_l_gass_transfer_http_subject_name;
 
 #define GLOBUS_L_DEFAULT_DENIAL_MESSAGE	"Internal Server Error"
 
-#define GLOBUS_L_CONTENT_LENGTH_HEADER	"Content-Length: %ld" CRLF
+#define GLOBUS_L_CONTENT_LENGTH_HEADER	"Content-Length: %zu" CRLF
 #define GLOBUS_L_CHUNKED_HEADER		"Transfer-Encoding: chunked" CRLF
 #define GLOBUS_L_BINARY_HEADER		"Content-Type: " \
 					    "application/octet-stream" CRLF

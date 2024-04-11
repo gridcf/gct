@@ -688,6 +688,7 @@ globus_l_fork_parse_events(
     char *                              p;
     int                                 protocol_msg_type;
     time_t                              stamp;
+    long long                           tmp_stamp;
     char *                              jobid;
     int                                 job_state;
     int                                 exit_code;
@@ -711,9 +712,9 @@ globus_l_fork_parse_events(
 
         exit_code = EXIT_CODE_UNASSIGNED;
 
-        rc = sscanf(p, "%d;%ld;%n%*[^;]%n;%d;%d", 
+        rc = sscanf(p, "%d;%lld;%n%*[^;]%n;%d;%d",
             &protocol_msg_type,
-            &stamp,
+            &tmp_stamp,
             &jobid_start,
             &jobid_end,
             &job_state,
@@ -723,6 +724,8 @@ globus_l_fork_parse_events(
         {
             goto bad_line;
         }
+
+        stamp = (time_t) tmp_stamp;
 
         jobid = p + jobid_start;
         *(p + jobid_end) = '\0';

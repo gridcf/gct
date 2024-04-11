@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_scheduler_event_generator],[6.5],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_scheduler_event_generator],[6.6],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -134,7 +134,7 @@ AC_CONFIG_FILES(
         init/globus-scheduler-event-generator-lsb
         init/Makefile
         test/Makefile
-	version.h)
+        version.h)
 AC_CONFIG_FILES([globus-scheduler-event-generator-admin],
     [chmod a+x globus-scheduler-event-generator-admin])
 AC_OUTPUT

@@ -314,8 +314,8 @@ globus_l_gass_transfer_http_send(
 
 	/* send chunk header and footer as an iovec array */
 	sprintf((char *) new_proto->iov[0].iov_base,
-		"%lx%s",
-		(long) new_proto->user_buflen,
+		"%zx%s",
+		new_proto->user_buflen,
 		CRLF);
 	new_proto->iov[0].iov_len = strlen((char *) new_proto->iov[0].iov_base);
 
@@ -1728,7 +1728,7 @@ globus_l_gass_transfer_http_request_refer(
 		      GLOBUS_L_HTML_HEADER);
     offset += sprintf(referral_string + offset,
 		      GLOBUS_L_CONTENT_LENGTH_HEADER,
-		      (long) body_count);
+		      body_count);
     offset += sprintf(referral_string + offset,
 		      CRLF);
 
@@ -1838,7 +1838,7 @@ globus_l_gass_transfer_http_request_deny(
 		      GLOBUS_L_HTML_HEADER);
     offset += sprintf(deny_string + offset,
 		      GLOBUS_L_CONTENT_LENGTH_HEADER,
-		      (long) body_count);
+		      body_count);
     offset += sprintf(deny_string + offset,
 		      CRLF);
 
@@ -1941,7 +1941,7 @@ globus_l_gass_transfer_http_request_authorize(
 	{
 	    offset += sprintf(authorize_string + offset,
 			      GLOBUS_L_CONTENT_LENGTH_HEADER,
-			      (long) length);
+			      length);
 	}
 	offset += sprintf(authorize_string + offset,
 			  CRLF);
