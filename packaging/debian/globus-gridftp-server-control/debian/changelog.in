@@ -1,3 +1,9 @@
+globus-gridftp-server-control (9.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Passing argument from incompatible pointer type
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Thu, 11 Jul 2024 13:19:25 +0200
+
 globus-gridftp-server-control (9.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Handle 64 bit time_t on 32 bit systems

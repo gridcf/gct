@@ -53,7 +53,7 @@ main(
     globus_bool_t                           done = GLOBUS_FALSE;
     globus_size_t                           nbytes;
     globus_xio_attr_t                       attr;
-    int                                     len;
+    globus_size_t                           len;
     globus_xio_iovec_t                      readv;
 
     if(argc < 2)
