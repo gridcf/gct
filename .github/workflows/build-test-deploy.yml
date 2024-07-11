@@ -16,7 +16,7 @@ jobs:
       # Don't cancel the remaining running jobs if some job(s) fail(s)
       fail-fast: false
       matrix:
-        image: ['centos:centos7', 'rockylinux:8', 'quay.io/centos/centos:stream8']
+        image: ['rockylinux:8']
         components: ['udt,myproxy,ssh', 'gram5']
         # Ignore UDT for the CentOS Stream 9 case because libnice is not available there yet
         include:
@@ -52,11 +52,11 @@ jobs:
       
       # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
       - name: Establish ssh and upload source tarballs
-        # Only run this step for the centos:centos7 case and
+        # Only run this step for the rockylinux:8 case and
         # for only one component selection (must be the same as for the previous step!) and
         # only when a tag was created
         if: |
-          contains(matrix.image , 'centos:centos7') &&
+          contains(matrix.image , 'rockylinux:8') &&
           contains(matrix.components , 'gram5') &&
           contains(github.ref , 'refs/tags/')
         env:

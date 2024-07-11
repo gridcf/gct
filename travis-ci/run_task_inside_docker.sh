@@ -9,17 +9,6 @@ COMPONENTS=${3-}
 set -e
 
 case $(</etc/redhat-release) in
-    CentOS*\ 7*)
-
-        OS=centos7
-        release_ver=el7
-        ;;
-
-    CentOS\ Stream*\ 8*)
-
-        OS=centos-stream-8
-        release_ver=el8
-        ;;
 
     CentOS\ Stream*\ 9*)
 
@@ -45,8 +34,6 @@ esac
 # EPEL required for UDT
 case $OS in
     # from `https://docs.fedoraproject.org/en-US/epel/#_quickstart`
-    centos7)  yum -y install epel-release
-              ;;
     rockylinux8)
               dnf -y install dnf-plugins-core
               dnf config-manager --set-enabled powertools
@@ -56,11 +43,6 @@ case $OS in
               dnf -y install dnf-plugins-core
               dnf config-manager --set-enabled crb
               dnf -y install epel-release
-              ;;
-    centos-stream-8)
-              dnf -y install dnf-plugins-core
-              dnf config-manager --set-enabled powertools
-              dnf -y install epel-release epel-next-release
               ;;
     centos-stream-9)
               dnf -y install dnf-plugins-core
@@ -79,23 +61,19 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
           'perl(URI)' file sudo bison patch curl \
           pam pam-devel libedit libedit-devel)
 
-if [[ $OS != *7 ]]; then
+# provides `cmp` used by `packaging/git-dirt-filter`
+packages+=(diffutils)
+if [[ $OS == *9 ]]; then
 
-    # provides `cmp` used by `packaging/git-dirt-filter`
-    packages+=(diffutils)
-    if [[ $OS == *9 ]]; then
-
-        # also install "zlib zlib-devel" because it's needed for `configure`ing
-        # "gridftp/server/src"
-        packages+=(zlib zlib-devel)
-        # "perl-English" isn't installed by default, so install it explicitly,
-        # because needed for "gridmap-tools-test.pl"
-        packages+=(perl-English)
-        # "perl-Sys-Hostname" isn't installed by default, so install it explicitly,
-        # because needed for globus_ftp_client test scripta.
-        # see https://github.com/fscheiner/gct/runs/5144915195?check_suite_focus=true#step:3:15649
-        packages+=(perl-Sys-Hostname)
-    fi
+	# also install "zlib zlib-devel" because it's needed for `configure`ing
+	# "gridftp/server/src"
+	packages+=(zlib zlib-devel)
+	# "perl-English" isn't installed by default, so install it explicitly,
+	# because needed for "gridmap-tools-test.pl"
+	packages+=(perl-English)
+	# "perl-Sys-Hostname" isn't installed by default, so install it explicitly,
+	# because needed for globus_ftp_client test scripts.
+	packages+=(perl-Sys-Hostname)
 fi
 
 if [[ $TASK == tests ]]; then
@@ -123,12 +101,7 @@ elif [[ $TASK == *rpms ]]; then
     # for myproxy:
     packages+=(pam-devel voms-devel cyrus-sasl-devel openldap-devel voms-clients initscripts)
     # for globus-net-manager:
-    if [[ $OS == *7 ]]; then
-
-        packages+=(python-devel)
-    else
-        packages+=(python3-devel)
-    fi
+    packages+=(python3-devel)
     # for globus-gram-audit:
     packages+=('perl(DBI)')
     # for globus-scheduler-event-generator:
@@ -144,11 +117,7 @@ elif [[ $TASK == *rpms ]]; then
     packages+=(pam libedit libedit-devel)
 fi
 
-if [[ $OS == *7 ]]; then
-	yum -y -d1 install "${packages[@]}"
-else
-	dnf --allowerasing -y -d1 install "${packages[@]}"
-fi
+dnf --allowerasing -y -d1 install "${packages[@]}"
 
 # UID of travis user inside needs to match UID of travis user outside
 getent passwd travis > /dev/null || useradd travis -u $TRAVISUID -o

@@ -11,8 +11,6 @@
 set -eu
 
 case $(</etc/redhat-release) in
-    CentOS*\ 7*) OS=centos7 ;;
-    CentOS\ Stream*\ 8*) OS=centos-stream-8;;
     CentOS\ Stream*\ 9*) OS=centos-stream-9;;
     Rocky\ Linux*\ 8*) OS=rockylinux8 ;;
     Rocky\ Linux*\ 9*) OS=rockylinux9 ;;
