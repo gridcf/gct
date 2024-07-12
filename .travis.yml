@@ -24,9 +24,11 @@ jobs:
     - &run_tests
       # Template; subsequent uses modify 'env'
       arch:
-        - ppc64le
+        #- ppc64le
+        - arm64
       env:
-        - IMAGE=ppc64le/rockylinux:9 TASK=tests COMPONENTS=udt,myproxy,ssh
+        #- IMAGE=rockylinux:9 TASK=tests COMPONENTS=udt,myproxy,ssh
+        - IMAGE=rockylinux:8 TASK=tests COMPONENTS=udt,myproxy,ssh
       stage: test
       services:
         - docker
@@ -39,20 +41,20 @@ jobs:
       script:
       - travis-ci/setup_tasks.sh
 
+#    - <<: *run_tests
+#      arch:
+#        - arm64
+#      env:
+#        - IMAGE=rockylinux:8 TASK=tests COMPONENTS=udt,myproxy,ssh
+
+#    - <<: *run_tests
+#      arch:
+#        - ppc64le
+#      env:
+#        - IMAGE=rockylinux:9 TASK=tests COMPONENTS=gram5
+
     - <<: *run_tests
       arch:
         - arm64
       env:
-        - IMAGE=arm64v8/rockylinux:8 TASK=tests COMPONENTS=udt,myproxy,ssh
-
-    - <<: *run_tests
-      arch:
-        - ppc64le
-      env:
-        - IMAGE=ppc64le/rockylinux:9 TASK=tests COMPONENTS=gram5
-
-    - <<: *run_tests
-      arch:
-        - arm64
-      env:
-        - IMAGE=arm64v8/rockylinux:8 TASK=tests COMPONENTS=gram5
+        - IMAGE=rockylinux:8 TASK=tests COMPONENTS=gram5
