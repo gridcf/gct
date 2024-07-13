@@ -3,7 +3,7 @@
 Name:           myproxy
 %global soname 6
 Version:        6.2.17
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
 Group:          Applications/Internet
@@ -27,6 +27,10 @@ BuildRequires:  krb5-devel
 BuildRequires:  openldap2-devel
 %else
 BuildRequires:  openldap-devel >= 2.3
+%endif
+BuildRequires:  openssl-devel
+%if %{?fedora}%{!?fedora:0} >= 41
+BuildRequires:  openssl-devel-engine
 %endif
 BuildRequires:  pam-devel
 %if ! %{?suse_version}%{!?suse_version:0}
@@ -387,6 +391,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Thu Jul 11 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.17-2
+- Add openssl-devel-engine build requirement on Fedora 41+
+
 * Sun Mar 17 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.17-1
 - Handle 64 bit time_t on 32 bit systems
 
