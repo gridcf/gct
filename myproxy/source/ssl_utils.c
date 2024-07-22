@@ -18,6 +18,10 @@
 #define EVP_PKEY_id(k) (k)->type
 #endif
 
+#ifndef MYPROXY_PRIVKEY_CIPHER
+#define MYPROXY_PRIVKEY_CIPHER()  EVP_aes_256_cbc()
+#endif
+
 /**********************************************************************
  *
  * Constants
@@ -808,8 +812,7 @@ ssl_private_key_store_to_file(SSL_CREDENTIALS *creds,
     else
     {
         /* Encrypt with pass phrase */
-        /* XXX This is my best guess at a cipher */
-        cipher = EVP_des_ede3_cbc();
+        cipher = MYPROXY_PRIVKEY_CIPHER();
         pass_phrase_len = strlen(pass_phrase);
     }
 
@@ -1127,8 +1130,7 @@ ssl_proxy_to_pem(SSL_CREDENTIALS                *creds,
     else
     {
         /* Encrypt with pass phrase */
-        /* XXX This is my best guess at a cipher */
-        cipher = EVP_des_ede3_cbc();
+        cipher = MYPROXY_PRIVKEY_CIPHER();
         pass_phrase_len = strlen(pass_phrase);
     }
 
