@@ -27,7 +27,6 @@
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
 # endif
-#include <openssl/fips.h>
 
 #include "fips_mode_replacement.h"
 

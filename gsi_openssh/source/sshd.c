@@ -81,7 +81,6 @@
 #include <openssl/dh.h>
 #include <openssl/bn.h>
 #include <openssl/rand.h>
-#include <openssl/fips.h>
 #include "openbsd-compat/openssl-compat.h"
 #endif
 #include "fips_mode_replacement.h"

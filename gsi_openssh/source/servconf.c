@@ -38,7 +38,6 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <errno.h>
-#include <openssl/fips.h>
 #ifdef HAVE_UTIL_H
 #include <util.h>
 #endif
