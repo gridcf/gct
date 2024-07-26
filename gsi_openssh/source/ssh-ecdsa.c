@@ -49,7 +49,9 @@
 
 #include "openbsd-compat/openssl-compat.h"
 
+#ifdef ENABLE_PKCS11
 #include "ssh-pkcs11.h"
+#endif
 
 static u_int
 ssh_ecdsa_size(const struct sshkey *key)
