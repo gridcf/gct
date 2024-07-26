@@ -49,6 +49,8 @@
 
 #include "openbsd-compat/openssl-compat.h"
 
+#include "ssh-pkcs11.h"
+
 static u_int
 ssh_ecdsa_size(const struct sshkey *key)
 {
@@ -597,7 +599,7 @@ ssh_create_evp_ec(EC_KEY *k, int ecdsa_nid, EVP_PKEY **pkey)
 	OSSL_PARAM_BLD *param_bld = NULL;
 	EVP_PKEY_CTX *ctx = NULL;
   	BN_CTX *bn_ctx = NULL;
-  	uint8_t *pub_ser = NULL; 
+  	uint8_t *pub_ser = NULL;
   	const char *group_name;
   	const EC_POINT *pub = NULL;
   	const BIGNUM *priv = NULL;

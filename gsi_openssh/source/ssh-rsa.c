@@ -43,6 +43,8 @@
 
 #include "openbsd-compat/openssl-compat.h"
 
+#include "ssh-pkcs11.h"
+
 # if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int openssh_RSA_verify(int, const u_char *, size_t, u_char *, size_t, EVP_PKEY *);
 # else

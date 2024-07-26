@@ -5024,7 +5024,7 @@ x11_create_display_inet(struct ssh *ssh, int x11_display_offset,
 				if ((errno != EINVAL) && (errno != EAFNOSUPPORT)
 #ifdef EPFNOSUPPORT
 				    && (errno != EPFNOSUPPORT)
-#endif 
+#endif
 				    ) {
 					error("socket: %.100s", strerror(errno));
 					freeaddrinfo(aitop);
@@ -5196,7 +5196,7 @@ x11_connect_display(struct ssh *ssh)
 			debug("x11_connect_display: $DISPLAY is launchd");
 
 			/* Create a socket. */
-			sock = connect_local_xsocket_path(path);
+			sock = connect_local_xsocket_path(path, sizeof(path));
 			if (sock < 0)
 				return -1;
 
