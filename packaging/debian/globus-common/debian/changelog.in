@@ -1,3 +1,9 @@
+globus-common (18.15-1+gct.@distro@) @distro@; urgency=medium
+
+  * Compatibility with autoconf 2.72
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 30 Oct 2024 12:26:59 +0100
+
 globus-common (18.14-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove register qualifier that is incompatible with C++ 17
