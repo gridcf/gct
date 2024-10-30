@@ -117,7 +117,8 @@ elif [[ $TASK == *rpms ]]; then
     packages+=(pam libedit libedit-devel)
 fi
 
-dnf --allowerasing -y -d1 install "${packages[@]}"
+# update potentially stale repo data before trying to install packages
+dnf --refresh --allowerasing -y -d1 install "${packages[@]}"
 
 # UID of travis user inside needs to match UID of travis user outside
 getent passwd travis > /dev/null || useradd travis -u $TRAVISUID -o
