@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([globus_common], [18.14], [https://github.com/gridcf/gct/issues])
+AC_INIT([globus_common], [18.15], [https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -24,18 +24,40 @@ AC_SUBST(DIRT_TIMESTAMP)
 AC_SUBST(DIRT_BRANCH_ID)
 
 AC_SYS_LARGEFILE
+
+if test X"$ac_cv_sys_largefile_opts" != "X"; then
+
+# New version (autoconf >= 2.72
+
+case $ac_cv_sys_largefile_opts in
+  "none needed") :
+    ;;
+  "supported through gnulib") :
+    ;;
+  "support not detected") :
+    ;;
+  *)
+    LARGEFILE_CFLAGS="$ac_cv_sys_largefile_opts"
+    ;;
+esac
+
+else
+
+# Old version (autoconf < 2.72
+
 if test X"$ac_cv_sys_largefile_CC" != "Xno"; then
     LARGEFILE_CFLAGS="$ac_cv_sys_largefile_CC"
-    AC_SUBST(LARGEFILE_CFLAGS)
 fi
 if test X"$ac_cv_sys_file_offset_bits" != "Xno" && \
     test X"$ac_cv_sys_file_offset_bits" != "Xunknown"; then
     LARGEFILE_CFLAGS="${LARGEFILE_CFLAGS} -D_FILE_OFFSET_BITS=$ac_cv_sys_file_offset_bits" 
 fi
-
 if test X"$ac_cv_sys_large_files" = "X1"; then
     LARGEFILE_CFLAGS="${LARGEFILE_CFLAGS} -D_LARGE_FILES=$ac_cv_sys_large_files" 
 fi
+
+fi
+
 AC_SUBST(LARGEFILE_CFLAGS)
 
 LAC_THREADS
@@ -174,15 +196,15 @@ fi
 
 
 AC_CONFIG_FILES([
-	Makefile
+        Makefile
         globus-common.pc
         globus-common-uninstalled.pc
-	library/Makefile
-	library/Doxyfile
+        library/Makefile
+        library/Doxyfile
         library/globus_l_common_paths.h
-	programs/Makefile
+        programs/Makefile
         programs/globus-sh-exec
-	scripts/Makefile
+        scripts/Makefile
         scripts/Paths.pm
         scripts/globus-sh-tools.sh
         scripts/globus-sh-tools-vars.sh
@@ -192,7 +214,7 @@ AC_CONFIG_FILES([
         scripts/globus-script-initializer.$host_cpu-$host_vendor-$host_os:scripts/globus-script-initializer-host.in
         test/Makefile
         manpages/Makefile
-	version.h])
+        version.h])
 AC_CONFIG_FILES([programs/globus-version], [chmod a+x programs/globus-version])
 AC_CONFIG_FILES([scripts/globus-domainname:scripts/globus-hostname.in],
         [chmod a+x scripts/globus-domainname])
