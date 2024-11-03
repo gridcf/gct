@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.18
+Version:        6.2.19
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -391,6 +391,9 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Sat Nov 02 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.19-1
+- Make OpenSSL engine optional
+
 * Tue Jul 23 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.18-1
 - Change private key cipher to EVP_aes_256_cbc
 

@@ -4,7 +4,9 @@
  */
 
 #include "myproxy_common.h"
+#ifndef OPENSSL_NO_ENGINE
 #include <openssl/engine.h>
+#endif
 #include <openssl/ui.h>
 
 #define BUF_SIZE 16384
@@ -467,8 +469,10 @@ write_certificate(X509 *cert, const char serial[], const char dir[]) {
 }
 
 static EVP_PKEY  *e_cakey=NULL;
+#ifndef OPENSSL_NO_ENGINE
 static ENGINE    *engine=NULL;
 static int        engine_used=0;
+#endif
 
 static int 
 generate_certificate( X509_REQ                 *request, 
@@ -701,6 +705,7 @@ generate_certificate( X509_REQ                 *request,
 
   /* load ca key */
 
+#ifndef OPENSSL_NO_ENGINE
   if (engine) {
       if (server_context->certificate_openssl_engine_lockfile) {
           lockfd = open(server_context->certificate_openssl_engine_lockfile,
@@ -725,6 +730,7 @@ generate_certificate( X509_REQ                 *request,
           goto error;
       }
   }
+#endif
 
   if(e_cakey) {
       cakey = e_cakey;
@@ -770,6 +776,7 @@ generate_certificate( X509_REQ                 *request,
     goto error;
   } 
   serial = i2s_ASN1_OCTET_STRING(NULL, X509_get_serialNumber(cert));
+#ifndef OPENSSL_NO_ENGINE
   if (engine) {
       engine_used=1;
       if (lockfd != -1) close(lockfd);
@@ -779,6 +786,7 @@ generate_certificate( X509_REQ                 *request,
           goto error;
       }
   }
+#endif
 
   return_value = 0;
 
@@ -827,6 +835,7 @@ arraylen(char **options) {
   return c;
 }
 
+#ifndef OPENSSL_NO_ENGINE
 void shutdown_openssl_engine(void) {
   if (e_cakey) EVP_PKEY_free( e_cakey );
   if (engine) ENGINE_finish(engine);
@@ -837,6 +846,7 @@ void shutdown_openssl_engine(void) {
 
   if (engine_used) ENGINE_cleanup();
 }
+#endif
 
 static int ui_read_fn(UI *ui, UI_STRING *ui_string) {
     switch(UI_get_string_type(ui_string)) {
@@ -868,6 +878,7 @@ static int ui_write_fn(UI *ui, UI_STRING *ui_string) {
     return 1;
 }
 
+#ifndef OPENSSL_NO_ENGINE
 int initialise_openssl_engine(myproxy_server_context_t *server_context) {
     ENGINE *e;
     EVP_PKEY *cakey;
@@ -982,6 +993,7 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
 	UI_destroy_method(ui_method);
 	return 1;
 }
+#endif
 
 static int
 do_check(const char *callout, const X509_REQ *req, const X509 *cert)

@@ -287,10 +287,17 @@ main(int argc, char *argv[])
     }
 
     if(server_context->certificate_openssl_engine_id) {
+#ifndef OPENSSL_NO_ENGINE
         if(!initialise_openssl_engine(server_context)) {
             myproxy_log_verror();
             my_failure("Could not initialise OpenSSL engine.");
         }
+#else
+        myproxy_log("Openssl has no engine support.");
+        myproxy_log("Can not use certificate_openssl_engine_id option.");
+        myproxy_log("Exiting.");
+        exit(1);
+#endif
     }
 
     if (!server_context->run_as_daemon) {

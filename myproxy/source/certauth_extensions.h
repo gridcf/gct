@@ -4,7 +4,9 @@
  *
  */
 
+#ifndef OPENSSL_NO_ENGINE
 int initialise_openssl_engine(myproxy_server_context_t *server_context);
+#endif
 
 int is_certificate_authority_configured(myproxy_server_context_t
                                         *server_context);

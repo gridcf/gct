@@ -1,3 +1,9 @@
+myproxy (6.2.19-1+gct.@distro@) @distro@; urgency=medium
+
+  * Make OpenSSL engine optional
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 02 Nov 2024 08:58:37 +0100
+
 myproxy (6.2.18-1+gct.@distro@) @distro@; urgency=medium
 
   * Change private key cipher to EVP_aes_256_cbc
