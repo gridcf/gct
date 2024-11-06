@@ -27,7 +27,6 @@
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
 # endif
-#include <openssl/fips.h>
 
 #include "fips_mode_replacement.h"
 
@@ -42,6 +41,10 @@
 #include "log.h"
 
 #include "openbsd-compat/openssl-compat.h"
+
+#ifdef ENABLE_PKCS11
+#include "ssh-pkcs11.h"
+#endif
 
 # if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int openssh_RSA_verify(int, const u_char *, size_t, u_char *, size_t, EVP_PKEY *);
