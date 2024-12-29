@@ -2903,12 +2903,8 @@ if test "x$openssl" = "xyes" ; then
 				;;
 			101*)   ;; # 1.1.x
 			200*)   ;; # LibreSSL
-			300*)
+			30*)
 				# OpenSSL 3; we use the 1.1x API
-				CPPFLAGS="$CPPFLAGS -DOPENSSL_API_COMPAT=0x10100000L"
-				;;
-			301*|302*)
-				# OpenSSL development branch; request 1.1x API
 				CPPFLAGS="$CPPFLAGS -DOPENSSL_API_COMPAT=0x10100000L"
 				;;
 		        *)
