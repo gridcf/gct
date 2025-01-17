@@ -1,3 +1,9 @@
+globus-gsi-credential (8.5-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix incompatible pointer errors (gcc 15)
+
+ -- Mischa Sallé <msalle@nikhef.nl>  Fri, 17 Jan 2025 09:06:35 +0100
+
 globus-gsi-credential (8.4-1+gct.@distro@) @distro@; urgency=medium
 
   * Greatly simplify getting current time

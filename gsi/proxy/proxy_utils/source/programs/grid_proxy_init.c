@@ -126,7 +126,8 @@ static int
 globus_i_gsi_proxy_utils_pwstdin_callback(
     char *                              buf, 
     int                                 num, 
-    int                                 w);
+    int                                 w,
+    void *                              u);
 
 static void
 globus_i_gsi_proxy_utils_key_gen_callback(
@@ -174,7 +175,7 @@ main(
     char *                              policy_language = NULL;
     int                                 policy_NID;
     long                                path_length = -1;
-    int                                 (*pw_cb)() = NULL;
+    pem_password_cb *                   pw_cb = NULL;
     int                                 return_value = 0;
     
     if(globus_module_activate(GLOBUS_GSI_PROXY_MODULE) != (int)GLOBUS_SUCCESS)
@@ -1070,7 +1071,8 @@ static int
 globus_i_gsi_proxy_utils_pwstdin_callback(
     char *                              buf, 
     int                                 num, 
-    int                                 w)
+    int                                 w,
+    void *                              u)
 {
     int                                 i;
 

@@ -9,7 +9,10 @@
 
 #include "globus_i_gfs_data.c"
 
-extern int globus_i_gfs_config_init();
+extern int globus_i_gfs_config_init(
+    int                                 argc,
+    char **                             argv,
+    globus_bool_t                       argv_only);
 
 typedef struct
 {

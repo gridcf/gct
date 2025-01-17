@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server
 %global soname 6
 %global _name %(echo %{name} | tr - _)
-Version:	13.27
+Version:	13.28
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server
 
@@ -223,6 +223,9 @@ fi
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Jan 17 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.28-1
+- Fix incompatible pointer errors (gcc 15)
+
 * Sat Mar 16 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 13.27-1
 - Handle 64 bit time_t on 32 bit systems
 
