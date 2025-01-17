@@ -45,7 +45,6 @@
 #include <vis.h>
 #endif
 
-#include <openssl/fips.h>
 #include "fips_mode_replacement.h"
 
 #include "openbsd-compat/sys-queue.h"

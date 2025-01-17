@@ -28,7 +28,6 @@
 
 #ifdef WITH_OPENSSL
 
-#include <openssl/fips.h>
 #include <sys/types.h>
 
 #include <openssl/dh.h>
