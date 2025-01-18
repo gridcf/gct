@@ -79,7 +79,7 @@ extern "C" {
 #define PROXYCERTINFO_SN                "PROXYCERTINFO"
 #define PROXYCERTINFO_LN                "Proxy Certificate Info Extension"
 #define PROXYCERTINFO_OLD_SN            "OLD_PROXYCERTINFO"
-#define PROXYCERTINFO_OLD_LN                "Proxy Certificate Info Extension (old OID)"
+#define PROXYCERTINFO_OLD_LN            "Proxy Certificate Info Extension (old OID)"
 
 /*
  * Used for error checking
@@ -138,13 +138,10 @@ DECLARE_ASN1_FUNCTIONS(PROXYCERTINFO)
 /* macros */
 
 #define d2i_PROXYCERTINFO_bio(bp, pci) \
-    (PROXYCERTINFO *) ASN1_d2i_bio((char *(*)()) PROXYCERTINFO_new, \
-    (char *(*)()) d2i_PROXYCERTINFO, \
-    (bp), (unsigned char **) pci)
+  ASN1_d2i_bio_of(PROXYCERTINFO, PROXYCERTINFO_new, d2i_PROXYCERTINFO, bp, pci)
 
 #define i2d_PROXYCERTINFO_bio(bp, pci) \
-                ASN1_i2d_bio(i2d_PROXYCERTINFO, bp, \
-		(unsigned char *)pci)
+  ASN1_i2d_bio_of(PROXYCERTINFO, i2d_PROXYCERTINFO, bp, pci)
 
 /* functions */
     

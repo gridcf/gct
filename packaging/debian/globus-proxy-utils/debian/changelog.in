@@ -1,3 +1,9 @@
+globus-proxy-utils (7.4-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix incompatible pointer errors (gcc 15)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 17 Jan 2025 09:08:49 +0100
+
 globus-proxy-utils (7.3-1+gct.@distro@) @distro@; urgency=medium
 
   * Use sha256 hash when generating test certificates

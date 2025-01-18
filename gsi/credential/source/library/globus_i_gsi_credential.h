@@ -229,7 +229,8 @@ int
 globus_i_gsi_cred_password_callback_no_prompt(
     char *                              buffer,
     int                                 size,
-    int                                 w);
+    int                                 w,
+    void *                              u);
 
 globus_result_t
 globus_i_gsi_cred_openssl_error_result(

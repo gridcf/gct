@@ -2130,7 +2130,9 @@ typedef globus_result_t
     globus_gfs_brain_reason_t           reason);
 
 typedef globus_result_t
-(*globus_i_gfs_brain_init_func_t)();
+(*globus_i_gfs_brain_init_func_t)(
+    globus_callback_func_t              ready_cb,
+    void *                              ready_cb_arg);
 
 typedef void
 (*globus_i_gfs_brain_stop_func_t)();

@@ -1,3 +1,9 @@
+globus-gsi-proxy-ssl (6.6-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix incompatible pointer errors (gcc 15)
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Fri, 17 Jan 2025 09:07:46 +0100
+
 globus-gsi-proxy-ssl (6.5-1+gct.@distro@) @distro@; urgency=medium
 
   * Fixes for OpenSSL-3.0.0-beta1

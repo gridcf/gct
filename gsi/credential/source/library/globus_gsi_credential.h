@@ -212,7 +212,7 @@ globus_result_t globus_gsi_cred_read_proxy_bio(
 globus_result_t globus_gsi_cred_read_key(
     globus_gsi_cred_handle_t            handle,
     const char *                        key_filename,
-    int                                 (*pw_cb)());
+    pem_password_cb *                   pw_cb);
 
 globus_result_t globus_gsi_cred_read_cert(
     globus_gsi_cred_handle_t            handle,

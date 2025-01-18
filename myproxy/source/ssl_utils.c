@@ -824,7 +824,7 @@ ssl_private_key_store_to_file(SSL_CREDENTIALS *creds,
        uses PEM_write_bio_PKCS8PrivateKey() which "uses the more more secure
        PKCS#8 private key format with a high iteration count" per the CHANGES
        file in the openssl tree */
-    if (PEM_ASN1_write_bio((int (*)())i2d_PrivateKey,
+    if (PEM_ASN1_write_bio((i2d_of_void *) i2d_PrivateKey,
                            ((EVP_PKEY_id(creds->private_key) == EVP_PKEY_DSA)?
                            PEM_STRING_DSA:PEM_STRING_RSA),
                            keybio, (void *)creds->private_key, cipher,
@@ -1142,7 +1142,7 @@ ssl_proxy_to_pem(SSL_CREDENTIALS                *creds,
        uses PEM_write_bio_PKCS8PrivateKey() which "uses the more more secure
        PKCS#8 private key format with a high iteration count" per the CHANGES
        file in the openssl tree */
-    if (PEM_ASN1_write_bio((int (*)())i2d_PrivateKey,
+    if (PEM_ASN1_write_bio((i2d_of_void *) i2d_PrivateKey,
                            ((EVP_PKEY_id(creds->private_key) == EVP_PKEY_DSA)?
                            PEM_STRING_DSA:PEM_STRING_RSA),
                            bio, (void *)creds->private_key, cipher,

@@ -977,7 +977,7 @@ globus_gsi_cred_read_proxy_bio(
 
                 goto exit;
             }
-            if (!PEM_do_header(&cipher, data, &len, (int (*) ()) globus_i_gsi_cred_password_callback_no_prompt, NULL))
+            if (!PEM_do_header(&cipher, data, &len, globus_i_gsi_cred_password_callback_no_prompt, NULL))
             {
                 GLOBUS_GSI_CRED_OPENSSL_ERROR_RESULT(
                     result,
@@ -1127,7 +1127,7 @@ globus_result_t
 globus_gsi_cred_read_key(
     globus_gsi_cred_handle_t            handle,
     const char *                        key_filename,
-    int                                 (*pw_cb)())
+    pem_password_cb *                   pw_cb)
 {
     BIO *                               key_bio = NULL;
     globus_result_t                     result;
@@ -2093,9 +2093,9 @@ int
 globus_i_gsi_cred_password_callback_no_prompt(
     char *                              buffer,
     int                                 size,
-    int                                 w)
+    int                                 w,
+    void *                              u)
 {
-
     GLOBUS_I_GSI_CRED_DEBUG_ENTER;
 
     /* current gsi implementation does not allow for a password

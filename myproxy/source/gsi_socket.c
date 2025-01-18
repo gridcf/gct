@@ -1031,7 +1031,7 @@ GSI_SOCKET_get_peer_fqans(GSI_SOCKET *self, char ***fqans)
 {
     static int once = 1;
     static void *myproxy_voms_handle = 0;
-    static int (*myproxy_voms_get_peer_fqans)() = 0;
+    static int (*myproxy_voms_get_peer_fqans)(GSI_SOCKET *, char ***) = 0;
 
     if (once)
     {

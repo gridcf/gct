@@ -1158,7 +1158,7 @@ handle_certificate(unsigned char            *input_buffer,
   } 
 
   /* convert pkey into string for output to log */
-  ASN1_digest((int (*)())i2d_PUBKEY,EVP_sha1(),(char*)pkey,md,&md_len);
+  ASN1_digest((i2d_of_void*)i2d_PUBKEY, EVP_sha1(), (char*)pkey, md, &md_len);
   sub_hash = md[0] + (md[1] + (md[2] + (md[3] >> 1) * 256) * 256) * 256; 
 
   myproxy_log("Got a cert request for user \"%s\", "

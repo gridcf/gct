@@ -15,7 +15,11 @@
 #endif
 
 int have_voms = 0;
-void (*get_voms_proxy_impl)();
+void (*get_voms_proxy_impl)(myproxy_socket_attrs_t *,
+                            myproxy_creds_t *,
+                            myproxy_request_t *,
+                            myproxy_response_t *,
+                            myproxy_server_context_t *);
 
 static char usage[] = \
 "\n"\
