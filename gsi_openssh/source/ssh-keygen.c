@@ -20,7 +20,6 @@
 
 #ifdef WITH_OPENSSL
 #include <openssl/evp.h>
-#include <openssl/fips.h>
 #include <openssl/pem.h>
 #include "openbsd-compat/openssl-compat.h"
 #endif
