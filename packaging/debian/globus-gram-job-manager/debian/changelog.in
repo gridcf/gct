@@ -1,3 +1,9 @@
+globus-gram-job-manager (15.10-1+gct.@distro@) @distro@; urgency=medium
+
+  * Only check write permission for stdout/stderr if path is absolute
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Sat, 26 Apr 2025 05:04:03 +0200
+
 globus-gram-job-manager (15.9-1+gct.@distro@) @distro@; urgency=medium
 
   * Handle 64 bit time_t on 32 bit systems

@@ -311,9 +311,11 @@ globus_l_staging_replace_one_stream(
             goto bad_value;
         }
     }
-    else if (strstr(evaled_to, "://") == NULL)
+    else if (strstr(evaled_to, "://") == NULL && evaled_to[0] == '/')
     {
-        /* If it's a local file, check that it is writable */
+        /* If it's a local file with absolute path, check that it is
+         * writable
+         */
         int tmpfd;
 
         tmpfd = open(evaled_to, O_WRONLY|O_CREAT|O_APPEND, S_IRUSR|S_IWUSR);
