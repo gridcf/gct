@@ -77,7 +77,6 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #endif
-#include <openssl/fips.h>
 #include "openbsd-compat/openssl-compat.h"
 #include "openbsd-compat/sys-queue.h"
 #include "fips_mode_replacement.h"

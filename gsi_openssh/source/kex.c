@@ -39,7 +39,6 @@
 
 #ifdef WITH_OPENSSL
 #include <openssl/crypto.h>
-#include <openssl/fips.h>
 #include <openssl/dh.h>
 # ifdef HAVE_EVP_KDF_CTX_NEW_ID
 # include <openssl/kdf.h>
@@ -1724,7 +1723,7 @@ kex_exchange_identification(struct ssh *ssh, int timeout_ms,
 
 #ifdef WITH_OPENSSL
 # if OPENSSL_VERSION_NUMBER >= 0x30000000L
-/* 
+/*
  * Creates an EVP_PKEY from the given parameters and keys.
  * The private key can be omitted.
  */

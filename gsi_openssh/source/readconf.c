@@ -39,7 +39,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <openssl/fips.h>
 #ifdef USE_SYSTEM_GLOB
 # include <glob.h>
 #else

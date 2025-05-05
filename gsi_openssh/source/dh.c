@@ -36,7 +36,6 @@
 
 #include <openssl/bn.h>
 #include <openssl/dh.h>
-#include <openssl/fips.h>
 #include <openssl/evp.h>
 # if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>

@@ -31,7 +31,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
-#include <openssl/fips.h>
 
 #include "fips_mode_replacement.h"
 
