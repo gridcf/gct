@@ -37,8 +37,10 @@
 #include <openssl/dh.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+# endif
 
 #include "sshkey.h"
 #include "kex.h"
@@ -83,6 +85,7 @@ kex_dh_keygen(struct kex *kex)
 	return (dh_gen_key(kex->dh, kex->we_need * 8));
 }
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 {
@@ -162,6 +165,50 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	EVP_PKEY_CTX_free(ctx);
 	return r;
 }
+# else
+/* Original function in OpenSSH Portable 9.9p1 */
+int
+kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
+{
+	BIGNUM *shared_secret = NULL;
+	u_char *kbuf = NULL;
+	size_t klen = 0;
+	int kout, r;
+
+#ifdef DEBUG_KEXDH
+	fprintf(stderr, "dh_pub= ");
+	BN_print_fp(stderr, dh_pub);
+	fprintf(stderr, "\n");
+	debug("bits %d", BN_num_bits(dh_pub));
+	DHparams_print_fp(stderr, kex->dh);
+	fprintf(stderr, "\n");
+#endif
+
+	if (!dh_pub_is_valid(kex->dh, dh_pub)) {
+		r = SSH_ERR_MESSAGE_INCOMPLETE;
+		goto out;
+	}
+	klen = DH_size(kex->dh);
+	if ((kbuf = malloc(klen)) == NULL ||
+	    (shared_secret = BN_new()) == NULL) {
+		r = SSH_ERR_ALLOC_FAIL;
+		goto out;
+	}
+	if ((kout = DH_compute_key(kbuf, dh_pub, kex->dh)) < 0 ||
+	    BN_bin2bn(kbuf, kout, shared_secret) == NULL) {
+		r = SSH_ERR_LIBCRYPTO_ERROR;
+		goto out;
+	}
+#ifdef DEBUG_KEXDH
+	dump_digest("shared secret", kbuf, kout);
+#endif
+	r = sshbuf_put_bignum2(out, shared_secret);
+ out:
+	freezero(kbuf, klen);
+	BN_clear_free(shared_secret);
+	return r;
+}
+# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 int
 kex_dh_keypair(struct kex *kex)
