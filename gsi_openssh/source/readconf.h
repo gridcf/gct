@@ -1,4 +1,4 @@
-/* $OpenBSD: readconf.h,v 1.150 2023/01/13 02:58:20 dtucker Exp $ */
+/* $OpenBSD: readconf.h,v 1.156 2024/03/04 02:16:11 djm Exp $ */
 
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
@@ -56,10 +56,8 @@ typedef struct {
 	int     strict_host_key_checking;	/* Strict host key checking. */
 	int     compression;	/* Compress packets in both directions. */
 	int     tcp_keep_alive;	/* Set SO_KEEPALIVE. */
-	int     tcp_rcv_buf; /* user switch to set tcp recv buffer */
 	int     tcp_rcv_buf_poll; /* Option to poll recv buf every window transfer */
-	int     hpn_disabled;    /* Switch to disable HPN buffer management */
-	int     hpn_buffer_size; /* User definable size for HPN buffer window */
+	int     hpn_disabled;     /* Switch to disable HPN buffer management */
 	int	ip_qos_interactive;	/* IP ToS/DSCP/class for interactive */
 	int	ip_qos_bulk;		/* IP ToS/DSCP/class for bulk traffic */
 	SyslogFacility log_facility;	/* Facility for system logging. */
@@ -80,6 +78,7 @@ typedef struct {
 	char   *kex_algorithms;	/* SSH2 kex methods in order of preference. */
 	char   *ca_sign_algorithms;	/* Allowed CA signature algorithms */
 	char   *hostname;	/* Real host to connect. */
+	char   *tag;		/* Configuration tag name. */
 	char   *host_key_alias;	/* hostname alias for .ssh/known_hosts */
 	char   *proxy_command;	/* Proxy command for connecting the host. */
 	char   *user;		/* User to log in as. */
@@ -98,7 +97,7 @@ typedef struct {
 	char   *sk_provider; /* Security key provider */
 	int	verify_host_key_dns;	/* Verify host key using DNS */
 
-	int     num_identity_files;	/* Number of files for RSA/DSA identities. */
+	int     num_identity_files;	/* Number of files for identities. */
 	char   *identity_files[SSH_MAX_IDENTITY_FILES];
 	int    identity_file_userprovided[SSH_MAX_IDENTITY_FILES];
 	struct sshkey *identity_keys[SSH_MAX_IDENTITY_FILES];
@@ -131,11 +130,17 @@ typedef struct {
 
 	int	enable_ssh_keysign;
 	int64_t rekey_limit;
+	int	rekey_interval;
+
 	int     none_switch;    /* Use none cipher */
 	int     none_enabled;   /* Allow none to be used */
-	int     nonemac_enabled;   /* Allow none to be used */	
-	int     disable_multithreaded; /*disable multithreaded aes-ctr*/
-	int	rekey_interval;
+	int     nonemac_enabled;   /* Allow none to be used */
+	int     disable_multithreaded; /* Disable multithreaded aes-ctr */
+	int     metrics; /* enable metrics */
+	int     metrics_interval; /* time in seconds between polls */
+	char   *metrics_path; /* path for the metrics files */
+	int     fallback; /* en|disable fallback port (def: true) */
+	int     fallback_port; /* port to fallback to (def: 22) */
 
 	int	no_host_authentication_for_localhost;
 	int	identities_only;
@@ -171,12 +176,12 @@ typedef struct {
 	int	proxy_use_fdpass;
 
 	int	num_canonical_domains;
-	char	*canonical_domains[MAX_CANON_DOMAINS];
+	char	**canonical_domains;
 	int	canonicalize_hostname;
 	int	canonicalize_max_dots;
 	int	canonicalize_fallback_local;
 	int	num_permitted_cnames;
-	struct allowed_cname permitted_cnames[MAX_CANON_DOMAINS];
+	struct allowed_cname *permitted_cnames;
 
 	char	*revoked_host_keys;
 
@@ -196,6 +201,10 @@ typedef struct {
 
 	int	required_rsa_size;	/* minimum size of RSA keys */
 	int	enable_escape_commandline;	/* ~C commandline */
+	int	obscure_keystroke_timing_interval;
+
+	char	**channel_timeouts;	/* inactivity timeout by channel type */
+	u_int	num_channel_timeouts;
 
 	char	*ignored_unknown; /* Pattern list of unknown tokens to ignore */
 }       Options;
@@ -238,9 +247,14 @@ typedef struct {
 #define SSH_STRICT_HOSTKEY_YES	2
 #define SSH_STRICT_HOSTKEY_ASK	3
 
+/* ObscureKeystrokes parameters */
+#define SSH_KEYSTROKE_DEFAULT_INTERVAL_MS	20
+#define SSH_KEYSTROKE_CHAFF_MIN_MS		1024
+#define SSH_KEYSTROKE_CHAFF_RNG_MS		2048
+
 const char *kex_default_pk_alg(void);
 char	*ssh_connection_hash(const char *thishost, const char *host,
-    const char *portstr, const char *user);
+    const char *portstr, const char *user, const char *jump_host);
 void     initialize_options(Options *);
 int      fill_default_options(Options *);
 void	 fill_default_options_for_canonicalization(Options *);

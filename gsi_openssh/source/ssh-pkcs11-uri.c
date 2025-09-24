@@ -40,13 +40,14 @@
 #define PKCS11_URI_OBJECT "object"
 #define PKCS11_URI_LIB_MANUF "library-manufacturer"
 #define PKCS11_URI_MANUF "manufacturer"
+#define PKCS11_URI_SERIAL "serial"
 #define PKCS11_URI_MODULE_PATH "module-path"
 #define PKCS11_URI_PIN_VALUE "pin-value"
 
 /* Keyword tokens. */
 typedef enum {
-	pId, pToken, pObject, pLibraryManufacturer, pManufacturer, pModulePath,
-	pPinValue, pBadOption
+	pId, pToken, pObject, pLibraryManufacturer, pManufacturer, pSerial,
+	pModulePath, pPinValue, pBadOption
 } pkcs11uriOpCodes;
 
 /* Textual representation of the tokens. */
@@ -59,6 +60,7 @@ static struct {
 	{ PKCS11_URI_OBJECT, pObject },
 	{ PKCS11_URI_LIB_MANUF, pLibraryManufacturer },
 	{ PKCS11_URI_MANUF, pManufacturer },
+	{ PKCS11_URI_SERIAL, pSerial },
 	{ PKCS11_URI_MODULE_PATH, pModulePath },
 	{ PKCS11_URI_PIN_VALUE, pPinValue },
 	{ NULL, pBadOption }
@@ -217,6 +219,16 @@ pkcs11_uri_get(struct pkcs11_uri *uri)
 			goto err;
 	}
 
+	/* Write serial */
+	if (uri->serial) {
+		struct sshbuf *serial = percent_encode(uri->serial,
+		    strlen(uri->serial), PKCS11_URI_WHITELIST);
+		path = pkcs11_uri_append(path, PKCS11_URI_PATH_SEPARATOR,
+		    PKCS11_URI_SERIAL, serial);
+		if (path == NULL)
+			goto err;
+	}
+
 	/* Write module_path */
 	if (uri->module_path) {
 		struct sshbuf *module = percent_encode(uri->module_path,
@@ -259,6 +271,7 @@ pkcs11_uri_cleanup(struct pkcs11_uri *pkcs11)
 	free(pkcs11->object);
 	free(pkcs11->lib_manuf);
 	free(pkcs11->manuf);
+	free(pkcs11->serial);
 	if (pkcs11->pin)
 		freezero(pkcs11->pin, strlen(pkcs11->pin));
 	free(pkcs11);
@@ -352,6 +365,11 @@ pkcs11_uri_parse(const char *uri, struct pkcs11_uri *pkcs11)
 		case pManufacturer:
 			/* CK_TOKEN_INFO -> manufacturerID */
 			charptr = &pkcs11->manuf;
+			goto parse_string;
+
+		case pSerial:
+			/* CK_TOKEN_INFO -> serialNumber */
+			charptr = &pkcs11->serial;
 			goto parse_string;
 
 		case pLibraryManufacturer:

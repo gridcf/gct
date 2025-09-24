@@ -18,7 +18,7 @@
 .Nd OpenSSH secure file copy
 .Sh SYNOPSIS
 .Nm scp
-.Op Fl 346ABCOpqRrsTv
+.Op Fl 346ABCOpqRrsTvZ
 .Op Fl c Ar cipher
 .Op Fl D Ar sftp_server_path
 .Op Fl F Ar ssh_config
@@ -252,6 +252,9 @@ Recursively copy entire directories.
 Note that
 .Nm
 follows symbolic links encountered in the tree traversal.
+.It Fl Z
+Resume failed or interrupted transfer. Identical files will be skipped. Remote must have resume option.
+HPN-SSH only option.
 .It Fl S Ar program
 Name of
 .Ar program
@@ -259,6 +262,13 @@ to use for the encrypted connection.
 The program must understand
 .Xr ssh 1
 options.
+.It Fl z Ar program
+Path to hpnscp on remote system. Useful if remote has multiple scp installs.
+For example, using the resume option but the default remote scp does not have the resume option.
+Use -z to point the version that does - e.g. -z /opt/hpnssh/bin/hpnscp.
+HPN-SSH only option.
+.It Fl s
+Use the SFTP protocol for transfers rather than the original scp protocol.
 .It Fl T
 Disable strict filename checking.
 By default when copying files from a remote host to a local directory
@@ -285,10 +295,13 @@ The valid options are:
 .It Cm nrequests Ns = Ns Ar value
 Controls how many concurrent SFTP read or write requests may be in progress
 at any point in time during a download or upload.
-By default 64 requests may be active concurrently.
+This value must be between 1 and 8192.
+By default 1024 requests may be active concurrently.
 .It Cm buffer Ns = Ns Ar value
 Controls the maximum buffer size for a single SFTP read/write operation used
 during download or upload.
+This value must be between 1B and 255KB. You may use
+the K unit for the size. E.g. 32768 or 32K.
 By default a 32KB buffer is used.
 .El
 .El
@@ -322,6 +335,7 @@ has used the SFTP protocol for transfers by default.
 .Sh AUTHORS
 .An Timo Rinne Aq Mt tri@iki.fi
 .An Tatu Ylonen Aq Mt ylo@cs.hut.fi
+.An Chris Rapier Aq Mt rapier@psc.edu
 .Sh CAVEATS
 The legacy SCP protocol (selected by the
 .Fl O

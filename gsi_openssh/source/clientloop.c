@@ -1,4 +1,4 @@
-/* $OpenBSD: clientloop.c,v 1.390 2023/03/08 04:43:12 guenther Exp $ */
+/* $OpenBSD: clientloop.c,v 1.408 2024/07/01 04:31:17 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -114,6 +114,7 @@
 #include "msg.h"
 #include "ssherr.h"
 #include "hostfile.h"
+#include "metrics.h"
 
 #ifdef GSSAPI
 #include "ssh-gss.h"
@@ -121,6 +122,9 @@
 
 /* Permitted RSA signature algorithms for UpdateHostkeys proofs */
 #define HOSTKEY_PROOF_RSA_ALGS	"rsa-sha2-512,rsa-sha2-256"
+
+/* Uncertainty (in percent) of keystroke timing intervals */
+#define SSH_KEYSTROKE_TIMING_FUZZ 10
 
 /* import options */
 extern Options options;
@@ -157,7 +161,6 @@ static time_t control_persist_exit_time = 0;
 volatile sig_atomic_t quit_pending; /* Set non-zero to quit the loop. */
 static int last_was_cr;		/* Last character was a newline. */
 static int exit_status;		/* Used to store the command exit status. */
-static struct sshbuf *stderr_buffer;	/* Used for final exit message. */
 static int connection_in;	/* Connection to server (input). */
 static int connection_out;	/* Connection to server (output). */
 static int need_rekeying;	/* Set to non-zero if rekeying is requested. */
@@ -169,6 +172,10 @@ static int session_setup_complete;
 
 static void client_init_dispatch(struct ssh *ssh);
 int	session_ident = -1;
+int     metrics_hdr_remote_flag = 0;
+int     metrics_hdr_local_flag = 0;
+int     remote_no_poll_flag = 0;
+int     local_no_poll_flag = 0;
 
 /* Track escape per proto2 channel */
 struct escape_filter_ctx {
@@ -195,23 +202,26 @@ TAILQ_HEAD(global_confirms, global_confirm);
 static struct global_confirms global_confirms =
     TAILQ_HEAD_INITIALIZER(global_confirms);
 
-void ssh_process_session2_setup(int, int, int, struct sshbuf *);
+void client_request_metrics(struct ssh *);
+
 static void quit_message(const char *fmt, ...)
     __attribute__((__format__ (printf, 1, 2)));
 
 static void
 quit_message(const char *fmt, ...)
 {
-	char *msg;
+	char *msg, *fmt2;
 	va_list args;
-	int r;
+	xasprintf(&fmt2, "%s\r\n", fmt);
 
 	va_start(args, fmt);
-	xvasprintf(&msg, fmt, args);
+	xvasprintf(&msg, fmt2, args);
 	va_end(args);
 
-	if ((r = sshbuf_putf(stderr_buffer, "%s\r\n", msg)) != 0)
-		fatal_fr(r, "sshbuf_putf");
+	(void)atomicio(vwrite, STDERR_FILENO, msg, strlen(msg));
+	free(msg);
+	free(fmt2);
+
 	quit_pending = 1;
 }
 
@@ -511,17 +521,182 @@ server_alive_check(struct ssh *ssh)
 	schedule_server_alive_check();
 }
 
+/* Try to send a dummy keystroke */
+static int
+send_chaff(struct ssh *ssh)
+{
+	int r;
+
+	if (ssh->kex == NULL || (ssh->kex->flags & KEX_HAS_PING) == 0)
+		return 0;
+	/* XXX probabilistically send chaff? */
+	/*
+	 * a SSH2_MSG_CHANNEL_DATA payload is 9 bytes:
+	 *    4 bytes channel ID + 4 bytes string length + 1 byte string data
+	 * simulate that here.
+	 */
+	if ((r = sshpkt_start(ssh, SSH2_MSG_PING)) != 0 ||
+	    (r = sshpkt_put_cstring(ssh, "PING!")) != 0 ||
+	    (r = sshpkt_send(ssh)) != 0)
+		fatal_fr(r, "send packet");
+	return 1;
+}
+
+/* Sets the next interval to send a keystroke or chaff packet */
+static void
+set_next_interval(const struct timespec *now, struct timespec *next_interval,
+    u_int interval_ms, int starting)
+{
+	struct timespec tmp;
+	long long interval_ns, fuzz_ns;
+	static long long rate_fuzz;
+
+	interval_ns = interval_ms * (1000LL * 1000);
+	fuzz_ns = (interval_ns * SSH_KEYSTROKE_TIMING_FUZZ) / 100;
+	/* Center fuzz around requested interval */
+	if (fuzz_ns > INT_MAX)
+		fuzz_ns = INT_MAX;
+	if (fuzz_ns > interval_ns) {
+		/* Shouldn't happen */
+		fatal_f("internal error: fuzz %u%% %lldns > interval %lldns",
+		    SSH_KEYSTROKE_TIMING_FUZZ, fuzz_ns, interval_ns);
+	}
+	/*
+	 * Randomise the keystroke/chaff intervals in two ways:
+	 * 1. Each interval has some random jitter applied to make the
+	 *    interval-to-interval time unpredictable.
+	 * 2. The overall interval rate is also randomly perturbed for each
+	 *    chaffing session to make the average rate unpredictable.
+	 */
+	if (starting)
+		rate_fuzz = arc4random_uniform(fuzz_ns);
+	interval_ns -= fuzz_ns;
+	interval_ns += arc4random_uniform(fuzz_ns) + rate_fuzz;
+
+	tmp.tv_sec = interval_ns / (1000 * 1000 * 1000);
+	tmp.tv_nsec = interval_ns % (1000 * 1000 * 1000);
+
+	timespecadd(now, &tmp, next_interval);
+}
+
+/*
+ * Performs keystroke timing obfuscation. Returns non-zero if the
+ * output fd should be polled.
+ */
+static int
+obfuscate_keystroke_timing(struct ssh *ssh, struct timespec *timeout,
+    int channel_did_enqueue)
+{
+	static int active;
+	static struct timespec next_interval, chaff_until;
+	struct timespec now, tmp;
+	int just_started = 0, had_keystroke = 0;
+	static unsigned long long nchaff;
+	char *stop_reason = NULL;
+	long long n;
+
+	monotime_ts(&now);
+
+	if (options.obscure_keystroke_timing_interval <= 0)
+		return 1;	/* disabled in config */
+
+	if (!channel_tty_open(ssh) || quit_pending) {
+		/* Stop if no channels left of we're waiting for one to close */
+		stop_reason = "no active channels";
+	} else if (ssh_packet_is_rekeying(ssh)) {
+		/* Stop if we're rekeying */
+		stop_reason = "rekeying started";
+	} else if (!ssh_packet_interactive_data_to_write(ssh) &&
+	    ssh_packet_have_data_to_write(ssh)) {
+		/* Stop if the output buffer has more than a few keystrokes */
+		stop_reason = "output buffer filling";
+	} else if (active && channel_did_enqueue &&
+	    ssh_packet_have_data_to_write(ssh)) {
+		/* Still in active mode and have a keystroke queued. */
+		had_keystroke = 1;
+	} else if (active) {
+		if (timespeccmp(&now, &chaff_until, >=)) {
+			/* Stop if there have been no keystrokes for a while */
+			stop_reason = "chaff time expired";
+		} else if (timespeccmp(&now, &next_interval, >=) &&
+		    !ssh_packet_have_data_to_write(ssh)) {
+			/* If due to send but have no data, then send chaff */
+			if (send_chaff(ssh))
+				nchaff++;
+		}
+	}
+
+	if (stop_reason != NULL) {
+		if (active) {
+			debug3_f("stopping: %s (%llu chaff packets sent)",
+			    stop_reason, nchaff);
+			active = 0;
+		}
+		return 1;
+	}
+
+	/*
+	 * If we're in interactive mode, and only have a small amount
+	 * of outbound data, then we assume that the user is typing
+	 * interactively. In this case, start quantising outbound packets to
+	 * fixed time intervals to hide inter-keystroke timing.
+	 */
+	if (!active && ssh_packet_interactive_data_to_write(ssh) &&
+	    channel_did_enqueue && ssh_packet_have_data_to_write(ssh)) {
+		debug3_f("starting: interval ~%dms",
+		    options.obscure_keystroke_timing_interval);
+		just_started = had_keystroke = active = 1;
+		nchaff = 0;
+		set_next_interval(&now, &next_interval,
+		    options.obscure_keystroke_timing_interval, 1);
+	}
+
+	/* Don't hold off if obfuscation inactive */
+	if (!active)
+		return 1;
+
+	if (had_keystroke) {
+		/*
+		 * Arrange to send chaff packets for a random interval after
+		 * the last keystroke was sent.
+		 */
+		ms_to_timespec(&tmp, SSH_KEYSTROKE_CHAFF_MIN_MS +
+		    arc4random_uniform(SSH_KEYSTROKE_CHAFF_RNG_MS));
+		timespecadd(&now, &tmp, &chaff_until);
+	}
+
+	ptimeout_deadline_monotime_tsp(timeout, &next_interval);
+
+	if (just_started)
+		return 1;
+
+	/* Don't arm output fd for poll until the timing interval has elapsed */
+	if (timespeccmp(&now, &next_interval, <))
+		return 0;
+
+	/* Calculate number of intervals missed since the last check */
+	n = (now.tv_sec - next_interval.tv_sec) * 1000LL * 1000 * 1000;
+	n += now.tv_nsec - next_interval.tv_nsec;
+	n /= options.obscure_keystroke_timing_interval * 1000LL * 1000;
+	n = (n < 0) ? 1 : n + 1;
+
+	/* Advance to the next interval */
+	set_next_interval(&now, &next_interval,
+	    options.obscure_keystroke_timing_interval * n, 0);
+	return 1;
+}
+
 /*
  * Waits until the client can do something (some data becomes available on
  * one of the file descriptors).
  */
 static void
 client_wait_until_can_do_something(struct ssh *ssh, struct pollfd **pfdp,
-    u_int *npfd_allocp, u_int *npfd_activep, int rekeying,
-    int *conn_in_readyp, int *conn_out_readyp)
+    u_int *npfd_allocp, u_int *npfd_activep, int channel_did_enqueue,
+    sigset_t *sigsetp, int *conn_in_readyp, int *conn_out_readyp)
 {
 	struct timespec timeout;
-	int ret;
+	int ret, oready;
 	u_int p;
 
 	*conn_in_readyp = *conn_out_readyp = 0;
@@ -541,11 +716,14 @@ client_wait_until_can_do_something(struct ssh *ssh, struct pollfd **pfdp,
 		return;
 	}
 
+	oready = obfuscate_keystroke_timing(ssh, &timeout, channel_did_enqueue);
+
 	/* Monitor server connection on reserved pollfd entries */
 	(*pfdp)[0].fd = connection_in;
 	(*pfdp)[0].events = POLLIN;
 	(*pfdp)[1].fd = connection_out;
-	(*pfdp)[1].events = ssh_packet_have_data_to_write(ssh) ? POLLOUT : 0;
+	(*pfdp)[1].events = (oready && ssh_packet_have_data_to_write(ssh)) ?
+	    POLLOUT : 0;
 
 	/*
 	 * Wait for something to happen.  This will suspend the process until
@@ -557,12 +735,12 @@ client_wait_until_can_do_something(struct ssh *ssh, struct pollfd **pfdp,
 		ptimeout_deadline_monotime(&timeout, control_persist_exit_time);
 	if (options.server_alive_interval > 0)
 		ptimeout_deadline_monotime(&timeout, server_alive_time);
-	if (options.rekey_interval > 0 && !rekeying) {
+	if (options.rekey_interval > 0 && !ssh_packet_is_rekeying(ssh)) {
 		ptimeout_deadline_sec(&timeout,
 		    ssh_packet_get_rekey_timeout(ssh));
 	}
 
-	ret = poll(*pfdp, *npfd_activep, ptimeout_get_ms(&timeout));
+	ret = ppoll(*pfdp, *npfd_activep, ptimeout_get_tsp(&timeout), sigsetp);
 
 	if (ret == -1) {
 		/*
@@ -1009,14 +1187,12 @@ process_escapes(struct ssh *ssh, Channel *c,
 	u_int i;
 	u_char ch;
 	char *s;
-	struct escape_filter_ctx *efc = c->filter_ctx == NULL ?
-	    NULL : (struct escape_filter_ctx *)c->filter_ctx;
+	struct escape_filter_ctx *efc;
 
-	if (c->filter_ctx == NULL)
+	if (c == NULL || c->filter_ctx == NULL || len <= 0)
 		return 0;
 
-	if (len <= 0)
-		return (0);
+	efc = (struct escape_filter_ctx *)c->filter_ctx;
 
 	for (i = 0; i < (u_int)len; i++) {
 		/* Get one character at a time. */
@@ -1113,7 +1289,7 @@ process_escapes(struct ssh *ssh, Channel *c,
 				continue;
 
 			case '&':
-				if (c && c->ctl_chan != -1)
+				if (c->ctl_chan != -1)
 					goto noescape;
 				/*
 				 * Detach the program (continue to serve
@@ -1281,9 +1457,11 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 	struct pollfd *pfd = NULL;
 	u_int npfd_alloc = 0, npfd_active = 0;
 	double start_time, total_time;
-	int r, len;
+	int channel_did_enqueue = 0, r;
 	u_int64_t ibytes, obytes;
+	time_t previous_time;
 	int conn_in_ready, conn_out_ready;
+	sigset_t bsigset, osigset;
 
 	debug("Entering interactive session.");
 	session_ident = ssh2_chan_id;
@@ -1323,6 +1501,7 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 	client_repledge();
 
 	start_time = monotime_double();
+	previous_time = time(NULL); /* for metrics polling */
 
 	/* Initialize variables. */
 	last_was_cr = 1;
@@ -1331,10 +1510,6 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 	connection_out = ssh_packet_get_connection_out(ssh);
 
 	quit_pending = 0;
-
-	/* Initialize buffer. */
-	if ((stderr_buffer = sshbuf_new()) == NULL)
-		fatal_f("sshbuf_new failed");
 
 	client_init_dispatch(ssh);
 
@@ -1368,9 +1543,25 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 	}
 
 	schedule_server_alive_check();
+	if (options.metrics)
+		client_request_metrics(ssh); /* initial metrics polling */
+
+	if (sigemptyset(&bsigset) == -1 ||
+	    sigaddset(&bsigset, SIGHUP) == -1 ||
+	    sigaddset(&bsigset, SIGINT) == -1 ||
+	    sigaddset(&bsigset, SIGQUIT) == -1 ||
+	    sigaddset(&bsigset, SIGTERM) == -1)
+		error_f("bsigset setup: %s", strerror(errno));
 
 	/* Main loop of the client for the interactive session mode. */
 	while (!quit_pending) {
+		if (options.metrics) {
+			if ((time(NULL) - previous_time) >= options.metrics_interval) {
+				client_request_metrics(ssh);
+				previous_time = time(NULL);
+			}
+		}
+		channel_did_enqueue = 0;
 
 		/* Process buffered packets sent by the server. */
 		client_process_buffered_input_packets(ssh);
@@ -1392,24 +1583,27 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 			 * enqueue them for sending to the server.
 			 */
 			if (ssh_packet_not_very_much_data_to_write(ssh))
-				channel_output_poll(ssh);
+				channel_did_enqueue = channel_output_poll(ssh);
 
 			/*
 			 * Check if the window size has changed, and buffer a
 			 * message about it to the server if so.
 			 */
 			client_check_window_change(ssh);
-
-			if (quit_pending)
-				break;
 		}
 		/*
 		 * Wait until we have something to do (something becomes
 		 * available on one of the descriptors).
 		 */
+		if (sigprocmask(SIG_BLOCK, &bsigset, &osigset) == -1)
+			error_f("bsigset sigprocmask: %s", strerror(errno));
+		if (quit_pending)
+			break;
 		client_wait_until_can_do_something(ssh, &pfd, &npfd_alloc,
-		    &npfd_active, ssh_packet_is_rekeying(ssh),
+		    &npfd_active, channel_did_enqueue, &osigset,
 		    &conn_in_ready, &conn_out_ready);
+		if (sigprocmask(SIG_SETMASK, &osigset, NULL) == -1)
+			error_f("osigset sigprocmask: %s", strerror(errno));
 
 		if (quit_pending)
 			break;
@@ -1459,9 +1653,21 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 			}
 		}
 	}
+
+	if (options.metrics)
+		client_request_metrics(ssh); /* final metrics polling */
+
 	free(pfd);
 
 	/* Terminate the session. */
+
+	/*
+	 * In interactive mode (with pseudo tty) display a message indicating
+	 * that the connection has been closed.
+	 */
+	if (have_pty && options.log_level >= SYSLOG_LEVEL_INFO)
+		quit_message("Connection to %s closed.", host);
+
 
 	/* Stop watching for window change. */
 	ssh_signal(SIGWINCH, SIG_DFL);
@@ -1494,27 +1700,6 @@ client_loop(struct ssh *ssh, int have_pty, int escape_char_arg,
 		verbose("Killed by signal %d.", (int) received_signal);
 		cleanup_exit(255);
 	}
-
-	/*
-	 * In interactive mode (with pseudo tty) display a message indicating
-	 * that the connection has been closed.
-	 */
-	if (have_pty && options.log_level >= SYSLOG_LEVEL_INFO)
-		quit_message("Connection to %s closed.", host);
-
-	/* Output any buffered data for stderr. */
-	if (sshbuf_len(stderr_buffer) > 0) {
-		len = atomicio(vwrite, fileno(stderr),
-		    (u_char *)sshbuf_ptr(stderr_buffer),
-		    sshbuf_len(stderr_buffer));
-		if (len < 0 || (u_int)len != sshbuf_len(stderr_buffer))
-			error("Write failed flushing stderr buffer.");
-		else if ((r = sshbuf_consume(stderr_buffer, len)) != 0)
-			fatal_fr(r, "sshbuf_consume");
-	}
-
-	/* Clear and free any buffers. */
-	sshbuf_free(stderr_buffer);
 
 	/* Report bytes transferred, and transfer rates. */
 	total_time = monotime_double() - start_time;
@@ -1644,11 +1829,9 @@ client_request_x11(struct ssh *ssh, const char *request_type, int rchan)
 	sock = x11_connect_display(ssh);
 	if (sock < 0)
 		return NULL;
-	c = channel_new(ssh, "x11",
+	c = channel_new(ssh, "x11-connection",
 	    SSH_CHANNEL_X11_OPEN, sock, sock, -1,
-	    /* again is this really necessary for X11? */
-	    options.hpn_disabled ? CHAN_TCP_WINDOW_DEFAULT : options.hpn_buffer_size,
-	    CHAN_X11_PACKET_DEFAULT, 0, "x11", 1);
+	    CHAN_TCP_WINDOW_DEFAULT, CHAN_X11_PACKET_DEFAULT, 0, "x11", 1);
 	c->force_drain = 1;
 	return c;
 }
@@ -1681,10 +1864,9 @@ client_request_agent(struct ssh *ssh, const char *request_type, int rchan)
 	else
 		debug2_fr(r, "ssh_agent_bind_hostkey");
 
-	c = channel_new(ssh, "authentication agent connection",
+	c = channel_new(ssh, "agent-connection",
 	    SSH_CHANNEL_OPEN, sock, sock, -1,
-	    options.hpn_disabled ? CHAN_X11_WINDOW_DEFAULT : options.hpn_buffer_size,
-	    CHAN_TCP_PACKET_DEFAULT, 0,
+	    CHAN_X11_WINDOW_DEFAULT, CHAN_TCP_PACKET_DEFAULT, 0,
 	    "authentication agent connection", 1);
 	c->force_drain = 1;
 	return c;
@@ -1710,9 +1892,8 @@ client_request_tun_fwd(struct ssh *ssh, int tun_mode,
 	}
 	debug("Tunnel forwarding using interface %s", ifname);
 
-	c = channel_new(ssh, "tun", SSH_CHANNEL_OPENING, fd, fd, -1,
-	    options.hpn_disabled ? CHAN_TCP_WINDOW_DEFAULT : options.hpn_buffer_size,
-	    CHAN_TCP_PACKET_DEFAULT, 0, "tun", 1);
+	c = channel_new(ssh, "tun-connection", SSH_CHANNEL_OPENING, fd, fd, -1,
+	    CHAN_TCP_WINDOW_DEFAULT, CHAN_TCP_PACKET_DEFAULT, 0, "tun", 1);
 	c->datagram = 1;
 
 #if defined(SSH_TUN_FILTER)
@@ -2277,25 +2458,6 @@ client_global_hostkeys_prove_confirm(struct ssh *ssh, int type,
 }
 
 /*
- * Returns non-zero if the key is accepted by HostkeyAlgorithms.
- * Made slightly less trivial by the multiple RSA signature algorithm names.
- */
-static int
-key_accepted_by_hostkeyalgs(const struct sshkey *key)
-{
-	const char *ktype = sshkey_ssh_name(key);
-	const char *hostkeyalgs = options.hostkeyalgorithms;
-
-	if (key == NULL || key->type == KEY_UNSPEC)
-		return 0;
-	if (key->type == KEY_RSA &&
-	    (match_pattern_list("rsa-sha2-256", hostkeyalgs, 0) == 1 ||
-	    match_pattern_list("rsa-sha2-512", hostkeyalgs, 0) == 1))
-		return 1;
-	return match_pattern_list(ktype, hostkeyalgs, 0) == 1;
-}
-
-/*
  * Handle hostkeys-00@openssh.com global request to inform the client of all
  * the server's hostkeys. The keys are checked against the user's
  * HostkeyAlgorithms preference before they are accepted.
@@ -2339,7 +2501,7 @@ client_input_hostkeys(struct ssh *ssh)
 		debug3_f("received %s key %s", sshkey_type(key), fp);
 		free(fp);
 
-		if (!key_accepted_by_hostkeyalgs(key)) {
+		if (!hostkey_accepted_by_hostkeyalgs(key)) {
 			debug3_f("%s key not permitted by "
 			    "HostkeyAlgorithms", sshkey_ssh_name(key));
 			continue;
@@ -2506,6 +2668,167 @@ client_input_hostkeys(struct ssh *ssh)
 	return 1;
 }
 
+/* take the response from the server and parse out the data.
+ * the _ctx should be null. It's just here because the format
+ * of the callback handler expects it. Likewise, seq is
+ * not used. */
+static void
+client_process_request_metrics (struct ssh *ssh, int type, u_int32_t seq, void *_ctx) {
+	struct tcp_info local_tcp_info;
+	const u_char *blob;
+	FILE *remfptr;
+	FILE *localfptr;
+	char remfilename[1024];
+	char localfilename[1024];
+	time_t now;
+	struct tm *info;
+	char timestamp[40];
+	char *metricsstring = NULL;
+	size_t tcpi_len, len = 0;
+	binn *metricsobj = NULL;
+	int r, kernel_version = 0;
+
+	time(&now);
+	info = localtime(&now);
+	strftime(timestamp, 40, "%d-%m-%Y %H:%M:%S", info);
+
+	/* malloc the string 1KB should be large enough */
+	metricsstring = malloc(1024);
+
+	/* get the local socket information */
+	int sock_in = ssh_packet_get_connection_in(ssh);
+
+	/* the user can specify a name/path with options.metrics_path
+	 * but if it's not defined we'll use a default name. In either case
+	 * the name will have a suffix of local for the local data and remote for
+	 * the remote data */
+	if (options.metrics_path == NULL) {
+		snprintf(remfilename, 1024, "%s", "./ssh_stack_metrics.remote");
+		snprintf(localfilename, 1024, "%s", "./ssh_stack_metrics.local");
+	} else {
+		snprintf(remfilename, 1024, "%s.%s", options.metrics_path, "remote");
+		snprintf(localfilename, 1024, "%s.%s", options.metrics_path, "local");
+	}
+
+	/* should be type 81 and if it's not then its likley that
+	* the remote does not support polling. We can still get local data though
+	*/
+	if (type != SSH2_MSG_REQUEST_SUCCESS) {
+		if (remote_no_poll_flag == 0) {
+			error("Remote does not support stack metric polling. Local data only.");
+			remote_no_poll_flag = 1;
+		}
+		goto localonly;
+	}
+
+	/* open the file handle to write the remote data*/
+	remfptr = fopen(remfilename, "a");
+	if (remfptr == NULL)
+		fatal("Error opening %s: %s", remfilename, strerror(errno));
+
+	/* read the entire packet string into blob
+	 * blob has to be a const uchar as that's what string_direct expects
+	 * we cast it as a void for the binn functions */
+	sshpkt_get_string_direct(ssh, &blob, &len);
+	if (len == 0) {
+		/* received no data. which is weird */
+		error("Received no remote metrics data. Continuing.");
+	}
+
+	/* get the kernel version printing the header */
+	kernel_version = binn_object_int32((void *)blob, "kernel_version");
+
+	/* create a string of the data from the binn object blob */
+	metrics_read_binn_object((void *)blob, metricsstring);
+
+	/* have we printed the header? */
+	if (metrics_hdr_remote_flag == 0) {
+		metrics_print_header(remfptr, "REMOTE CONNECTION", kernel_version);
+		metrics_hdr_remote_flag = 1;
+	}
+	fprintf(remfptr, "%s, ", timestamp);
+	fprintf(remfptr, "%s\n", metricsstring);
+
+	/* close remote file pointer*/
+	fclose(remfptr);
+
+	/* got the remote data, now get the local */
+localonly:
+/* TCP_INFO is defined in metrics.h*/
+#if !defined TCP_INFO
+	if (local_no_poll_flag == 0) {
+		error("Local host does not support metric polling. Remote data only.");
+		local_no_poll_flag = 1;
+	}
+#else
+	/* open file handle for local data */
+	localfptr = fopen(localfilename, "a");
+	if(localfptr == NULL)
+		fatal("Error opening %s: %s", localfilename, strerror(errno));
+
+	/* create the binn object*/
+	metricsobj = binn_object();
+	if (metricsobj == NULL) {
+		fatal("Could not create metrics object");
+	}
+
+	tcpi_len = (size_t)sizeof(local_tcp_info);
+	if ((r = getsockopt(sock_in, IPPROTO_TCP, TCP_INFO, (void *)&local_tcp_info,
+			    (socklen_t *)&tcpi_len)) != 0){
+		error("Could not read tcp_info from socket");
+		goto out;
+	}
+
+	/* we write and read to a binn object because it lets us
+	 * format the data consistently */
+	metrics_write_binn_object(&local_tcp_info, metricsobj);
+
+	/* create a string of the data from the binn object metricsobj */
+	metrics_read_binn_object((void *)metricsobj, metricsstring);
+
+	/* get the kernel version printing the header */
+	kernel_version = binn_object_int32(metricsobj, "kernel_version");
+
+	if (metrics_hdr_local_flag == 0) {
+		metrics_print_header(localfptr, "LOCAL CONNECTION", kernel_version);
+		metrics_hdr_local_flag = 1;
+	}
+
+	fprintf(localfptr, "%s, ", timestamp);
+	fprintf(localfptr, "%s\n", metricsstring);
+	fclose (localfptr);
+#endif /* TCP_INFO */
+out:
+	free(metricsstring);
+}
+
+/* Use the SSH2_MSG_GLOBAL_REQUEST protocol to
+ * ask the server to send metrics back to the client.
+ * we use the non-canonical string stack-metrics@hpnssh.org
+ * to indicate the type of request we want. If the receiver doesn't
+ * understand it then the response indiactes a failure.
+ * I can probably do this by using clint_input_global_request but
+ * I need to understand that better.
+ */
+void client_request_metrics(struct ssh *ssh) {
+	int r;
+
+	debug_f("Asking server for TCP stack metrics");
+	/* create a pakcet of GLOBAL_REQUEST type */
+	if ((r = sshpkt_start(ssh, SSH2_MSG_GLOBAL_REQUEST)) != 0 ||
+	    /* define the type of GLOBAL_REQUEST message */
+	    (r = sshpkt_put_cstring(ssh,
+	    "stack-metrics@hpnssh.org")) != 0 ||
+	    /* indicate if we want a response. 1 for yes 0 for no */
+	    (r = sshpkt_put_u8(ssh, 1)) != 0)
+		fatal_fr(r, "prepare stack request failure");
+	/* send the packet */
+	if ((r = sshpkt_send(ssh)) != 0)
+		fatal_fr(r, "send stack request");
+	/* i believe this indicates what we are to use for a callback */
+	client_register_global_confirm(client_process_request_metrics, NULL);
+}
+
 static int
 client_input_global_request(int type, u_int32_t seq, struct ssh *ssh)
 {
@@ -2631,6 +2954,43 @@ client_session2_setup(struct ssh *ssh, int id, int want_tty, int want_subsystem,
 
 	len = sshbuf_len(cmd);
 	if (len > 0) {
+		/* we may be connecting to a server that has hpn prefixed
+		 * binaries installed. In that case we need to rewrite any
+		 * scp commands to look for hpnscp instead.
+		 */
+		if (ssh->compat & SSH_HPNSSH_PREFIX) {
+			char *new_cmd;
+			new_cmd = malloc(len+4);
+			/* read the existing command into a temp buffer */
+			sprintf(new_cmd, "%s", (const u_char*)sshbuf_ptr(cmd));
+			const char *pos;
+			/* see if the command starts with scp */
+			pos = strstr(new_cmd, "scp");
+			/* by substracting the pointer new_cmd from the pointer
+			 * pos we end up with the position of the needle in the
+			 * haystack. If it's 0 then we can mess with it
+			 */
+			if (pos - new_cmd == 0) {
+				debug_f("Rewriting scp command for hpnscp.");
+				sprintf(new_cmd, "hpn%s", (const u_char*)sshbuf_ptr(cmd));
+				debug_f("Command was: %s and is now %s",
+				      (const u_char*)sshbuf_ptr(cmd), new_cmd);
+				/* free the existing sshbuf 'cmd'
+				 * recreate it and then write our new_cmd into
+				 * the sshbuf struct
+				 */
+				sshbuf_free(cmd);
+				if ((cmd = sshbuf_new()) == NULL)
+					fatal("sshbuf_new failed in scp rewrite");
+				sshbuf_putf(cmd, "%s", new_cmd);
+				/* we use len later on so don't forget to
+				 * increment it by the number of new chars in the
+				 * command
+				 */
+				len += 3;
+				free(new_cmd);
+			}
+		}
 		if (len > 900)
 			len = 900;
 		if (want_subsystem) {

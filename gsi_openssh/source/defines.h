@@ -889,7 +889,7 @@ struct winsize {
 #endif
 
 #ifndef SSH_IOBUFSZ
-# define SSH_IOBUFSZ 32*1024
+# define SSH_IOBUFSZ (32*1024)
 #endif
 
 /*
@@ -940,6 +940,8 @@ struct winsize {
  * so only enable if the compiler supports them.
  */
 #if defined(VARIABLE_LENGTH_ARRAYS) && defined(VARIABLE_DECLARATION_AFTER_CODE)
-# define USE_SNTRUP761X25519 1
+# define USE_SNTRUP761X25519	1
+/* The ML-KEM768 implementation also uses C89 features */
+# define USE_MLKEM768X25519	1
 #endif
 #endif /* _DEFINES_H */

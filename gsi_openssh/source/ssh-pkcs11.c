@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-pkcs11.c,v 1.56 2023/03/08 05:33:53 tb Exp $ */
+/* $OpenBSD: ssh-pkcs11.c,v 1.63 2024/08/15 00:51:51 djm Exp $ */
 /*
  * Copyright (c) 2010 Markus Friedl.  All rights reserved.
  * Copyright (c) 2014 Pedro Martelletto. All rights reserved.
@@ -38,6 +38,7 @@
 #include <openssl/ecdsa.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
+#include <openssl/evp.h>
 
 #define CRYPTOKI_COMPAT
 #include "pkcs11.h"
@@ -299,13 +300,17 @@ pkcs11_uri_write(const struct sshkey *key, FILE *f)
 
 	/* sanity - is it a RSA key with associated app_data? */
 	switch (key->type) {
-	case KEY_RSA:
-		k11 = RSA_get_ex_data(key->rsa, rsa_idx);
+	case KEY_RSA: {
+               const RSA *rsa = EVP_PKEY_get0_RSA(key->pkey);
+		k11 = RSA_get_ex_data(rsa, rsa_idx);
 		break;
+		}
 #ifdef HAVE_EC_KEY_METHOD_NEW
-	case KEY_ECDSA:
-		k11 = EC_KEY_get_ex_data(key->ecdsa, ec_key_idx);
+	case KEY_ECDSA: {
+               const EC_KEY * ecdsa = EVP_PKEY_get0_EC_KEY(key->pkey);
+		k11 = EC_KEY_get_ex_data(ecdsa, ec_key_idx);
 		break;
+		}
 #endif
 	default:
 		error("Unknown key type %d", key->type);
@@ -324,6 +329,7 @@ pkcs11_uri_write(const struct sshkey *key, FILE *f)
 	uri.module_path = k11->provider->module->module_path;
 	uri.lib_manuf = k11->provider->module->info.manufacturerID;
 	uri.manuf = k11->provider->module->slotinfo[k11->slotidx].token.manufacturerID;
+	uri.serial = k11->provider->module->slotinfo[k11->slotidx].token.serialNumber;
 
 	p = pkcs11_uri_get(&uri);
 	/* do not cleanup -- we do not allocate here, only reference */
@@ -401,7 +407,7 @@ pkcs11_login_slot(struct pkcs11_provider *provider, struct pkcs11_slotinfo *si,
 	if (si->token.flags & CKF_PROTECTED_AUTHENTICATION_PATH)
 		verbose("Deferring PIN entry to reader keypad.");
 	else {
-		snprintf(prompt, sizeof(prompt), "Enter PIN for '%s': ",
+		snprintf(prompt, sizeof(prompt), "Enter PIN for '%.32s': ",
 		    si->token.label);
 		if ((pin = read_passphrase(prompt, RP_ALLOW_EOF|RP_ALLOW_STDIN)) == NULL) {
 			debug_f("no pin specified");
@@ -652,8 +658,10 @@ pkcs11_rsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 		k11->label[label_attrib->ulValueLen] = 0;
 	}
 
-	RSA_set_method(rsa, rsa_method);
-	RSA_set_ex_data(rsa, rsa_idx, k11);
+	if (RSA_set_method(rsa, rsa_method) != 1)
+		fatal_f("RSA_set_method failed");
+	if (RSA_set_ex_data(rsa, rsa_idx, k11) != 1)
+		fatal_f("RSA_set_ex_data failed");
 	return (0);
 }
 
@@ -771,43 +779,33 @@ pkcs11_ecdsa_wrap(struct pkcs11_provider *provider, CK_ULONG slotidx,
 		k11->label[label_attrib->ulValueLen] = 0;
 	}
 
-	EC_KEY_set_method(ec, ec_key_method);
-	EC_KEY_set_ex_data(ec, ec_key_idx, k11);
+	if (EC_KEY_set_method(ec, ec_key_method) != 1)
+		fatal_f("EC_KEY_set_method failed");
+	if (EC_KEY_set_ex_data(ec, ec_key_idx, k11) != 1)
+		fatal_f("EC_KEY_set_ex_data failed");
 
 	return (0);
 }
-
-int
-is_ecdsa_pkcs11(EC_KEY *ecdsa)
-{
-	if (EC_KEY_get_ex_data(ecdsa, ec_key_idx) != NULL)
-		return 1;
-	return 0;
-}
 #endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 
-int
-is_rsa_pkcs11(RSA *rsa)
-{
-	if (RSA_get_ex_data(rsa, rsa_idx) != NULL)
-		return 1;
-	return 0;
-}
-
-/* remove trailing spaces */
-static void
+/* remove trailing spaces. Note, that this does NOT guarantee the buffer
+ * will be null terminated if there are no trailing spaces! */
+static char *
 rmspace(u_char *buf, size_t len)
 {
 	size_t i;
 
-	if (!len)
-		return;
-	for (i = len - 1;  i > 0; i--)
-		if (i == len - 1 || buf[i] == ' ')
+	if (len == 0)
+		return buf;
+	for (i = len - 1; i > 0; i--)
+		if (buf[i] == ' ')
 			buf[i] = '\0';
 		else
 			break;
+	return buf;
 }
+/* Used to printf fixed-width, space-padded, unterminated strings using %.*s */
+#define RMSPACE(s) (int)sizeof(s), rmspace(s, sizeof(s))
 
 /*
  * open a pkcs11 session and login if required.
@@ -974,11 +972,14 @@ pkcs11_fetch_ecdsa_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 		goto fail;
 	}
 
-	key->ecdsa = ec;
+	EVP_PKEY_free(key->pkey);
+	if ((key->pkey = EVP_PKEY_new()) == NULL)
+		fatal("EVP_PKEY_new failed");
+	if (EVP_PKEY_set1_EC_KEY(key->pkey, ec) != 1)
+		fatal("EVP_PKEY_set1_EC_KEY failed");
 	key->ecdsa_nid = nid;
 	key->type = KEY_ECDSA;
 	key->flags |= SSHKEY_FLAG_EXT;
-	ec = NULL;	/* now owned by key */
 
 fail:
 	for (i = 0; i < nattr; i++)
@@ -1072,10 +1073,13 @@ pkcs11_fetch_rsa_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 		goto fail;
 	}
 
-	key->rsa = rsa;
+	EVP_PKEY_free(key->pkey);
+	if ((key->pkey = EVP_PKEY_new()) == NULL)
+		fatal("EVP_PKEY_new failed");
+	if (EVP_PKEY_set1_RSA(key->pkey, rsa) != 1)
+		fatal("EVP_PKEY_set1_RSA failed");
 	key->type = KEY_RSA;
 	key->flags |= SSHKEY_FLAG_EXT;
-	rsa = NULL;	/* now owned by key */
 
 fail:
 	for (i = 0; i < nattr; i++)
@@ -1190,10 +1194,13 @@ pkcs11_fetch_x509_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 			goto out;
 		}
 
-		key->rsa = rsa;
+		EVP_PKEY_free(key->pkey);
+		if ((key->pkey = EVP_PKEY_new()) == NULL)
+			fatal("EVP_PKEY_new failed");
+		if (EVP_PKEY_set1_RSA(key->pkey, rsa) != 1)
+			fatal("EVP_PKEY_set1_RSA failed");
 		key->type = KEY_RSA;
 		key->flags |= SSHKEY_FLAG_EXT;
-		rsa = NULL;	/* now owned by key */
 #if defined(OPENSSL_HAS_ECC) && defined(HAVE_EC_KEY_METHOD_NEW)
 	} else if (EVP_PKEY_base_id(evp) == EVP_PKEY_EC) {
 		if (EVP_PKEY_get0_EC_KEY(evp) == NULL) {
@@ -1220,11 +1227,14 @@ pkcs11_fetch_x509_pubkey(struct pkcs11_provider *p, CK_ULONG slotidx,
 			goto out;
 		}
 
-		key->ecdsa = ec;
+		EVP_PKEY_free(key->pkey);
+		if ((key->pkey = EVP_PKEY_new()) == NULL)
+			fatal("EVP_PKEY_new failed");
+		if (EVP_PKEY_set1_EC_KEY(key->pkey, ec) != 1)
+			fatal("EVP_PKEY_set1_EC_KEY failed");
 		key->ecdsa_nid = nid;
 		key->type = KEY_ECDSA;
 		key->flags |= SSHKEY_FLAG_EXT;
-		ec = NULL;	/* now owned by key */
 #endif /* OPENSSL_HAS_ECC && HAVE_EC_KEY_METHOD_NEW */
 	} else {
 		error("unknown certificate key type");
@@ -1590,10 +1600,22 @@ pkcs11_rsa_generate_private_key(struct pkcs11_provider *p, CK_ULONG slotidx,
 }
 
 static int
+h2i(char c)
+{
+	if (c >= '0' && c <= '9')
+		return c - '0';
+	else if (c >= 'a' && c <= 'f')
+		return c - 'a' + 10;
+	else if (c >= 'A' && c <= 'F')
+		return c - 'A' + 10;
+	else
+		return -1;
+}
+
+static int
 pkcs11_decode_hex(const char *hex, unsigned char **dest, size_t *rlen)
 {
 	size_t	i, len;
-	char	ptr[3];
 
 	if (dest)
 		*dest = NULL;
@@ -1606,13 +1628,14 @@ pkcs11_decode_hex(const char *hex, unsigned char **dest, size_t *rlen)
 
 	*dest = xmalloc(len);
 
-	ptr[2] = '\0';
 	for (i = 0; i < len; i++) {
-		ptr[0] = hex[2 * i];
-		ptr[1] = hex[(2 * i) + 1];
-		if (!isxdigit(ptr[0]) || !isxdigit(ptr[1]))
+		int hi, low;
+
+		hi = h2i(hex[2 * i]);
+		lo = h2i(hex[(2 * i) + 1]);
+		if (hi == -1 || lo == -1)
 			return -1;
-		(*dest)[i] = (unsigned char)strtoul(ptr, NULL, 16);
+		(*dest)[i] = (hi << 4) | lo;
 	}
 
 	if (rlen)
@@ -1728,15 +1751,18 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 		provider_module = strdup(PKCS11_DEFAULT_PROVIDER);
 #else
 		error_f("No module path provided");
-		goto fail;
+ 		goto fail;
 #endif
 	} else {
 		provider_module = strdup(uri->module_path);
 	}
-
 	p = xcalloc(1, sizeof(*p));
 	p->name = pkcs11_uri_get(uri);
 
+	if (lib_contains_symbol(provider_module, "C_GetFunctionList") != 0) {
+		error("provider %s is not a PKCS11 library", provider_module);
+		goto fail;
+	}
 	if ((m = pkcs11_provider_lookup_module(provider_module)) != NULL
 	   && m->valid) {
 		debug_f("provider module already initialized: %s", provider_module);
@@ -1762,7 +1788,6 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 	}
 	if ((getfunctionlist = dlsym(handle, "C_GetFunctionList")) == NULL)
 		fatal("dlsym(C_GetFunctionList) failed: %s", dlerror());
-
 	p->module->handle = handle;
 	/* setup the pkcs11 callbacks */
 	if ((rv = (*getfunctionlist)(&f)) != CKR_OK) {
@@ -1784,14 +1809,14 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 	}
 	rmspace(m->info.manufacturerID, sizeof(m->info.manufacturerID));
 	if (uri->lib_manuf != NULL &&
-	    strcmp(uri->lib_manuf, m->info.manufacturerID)) {
+	    strncmp(uri->lib_manuf, m->info.manufacturerID, 32)) {
 		debug_f("Skipping provider %s not matching library_manufacturer",
 		    m->info.manufacturerID);
 		goto fail;
 	}
 	rmspace(m->info.libraryDescription, sizeof(m->info.libraryDescription));
-	debug("provider %s: manufacturerID <%s> cryptokiVersion %d.%d"
-	    " libraryDescription <%s> libraryVersion %d.%d",
+	debug("provider %s: manufacturerID <%.32s> cryptokiVersion %d.%d"
+	    " libraryDescription <%.32s> libraryVersion %d.%d",
 	    provider_module,
 	    m->info.manufacturerID,
 	    m->info.cryptokiVersion.major,
@@ -1816,8 +1841,8 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 		    provider_module, rv);
 		goto fail;
 	}
-	p->valid = 1;
 	m->slotinfo = xcalloc(m->nslots, sizeof(struct pkcs11_slotinfo));
+	p->valid = 1;
 	m->valid = 1;
 	for (i = 0; i < m->nslots; i++) {
 		token = &m->slotinfo[i].token;
@@ -1828,20 +1853,24 @@ pkcs11_initialize_provider(struct pkcs11_uri *uri, struct pkcs11_provider **prov
 			token->flags = 0;
 			continue;
 		}
-		rmspace(token->label, sizeof(token->label));
-		rmspace(token->manufacturerID, sizeof(token->manufacturerID));
-		rmspace(token->model, sizeof(token->model));
-		rmspace(token->serialNumber, sizeof(token->serialNumber));
+		debug("provider %s slot %lu: label <%.*s> "
+		    "manufacturerID <%.*s> model <%.*s> serial <%.*s> "
+		    "flags 0x%lx",
+		    provider_module, (unsigned long)i,
+		    RMSPACE(token->label), RMSPACE(token->manufacturerID),
+		    RMSPACE(token->model), RMSPACE(token->serialNumber),
+		    token->flags);
 	}
 	m->module_path = provider_module;
 	provider_module = NULL;
 
-	/* insert unconditionally -- remove if there will be no keys later */
+	/* now owned by caller */
+	*providerp = p;
+
 	TAILQ_INSERT_TAIL(&pkcs11_providers, p, next);
 	p->refcount++;	/* add to provider list */
-	*providerp = p;
-	return 0;
 
+	return 0;
 fail:
 	if (need_finalize && (rv = f->C_Finalize(NULL)) != CKR_OK)
 		error("C_Finalize for provider %s failed: %lu",
@@ -1857,7 +1886,7 @@ fail:
 	}
 	if (handle)
 		dlclose(handle);
-	return ret;
+	return (ret);
 }
 
 /*
@@ -1900,26 +1929,33 @@ pkcs11_register_provider_by_uri(struct pkcs11_uri *uri, char *pin,
 			continue;
 		}
 		if (uri->token != NULL &&
-		    strcmp(token->label, uri->token) != 0) {
-			debug2_f("ignoring token not matching label (%s) "
+		    strncmp(token->label, uri->token, 32) != 0) {
+			debug2_f("ignoring token not matching label (%.32s) "
 			    "specified by PKCS#11 URI in slot %lu",
 			    token->label, (unsigned long)i);
 			continue;
 		}
 		if (uri->manuf != NULL &&
-		    strcmp(token->manufacturerID, uri->manuf) != 0) {
+		    strncmp(token->manufacturerID, uri->manuf, 32) != 0) {
 			debug2_f("ignoring token not matching requrested "
-			    "manufacturerID (%s) specified by PKCS#11 URI in "
+			    "manufacturerID (%.32s) specified by PKCS#11 URI in "
 			    "slot %lu", token->manufacturerID, (unsigned long)i);
 			continue;
 		}
-		debug("provider %s slot %lu: label <%s> manufacturerID <%s> "
-		    "model <%s> serial <%s> flags 0x%lx",
+		if (uri->serial != NULL &&
+		    strncmp(token->serialNumber, uri->serial, 16) != 0) {
+			debug2_f("ignoring token not matching requrested "
+			    "serialNumber (%s) specified by PKCS#11 URI in "
+			    "slot %lu", token->serialNumber, (unsigned long)i);
+			continue;
+		}
+		debug("provider %s slot %lu: label <%.32s> manufacturerID <%.32s> "
+		    "model <%.16s> serial <%.16s> flags 0x%lx",
 		    provider_uri, (unsigned long)i,
 		    token->label, token->manufacturerID, token->model,
 		    token->serialNumber, token->flags);
 		/*
-		 * open session if not yet openend, login with pin and
+		 * open session if not yet opened, login with pin and
 		 * retrieve public keys (if keyp is provided)
 		 */
 		if ((p->module->slotinfo[i].session != 0 ||
@@ -1944,7 +1980,7 @@ pkcs11_register_provider_by_uri(struct pkcs11_uri *uri, char *pin,
 			pkcs11_fetch_certs(p, i, keyp, labelsp, &nkeys, uri);
 		}
 		if (nkeys == 0 && uri->object != NULL) {
-			debug3_f("No keys found. Retrying without label (%s) ",
+			debug3_f("No keys found. Retrying without label (%.32s) ",
 			    uri->object);
 			/* Try once more without the label filter */
 			char *label = uri->object;
@@ -1963,8 +1999,8 @@ pkcs11_register_provider_by_uri(struct pkcs11_uri *uri, char *pin,
 	return (nkeys);
 fail:
 	if (p) {
- 		TAILQ_REMOVE(&pkcs11_providers, p, next);
-		pkcs11_provider_unref(p);
+		TAILQ_REMOVE(&pkcs11_providers, p, next);
+	      	pkcs11_provider_unref(p);
 	}
 	if (ret > 0)
 		ret = -1;

@@ -33,12 +33,6 @@
 struct sshbuf;
 struct ssh_digest_ctx;
 
-#ifdef WITH_OPENSSL
-#include <openssl/evp.h>
-/* Converts internal digest representation to the OpenSSL one */
-const EVP_MD *ssh_digest_to_md(int digest_type);
-#endif
-
 /* Looks up a digest algorithm by name */
 int ssh_digest_alg_by_name(const char *name);
 

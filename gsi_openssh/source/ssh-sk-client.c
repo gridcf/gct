@@ -439,6 +439,7 @@ sshsk_load_resident(const char *provider_path, const char *device,
 		}
 		if ((srk = calloc(1, sizeof(*srk))) == NULL) {
 			error_f("calloc failed");
+			r = SSH_ERR_ALLOC_FAIL;
 			goto out;
 		}
 		srk->key = key;
@@ -450,6 +451,7 @@ sshsk_load_resident(const char *provider_path, const char *device,
 		if ((tmp = recallocarray(srks, nsrks, nsrks + 1,
 		    sizeof(*srks))) == NULL) {
 			error_f("recallocarray keys failed");
+			r = SSH_ERR_ALLOC_FAIL;
 			goto out;
 		}
 		debug_f("srks[%zu]: %s %s uidlen %zu", nsrks,

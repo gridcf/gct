@@ -121,7 +121,7 @@ ssh_gssapi_acquire_cred(Gssctxt *ctx)
 		gss_create_empty_oid_set(&status, &oidset);
 		gss_add_oid_set_member(&status, ctx->oid, &oidset);
 
-		if (gethostname(lname, MAXHOSTNAMELEN)) {
+		if (gethostname(lname, HOST_NAME_MAX)) {
 			gss_release_oid_set(&status, &oidset);
 			return (-1);
 		}
@@ -173,7 +173,7 @@ ssh_gssapi_server_check_mech(Gssctxt **dum, gss_OID oid, const char *data,
 	Gssctxt *ctx = NULL;
 	int res;
 
-	res = !GSS_ERROR(PRIVSEP(ssh_gssapi_server_ctx(&ctx, oid)));
+	res = !GSS_ERROR(mm_ssh_gssapi_server_ctx(&ctx, oid));
 	ssh_gssapi_delete_ctx(&ctx);
 
 	return (res);
@@ -590,7 +590,7 @@ ssh_gssapi_rekey_creds(void) {
 	    gssapi_client.store.envval == NULL)
 		return;
 
-	ok = PRIVSEP(ssh_gssapi_update_creds(&gssapi_client.store));
+	ok = mm_ssh_gssapi_update_creds(&gssapi_client.store);
 
 	if (!ok)
 		return;
@@ -602,11 +602,6 @@ ssh_gssapi_rekey_creds(void) {
 	 * for rekeying. So, use our own :)
 	 */
 #ifdef USE_PAM	
-	if (!use_privsep) {
-		debug("Not even going to try and do PAM with privsep disabled");
-		return;
-	}
-
 	ret = pam_start("sshd-rekey", gssapi_client.store.owner->pw_name,
  	    &pamconv, &pamh);
 	if (ret)

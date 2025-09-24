@@ -1,6 +1,6 @@
-/* $OpenBSD: ssh-gss.h,v 1.15 2021/01/27 10:05:28 djm Exp $ */
+/* $OpenBSD: ssh-gss.h,v 1.16 2024/05/17 06:42:04 jsg Exp $ */
 /*
- * Copyright (c) 2001-2009 Simon Wilkinson. All rights reserved.
+ * Copyright (c) 2001-2003 Simon Wilkinson. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -88,6 +88,8 @@ extern char **k5users_allowed_cmds;
 	KEX_GSS_GRP14_SHA1_ID "," \
 	KEX_GSS_GEX_SHA1_ID
 
+#include "digest.h" /* SSH_DIGEST_MAX_LENGTH */
+
 typedef struct {
 	char *filename;
 	char *envvar;
@@ -129,6 +131,16 @@ typedef struct {
 	gss_cred_id_t	creds; /* server */
 	gss_name_t	client; /* server */
 	gss_cred_id_t	client_creds; /* both */
+	struct sshbuf *shared_secret; /* both */
+	struct sshbuf *server_pubkey; /* server */
+	struct sshbuf *server_blob; /* client */
+	struct sshbuf *server_host_key_blob; /* client */
+	gss_buffer_desc msg_tok; /* client */
+	gss_buffer_desc buf; /* both */
+	u_char hash[SSH_DIGEST_MAX_LENGTH]; /* both */
+	size_t hashlen; /* both */
+	int first; /* client */
+	BIGNUM *dh_client_pub; /* server (gex) */
 } Gssctxt;
 
 extern ssh_gssapi_mech *supported_mechs[];
@@ -138,7 +150,6 @@ int  ssh_gssapi_check_oid(Gssctxt *, void *, size_t);
 void ssh_gssapi_set_oid_data(Gssctxt *, void *, size_t);
 void ssh_gssapi_set_oid(Gssctxt *, gss_OID);
 void ssh_gssapi_supported_oids(gss_OID_set *);
-ssh_gssapi_mech *ssh_gssapi_get_ctype(Gssctxt *);
 void ssh_gssapi_prepare_supported_oids(void);
 OM_uint32 ssh_gssapi_test_oid_supported(OM_uint32 *, gss_OID, int *);
 

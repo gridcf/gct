@@ -1,4 +1,4 @@
-/* $OpenBSD: serverloop.c,v 1.236 2023/03/08 04:43:12 guenther Exp $ */
+/* $OpenBSD: serverloop.c,v 1.240 2024/06/17 08:28:31 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -81,20 +81,18 @@
 #include "serverloop.h"
 #include "ssherr.h"
 #include "compat.h"
+#include "metrics.h"
+#include "cipher-switch.h"
 
 extern ServerOptions options;
 
 /* XXX */
 extern Authctxt *the_authctxt;
 extern struct sshauthopt *auth_opts;
-extern int use_privsep;
 
 static int no_more_sessions = 0; /* Disallow further sessions. */
 
 static volatile sig_atomic_t child_terminated = 0;	/* The child has terminated. */
-
-/* Cleanup on signals (!use_privsep case only) */
-static volatile sig_atomic_t received_sigterm = 0;
 
 /* prototypes */
 static void server_init_dispatch(struct ssh *);
@@ -102,27 +100,10 @@ static void server_init_dispatch(struct ssh *);
 /* requested tunnel forwarding interface(s), shared with session.c */
 char *tun_fwd_ifnames = NULL;
 
-/* returns 1 if bind to specified port by specified user is permitted */
-static int
-bind_permitted(int port, uid_t uid)
-{
-	if (use_privsep)
-		return 1; /* allow system to decide */
-	if (port < IPPORT_RESERVED && uid != 0)
-		return 0;
-	return 1;
-}
-
 static void
 sigchld_handler(int sig)
 {
 	child_terminated = 1;
-}
-
-static void
-sigterm_handler(int sig)
-{
-	received_sigterm = sig;
 }
 
 static void
@@ -254,7 +235,7 @@ wait_until_can_do_something(struct ssh *ssh,
 	/* ClientAliveInterval probing */
 	if (client_alive_scheduled) {
 		if (ret == 0 &&
-		    now > last_client_time + options.client_alive_interval) {
+		    now >= last_client_time + options.client_alive_interval) {
 			/* ppoll timed out and we're due to probe */
 			client_alive_check(ssh);
 			last_client_time = now;
@@ -288,11 +269,11 @@ process_input(struct ssh *ssh, int connection_in)
 		if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
 			return 0;
 		if (errno == EPIPE) {
-			verbose("Connection closed by %.100s port %d",
+			logit("Connection closed by %.100s port %d",
 			    ssh_remote_ipaddr(ssh), ssh_remote_port(ssh));
 			return -1;
 		}
-		verbose("Read error from remote host %s port %d: %s",
+		logit("Read error from remote host %s port %d: %s",
 		    ssh_remote_ipaddr(ssh), ssh_remote_port(ssh),
 		    strerror(errno));
 		cleanup_exit(255);
@@ -356,12 +337,6 @@ server_loop2(struct ssh *ssh, Authctxt *authctxt)
 	connection_in = ssh_packet_get_connection_in(ssh);
 	connection_out = ssh_packet_get_connection_out(ssh);
 
-	if (!use_privsep) {
-		ssh_signal(SIGTERM, sigterm_handler);
-		ssh_signal(SIGINT, sigterm_handler);
-		ssh_signal(SIGQUIT, sigterm_handler);
-	}
-
 	server_init_dispatch(ssh);
 
 	for (;;) {
@@ -382,15 +357,8 @@ server_loop2(struct ssh *ssh, Authctxt *authctxt)
 		wait_until_can_do_something(ssh, connection_in, connection_out,
 		    &pfd, &npfd_alloc, &npfd_active, &osigset,
 		    &conn_in_ready, &conn_out_ready);
-		if (sigprocmask(SIG_UNBLOCK, &bsigset, &osigset) == -1)
+		if (sigprocmask(SIG_SETMASK, &osigset, NULL) == -1)
 			error_f("osigset sigprocmask: %s", strerror(errno));
-
-		if (received_sigterm) {
-			logit("Exiting on signal %d", (int)received_sigterm);
-			sshpkt_final_log_entry(ssh);
-			/* Clean up sessions, utmp, etc. */
-			cleanup_exit(255);
-		}
 
 		channel_after_poll(ssh, pfd, npfd_active);
 		if (conn_in_ready &&
@@ -404,6 +372,9 @@ server_loop2(struct ssh *ssh, Authctxt *authctxt)
 	}
 	collect_children(ssh);
 	free(pfd);
+
+	/* write final log entry (do we need this here? -cjr)*/
+	sshpkt_final_log_entry(ssh);
 
 	/* free all channels, no more reads and writes */
 	channel_free_all(ssh);
@@ -504,7 +475,7 @@ server_request_direct_streamlocal(struct ssh *ssh)
 	/* XXX fine grained permissions */
 	if ((options.allow_streamlocal_forwarding & FORWARD_LOCAL) != 0 &&
 	    auth_opts->permit_port_forwarding_flag &&
-	    !options.disable_forwarding && (pw->pw_uid == 0 || use_privsep)) {
+	    !options.disable_forwarding) {
 		c = channel_connect_to_path(ssh, target,
 		    "direct-streamlocal@openssh.com", "direct-streamlocal");
 	} else {
@@ -561,8 +532,7 @@ server_request_tun(struct ssh *ssh)
 	debug("Tunnel forwarding using interface %s", ifname);
 
 	c = channel_new(ssh, "tun", SSH_CHANNEL_OPEN, sock, sock, -1,
-	    options.hpn_disabled ? CHAN_TCP_WINDOW_DEFAULT : options.hpn_buffer_size,
-	    CHAN_TCP_PACKET_DEFAULT, 0, "tun", 1);
+	    CHAN_TCP_WINDOW_DEFAULT, CHAN_TCP_PACKET_DEFAULT, 0, "tun", 1);
 	c->datagram = 1;
 #if defined(SSH_TUN_FILTER)
 	if (mode == SSH_TUNMODE_POINTOPOINT)
@@ -681,6 +651,67 @@ server_input_channel_open(int type, u_int32_t seq, struct ssh *ssh)
 	}
 	free(ctype);
 	return 0;
+}
+
+/* we need to get the actual socket in use and from there
+ * read the values in the TCP_INFO struct.
+ * shout out to Rene Pfiffer for the article https://linuxgazette.net/136/pfeiffer.html
+ * for getting me started. This only works on systems that support the tcp_info
+ * struct; linux, freebsd, netbsd as of now. Apple has one but it's completely different
+ * than any of the others.
+ */
+static int
+server_input_metrics_request(struct ssh *ssh, struct sshbuf **respp)
+{
+	int success = 0;
+	/* TCP_INFO is defined in metrics.h
+	 * if it's not defined then we don't support tcp_info
+	 * so just return a failure code */
+#if !defined TCP_INFO
+	return success;
+#else
+        struct tcp_info tcp_info;
+	struct sshbuf *resp = NULL;
+	int tcp_info_len;
+	/* this is the socket of the current connection */
+	int sock_in = ssh_packet_get_connection_in(ssh);
+	int r;
+	binn *metricsobj;
+
+	tcp_info_len = sizeof(tcp_info); /*expect around 330 bytes */
+	if ((resp = sshbuf_new()) == NULL)
+		fatal_f("sshbuf_new");
+
+	/* create the binn object to hold the serialized metrics */
+	metricsobj = binn_object();
+	if (metricsobj == NULL) {
+		error_f("Could not create metrics object");
+		goto out;
+	}
+
+	debug("Stack metrics request for connection %d", sock_in);
+	if ((r = getsockopt(sock_in, IPPROTO_TCP, TCP_INFO, (void *)&tcp_info,
+			   (socklen_t *)&tcp_info_len)) != 0) {
+		error_f("Could not read tcp_info from socket");
+		goto out;
+	}
+	/* write the tcp_info data to the binn object */
+	metrics_write_binn_object(&tcp_info, metricsobj);
+	if ((r = sshbuf_put_string(resp, binn_ptr(metricsobj),
+				   binn_size(metricsobj))) != 0) {
+		error_fr(r, "Failed to build tcp_info object");
+		goto out;
+	}
+	/* copy the pointer of the response to the passed in response pointer */
+	*respp = resp;
+	resp = NULL; /* don't free it */
+	/* everything worked so set success to true */
+	success = 1;
+out:
+	sshbuf_free(resp);
+	binn_free(metricsobj);
+	return success;
+#endif /* TCP_INFO */
 }
 
 static int
@@ -805,9 +836,7 @@ server_input_global_request(int type, u_int32_t seq, struct ssh *ssh)
 		    (options.allow_tcp_forwarding & FORWARD_REMOTE) == 0 ||
 		    !auth_opts->permit_port_forwarding_flag ||
 		    options.disable_forwarding ||
-		    (!want_reply && fwd.listen_port == 0) ||
-		    (fwd.listen_port != 0 &&
-		    !bind_permitted(fwd.listen_port, pw->pw_uid))) {
+		    (!want_reply && fwd.listen_port == 0)) {
 			success = 0;
 			ssh_packet_send_debug(ssh, "Server has disabled port forwarding.");
 		} else {
@@ -840,8 +869,7 @@ server_input_global_request(int type, u_int32_t seq, struct ssh *ssh)
 		/* check permissions */
 		if ((options.allow_streamlocal_forwarding & FORWARD_REMOTE) == 0
 		    || !auth_opts->permit_port_forwarding_flag ||
-		    options.disable_forwarding ||
-		    (pw->pw_uid != 0 && !use_privsep)) {
+		    options.disable_forwarding) {
 			success = 0;
 			ssh_packet_send_debug(ssh, "Server has disabled "
 			    "streamlocal forwarding.");
@@ -862,6 +890,10 @@ server_input_global_request(int type, u_int32_t seq, struct ssh *ssh)
 		success = 1;
 	} else if (strcmp(rtype, "hostkeys-prove-00@openssh.com") == 0) {
 		success = server_input_hostkeys_prove(ssh, &resp);
+	} else if (strcmp(rtype, "stack-metrics@hpnssh.org") == 0) {
+		/* resp is the response (sshbuf struct) from the function which is
+		 * handled below in the want_reply stanza */
+		success = server_input_metrics_request(ssh, &resp);
 	}
 	/* XXX sshpkt_get_end() */
 	if (want_reply) {

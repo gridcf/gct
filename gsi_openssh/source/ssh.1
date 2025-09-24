@@ -33,8 +33,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: ssh.1,v 1.433 2022/11/28 01:37:36 djm Exp $
-.Dd $Mdocdate: November 28 2022 $
+.\" $OpenBSD: ssh.1,v 1.443 2024/07/18 01:47:27 djm Exp $
+.Dd $Mdocdate: July 18 2024 $
 .Dt SSH 1
 .Os
 .Sh NAME
@@ -58,14 +58,16 @@
 .Op Fl m Ar mac_spec
 .Op Fl O Ar ctl_cmd
 .Op Fl o Ar option
+.Op Fl P Ar tag
 .Op Fl p Ar port
-.Op Fl Q Ar query_option
 .Op Fl R Ar address
 .Op Fl S Ar ctl_path
 .Op Fl W Ar host : Ns Ar port
 .Op Fl w Ar local_tun Ns Op : Ns Ar remote_tun
 .Ar destination
 .Op Ar command Op Ar argument ...
+.Nm
+.Op Fl Q Ar query_option
 .Sh DESCRIPTION
 .Nm
 (SSH client) is a program for logging into a remote machine and for
@@ -75,6 +77,14 @@ two untrusted hosts over an insecure network.
 X11 connections, arbitrary TCP ports and
 .Ux Ns -domain
 sockets can also be forwarded over the secure channel.
+.Nm
+is binary compatible with the more well known OpenSSH and uses the same configuration
+directives, methods, and keywords except where noted with the exception of the default port.
+HPN-SSH servers, by default, use port 2222 for connection, and as such,
+.Nm
+clients
+attempt to connect on that port. If the connection attempt on port 2222 fails it will fallback to
+port 22. Please see the -p switch for more information.
 .Pp
 .Nm
 connects and logs into the specified
@@ -302,10 +312,9 @@ The default is
 .Pa ~/.ssh/id_rsa ,
 .Pa ~/.ssh/id_ecdsa ,
 .Pa ~/.ssh/id_ecdsa_sk ,
-.Pa ~/.ssh/id_ed25519 ,
-.Pa ~/.ssh/id_ed25519_sk
+.Pa ~/.ssh/id_ed25519
 and
-.Pa ~/.ssh/id_dsa .
+.Pa ~/.ssh/id_ed25519_sk .
 Identity files may also be specified on
 a per-host basis in the configuration file.
 It is possible to have multiple
@@ -322,13 +331,14 @@ by appending
 to identity filenames.
 .Pp
 .It Fl J Ar destination
-Connect to the target host by first making a
+Connect to the target host by first making an
 .Nm
 connection to the jump host described by
 .Ar destination
 and then establishing a TCP forwarding to the ultimate destination from
 there.
 Multiple jump hops may be specified separated by comma characters.
+IPv6 addresses can be specified by enclosing the address in square brackets.
 This is a shortcut to specify a
 .Cm ProxyJump
 configuration directive.
@@ -488,6 +498,8 @@ Valid commands are:
 (request forwardings without command execution),
 .Dq cancel
 (cancel forwardings),
+.Dq proxy
+(connect to a running multiplexing master in proxy mode),
 .Dq exit
 (request the master to exit), and
 .Dq stop
@@ -522,11 +534,13 @@ For full details of the options listed below, and their possible values, see
 .It ControlMaster
 .It ControlPath
 .It ControlPersist
+.It DisableMTAES*
 .It DynamicForward
 .It EnableSSHKeysign
 .It EnableEscapeCommandline
 .It EscapeChar
 .It ExitOnForwardFailure
+.It FallbackPort
 .It FingerprintHash
 .It ForkAfterAuthentication
 .It ForwardAgent
@@ -550,6 +564,7 @@ For full details of the options listed below, and their possible values, see
 .It HostKeyAlgorithms
 .It HostKeyAlias
 .It Hostname
+.It HPNDisabled*
 .It IdentitiesOnly
 .It IdentityAgent
 .It IdentityFile
@@ -566,7 +581,13 @@ For full details of the options listed below, and their possible values, see
 .It LogVerbose
 .It MACs
 .It Match
+.It Metrics
+.It MetricsInterval
+.It MetricsPath
 .It NoHostAuthenticationForLocalhost
+.It NoneCipherEnabled*
+.It NoneEnabled*
+.It NoneMacEnabled*
 .It NumberOfPasswordPrompts
 .It PasswordAuthentication
 .It PermitLocalCommand
@@ -597,6 +618,7 @@ For full details of the options listed below, and their possible values, see
 .It StrictHostKeyChecking
 .It SyslogFacility
 .It TCPKeepAlive
+.It TcpRcvBufPoll*
 .It Tunnel
 .It TunnelDevice
 .It UpdateHostKeys
@@ -605,12 +627,31 @@ For full details of the options listed below, and their possible values, see
 .It VerifyHostKeyDNS
 .It VisualHostKey
 .It XAuthLocation
+.Pp
+.It * Hpnssh specific configuration option.
 .El
 .Pp
+.It Fl P Ar tag
+Specify a tag name that may be used to select configuration in
+.Xr ssh_config 5 .
+Refer to the
+.Cm Tag
+and
+.Cm Match
+keywords in
+.Xr ssh_config 5
+for more information.
 .It Fl p Ar port
 Port to connect to on the remote host.
 This can be specified on a
 per-host basis in the configuration file.
+HPN-SSH uses a default port of 2222. It will automatically
+fallback to use the SSH standard port 22 if it cannot connect
+on port 2222. This fallback behaviour can be modified with the
+FallbackPort option. Note: if outbound port 2222 is
+blocked it may appear that the hpnssh client is non-responsive. In that event,
+either specify the correct port or use the ConnectTimeout option
+to trigger the port fallback more quickly.
 .Pp
 .It Fl Q Ar query_option
 Queries for the algorithms supported by one of the following features:
@@ -630,6 +671,8 @@ flag),
 (GSSAPI key exchange algorithms),
 .Ar key
 (key types),
+.Ar key-ca-sign
+(valid CA signature algorithms for certificates),
 .Ar key-cert
 (certificate key types),
 .Ar key-plain
@@ -930,10 +973,7 @@ key pair for authentication purposes.
 The server knows the public key, and only the user knows the private key.
 .Nm
 implements public key authentication protocol automatically,
-using one of the DSA, ECDSA, Ed25519 or RSA algorithms.
-The HISTORY section of
-.Xr ssl 8
-contains a brief discussion of the DSA and RSA algorithms.
+using one of the ECDSA, Ed25519 or RSA algorithms.
 .Pp
 The file
 .Pa ~/.ssh/authorized_keys
@@ -960,8 +1000,6 @@ flag).
 The user creates their key pair by running
 .Xr ssh-keygen 1 .
 This stores the private key in
-.Pa ~/.ssh/id_dsa
-(DSA),
 .Pa ~/.ssh/id_ecdsa
 (ECDSA),
 .Pa ~/.ssh/id_ecdsa_sk
@@ -974,8 +1012,6 @@ or
 .Pa ~/.ssh/id_rsa
 (RSA)
 and stores the public key in
-.Pa ~/.ssh/id_dsa.pub
-(DSA),
 .Pa ~/.ssh/id_ecdsa.pub
 (ECDSA),
 .Pa ~/.ssh/id_ecdsa_sk.pub
@@ -1569,7 +1605,7 @@ secret, but the recommended permissions are read/write/execute for the user,
 and not accessible by others.
 .Pp
 .It Pa ~/.ssh/authorized_keys
-Lists the public keys (DSA, ECDSA, Ed25519, RSA)
+Lists the public keys (ECDSA, Ed25519, RSA)
 that can be used for logging in as this user.
 The format of this file is described in the
 .Xr sshd 8
@@ -1589,7 +1625,6 @@ Contains additional definitions for environment variables; see
 .Sx ENVIRONMENT ,
 above.
 .Pp
-.It Pa ~/.ssh/id_dsa
 .It Pa ~/.ssh/id_ecdsa
 .It Pa ~/.ssh/id_ecdsa_sk
 .It Pa ~/.ssh/id_ed25519
@@ -1605,7 +1640,6 @@ It is possible to specify a passphrase when
 generating the key which will be used to encrypt the
 sensitive part of this file using AES-128.
 .Pp
-.It Pa ~/.ssh/id_dsa.pub
 .It Pa ~/.ssh/id_ecdsa.pub
 .It Pa ~/.ssh/id_ecdsa_sk.pub
 .It Pa ~/.ssh/id_ed25519.pub
@@ -1646,8 +1680,6 @@ Systemwide configuration file.
 The file format and configuration options are described in
 .Xr ssh_config 5 .
 .Pp
-.It Pa /etc/ssh/ssh_host_key
-.It Pa /etc/ssh/ssh_host_dsa_key
 .It Pa /etc/ssh/ssh_host_ecdsa_key
 .It Pa /etc/ssh/ssh_host_ed25519_key
 .It Pa /etc/ssh/ssh_host_rsa_key
@@ -1811,3 +1843,7 @@ removed many bugs, re-added newer features and
 created OpenSSH.
 Markus Friedl contributed the support for SSH
 protocol versions 1.5 and 2.0.
+Chris Rapier, Michael Stevens, Ben Bennet, and Mike Tasota developed
+the HPN extensions at the Pittsburgh Supercomuting Center with grants
+from Cisco, the National Library of Medicine, and the National Science
+Foundation.

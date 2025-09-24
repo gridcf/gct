@@ -137,19 +137,19 @@ audit_key(struct ssh *ssh, int host_user, int *rv, const struct sshkey *key)
 void
 audit_unsupported(struct ssh *ssh, int what)
 {
-	PRIVSEP(audit_unsupported_body(ssh, what));
+	mm_audit_unsupported_body(ssh, what);
 }
 
 void
 audit_kex(struct ssh *ssh, int ctos, char *enc, char *mac, char *comp, char *pfs)
 {
-	PRIVSEP(audit_kex_body(ssh, ctos, enc, mac, comp, pfs, getpid(), getuid()));
+	mm_audit_kex_body(ssh, ctos, enc, mac, comp, pfs, getpid(), getuid());
 }
 
 void
 audit_session_key_free(struct ssh *ssh, int ctos)
 {
-	PRIVSEP(audit_session_key_free_body(ssh, ctos, getpid(), getuid()));
+	mm_audit_session_key_free_body(ssh, ctos, getpid(), getuid());
 }
 
 # ifndef CUSTOM_SSH_AUDIT_EVENTS

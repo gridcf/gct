@@ -1,4 +1,4 @@
-/* $OpenBSD: auth2-pubkey.c,v 1.118 2023/02/17 04:22:50 dtucker Exp $ */
+/* $OpenBSD: auth2-pubkey.c,v 1.120 2024/05/17 00:30:23 djm Exp $ */
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
  * Copyright (c) 2010 Damien Miller.  All rights reserved.
@@ -73,8 +73,8 @@
 /* import */
 extern ServerOptions options;
 extern int inetd_flag;
-extern int rexeced_flag;
 extern Authctxt *the_authctxt;
+extern struct authmethod_cfg methodcfg_pubkey;
 
 static char *
 format_key(const struct sshkey *key)
@@ -229,11 +229,11 @@ userauth_pubkey(struct ssh *ssh, const char *method)
 #endif
 		/* test for correct signature */
 		authenticated = 0;
-		if (PRIVSEP(user_key_allowed(ssh, pw, key, 1, &authopts)) &&
-		    PRIVSEP(user_key_verify(ssh, key, sig, slen,
+		if (mm_user_key_allowed(ssh, pw, key, 1, &authopts) &&
+		    mm_user_key_verify(ssh, key, sig, slen,
 		    sshbuf_ptr(b), sshbuf_len(b),
 		    (ssh->compat & SSH_BUG_SIGTYPE) == 0 ? pkalg : NULL,
-		    ssh->compat, &sig_details)) == 0) {
+		    ssh->compat, &sig_details) == 0) {
 			authenticated = 1;
 		}
 		if (authenticated == 1 && sig_details != NULL) {
@@ -291,7 +291,7 @@ userauth_pubkey(struct ssh *ssh, const char *method)
 		 * if a user is not allowed to login. is this an
 		 * issue? -markus
 		 */
-		if (PRIVSEP(user_key_allowed(ssh, pw, key, 0, NULL))) {
+		if (mm_user_key_allowed(ssh, pw, key, 0, NULL)) {
 			if ((r = sshpkt_start(ssh, SSH2_MSG_USERAUTH_PK_OK))
 			    != 0 ||
 			    (r = sshpkt_put_cstring(ssh, pkalg)) != 0 ||
@@ -364,8 +364,8 @@ match_principals_file(struct passwd *pw, char *file,
  * returns 1 if the principal is allowed or 0 otherwise.
  */
 static int
-match_principals_command(struct passwd *user_pw,
-    const struct sshkey *key, struct sshauthopt **authoptsp)
+match_principals_command(struct passwd *user_pw, const struct sshkey *key,
+    const char *conn_id, const char *rdomain, struct sshauthopt **authoptsp)
 {
 	struct passwd *runas_pw = NULL;
 	const struct sshkey_cert *cert = key->cert;
@@ -440,6 +440,8 @@ match_principals_command(struct passwd *user_pw,
 	    (unsigned long long)user_pw->pw_uid);
 	for (i = 1; i < ac; i++) {
 		tmp = percent_expand(av[i],
+		    "C", conn_id,
+		    "D", rdomain,
 		    "U", uidstr,
 		    "u", user_pw->pw_name,
 		    "h", user_pw->pw_dir,
@@ -464,7 +466,7 @@ match_principals_command(struct passwd *user_pw,
 	    ac, av, &f,
 	    SSH_SUBPROCESS_STDOUT_CAPTURE|SSH_SUBPROCESS_STDERR_DISCARD,
 	    runas_pw, temporarily_use_uid, restore_uid,
-	    (inetd_flag && !rexeced_flag), the_authctxt)) == 0)
+	    inetd_flag, the_authctxt)) == 0)
 		goto out;
 
 	uid_swapped = 1;
@@ -502,7 +504,7 @@ match_principals_command(struct passwd *user_pw,
 static int
 user_cert_trusted_ca(struct passwd *pw, struct sshkey *key,
     const char *remote_ip, const char *remote_host,
-    struct sshauthopt **authoptsp)
+    const char *conn_id, const char *rdomain, struct sshauthopt **authoptsp)
 {
 	char *ca_fp, *principals_file = NULL;
 	const char *reason;
@@ -539,7 +541,7 @@ user_cert_trusted_ca(struct passwd *pw, struct sshkey *key,
 	}
 	/* Try querying command if specified */
 	if (!found_principal && match_principals_command(pw, key,
-	    &principals_opts))
+	    conn_id, rdomain, &principals_opts))
 		found_principal = 1;
 	/* If principals file or command is specified, then require a match */
 	use_authorized_principals = principals_file != NULL ||
@@ -638,7 +640,7 @@ user_key_allowed2(struct passwd *pw, struct sshkey *key,
 static int
 user_key_command_allowed2(struct passwd *user_pw, struct sshkey *key,
     const char *remote_ip, const char *remote_host,
-    struct sshauthopt **authoptsp)
+    const char *conn_id, const char *rdomain, struct sshauthopt **authoptsp)
 {
 	struct passwd *runas_pw = NULL;
 	FILE *f = NULL;
@@ -700,6 +702,8 @@ user_key_command_allowed2(struct passwd *user_pw, struct sshkey *key,
 	    (unsigned long long)user_pw->pw_uid);
 	for (i = 1; i < ac; i++) {
 		tmp = percent_expand(av[i],
+		    "C", conn_id,
+		    "D", rdomain,
 		    "U", uidstr,
 		    "u", user_pw->pw_name,
 		    "h", user_pw->pw_dir,
@@ -733,7 +737,7 @@ user_key_command_allowed2(struct passwd *user_pw, struct sshkey *key,
 	    ac, av, &f,
 	    SSH_SUBPROCESS_STDOUT_CAPTURE|SSH_SUBPROCESS_STDERR_DISCARD,
 	    runas_pw, temporarily_use_uid, restore_uid,
-	    (inetd_flag && !rexeced_flag), the_authctxt)) == 0)
+	    inetd_flag, the_authctxt)) == 0)
 		goto out;
 
 	uid_swapped = 1;
@@ -775,11 +779,9 @@ user_key_allowed(struct ssh *ssh, struct passwd *pw, struct sshkey *key,
     int auth_attempt, struct sshauthopt **authoptsp)
 {
 	u_int success = 0, i;
-	char *file;
+	char *file, *conn_id;
 	struct sshauthopt *opts = NULL;
-	const char *remote_ip = ssh_remote_ipaddr(ssh);
-	const char *remote_host = auth_get_canonical_hostname(ssh,
-	    options.use_dns);
+	const char *rdomain, *remote_ip, *remote_host;
 
 	if (authoptsp != NULL)
 		*authoptsp = NULL;
@@ -789,6 +791,14 @@ user_key_allowed(struct ssh *ssh, struct passwd *pw, struct sshkey *key,
 	if (sshkey_is_cert(key) &&
 	    auth_key_is_revoked(key->cert->signature_key))
 		return 0;
+
+	if ((rdomain = ssh_packet_rdomain_in(ssh)) == NULL)
+		rdomain = "";
+	remote_ip = ssh_remote_ipaddr(ssh);
+	remote_host = auth_get_canonical_hostname(ssh, options.use_dns);
+	xasprintf(&conn_id, "%s %d %s %d",
+	    ssh_local_ipaddr(ssh), ssh_local_port(ssh),
+	    remote_ip, ssh_remote_port(ssh));
 
 	for (i = 0; !success && i < options.num_authkeys_files; i++) {
 		if (strcasecmp(options.authorized_keys_files[i], "none") == 0)
@@ -807,18 +817,19 @@ user_key_allowed(struct ssh *ssh, struct passwd *pw, struct sshkey *key,
 		goto out;
 
 	if ((success = user_cert_trusted_ca(pw, key, remote_ip, remote_host,
-	    &opts)) != 0)
+	    conn_id, rdomain, &opts)) != 0)
 		goto out;
 	sshauthopt_free(opts);
 	opts = NULL;
 
 	if ((success = user_key_command_allowed2(pw, key, remote_ip,
-	    remote_host, &opts)) != 0)
+	    remote_host, conn_id, rdomain, &opts)) != 0)
 		goto out;
 	sshauthopt_free(opts);
 	opts = NULL;
 
  out:
+	free(conn_id);
 	if (success && authoptsp != NULL) {
 		*authoptsp = opts;
 		opts = NULL;
@@ -828,8 +839,6 @@ user_key_allowed(struct ssh *ssh, struct passwd *pw, struct sshkey *key,
 }
 
 Authmethod method_pubkey = {
-	"publickey",
-	"publickey-hostbound-v00@openssh.com",
+	&methodcfg_pubkey,
 	userauth_pubkey,
-	&options.pubkey_authentication
 };

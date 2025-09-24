@@ -38,10 +38,8 @@
 #include <openssl/dh.h>
 #include <openssl/fips.h>
 #include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
-# endif
 
 #include "dh.h"
 #include "pathnames.h"
@@ -293,7 +291,6 @@ dh_pub_is_valid(const DH *dh, const BIGNUM *dh_pub)
 	return 1;
 }
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 dh_gen_key(DH *dh, int need)
 {
@@ -393,37 +390,6 @@ out:
 	BN_clear_free(priv_key);
 	return r;
 }
-# else
-/* Original function in OpenSSH Portable 9.3p1 */
-int
-dh_gen_key(DH *dh, int need)
-{
-	int pbits;
-	const BIGNUM *dh_p, *pub_key;
-
-	DH_get0_pqg(dh, &dh_p, NULL, NULL);
-
-	if (need < 0 || dh_p == NULL ||
-	    (pbits = BN_num_bits(dh_p)) <= 0 ||
-	    need > INT_MAX / 2 || 2 * need > pbits)
-		return SSH_ERR_INVALID_ARGUMENT;
-	if (need < 256)
-		need = 256;
-	/*
-	 * Pollard Rho, Big step/Little Step attacks are O(sqrt(n)),
-	 * so double requested need here.
-	 */
-	if (!DH_set_length(dh, MINIMUM(need * 2, pbits - 1)))
-		return SSH_ERR_LIBCRYPTO_ERROR;
-
-	if (DH_generate_key(dh) == 0)
-		return SSH_ERR_LIBCRYPTO_ERROR;
-	DH_get0_key(dh, &pub_key, NULL);
-	if (!dh_pub_is_valid(dh, pub_key))
-		return SSH_ERR_INVALID_FORMAT;
-	return 0;
-}
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 DH *
 dh_new_group_asc(const char *gen, const char *modulus)
@@ -617,31 +583,6 @@ dh_estimate(int bits)
 		return 7680;
 	return 8192;
 }
-
-# if (OPENSSL_VERSION_NUMBER < 0x10100000L)
-/*
- * taken from
- * https://github.com/openssl/openssl/blob/OpenSSL_1_1_1-stable/crypto/dh/dh_lib.c
- */
-void DH_get0_pqg(const DH *dh,
-                 const BIGNUM **p, const BIGNUM **q, const BIGNUM **g)
-{
-    if (p != NULL)
-        *p = dh->p;
-    if (q != NULL)
-        *q = dh->q;
-    if (g != NULL)
-        *g = dh->g;
-}
-
-void DH_get0_key(const DH *dh, const BIGNUM **pub_key, const BIGNUM **priv_key)
-{
-    if (pub_key != NULL)
-        *pub_key = dh->pub_key;
-    if (priv_key != NULL)
-        *priv_key = dh->priv_key;
-}
-# endif
 
 /*
  * Compares the received DH parameters with known-good groups,
