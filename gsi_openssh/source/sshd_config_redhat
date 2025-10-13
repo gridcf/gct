@@ -1,12 +1,12 @@
 SyslogFacility AUTHPRIV
 
-ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
 
 UsePAM yes
 
 X11Forwarding yes
 
-# It is recommended to use pam_motd in /etc/pam.d/sshd instead of PrintMotd,
+# It is recommended to use pam_motd in /etc/pam.d/gsisshd instead of PrintMotd,
 # as it is more configurable and versatile than the built-in version.
 PrintMotd no
 

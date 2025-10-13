@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-dss.c,v 1.49 2023/03/05 05:34:09 dtucker Exp $ */
+/* $OpenBSD: ssh-dss.c,v 1.50 2024/01/11 01:45:36 djm Exp $ */
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
  *
@@ -25,17 +25,13 @@
 
 #include "includes.h"
 
-#ifdef WITH_OPENSSL
+#if defined(WITH_OPENSSL) && defined(WITH_DSA)
 
 #include <sys/types.h>
 
 #include <openssl/bn.h>
 #include <openssl/dsa.h>
 #include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-#include <openssl/core_names.h>
-#include <openssl/param_build.h>
-# endif
 
 #include <stdarg.h>
 #include <string.h>
@@ -259,88 +255,6 @@ ssh_dss_deserialize_private(const char *ktype, struct sshbuf *b,
 	return 0;
 }
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-static int
-ssh_dss_sign(struct sshkey *key,
-    u_char **sigp, size_t *lenp,
-    const u_char *data, size_t datalen,
-    const char *alg, const char *sk_provider, const char *sk_pin, u_int compat)
-{
-	EVP_PKEY *pkey = NULL;
-	DSA_SIG *sig = NULL;
-	const BIGNUM *sig_r, *sig_s;
-	u_char sigblob[SIGBLOB_LEN];
-	size_t rlen, slen;
-	int len;
-	struct sshbuf *b = NULL;
-	u_char *sigb = NULL;
-	const u_char *psig = NULL;
-	int ret = SSH_ERR_INVALID_ARGUMENT;
-
-	if (lenp != NULL)
-		*lenp = 0;
-	if (sigp != NULL)
-		*sigp = NULL;
-
-	if (key == NULL || key->dsa == NULL ||
-	    sshkey_type_plain(key->type) != KEY_DSA)
-		return SSH_ERR_INVALID_ARGUMENT;
-
-  	if ((ret = ssh_create_evp_dss(key, &pkey)) != 0)
-    		return ret;
-	ret = sshkey_calculate_signature(pkey, SSH_DIGEST_SHA1, &sigb, &len,
-	    data, datalen);
-	EVP_PKEY_free(pkey);
-	if (ret < 0) {
-		goto out;
-	}
-
-	psig = sigb;
-	if ((sig = d2i_DSA_SIG(NULL, &psig, len)) == NULL) {
-		ret = SSH_ERR_LIBCRYPTO_ERROR;
-		goto out;
-	}
-	free(sigb);
-	sigb = NULL;
-
-	DSA_SIG_get0(sig, &sig_r, &sig_s);
-	rlen = BN_num_bytes(sig_r);
-	slen = BN_num_bytes(sig_s);
-	if (rlen > INTBLOB_LEN || slen > INTBLOB_LEN) {
-		ret = SSH_ERR_INTERNAL_ERROR;
-		goto out;
-	}
-	explicit_bzero(sigblob, SIGBLOB_LEN);
-	BN_bn2bin(sig_r, sigblob + SIGBLOB_LEN - INTBLOB_LEN - rlen);
-	BN_bn2bin(sig_s, sigblob + SIGBLOB_LEN - slen);
-
-	if ((b = sshbuf_new()) == NULL) {
-		ret = SSH_ERR_ALLOC_FAIL;
-		goto out;
-	}
-	if ((ret = sshbuf_put_cstring(b, "ssh-dss")) != 0 ||
-	    (ret = sshbuf_put_string(b, sigblob, SIGBLOB_LEN)) != 0)
-		goto out;
-
-	len = sshbuf_len(b);
-	if (sigp != NULL) {
-		if ((*sigp = malloc(len)) == NULL) {
-			ret = SSH_ERR_ALLOC_FAIL;
-			goto out;
-		}
-		memcpy(*sigp, sshbuf_ptr(b), len);
-	}
-	if (lenp != NULL)
-		*lenp = len;
-	ret = 0;
- out:
-	free(sigb);
-	DSA_SIG_free(sig);
-	sshbuf_free(b);
-	return ret;
-}
-# else
-/* Original function in OpenSSH Portable 9.3p1 */
 static int
 ssh_dss_sign(struct sshkey *key,
     u_char **sigp, size_t *lenp,
@@ -410,103 +324,7 @@ ssh_dss_sign(struct sshkey *key,
 	sshbuf_free(b);
 	return ret;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-static int
-ssh_dss_verify(const struct sshkey *key,
-    const u_char *sig, size_t siglen,
-    const u_char *data, size_t dlen, const char *alg, u_int compat,
-    struct sshkey_sig_details **detailsp)
-{
-	EVP_PKEY *pkey = NULL;
-	DSA_SIG *dsig = NULL;
-	BIGNUM *sig_r = NULL, *sig_s = NULL;
-	u_char *sigblob = NULL;
-	size_t len, slen;
-	int ret = SSH_ERR_INTERNAL_ERROR;
-	struct sshbuf *b = NULL;
-	char *ktype = NULL;
-	u_char *sigb = NULL, *psig = NULL;
-
-	if (key == NULL || key->dsa == NULL ||
-	    sshkey_type_plain(key->type) != KEY_DSA ||
-	    sig == NULL || siglen == 0)
-		return SSH_ERR_INVALID_ARGUMENT;
-
-	/* fetch signature */
-	if ((b = sshbuf_from(sig, siglen)) == NULL)
-		return SSH_ERR_ALLOC_FAIL;
-	if (sshbuf_get_cstring(b, &ktype, NULL) != 0 ||
-	    sshbuf_get_string(b, &sigblob, &len) != 0) {
-		ret = SSH_ERR_INVALID_FORMAT;
-		goto out;
-	}
-	if (strcmp("ssh-dss", ktype) != 0) {
-		ret = SSH_ERR_KEY_TYPE_MISMATCH;
-		goto out;
-	}
-	if (sshbuf_len(b) != 0) {
-		ret = SSH_ERR_UNEXPECTED_TRAILING_DATA;
-		goto out;
-	}
-
-	if (len != SIGBLOB_LEN) {
-		ret = SSH_ERR_INVALID_FORMAT;
-		goto out;
-	}
-
-	/* parse signature */
-	if ((dsig = DSA_SIG_new()) == NULL ||
-	    (sig_r = BN_new()) == NULL ||
-	    (sig_s = BN_new()) == NULL) {
-		ret = SSH_ERR_ALLOC_FAIL;
-		goto out;
-	}
-	if ((BN_bin2bn(sigblob, INTBLOB_LEN, sig_r) == NULL) ||
-	    (BN_bin2bn(sigblob + INTBLOB_LEN, INTBLOB_LEN, sig_s) == NULL)) {
-		ret = SSH_ERR_LIBCRYPTO_ERROR;
-		goto out;
-	}
-	if (!DSA_SIG_set0(dsig, sig_r, sig_s)) {
-		ret = SSH_ERR_LIBCRYPTO_ERROR;
-		goto out;
-	}
-	sig_r = sig_s = NULL; /* transferred */
-
-	if ((slen = i2d_DSA_SIG(dsig, NULL)) == 0) {
-		ret = SSH_ERR_LIBCRYPTO_ERROR;
-		goto out;
-	}
-	if ((sigb = malloc(slen)) == NULL) {
-		ret = SSH_ERR_ALLOC_FAIL;
-		goto out;
-	}
-	psig = sigb;
-	if ((slen = i2d_DSA_SIG(dsig, &psig)) == 0) {
-		ret = SSH_ERR_LIBCRYPTO_ERROR;
-		goto out;
-	}
-
-  	if ((ret = ssh_create_evp_dss(key, &pkey)) != 0)
-		goto out;
-	ret = sshkey_verify_signature(pkey, SSH_DIGEST_SHA1, data, dlen,
-	    sigb, slen);
-	EVP_PKEY_free(pkey);
-
- out:
-	free(sigb);
-	DSA_SIG_free(dsig);
-	BN_clear_free(sig_r);
-	BN_clear_free(sig_s);
-	sshbuf_free(b);
-	free(ktype);
-	if (sigblob != NULL)
-		freezero(sigblob, len);
-	return ret;
-}
-# else
-/* Original function in OpenSSH Portable 9.3p1 */
 static int
 ssh_dss_verify(const struct sshkey *key,
     const u_char *sig, size_t siglen,
@@ -596,68 +414,6 @@ ssh_dss_verify(const struct sshkey *key,
 		freezero(sigblob, len);
 	return ret;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
-
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-int
-ssh_create_evp_dss(const struct sshkey *k, EVP_PKEY **pkey)
-{
-  	OSSL_PARAM_BLD *param_bld = NULL;
-  	EVP_PKEY_CTX *ctx = NULL;
-  	const BIGNUM *p = NULL, *q = NULL, *g = NULL, *pub = NULL, *priv = NULL;
-  	int ret = 0;
-
-  	if (k == NULL)
-  		return SSH_ERR_INVALID_ARGUMENT;
-  	if ((ctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL)) == NULL ||
-  	    (param_bld = OSSL_PARAM_BLD_new()) == NULL) {
-  		ret = SSH_ERR_ALLOC_FAIL;
-  	  	goto out;
-  	}
-
-  	DSA_get0_pqg(k->dsa, &p, &q, &g);
-  	DSA_get0_key(k->dsa, &pub, &priv);
-
-  	if (p != NULL &&
-  	    OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_P, p) != 1) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-  	if (q != NULL &&
-  	    OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_Q, q) != 1) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-  	if (g != NULL &&
-  	    OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_G, g) != 1) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-  	if (pub != NULL &&
-  	    OSSL_PARAM_BLD_push_BN(param_bld,
-	        OSSL_PKEY_PARAM_PUB_KEY,
-	        pub) != 1) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-  	if (priv != NULL &&
-  	    OSSL_PARAM_BLD_push_BN(param_bld,
-	        OSSL_PKEY_PARAM_PRIV_KEY,
-	        priv) != 1) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-  	if ((*pkey = sshkey_create_evp(param_bld, ctx)) == NULL) {
-  		ret = SSH_ERR_LIBCRYPTO_ERROR;
-  		goto out;
-  	}
-
-out:
-  	OSSL_PARAM_BLD_free(param_bld);
-  	EVP_PKEY_CTX_free(ctx);
-  	return ret;
-}
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 static const struct sshkey_impl_funcs sshkey_dss_funcs = {
 	/* .size = */		ssh_dss_size,
@@ -697,4 +453,5 @@ const struct sshkey_impl sshkey_dsa_cert_impl = {
 	/* .keybits = */	0,
 	/* .funcs = */		&sshkey_dss_funcs,
 };
-#endif /* WITH_OPENSSL */
+
+#endif /* WITH_OPENSSL && WITH_DSA */

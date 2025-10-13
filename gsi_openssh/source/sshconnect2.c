@@ -1,4 +1,4 @@
-/* $OpenBSD: sshconnect2.c,v 1.366 2023/03/09 07:11:05 dtucker Exp $ */
+/* $OpenBSD: sshconnect2.c,v 1.375 2024/09/09 02:39:57 djm Exp $ */
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
  * Copyright (c) 2008 Damien Miller.  All rights reserved.
@@ -77,7 +77,7 @@
 #include "utf8.h"
 #include "ssh-sk.h"
 #include "sk-api.h"
-#include "myproposal.h"
+#include "cipher-switch.h"
 
 #ifdef GSSAPI
 #include "ssh-gss.h"
@@ -110,7 +110,7 @@ verify_host_key_callback(struct sshkey *hostkey, struct ssh *ssh)
 	    options.required_rsa_size)) != 0)
 		fatal_r(r, "Bad server host key");
 	if (verify_host_key(xxx_host, xxx_hostaddr, hostkey,
-	    xxx_conn_info) == -1)
+	    xxx_conn_info) != 0)
 		fatal("Host key verification failed.");
 	return 0;
 }
@@ -149,7 +149,7 @@ order_hostkeyalgs(char *host, struct sockaddr *hostaddr, u_short port,
 	}
 	if (options.known_hosts_command != NULL) {
 		load_hostkeys_command(hostkeys, options.known_hosts_command,
-		    "ORDER", cinfo, NULL, host);
+		    "ORDER", cinfo, NULL, hostname);
 	}
 	/*
 	 * If a plain public key exists that matches the type of the best
@@ -225,22 +225,18 @@ order_hostkeyalgs(char *host, struct sockaddr *hostaddr, u_short port,
 	return ret;
 }
 
-static char *myproposal[PROPOSAL_MAX];
-static const char *myproposal_default[PROPOSAL_MAX] = { KEX_CLIENT };
 void
 ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
     const struct ssh_conn_info *cinfo)
 {
 	char *myproposal[PROPOSAL_MAX];
-	char *s, *all_key, *hkalgs = NULL, *filtered_algs = NULL;
+	char *all_key, *hkalgs = NULL, *filtered_algs = NULL;
 	int r, use_known_hosts_order = 0;
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
 	char *orig = NULL, *gss = NULL;
 	char *gss_host = NULL;
 #endif
-
-	memcpy(&myproposal, &myproposal_default, sizeof(myproposal));
 
 	xxx_host = host;
 	xxx_hostaddr = hostaddr;
@@ -267,9 +263,6 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 		fatal_fr(r, "kex_assemble_namelist");
 	free(all_key);
 
-	if ((s = kex_names_cat(options.kex_algorithms, "ext-info-c")) == NULL)
-		fatal_f("kex_names_cat");
-
 	if (use_known_hosts_order)
 		hkalgs = order_hostkeyalgs(host, hostaddr, port, cinfo);
 
@@ -285,8 +278,9 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 			        options.hostkeyalgorithms, options.pubkey_accepted_algos);
 	}
 
-	kex_proposal_populate_entries(ssh, myproposal, s, options.ciphers,
-	    options.macs, compression_alg_list(options.compression),
+	kex_proposal_populate_entries(ssh, myproposal,
+	    options.kex_algorithms, options.ciphers, options.macs,
+	    compression_alg_list(options.compression),
 	    filtered_algs);
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
@@ -361,6 +355,7 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 #endif /* WITH_OPENSSL */
 	ssh->kex->kex[KEX_C25519_SHA256] = kex_gen_client;
 	ssh->kex->kex[KEX_KEM_SNTRUP761X25519_SHA512] = kex_gen_client;
+	ssh->kex->kex[KEX_KEM_MLKEM768X25519_SHA256] = kex_gen_client;
 	ssh->kex->verify_host_key=&verify_host_key_callback;
 
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
@@ -373,11 +368,8 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 #endif
 
 	ssh_dispatch_run_fatal(ssh, DISPATCH_BLOCK, &ssh->kex->done);
+	kex_proposal_free_entries(myproposal);
 
-	/* remove ext-info from the KEX proposals for rekeying */
-	free(myproposal[PROPOSAL_KEX_ALGS]);
-	myproposal[PROPOSAL_KEX_ALGS] =
-	    compat_kex_proposal(ssh, options.kex_algorithms);
 #if defined(GSSAPI) && defined(WITH_OPENSSL)
 	/* repair myproposal after it was crumpled by the */
 	/* ext-info removal above */
@@ -388,9 +380,6 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 		free(gss);
 	}
 #endif
-	if ((r = kex_prop2buf(ssh->kex->my, myproposal)) != 0)
-		fatal_r(r, "kex_prop2buf");
-
 #ifdef DEBUG_KEXDH
 	/* send 1st encrypted/maced/compressed message */
 	if ((r = sshpkt_start(ssh, SSH2_MSG_IGNORE)) != 0 ||
@@ -399,7 +388,6 @@ ssh_kex2(struct ssh *ssh, char *host, struct sockaddr *hostaddr, u_short port,
 	    (r = ssh_packet_write_wait(ssh)) != 0)
 		fatal_fr(r, "send packet");
 #endif
-	kex_proposal_free_entries(myproposal);
 }
 
 /*
@@ -460,7 +448,6 @@ struct cauthmethod {
 };
 
 static int input_userauth_service_accept(int, u_int32_t, struct ssh *);
-static int input_userauth_ext_info(int, u_int32_t, struct ssh *);
 static int input_userauth_success(int, u_int32_t, struct ssh *);
 static int input_userauth_failure(int, u_int32_t, struct ssh *);
 static int input_userauth_banner(int, u_int32_t, struct ssh *);
@@ -568,10 +555,8 @@ ssh_userauth2(struct ssh *ssh, const char *local_user,
 	authctxt.mech_tried = 0;
 #endif
 	authctxt.agent_fd = -1;
-	pubkey_prepare(ssh, &authctxt);
-	if (authctxt.method == NULL) {
+	if (authctxt.method == NULL)
 		fatal_f("internal error: cannot send userauth none request");
-	}
 
 	if ((r = sshpkt_start(ssh, SSH2_MSG_SERVICE_REQUEST)) != 0 ||
 	    (r = sshpkt_put_cstring(ssh, "ssh-userauth")) != 0 ||
@@ -580,10 +565,18 @@ ssh_userauth2(struct ssh *ssh, const char *local_user,
 
 	ssh->authctxt = &authctxt;
 	ssh_dispatch_init(ssh, &input_userauth_error);
-	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, &input_userauth_ext_info);
+	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, kex_input_ext_info);
 	ssh_dispatch_set(ssh, SSH2_MSG_SERVICE_ACCEPT, &input_userauth_service_accept);
 	ssh_dispatch_run_fatal(ssh, DISPATCH_BLOCK, &authctxt.success);	/* loop until success */
 	pubkey_cleanup(ssh);
+#ifdef GSSAPI
+	if (authctxt.gss_supported_mechs != NULL) {
+		u_int ms;
+
+		gss_release_oid_set(&ms, &authctxt.gss_supported_mechs);
+		authctxt.gss_supported_mechs = NULL;
+	}
+#endif
 	ssh->authctxt = NULL;
 
 	ssh_dispatch_range(ssh, SSH2_MSG_USERAUTH_MIN, SSH2_MSG_USERAUTH_MAX, NULL);
@@ -597,16 +590,24 @@ ssh_userauth2(struct ssh *ssh, const char *local_user,
 	 * must be true and there must be no tty allocated.
 	 */
 	if (options.none_switch == 1 && options.none_enabled == 1) {
+		char *myproposal[PROPOSAL_MAX];
+		char *s = NULL;
+		const char *none_cipher = "none";
 		if (!tty_flag) { /* no null on tty sessions */
 			debug("Requesting none rekeying...");
-			memcpy(&myproposal, &myproposal_default, sizeof(myproposal));
-			myproposal[PROPOSAL_ENC_ALGS_STOC] = "none";
-			myproposal[PROPOSAL_ENC_ALGS_CTOS] = "none";
+			kex_proposal_populate_entries(ssh, myproposal, s, none_cipher,
+						      options.macs,
+						      compression_alg_list(options.compression),
+						      options.hostkeyalgorithms);
 			fprintf(stderr, "WARNING: ENABLED NONE CIPHER!!!\n");
+
 			/* NONEMAC can only be used in context of the NONE CIPHER */
 			if (options.nonemac_enabled == 1) {
-				myproposal[PROPOSAL_MAC_ALGS_STOC] = "none";
-				myproposal[PROPOSAL_MAC_ALGS_CTOS] = "none";
+				const char *none_mac = "none";
+				kex_proposal_populate_entries(ssh, myproposal, s, none_cipher,
+							      none_mac,
+							      compression_alg_list(options.compression),
+							      options.hostkeyalgorithms);
 				fprintf(stderr, "WARNING: ENABLED NONE MAC\n");
 			}
 			kex_prop2buf(ssh->kex->my, myproposal);
@@ -617,25 +618,6 @@ ssh_userauth2(struct ssh *ssh, const char *local_user,
 			fprintf(stderr, "NONE cipher switch disabled when a TTY is allocated\n");
 		}
 	}
-
-#ifdef WITH_OPENSSL
-	if (options.disable_multithreaded == 0) {
-		/* if we are using aes-ctr there can be issues in either a fork or sandbox
-		 * so the initial aes-ctr is defined to point to the original single process
-		 * evp. After authentication we'll be past the fork and the sandboxed privsep
-		 * so we repoint the define to the multithreaded evp. To start the threads we
-		 * then force a rekey
-		 */
-		const void *cc = ssh_packet_get_send_context(ssh);
-
-		/* only do this for the ctr cipher. otherwise gcm mode breaks. Don't know why though */
-		if (strstr(cipher_ctx_name(cc), "ctr")) {
-			debug("Single to Multithread CTR cipher swap - client request");
-			cipher_reset_multithreaded();
-			packet_request_rekeying();
-		}
-	}
-#endif
 
 	if (ssh_packet_connection_is_on_socket(ssh)) {
 		verbose("Authenticated to %s ([%s]:%d) using \"%s\".", host,
@@ -669,19 +651,15 @@ input_userauth_service_accept(int type, u_int32_t seq, struct ssh *ssh)
 	/* initial userauth request */
 	userauth_none(ssh);
 
-	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, &input_userauth_error);
+	/* accept EXT_INFO at any time during userauth */
+	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, ssh->kex->ext_info_s ?
+	    &kex_input_ext_info : &input_userauth_error);
 	ssh_dispatch_set(ssh, SSH2_MSG_USERAUTH_SUCCESS, &input_userauth_success);
 	ssh_dispatch_set(ssh, SSH2_MSG_USERAUTH_FAILURE, &input_userauth_failure);
 	ssh_dispatch_set(ssh, SSH2_MSG_USERAUTH_BANNER, &input_userauth_banner);
 	r = 0;
  out:
 	return r;
-}
-
-static int
-input_userauth_ext_info(int type, u_int32_t seqnr, struct ssh *ssh)
-{
-	return kex_input_ext_info(type, seqnr, ssh);
 }
 
 void
@@ -762,6 +740,7 @@ input_userauth_success(int type, u_int32_t seq, struct ssh *ssh)
 	free(authctxt->methoddata);
 	authctxt->methoddata = NULL;
 	authctxt->success = 1;			/* break out */
+	ssh_dispatch_set(ssh, SSH2_MSG_EXT_INFO, dispatch_protocol_error);
 	return 0;
 }
 
@@ -862,6 +841,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
 
 	if ((pktype = sshkey_type_from_name(pkalg)) == KEY_UNSPEC) {
 		debug_f("server sent unknown pkalg %s", pkalg);
+		r = SSH_ERR_INVALID_FORMAT;
 		goto done;
 	}
 	if ((r = sshkey_from_blob(pkblob, blen, &key)) != 0) {
@@ -872,6 +852,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
 		error("input_userauth_pk_ok: type mismatch "
 		    "for decoded key (received %d, expected %d)",
 		    key->type, pktype);
+		r = SSH_ERR_INVALID_FORMAT;
 		goto done;
 	}
 
@@ -891,6 +872,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
 		    SSH_FP_DEFAULT);
 		error_f("server replied with unknown key: %s %s",
 		    sshkey_type(key), fp == NULL ? "<ERROR>" : fp);
+		r = SSH_ERR_INVALID_FORMAT;
 		goto done;
 	}
 	ident = format_identity(id);
@@ -1002,9 +984,6 @@ userauth_gssapi_cleanup(struct ssh *ssh)
 
 	ssh_gssapi_delete_ctx(&gssctxt);
 	authctxt->methoddata = NULL;
-
-	free(authctxt->gss_supported_mechs);
-	authctxt->gss_supported_mechs = NULL;
 }
 
 static OM_uint32
@@ -1941,10 +1920,10 @@ pubkey_prepare(struct ssh *ssh, Authctxt *authctxt)
 	struct identity *id, *id2, *tmp;
 	struct idlist agent, files, *preferred;
 	struct sshkey *key;
-	int agent_fd = -1, i, r, found;
+	int disallowed, agent_fd = -1, i, r, found;
 	size_t j;
 	struct ssh_identitylist *idlist;
-	char *ident;
+	char *cp, *ident;
 
 	TAILQ_INIT(&agent);	/* keys from the agent */
 	TAILQ_INIT(&files);	/* keys from the config file */
@@ -2062,16 +2041,30 @@ pubkey_prepare(struct ssh *ssh, Authctxt *authctxt)
 	TAILQ_CONCAT(preferred, &files, next);
 	/* finally, filter by PubkeyAcceptedAlgorithms */
 	TAILQ_FOREACH_SAFE(id, preferred, next, id2) {
-		if (id->key != NULL && !key_type_allowed_by_config(id->key)) {
-			debug("Skipping %s key %s - "
-			    "corresponding algo not in PubkeyAcceptedAlgorithms",
-			    sshkey_ssh_name(id->key), id->filename);
-			TAILQ_REMOVE(preferred, id, next);
-			sshkey_free(id->key);
-			free(id->filename);
-			memset(id, 0, sizeof(*id));
+		disallowed = 0;
+		cp = NULL;
+		if (id->key == NULL)
 			continue;
+		if (!key_type_allowed_by_config(id->key)) {
+			debug("Skipping %s key %s - corresponding algorithm "
+			    "not in PubkeyAcceptedAlgorithms",
+			    sshkey_ssh_name(id->key), id->filename);
+			disallowed = 1;
+		} else if (ssh->kex->server_sig_algs != NULL &&
+		    (cp = key_sig_algorithm(ssh, id->key)) == NULL) {
+			debug("Skipping %s key %s - corresponding algorithm "
+			    "not supported by server",
+			    sshkey_ssh_name(id->key), id->filename);
+			disallowed = 1;
 		}
+		free(cp);
+		if (!disallowed)
+			continue;
+		/* remove key */
+		TAILQ_REMOVE(preferred, id, next);
+		sshkey_free(id->key);
+		free(id->filename);
+		memset(id, 0, sizeof(*id));
 	}
 	/* List the keys we plan on using */
 	TAILQ_FOREACH_SAFE(id, preferred, next, id2) {
@@ -2117,6 +2110,12 @@ userauth_pubkey(struct ssh *ssh)
 	Identity *id;
 	int sent = 0;
 	char *ident;
+	static int prepared;
+
+	if (!prepared) {
+		pubkey_prepare(ssh, authctxt);
+		prepared = 1;
+	}
 
 	while ((id = TAILQ_FIRST(&authctxt->keys))) {
 		if (id->tried++)
@@ -2130,12 +2129,10 @@ userauth_pubkey(struct ssh *ssh)
 		 * private key instead
 		 */
 		if (id->key != NULL) {
-			if (id->key != NULL) {
-				ident = format_identity(id);
-				debug("Offering public key: %s", ident);
-				free(ident);
-				sent = send_pubkey_test(ssh, id);
-			}
+			ident = format_identity(id);
+			debug("Offering public key: %s", ident);
+			free(ident);
+			sent = send_pubkey_test(ssh, id);
 		} else {
 			debug("Trying private key: %s", id->filename);
 			id->key = load_identity_file(id);

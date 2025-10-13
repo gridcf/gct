@@ -26,7 +26,7 @@
 #include "sshbuf.h"
 #include "ssh-pkcs11-uri.h"
 
-#define EMPTY_URI compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL)
+#define EMPTY_URI compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 
 /* prototypes are not public -- specify them here internally for tests */
 struct sshbuf *percent_encode(const char *, size_t, char *);
@@ -59,6 +59,10 @@ compare_uri(struct pkcs11_uri *a, struct pkcs11_uri *b)
 		ASSERT_STRING_EQ(a->lib_manuf, b->lib_manuf);
 	else /* both should be null */
 		ASSERT_PTR_EQ(a->lib_manuf, b->lib_manuf);
+	if (b->serial != NULL)
+		ASSERT_STRING_EQ(a->serial, b->serial);
+	else /* both should be null */
+		ASSERT_PTR_EQ(a->serial, b->serial);
 }
 
 void
@@ -93,7 +97,7 @@ check_parse(char *uri, struct pkcs11_uri *expect)
 
 struct pkcs11_uri *
 compose_uri(unsigned char *id, size_t id_len, char *token, char *lib_manuf,
-    char *manuf, char *module_path, char *object, char *pin)
+    char *manuf, char *serial, char *module_path, char *object, char *pin)
 {
 	struct pkcs11_uri *uri = pkcs11_uri_init();
 	if (id_len > 0) {
@@ -104,6 +108,7 @@ compose_uri(unsigned char *id, size_t id_len, char *token, char *lib_manuf,
 	uri->token = token;
 	uri->lib_manuf = lib_manuf;
 	uri->manuf = manuf;
+	uri->serial = serial;
 	uri->object = object;
 	uri->pin = pin;
 	return uri;
@@ -114,47 +119,49 @@ test_parse_valid(void)
 {
 	/* path arguments */
 	check_parse("pkcs11:id=%01",
-	    compose_uri("\x01", 1, NULL, NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("\x01", 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 	check_parse("pkcs11:id=%00%01",
-	    compose_uri("\x00\x01", 2, NULL, NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("\x00\x01", 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 	check_parse("pkcs11:token=SSH%20Keys",
-	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL, NULL));
 	check_parse("pkcs11:library-manufacturer=OpenSC",
-	    compose_uri(NULL, 0, NULL, "OpenSC", NULL, NULL, NULL, NULL));
+	    compose_uri(NULL, 0, NULL, "OpenSC", NULL, NULL, NULL, NULL, NULL));
 	check_parse("pkcs11:manufacturer=piv_II",
-	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, NULL, NULL));
+	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, NULL, NULL, NULL));
+	check_parse("pkcs11:serial=IamSerial",
+	    compose_uri(NULL, 0, NULL, NULL, NULL, "IamSerial", NULL, NULL, NULL));
 	check_parse("pkcs11:object=SIGN%20Key",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, "SIGN Key", NULL));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, "SIGN Key", NULL));
 	/* query arguments */
 	check_parse("pkcs11:?module-path=/usr/lib64/p11-kit-proxy.so",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
 	check_parse("pkcs11:?pin-value=123456",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, "123456"));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, "123456"));
 
 	/* combinations */
 	/* ID SHOULD be percent encoded */
 	check_parse("pkcs11:token=SSH%20Key;id=0",
-	    compose_uri("0", 1, "SSH Key", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("0", 1, "SSH Key", NULL, NULL, NULL, NULL, NULL, NULL));
 	check_parse(
 	    "pkcs11:manufacturer=CAC?module-path=/usr/lib64/p11-kit-proxy.so",
-	    compose_uri(NULL, 0, NULL, NULL, "CAC",
+	    compose_uri(NULL, 0, NULL, NULL, "CAC", NULL,
 	    "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
 	check_parse(
 	    "pkcs11:object=RSA%20Key?module-path=/usr/lib64/pkcs11/opencryptoki.so",
-	    compose_uri(NULL, 0, NULL, NULL, NULL,
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL,
 	    "/usr/lib64/pkcs11/opencryptoki.so", "RSA Key", NULL));
 	check_parse("pkcs11:?module-path=/usr/lib64/p11-kit-proxy.so&pin-value=123456",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, "123456"));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, "123456"));
 
 	/* empty path component matches everything */
 	check_parse("pkcs11:", EMPTY_URI);
 
 	/* empty string is a valid to match against (and different from NULL) */
 	check_parse("pkcs11:token=",
-	    compose_uri(NULL, 0, "", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri(NULL, 0, "", NULL, NULL, NULL, NULL, NULL, NULL));
 	/* Percent character needs to be percent-encoded */
 	check_parse("pkcs11:token=%25",
-	     compose_uri(NULL, 0, "%", NULL, NULL, NULL, NULL, NULL));
+	     compose_uri(NULL, 0, "%", NULL, NULL, NULL, NULL, NULL, NULL));
 }
 
 static void
@@ -166,7 +173,7 @@ test_parse_invalid(void)
 	check_parse_rv("pkcs11:id=%ZZ", EMPTY_URI, -1);
 	/* Space MUST be percent encoded -- XXX not enforced yet */
 	check_parse("pkcs11:token=SSH Keys",
-	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL, NULL));
 	/* MUST NOT contain duplicate attributes of the same name */
 	check_parse_rv("pkcs11:id=%01;id=%02", EMPTY_URI, -1);
 	/* MUST NOT contain duplicate attributes of the same name */
@@ -197,29 +204,31 @@ test_generate_valid(void)
 {
 	/* path arguments */
 	check_gen("pkcs11:id=%01",
-	    compose_uri("\x01", 1, NULL, NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("\x01", 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 	check_gen("pkcs11:id=%00%01",
-	    compose_uri("\x00\x01", 2, NULL, NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("\x00\x01", 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 	check_gen("pkcs11:token=SSH%20Keys", /* space must be percent encoded */
-	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri(NULL, 0, "SSH Keys", NULL, NULL, NULL, NULL, NULL, NULL));
 	/* library-manufacturer is not implmented now */
 	/*check_gen("pkcs11:library-manufacturer=OpenSC",
-	    compose_uri(NULL, 0, NULL, "OpenSC", NULL, NULL, NULL, NULL));*/
+	    compose_uri(NULL, 0, NULL, "OpenSC", NULL, NULL, NULL, NULL, NULL));*/
 	check_gen("pkcs11:manufacturer=piv_II",
-	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, NULL, NULL));
+	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, NULL, NULL, NULL));
+	check_gen("pkcs11:serial=IamSerial",
+	    compose_uri(NULL, 0, NULL, NULL, NULL, "IamSerial", NULL, NULL, NULL));
 	check_gen("pkcs11:object=RSA%20Key",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, "RSA Key", NULL));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, NULL, "RSA Key", NULL));
 	/* query arguments */
 	check_gen("pkcs11:?module-path=/usr/lib64/p11-kit-proxy.so",
-	    compose_uri(NULL, 0, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
+	    compose_uri(NULL, 0, NULL, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
 
 	/* combinations */
 	check_gen("pkcs11:id=%02;token=SSH%20Keys",
-	    compose_uri("\x02", 1, "SSH Keys", NULL, NULL, NULL, NULL, NULL));
+	    compose_uri("\x02", 1, "SSH Keys", NULL, NULL, NULL, NULL, NULL, NULL));
 	check_gen("pkcs11:id=%EE%02?module-path=/usr/lib64/p11-kit-proxy.so",
-	    compose_uri("\xEE\x02", 2, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
+	    compose_uri("\xEE\x02", 2, NULL, NULL, NULL, NULL, "/usr/lib64/p11-kit-proxy.so", NULL, NULL));
 	check_gen("pkcs11:object=Encryption%20Key;manufacturer=piv_II",
-	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, "Encryption Key", NULL));
+	    compose_uri(NULL, 0, NULL, NULL, "piv_II", NULL, NULL, "Encryption Key", NULL));
 
 	/* empty path component matches everything */
 	check_gen("pkcs11:", EMPTY_URI);

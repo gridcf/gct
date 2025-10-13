@@ -1,4 +1,4 @@
-/* $OpenBSD: auth.c,v 1.160 2023/03/05 05:34:09 dtucker Exp $ */
+/* $OpenBSD: auth.c,v 1.162 2024/09/15 01:18:26 djm Exp $ */
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
  *
@@ -79,7 +79,6 @@
 /* import */
 extern ServerOptions options;
 extern struct include_list includes;
-extern int use_privsep;
 extern struct sshbuf *loginmsg;
 extern struct passwd *privsep_pw;
 extern struct sshauthopt *auth_opts;
@@ -272,7 +271,7 @@ auth_log(struct ssh *ssh, int authenticated, int partial,
 	const char *authmsg;
 	char *extra = NULL;
 
-	if (use_privsep && !mm_is_monitor() && !authctxt->postponed)
+	if (!mm_is_monitor() && !authctxt->postponed)
 		return;
 
 	/* Raise logging level */
@@ -466,6 +465,9 @@ getpwnamallow(struct ssh *ssh, const char *user)
 {
 #ifdef HAVE_LOGIN_CAP
 	extern login_cap_t *lc;
+#ifdef HAVE_AUTH_HOSTOK
+	const char *from_host, *from_ip;
+#endif
 #ifdef BSD_AUTH
 	auth_session_t *as;
 #endif
@@ -474,14 +476,15 @@ getpwnamallow(struct ssh *ssh, const char *user)
 	struct connection_info *ci;
 	u_int i;
 
-	ci = get_connection_info(ssh, 1, options.use_dns);
+	ci = server_get_connection_info(ssh, 1, options.use_dns);
 	ci->user = user;
+	ci->user_invalid = getpwnam(user) == NULL;
 	parse_server_match_config(&options, &includes, ci);
 	log_change_level(options.log_level);
 	log_verbose_reset();
 	for (i = 0; i < options.num_log_verbose; i++)
 		log_verbose_add(options.log_verbose[i]);
-	process_permitopen(ssh, &options);
+	server_process_permitopen(ssh);
 
 #if defined(_AIX) && defined(HAVE_SETAUTHDB)
 	aix_setauthdb(user);
@@ -513,6 +516,21 @@ getpwnamallow(struct ssh *ssh, const char *user)
 		debug("unable to get login class: %s", user);
 		return (NULL);
 	}
+#ifdef HAVE_AUTH_HOSTOK
+	from_host = auth_get_canonical_hostname(ssh, options.use_dns);
+	from_ip = ssh_remote_ipaddr(ssh);
+	if (!auth_hostok(lc, from_host, from_ip)) {
+		debug("Denied connection for %.200s from %.200s [%.200s].",
+		      pw->pw_name, from_host, from_ip);
+		return (NULL);
+	}
+#endif /* HAVE_AUTH_HOSTOK */
+#ifdef HAVE_AUTH_TIMEOK
+	if (!auth_timeok(lc, time(NULL))) {
+		debug("LOGIN %.200s REFUSED (TIME)", pw->pw_name);
+		return (NULL);
+	}
+#endif /* HAVE_AUTH_TIMEOK */
 #ifdef BSD_AUTH
 	if ((as = auth_open()) == NULL || auth_setpwd(as, pw) != 0 ||
 	    auth_approval(as, lc, pw->pw_name, "ssh") <= 0) {
@@ -654,12 +672,10 @@ auth_get_canonical_hostname(struct ssh *ssh, int use_dns)
 
 	if (!use_dns)
 		return ssh_remote_ipaddr(ssh);
-	else if (dnsname != NULL)
+	if (dnsname != NULL)
 		return dnsname;
-	else {
-		dnsname = remote_hostname(ssh);
-		return dnsname;
-	}
+	dnsname = ssh_remote_hostname(ssh);
+	return dnsname;
 }
 
 /* These functions link key/cert options to the auth framework */

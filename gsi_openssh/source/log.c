@@ -1,4 +1,4 @@
-/* $OpenBSD: log.c,v 1.60 2021/09/16 15:11:19 djm Exp $ */
+/* $OpenBSD: log.c,v 1.62 2024/06/27 22:36:44 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -46,11 +46,6 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <errno.h>
-#include "packet.h" /* needed for host and port look ups */
-#ifdef HAVE_SYS_TIME_H
-# include <sys/time.h> /* to get current time */
-#endif
-
 #if defined(HAVE_STRNVIS) && defined(HAVE_VIS_H) && !defined(BROKEN_STRNVIS)
 # include <vis.h>
 #endif
@@ -69,8 +64,6 @@ static char **log_verbose;
 static size_t nlog_verbose;
 
 extern char *__progname;
-
-extern struct ssh *active_state;
 
 #define LOG_SYSLOG_VIS	(VIS_CSTYLE|VIS_NL|VIS_TAB|VIS_OCTAL)
 #define LOG_STDERR_VIS	(VIS_SAFE|VIS_OCTAL)
@@ -462,19 +455,6 @@ sshlogdie(const char *file, const char *func, int line, int showfunc,
 }
 
 void
-sshsigdie(const char *file, const char *func, int line, int showfunc,
-    LogLevel level, const char *suffix, const char *fmt, ...)
-{
-	va_list args;
-
-	va_start(args, fmt);
-	sshlogv(file, func, line, showfunc, SYSLOG_LEVEL_FATAL,
-	    suffix, fmt, args);
-	va_end(args);
-	_exit(1);
-}
-
-void
 sshlogv(const char *file, const char *func, int line, int showfunc,
     LogLevel level, const char *suffix, const char *fmt, va_list args)
 {
@@ -482,6 +462,10 @@ sshlogv(const char *file, const char *func, int line, int showfunc,
 	int forced = 0;
 	const char *cp;
 	size_t i;
+
+	/* short circuit processing early if we're not going to log anything */
+	if (nlog_verbose == 0 && level > log_level)
+		return;
 
 	snprintf(tag, sizeof(tag), "%.48s:%.48s():%d (pid=%ld)",
 	    (cp = strrchr(file, '/')) == NULL ? file : cp + 1, func, line,

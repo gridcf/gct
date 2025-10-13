@@ -1,4 +1,4 @@
-/* $OpenBSD: cipher.h,v 1.55 2020/01/23 10:24:29 dtucker Exp $ */
+/* $OpenBSD: cipher.h,v 1.56 2023/10/10 06:49:54 tb Exp $ */
 
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
@@ -42,10 +42,16 @@
 #include <openssl/evp.h>
 #endif
 #include "cipher-chachapoly.h"
+#ifdef WITH_OPENSSL
+#include "cipher-chachapoly-libcrypto-mt.h"
+#endif
 #include "cipher-aesctr.h"
 
 #define CIPHER_ENCRYPT		1
 #define CIPHER_DECRYPT		0
+
+#define CIPHER_MULTITHREAD	1
+#define CIPHER_SERIAL		0
 
 struct sshcipher {
 	char	*name;
@@ -60,6 +66,7 @@ struct sshcipher {
 #define CFLAG_NONE		(1<<3)
 #define CFLAG_INTERNAL		CFLAG_NONE /* Don't use "none" for packets */
 #ifdef WITH_OPENSSL
+#define CFLAG_MT		(1<<4)
 	const EVP_CIPHER	*(*evptype)(void);
 #else
 	void	*ignored;
@@ -68,21 +75,20 @@ struct sshcipher {
 
 struct sshcipher_ctx;
 
-void ssh_aes_ctr_thread_destroy(EVP_CIPHER_CTX *ctx); // defined in cipher-ctr-mt.c
-void ssh_aes_ctr_thread_reconstruction(EVP_CIPHER_CTX *ctx);
 struct sshcipher *cipher_by_name(const char *);
 const char *cipher_warning_message(const struct sshcipher_ctx *);
 int	 ciphers_valid(const char *);
 char	*cipher_alg_list(char, int);
 const char *compression_alg_list(int);
 int	 cipher_init(struct sshcipher_ctx **, const struct sshcipher *,
-    const u_char *, u_int, const u_char *, u_int, int);
+    const u_char *, u_int, const u_char *, u_int, u_int, int, int);
 int	 cipher_crypt(struct sshcipher_ctx *, u_int, u_char *, const u_char *,
     u_int, u_int, u_int);
 int	 cipher_get_length(struct sshcipher_ctx *, u_int *, u_int,
     const u_char *, u_int);
 void	 cipher_free(struct sshcipher_ctx *);
 u_int	 cipher_blocksize(const struct sshcipher *);
+uint64_t cipher_rekey_blocks(const struct sshcipher *);
 u_int	 cipher_keylen(const struct sshcipher *);
 u_int	 cipher_seclen(const struct sshcipher *);
 u_int	 cipher_authlen(const struct sshcipher *);
@@ -95,6 +101,5 @@ u_int	 cipher_ctx_is_plaintext(struct sshcipher_ctx *);
 
 int	 cipher_get_keyiv(struct sshcipher_ctx *, u_char *, size_t);
 int	 cipher_set_keyiv(struct sshcipher_ctx *, const u_char *, size_t);
-int	 cipher_get_keyiv_len(const struct sshcipher_ctx *);
 
 #endif				/* CIPHER_H */

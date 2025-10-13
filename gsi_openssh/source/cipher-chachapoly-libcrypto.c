@@ -1,3 +1,4 @@
+/* $OpenBSD: cipher-chachapoly-libcrypto.c,v 1.2 2023/07/17 05:26:38 djm Exp $ */
 /*
  * Copyright (c) 2013 Damien Miller <djm@mindrot.org>
  *
@@ -13,8 +14,6 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
-/* $OpenBSD: cipher-chachapoly-libcrypto.c,v 1.1 2020/04/03 04:32:21 djm Exp $ */
 
 #include "includes.h"
 #ifdef WITH_OPENSSL
@@ -35,8 +34,17 @@
 #include "ssherr.h"
 #include "cipher-chachapoly.h"
 
+/* using the EVP_MAC interface for poly1305 is significantly
+ * faster than the version bundled with OpenSSH. However,
+ * this interface is only available in OpenSSL 3.0+
+ * -cjr 10/21/2022 */
 struct chachapoly_ctx {
 	EVP_CIPHER_CTX *main_evp, *header_evp;
+#ifdef OPENSSL_HAVE_POLY_EVP
+	EVP_MAC_CTX    *poly_ctx;
+#else
+	char           *poly_ctx;
+#endif
 };
 
 struct chachapoly_ctx *
@@ -57,6 +65,15 @@ chachapoly_new(const u_char *key, u_int keylen)
 		goto fail;
 	if (EVP_CIPHER_CTX_iv_length(ctx->header_evp) != 16)
 		goto fail;
+#ifdef OPENSSL_HAVE_POLY_EVP
+	EVP_MAC *mac = NULL;
+	if ((mac = EVP_MAC_fetch(NULL, "POLY1305", NULL)) == NULL)
+		goto fail;
+	if ((ctx->poly_ctx = EVP_MAC_CTX_new(mac)) == NULL)
+		goto fail;
+#else
+	ctx->poly_ctx = NULL;
+#endif
 	return ctx;
  fail:
 	chachapoly_free(ctx);
@@ -70,6 +87,9 @@ chachapoly_free(struct chachapoly_ctx *cpctx)
 		return;
 	EVP_CIPHER_CTX_free(cpctx->main_evp);
 	EVP_CIPHER_CTX_free(cpctx->header_evp);
+#ifdef OPENSSL_HAVE_POLY_EVP
+	EVP_MAC_CTX_free(cpctx->poly_ctx);
+#endif
 	freezero(cpctx, sizeof(*cpctx));
 }
 
@@ -108,7 +128,7 @@ chachapoly_crypt(struct chachapoly_ctx *ctx, u_int seqnr, u_char *dest,
 	if (!do_encrypt) {
 		const u_char *tag = src + aadlen + len;
 
-		poly1305_auth(expected_tag, src, aadlen + len, poly_key);
+		poly1305_auth(ctx->poly_ctx, expected_tag, src, aadlen + len, poly_key);
 		if (timingsafe_bcmp(expected_tag, tag, POLY1305_TAGLEN) != 0) {
 			r = SSH_ERR_MAC_INVALID;
 			goto out;
@@ -134,7 +154,7 @@ chachapoly_crypt(struct chachapoly_ctx *ctx, u_int seqnr, u_char *dest,
 
 	/* If encrypting, calculate and append tag */
 	if (do_encrypt) {
-		poly1305_auth(dest + aadlen + len, dest, aadlen + len,
+		poly1305_auth(ctx->poly_ctx, dest + aadlen + len, dest, aadlen + len,
 		    poly_key);
 	}
 	r = 0;

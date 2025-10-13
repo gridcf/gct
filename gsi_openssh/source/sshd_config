@@ -18,7 +18,7 @@ Include /etc/ssh/sshd_config.d/*.conf
 # SELinux about this change.
 # semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
 #
-#Port 22
+Port 2222
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::
@@ -92,7 +92,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and KbdInteractiveAuthentication to 'no'.
-# WARNING: 'UsePAM no' is not supported in Fedora and may cause several
+# WARNING: 'UsePAM no' is not supported in this build and may cause several
 # problems.
 #UsePAM no
 
@@ -134,20 +134,11 @@ Subsystem	sftp	/usr/libexec/sftp-server
 # disable hpn performance boosts
 #HPNDisabled no
 
-# buffer size for hpn to non-hpn connections
-#HPNBufferSize 2048
-
 # allow the use of the none cipher
 #NoneEnabled no
 
 # allow the use of the none MAC
 #NoneMacEnabled no
-
-# Disable MT-AES-CTR cipher on server
-# * needed for GSI-OpenSSH 7.4p1 because it's broken on the server side there
-# * useful for modern processors with AES-NI instructions making the stock
-#   AES-CTR cipher faster than the MT-AES-CTR cipher
-DisableMTAES yes
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs

@@ -95,7 +95,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	EVP_PKEY_CTX *ctx = NULL;
 	u_char *kbuf = NULL;
 	size_t klen = 0;
-	int kout, r = 0;
+	int r = 0;
 
 #ifdef DEBUG_KEXDH
 	fprintf(stderr, "dh_pub= ");
@@ -166,7 +166,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	return r;
 }
 # else
-/* Original function in OpenSSH Portable 9.3p1 */
+/* Original function in OpenSSH Portable 9.9p1 */
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 {

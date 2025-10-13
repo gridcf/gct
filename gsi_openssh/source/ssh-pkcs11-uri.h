@@ -29,6 +29,7 @@ struct pkcs11_uri {
 	char *object;
 	char *lib_manuf;
 	char *manuf;
+	char *serial;
 	/* query */
 	char *module_path;
 	char *pin; /* Only parsed, but not printed */

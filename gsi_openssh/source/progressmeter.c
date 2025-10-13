@@ -1,4 +1,4 @@
-/* $OpenBSD: progressmeter.c,v 1.52 2023/03/08 04:43:12 guenther Exp $ */
+/* $OpenBSD: progressmeter.c,v 1.53 2023/04/12 14:22:04 jsg Exp $ */
 /*
  * Copyright (c) 2003 Nils Nordman.  All rights reserved.
  *
@@ -31,7 +31,6 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <signal.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -178,7 +177,6 @@ refresh_progress_meter(int force_update)
 		bytes_per_second = cur_speed;
 
 	last_update = now;
-	last_pos = cur_pos;
 
 	/* Don't bother if we can't even display the completion percentage */
 	if (win_size < 4)
@@ -204,9 +202,9 @@ refresh_progress_meter(int force_update)
 
 	/* instantaneous rate */
 	if (bytes_left > 0)
-		xextendf(&buf, NULL, "%s/s ", format_rate(delta_pos));
+		xextendf(&buf, NULL, "%s/s", format_rate((off_t)delta_pos));
 	else
-		xextendf(&buf, NULL, "%s/s ", format_rate(max_delta_pos));
+		xextendf(&buf, NULL, "%s/s", format_rate((off_t)max_delta_pos));
 
 	/* ETA */
 	if (!transferred)
@@ -250,6 +248,7 @@ refresh_progress_meter(int force_update)
 	}
 	free(buf);
 	free(obuf);
+	last_pos = cur_pos;
 }
 
 static void

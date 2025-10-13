@@ -1,7 +1,7 @@
-/* $OpenBSD: gss-genr.c,v 1.28 2021/01/27 10:05:28 djm Exp $ */
+/* $OpenBSD: gss-genr.c,v 1.29 2024/02/01 02:37:33 djm Exp $ */
 
 /*
- * Copyright (c) 2001-2009 Simon Wilkinson. All rights reserved.
+ * Copyright (c) 2001-2007 Simon Wilkinson. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -171,7 +171,7 @@ ssh_gssapi_kex_mechs(gss_OID_set gss_supported, ssh_gssapi_check_fn *check,
 			    ssh_digest_bytes(SSH_DIGEST_MD5) * 2);
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 			cp = strncpy(s, kex, strlen(kex));
-#pragma pop
+#pragma GCC diagnostic pop
 			for ((p = strsep(&cp, ",")); p && *p != '\0';
 				(p = strsep(&cp, ","))) {
 				if (sshbuf_len(buf) != 0 &&
@@ -347,6 +347,7 @@ ssh_gssapi_build_ctx(Gssctxt **ctx)
 	(*ctx)->creds = GSS_C_NO_CREDENTIAL;
 	(*ctx)->client = GSS_C_NO_NAME;
 	(*ctx)->client_creds = GSS_C_NO_CREDENTIAL;
+	(*ctx)->first = 1;
 }
 
 /* Delete our context, providing it has been built correctly */
@@ -372,6 +373,12 @@ ssh_gssapi_delete_ctx(Gssctxt **ctx)
 		gss_release_name(&ms, &(*ctx)->client);
 	if ((*ctx)->client_creds != GSS_C_NO_CREDENTIAL)
 		gss_release_cred(&ms, &(*ctx)->client_creds);
+	sshbuf_free((*ctx)->shared_secret);
+	sshbuf_free((*ctx)->server_pubkey);
+	sshbuf_free((*ctx)->server_host_key_blob);
+	sshbuf_free((*ctx)->server_blob);
+	explicit_bzero((*ctx)->hash, sizeof((*ctx)->hash));
+	BN_clear_free((*ctx)->dh_client_pub);
 
 	free(*ctx);
 	*ctx = NULL;
@@ -519,7 +526,7 @@ ssh_gssapi_check_mechanism(Gssctxt **ctx, gss_OID oid, const char *host,
 		ctx = &intctx;
 
 	/* RFC 4462 says we MUST NOT do SPNEGO */
-	if (oid->length == spnego_oid.length && 
+	if (oid->length == spnego_oid.length &&
 	    (memcmp(oid->elements, spnego_oid.elements, oid->length) == 0))
 		return 0; /* false */
 
@@ -531,7 +538,7 @@ ssh_gssapi_check_mechanism(Gssctxt **ctx, gss_OID oid, const char *host,
 		major = ssh_gssapi_client_identity(*ctx, client);
 
 	if (!GSS_ERROR(major)) {
-		major = ssh_gssapi_init_ctx(*ctx, 0, GSS_C_NO_BUFFER, &token, 
+		major = ssh_gssapi_init_ctx(*ctx, 0, GSS_C_NO_BUFFER, &token,
 		    NULL);
 		gss_release_buffer(&minor, &token);
 		if ((*ctx)->context != GSS_C_NO_CONTEXT)
