@@ -1,4 +1,4 @@
-name: Build/Test/Deploy
+name: Build/Test/Deploy arm64
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   run-scripts:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     strategy:
       # Don't cancel the remaining running jobs if some job(s) fail(s)
       fail-fast: false
@@ -47,7 +47,7 @@ jobs:
           TASK: tests
           COMPONENTS: ${{ matrix.components }}
         run: travis-ci/setup_tasks.sh
-        
+
       - name: build source tarballs and srpms
         # Run this step for all OS cases but for only one component selection each,
         # it still builds **all** source tarballs and SRPMs
@@ -57,21 +57,3 @@ jobs:
           IMAGE: ${{ matrix.image }}
           TASK: srpms
         run: travis-ci/setup_tasks.sh
-      
-      # SSH key recipe from https://www.webfactory.de/blog/use-ssh-key-for-private-repositories-in-github-actions
-      - name: Establish ssh and upload source tarballs
-        # Only run this step for the rockylinux:8 case and
-        # for only one component selection (must be the same as for the previous step!) and
-        # only when a tag was created
-        if: |
-          contains(matrix.image , 'rockylinux:8') &&
-          contains(matrix.components , 'gram5') &&
-          contains(github.ref , 'refs/tags/')
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
-          ssh-add - <<< "${{ secrets.ID_GRIDCF_UPLOADER }}"
-          travis-ci/upload_source_tarballs.sh ${{ github.repository_owner }}
