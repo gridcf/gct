@@ -24,9 +24,17 @@ jobs:
             components: 'myproxy,ssh'
           - image: 'quay.io/centos/centos:stream9'
             components: 'gram5'
+          - image: 'quay.io/centos/centos:stream10'
+            components: 'myproxy,ssh'
+          - image: 'quay.io/centos/centos:stream10'
+            components: 'gram5'
           - image: 'rockylinux:9'
             components: 'myproxy,ssh'
           - image: 'rockylinux:9'
+            components: 'gram5'
+          - image: 'rockylinux/rockylinux:10'
+            components: 'myproxy,ssh'
+          - image: 'rockylinux/rockylinux:10'
             components: 'gram5'
     steps:
       - uses: actions/checkout@v3

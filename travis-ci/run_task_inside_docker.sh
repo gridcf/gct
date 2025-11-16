@@ -16,6 +16,12 @@ case $(</etc/redhat-release) in
         release_ver=el9
         ;;
 
+    CentOS\ Stream*\ 10*)
+
+        OS=centos-stream-10
+        release_ver=el10
+        ;;
+
     Rocky\ Linux*\ 8*)
 
         OS=rockylinux8
@@ -26,6 +32,12 @@ case $(</etc/redhat-release) in
 
         OS=rockylinux9
         release_ver=el9
+        ;;
+
+    Rocky\ Linux*\ 10*)
+
+        OS=rockylinux10
+        release_ver=el10
         ;;
 
     *) OS=unknown ;;
@@ -44,12 +56,24 @@ case $OS in
               dnf config-manager --set-enabled crb
               dnf -y install epel-release
               ;;
+    rockylinux10)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled crb
+              dnf -y install epel-release
+              ;;
     centos-stream-9)
               dnf -y install dnf-plugins-core
               dnf config-manager --set-enabled crb
               dnf -y install \
                 https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
                 https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+              ;;
+    centos-stream-10)
+              dnf -y install dnf-plugins-core
+              dnf config-manager --set-enabled crb
+              dnf -y install \
+                https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
+              ;;
 esac
 
 # Clean the yum cache
@@ -63,7 +87,7 @@ packages=(gcc gcc-c++ make autoconf automake libtool \
 
 # provides `cmp` used by `packaging/git-dirt-filter`
 packages+=(diffutils)
-if [[ $OS == *9 ]]; then
+if [[ $OS == *9 || $OS == *10 ]]; then
 
 	# also install "zlib zlib-devel" because it's needed for `configure`ing
 	# "gridftp/server/src"
@@ -105,7 +129,7 @@ elif [[ $TASK == *rpms ]]; then
     # for globus-gram-audit:
     packages+=('perl(DBI)')
     # for globus-scheduler-event-generator:
-    if [[ $OS == *9 ]]; then
+    if [[ $OS == *9 || $OS == *10 ]]; then
 
         # redhat-lsb-core is not available for CentOS Stream 9 / Rocky Linux 9.
         # But the default is also to not use LSB, so can be ignored.
