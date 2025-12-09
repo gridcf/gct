@@ -132,43 +132,43 @@ extern const struct sshkey_impl sshkey_xmss_impl;
 extern const struct sshkey_impl sshkey_xmss_cert_impl;
 #endif
 
-static int ssh_gss_equal(const struct sshkey *, const struct sshkey *)
+static int ssh_gss_equal(const struct sshkey * arg1, const struct sshkey * arg2)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_serialize_public(const struct sshkey *, struct sshbuf *,
-	enum sshkey_serialize_rep)
+static int ssh_gss_serialize_public(const struct sshkey * arg1, struct sshbuf * arg2,
+	enum sshkey_serialize_rep arg3)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_deserialize_public(const char *, struct sshbuf *,
-	     struct sshkey *)
+static int ssh_gss_deserialize_public(const char * arg1, struct sshbuf * arg2,
+	     struct sshkey * arg3)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_serialize_private(const struct sshkey *, struct sshbuf *,
-	     enum sshkey_serialize_rep)
+static int ssh_gss_serialize_private(const struct sshkey * arg1, struct sshbuf * arg2,
+	     enum sshkey_serialize_rep arg3)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_deserialize_private(const char *, struct sshbuf *,
-	     struct sshkey *)
+static int ssh_gss_deserialize_private(const char * arg1, struct sshbuf * arg2,
+	     struct sshkey * arg3)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_copy_public(const struct sshkey *, struct sshkey *)
+static int ssh_gss_copy_public(const struct sshkey * arg1, struct sshkey * arg2)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
 
-static int ssh_gss_verify(const struct sshkey *, const u_char *, size_t,
-	    const u_char *, size_t, const char *, u_int,
-	    struct sshkey_sig_details **)
+static int ssh_gss_verify(const struct sshkey * arg1, const u_char * arg2, size_t arg3,
+	    const u_char * arg4, size_t arg5, const char * arg6, u_int arg7,
+	    struct sshkey_sig_details ** arg8)
 {
 	return SSH_ERR_FEATURE_UNSUPPORTED;
 }
