@@ -11,5 +11,8 @@ Match final all
 # mode correctly we set this to yes.
 	ForwardX11Trusted yes
 
+# rhbz#2352653 - export COLORTERM
+	SendEnv COLORTERM
+
 # Uncomment this if you want to use .local domain
 # Host *.local

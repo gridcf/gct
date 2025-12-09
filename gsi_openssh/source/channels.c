@@ -1,4 +1,4 @@
-/* $OpenBSD: channels.c,v 1.439 2024/07/25 22:40:08 djm Exp $ */
+/* $OpenBSD: channels.c,v 1.442 2024/12/05 06:49:26 dtucker Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -94,8 +94,10 @@
 #define	NUM_SOCKS	10
 
 /* -- X11 forwarding */
-/* Minimum port number for X11 forwarding */
-#define X11_PORT_MIN 6000
+/* X11 port for display :0 */
+#define X11_BASE_PORT	6000
+/* Maximum number of fake X11 displays to try. */
+#define MAX_DISPLAYS  1000
 
 /* in version of OpenSSH later than 8.8 if we advertise a window
  * 16MB or larger is causes a pathological behaviour that reduces
@@ -5060,13 +5062,13 @@ x11_create_display_inet(struct ssh *ssh, int x11_display_offset,
     u_int *display_numberp, int **chanids)
 {
 	Channel *nc = NULL;
-	int display_number, sock;
-	u_short port;
+	int display_number, sock, port;
 	struct addrinfo hints, *ai, *aitop;
 	char strport[NI_MAXSERV];
 	int gaierr, n, num_socks = 0, socks[NUM_SOCKS];
 
-	if (chanids == NULL)
+	if (chanids == NULL || x11_display_offset < 0 ||
+	    x11_display_offset > UINT16_MAX - X11_BASE_PORT - MAX_DISPLAYS)
 		return -1;
 
 	/* Try to bind ports starting at 6000+X11DisplayOffset */
@@ -5075,9 +5077,7 @@ x11_create_display_inet(struct ssh *ssh, int x11_display_offset,
 	for (display_number = x11_display_offset;
 	    display_number < x11_max_displays;
 	    display_number++) {
-		port = X11_PORT_MIN + display_number;
-		if (port < X11_PORT_MIN) /* overflow */
-			break;
+		port = X11_BASE_PORT + display_number;
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = ssh->chanctxt->IPv4or6;
 		hints.ai_flags = x11_use_localhost ? 0: AI_PASSIVE;
@@ -5140,7 +5140,7 @@ x11_create_display_inet(struct ssh *ssh, int x11_display_offset,
 		if (num_socks > 0)
 			break;
 	}
-	if (display_number >= x11_max_displays || port < X11_PORT_MIN ) {
+	if (display_number >= x11_max_displays || port < X11_BASE_PORT ) {
 		error("Failed to allocate internet-domain X11 display socket.");
 		return -1;
 	}
@@ -5316,7 +5316,8 @@ x11_connect_display(struct ssh *ssh)
 	 * buf now contains the host name.  But first we parse the
 	 * display number.
 	 */
-	if (sscanf(cp + 1, "%u", &display_number) != 1) {
+	if (sscanf(cp + 1, "%u", &display_number) != 1 ||
+	    display_number > UINT16_MAX - X11_BASE_PORT) {
 		error("Could not parse display number from DISPLAY: %.100s",
 		    display);
 		return -1;
@@ -5326,7 +5327,7 @@ x11_connect_display(struct ssh *ssh)
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = ssh->chanctxt->IPv4or6;
 	hints.ai_socktype = SOCK_STREAM;
-	snprintf(strport, sizeof strport, "%u", X11_PORT_MIN + display_number);
+	snprintf(strport, sizeof strport, "%u", X11_BASE_PORT + display_number);
 	if ((gaierr = getaddrinfo(buf, strport, &hints, &aitop)) != 0) {
 		error("%.100s: unknown host. (%s)", buf,
 		ssh_gai_strerror(gaierr));
@@ -5342,7 +5343,7 @@ x11_connect_display(struct ssh *ssh)
 		/* Connect it to the display. */
 		if (connect(sock, ai->ai_addr, ai->ai_addrlen) == -1) {
 			debug2("connect %.100s port %u: %.100s", buf,
-			    X11_PORT_MIN + display_number, strerror(errno));
+			    X11_BASE_PORT + display_number, strerror(errno));
 			close(sock);
 			continue;
 		}
@@ -5352,7 +5353,7 @@ x11_connect_display(struct ssh *ssh)
 	freeaddrinfo(aitop);
 	if (!ai) {
 		error("connect %.100s port %u: %.100s", buf,
-		    X11_PORT_MIN + display_number, strerror(errno));
+		    X11_BASE_PORT + display_number, strerror(errno));
 		return -1;
 	}
 	set_nodelay(sock);
@@ -5425,4 +5426,23 @@ x11_request_forwarding_with_spoofing(struct ssh *ssh, int client_session_id,
 	    (r = ssh_packet_write_wait(ssh)) != 0)
 		fatal_fr(r, "send x11-req");
 	free(new_data);
+}
+
+/*
+ * Returns whether an x11 channel was used recently (less than a second ago)
+ */
+int
+x11_channel_used_recently(struct ssh *ssh) {
+	u_int i;
+	Channel *c;
+	time_t lastused = 0;
+
+	for (i = 0; i < ssh->chanctxt->channels_alloc; i++) {
+		c = ssh->chanctxt->channels[i];
+		if (c == NULL || c->ctype == NULL || c->lastused == 0 ||
+		    strcmp(c->ctype, "x11-connection") != 0)
+			continue;
+		lastused = c->lastused;
+	}
+	return lastused != 0 && monotime() > lastused + 1;
 }

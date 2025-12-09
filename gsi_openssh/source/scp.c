@@ -1,4 +1,4 @@
-/* $OpenBSD: scp.c,v 1.261 2024/06/26 23:14:14 deraadt Exp $ */
+/* $OpenBSD: scp.c,v 1.263 2025/03/28 06:04:07 dtucker Exp $ */
 /*
  * scp - secure remote copy.  This is basically patched BSD rcp which
  * uses ssh to do the data transfer (instead of using rcmd).
@@ -539,6 +539,7 @@ main(int argc, char **argv)
 	addargs(&args, "-oClearAllForwardings=yes");
 	addargs(&args, "-oRemoteCommand=none");
 	addargs(&args, "-oRequestTTY=no");
+	addargs(&args, "-oControlMaster=no");
 
 	fflag = Tflag = tflag = 0;
 	while ((ch = getopt(argc, argv,
@@ -641,8 +642,8 @@ main(int argc, char **argv)
 					errno = EINVAL;
 				}
 				if (r == -1) {
-					fatal("Invalid buffer size. Must be between 1B and 255KB. \"%s\": %s",
-					     optarg + 7, strerror(errno));
+					fatal("Invalid buffer size. Must be between 1B and 255KB."
+					      "\"%s\": %s", optarg + 7, strerror(errno));
 				}
 				sftp_copy_buflen = (size_t)llv;
 			} else if (strncmp(optarg, "nrequests=", 10) == 0) {
@@ -747,10 +748,10 @@ main(int argc, char **argv)
 	(void) snprintf(cmd, sizeof cmd, "%s%s%s%s%s%s",
 	    remote_path ? remote_path : "scp",
 	    verbose_mode ? " -v" : "",
-	    iamrecursive ? " -r" : "", pflag ? " -p" : "",
+	    iamrecursive ? " -r" : "",
+	    pflag ? " -p" : "",
 	    targetshouldbedirectory ? " -d" : "",
 	    resume_flag ? " -Z" : "");
-
 #ifdef DEBUG
 	fprintf(stderr, "%s: Sending cmd %s\n", hostname, cmd);
 #endif
@@ -1148,7 +1149,7 @@ toremote(int argc, char **argv, enum scp_mode_e mode, char *sftp_direct)
 		}
 		if (host && throughlocal) {	/* extended remote to remote */
 			if (mode == MODE_SFTP) {
-				if (remin == -1) {
+				if (remin == -1 || conn == NULL) {
 					/* Connect to dest now */
 					conn = do_sftp_connect(thost, tuser,
 					    tport, sftp_direct,
@@ -1599,12 +1600,12 @@ syserr:			run_err("%s: %s", name, strerror(errno));
 		/* Add a hash of the file along with the filemode if in resume */
 		if (resume_flag)
 			snprintf(buf, sizeof buf, "C%04o %lld %s %s\n",
-				 (u_int) (stb.st_mode & FILEMODEMASK),
-				 (long long)stb.st_size, hashsum, last);
+			    (u_int) (stb.st_mode & FILEMODEMASK),
+			    (long long)stb.st_size, hashsum, last);
 		else
 			snprintf(buf, sizeof buf, "C%04o %lld %s\n",
-				 (u_int) (stb.st_mode & FILEMODEMASK),
-				 (long long)stb.st_size, last);
+			    (u_int) (stb.st_mode & FILEMODEMASK),
+			    (long long)stb.st_size, last);
 
 #ifdef DEBUG
 		fprintf(stderr, "%s: Sending file modes: %s", hostname, buf);
@@ -1959,13 +1960,12 @@ sink(int argc, char **argv, const char *src)
 	np = NULL; /* this was originally '/0' but that's wrong */
 	np_tmp = NULL;
 
-
 #define	atime	tv[0]
 #define	mtime	tv[1]
 #define	SCREWUP(str)	{ why = str; goto screwup; }
 
 #ifdef DEBUG
-       fprintf (stderr, "%s: LOCAL In sink with %s\n", hostname, src);
+	fprintf (stderr, "%s: LOCAL In sink with %s\n", hostname, src);
 #endif
 	if (TYPE_OVERFLOW(time_t, 0) || TYPE_OVERFLOW(off_t, 0))
 		SCREWUP("Unexpected off_t/time_t size");

@@ -54,6 +54,7 @@ enum monitor_reqtype {
 	MONITOR_REQ_GSSUSEROK = 46, MONITOR_ANS_GSSUSEROK = 47,
 	MONITOR_REQ_GSSCHECKMIC = 48, MONITOR_ANS_GSSCHECKMIC = 49,
 	MONITOR_REQ_TERM = 50,
+	MONITOR_REQ_STATE = 51, MONITOR_ANS_STATE = 52,
 
 #ifdef WITH_SELINUX
 	MONITOR_REQ_AUTHROLE = 80,
@@ -91,7 +92,6 @@ struct monitor {
 	int			 m_log_sendfd;
 	struct kex		**m_pkex;
 	pid_t			 m_pid;
-	char		*m_state;
 };
 
 struct monitor *monitor_init(void);
@@ -112,5 +112,7 @@ void mm_get_keystate(struct ssh *, struct monitor *);
 
 /* XXX: should be returned via a monitor call rather than config_fd */
 void mm_encode_server_options(struct sshbuf *);
+
+struct sshbuf *pack_hostkeys(void);
 
 #endif /* _MONITOR_H_ */

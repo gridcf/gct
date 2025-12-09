@@ -184,6 +184,7 @@ typedef struct {
 	char   **allow_groups;
 	u_int num_deny_groups;
 	char   **deny_groups;
+	char   *gss_indicators;
 
 	u_int num_subsystems;
 	char   **subsystem_name;
@@ -226,12 +227,13 @@ typedef struct {
 	char   *pam_service_name;
 	int	permit_pam_user_change;	/* Allow PAM to change user name */
 
+	/* hpnssh options */
 	int	tcp_rcv_buf_poll;	/* poll tcp rcv window in autotuning kernels*/
 	int	hpn_disabled;		/* disable hpn functionality. false by default */
 	int	none_enabled;		/* Enable NONE cipher switch */
 	int     nonemac_enabled;        /* Enable NONE MAC switch */
-	int disable_multithreaded; /* Disable multithreaded aes-ctr cipher */
-
+	int	use_mptcp;		/* Use MPTCP - Linux only */
+	int	disable_multithreaded;	/* Disable multithreaded aes-ctr cipher */
 	int	permit_tun;
 
 	char   **permitted_opens;	/* May also be one of PERMITOPEN_* */
@@ -268,6 +270,7 @@ typedef struct {
 	int	unused_connection_timeout;
 
 	char   *sshd_session_path;
+	char   *sshd_auth_path;
 
 	int	refuse_connection;
 }       ServerOptions;
@@ -319,6 +322,7 @@ TAILQ_HEAD(include_list, include_item);
 		M_CP_STROPT(routing_domain); \
 		M_CP_STROPT(permit_user_env_allowlist); \
 		M_CP_STROPT(pam_service_name); \
+		M_CP_STROPT(gss_indicators); \
 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \
 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \
 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \

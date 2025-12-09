@@ -29,6 +29,7 @@
 #ifdef GSSAPI
 
 #include <sys/types.h>
+#include <sys/param.h>
 
 #include <stdarg.h>
 #include <string.h>
@@ -55,7 +56,7 @@ extern Authctxt *the_authctxt;
 static ssh_gssapi_client gssapi_client =
     { {0, NULL}, GSS_C_EMPTY_BUFFER, GSS_C_EMPTY_BUFFER, GSS_C_NO_CREDENTIAL,
       GSS_C_NO_NAME, GSS_C_NO_NAME, NULL, {NULL, NULL, NULL, NULL, NULL},
-      GSS_C_NO_CONTEXT, 0, 0};
+      GSS_C_NO_CONTEXT, 0, 0, NULL};
 
 ssh_gssapi_mech gssapi_null_mech =
     { NULL, NULL, {0, NULL}, NULL, NULL, NULL, NULL, NULL};
@@ -327,6 +328,94 @@ ssh_gssapi_parse_ename(Gssctxt *ctx, gss_buffer_t ename, gss_buffer_t name)
 	return GSS_S_COMPLETE;
 }
 
+
+#ifdef KRB5
+/* Extract authentication indicators from the Kerberos ticket. Authentication
+ * indicators are GSSAPI name attributes for the name "auth-indicators".
+ * Multiple indicators might be present in the ticket.
+ * Each indicator is a utf8 string. */
+
+#define AUTH_INDICATORS_TAG "auth-indicators"
+
+/* Privileged (called from accept_secure_ctx) */
+static OM_uint32
+ssh_gssapi_getindicators(Gssctxt *ctx, gss_name_t gss_name, ssh_gssapi_client *client)
+{
+	gss_buffer_set_t attrs = GSS_C_NO_BUFFER_SET;
+	gss_buffer_desc value = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc display_value = GSS_C_EMPTY_BUFFER;
+	int is_mechname, authenticated, complete, more;
+	size_t count, i;
+
+	ctx->major = gss_inquire_name(&ctx->minor, gss_name,
+				      &is_mechname, NULL, &attrs);
+	if (ctx->major != GSS_S_COMPLETE) {
+		return (ctx->major);
+	}
+
+	if (attrs == GSS_C_NO_BUFFER_SET) {
+		/* No indicators in the ticket */
+		return (0);
+	}
+
+	count = 0;
+	for (i = 0; i < attrs->count; i++) {
+		/* skip anything but auth-indicators */
+		if (((sizeof(AUTH_INDICATORS_TAG) - 1) != attrs->elements[i].length) ||
+		    strncmp(AUTH_INDICATORS_TAG,
+			    attrs->elements[i].value,
+			    sizeof(AUTH_INDICATORS_TAG) - 1) != 0)
+			continue;
+		count++;
+	}
+
+	if (count == 0) {
+		/* No auth-indicators in the ticket */
+		(void) gss_release_buffer_set(&ctx->minor, &attrs);
+		return (0);
+	}
+
+	client->indicators = recallocarray(NULL, 0, count + 1, sizeof(char*));
+	count = 0;
+	for (i = 0; i < attrs->count; i++) {
+		authenticated = 0;
+		complete = 0;
+		more = -1;
+		/* skip anything but auth-indicators */
+		if (((sizeof(AUTH_INDICATORS_TAG) - 1) != attrs->elements[i].length) ||
+		    strncmp(AUTH_INDICATORS_TAG,
+			    attrs->elements[i].value,
+			    sizeof(AUTH_INDICATORS_TAG) - 1) != 0)
+			continue;
+		/* retrieve all indicators */
+		while (more != 0) {
+			value.value = NULL;
+			display_value.value = NULL;
+			ctx->major = gss_get_name_attribute(&ctx->minor, gss_name,
+					&attrs->elements[i], &authenticated,
+					&complete, &value, &display_value, &more);
+			if (ctx->major != GSS_S_COMPLETE) {
+				goto out;
+			}
+
+			if ((value.value != NULL) && authenticated) {
+				client->indicators[count] = xmalloc(value.length + 1);
+				memcpy(client->indicators[count], value.value, value.length);
+				client->indicators[count][value.length] = '\0';
+				count++;
+			}
+		}
+	}
+
+out:
+	(void) gss_release_buffer(&ctx->minor, &value);
+	(void) gss_release_buffer(&ctx->minor, &display_value);
+	(void) gss_release_buffer_set(&ctx->minor, &attrs);
+	return (ctx->major);
+}
+#endif
+
+
 /* Extract the client details from a given context. This can only reliably
  * be called once for a context */
 
@@ -429,6 +518,14 @@ ssh_gssapi_getclient(Gssctxt *ctx, ssh_gssapi_client *client)
 		return ctx->major;
 
 	gss_release_buffer(&ctx->minor, &ename);
+#ifdef KRB5
+	/* Retrieve authentication indicators, if they exist */
+	if ((ctx->major = ssh_gssapi_getindicators(ctx,
+	    ctx->client, client))) {
+		ssh_gssapi_error(ctx);
+		return (ctx->major);
+	}
+#endif
 
 	/* We can't copy this structure, so we just move the pointer to it */
 	client->creds = ctx->client_creds;
@@ -509,6 +606,7 @@ int
 ssh_gssapi_userok(char *user, struct passwd *pw, int kex)
 {
 	OM_uint32 lmin;
+	size_t i;
 
 	(void) kex; /* used in privilege separation */
 
@@ -530,6 +628,14 @@ ssh_gssapi_userok(char *user, struct passwd *pw, int kex)
 			gss_release_buffer(&lmin, &gssapi_client.exportedname);
 			gss_release_cred(&lmin, &gssapi_client.creds);
 			gss_release_name(&lmin, &gssapi_client.ctx_name);
+
+			if (gssapi_client.indicators != NULL) {
+				for(i = 0; gssapi_client.indicators[i] != NULL; i++) {
+					free(gssapi_client.indicators[i]);
+				}
+				free(gssapi_client.indicators);
+			}
+
 			explicit_bzero(&gssapi_client,
 			    sizeof(ssh_gssapi_client));
 			return 0;
