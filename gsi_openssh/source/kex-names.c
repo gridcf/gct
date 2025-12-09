@@ -108,6 +108,7 @@ static const struct kexalg gss_kexalgs[] = {
 	{ NULL, 0, -1, -1},
 };
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int is_mlkem768_available()
 {
 	static int is_fetched = -1;
@@ -120,6 +121,7 @@ static int is_mlkem768_available()
 
 	return is_fetched;
 }
+# endif
 
 static char *
 kex_alg_list_internal(char sep, const struct kexalg *algs)
@@ -129,9 +131,11 @@ kex_alg_list_internal(char sep, const struct kexalg *algs)
 	const struct kexalg *k;
 
 	for (k = algs; k->name != NULL; k++) {
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 		if (strcmp(k->name, KEX_MLKEM768X25519_SHA256) == 0
 			&& !is_mlkem768_available())
 			continue;
+# endif
 		if (ret != NULL)
 			ret[rlen++] = sep;
 		nlen = strlen(k->name);
@@ -163,9 +167,11 @@ kex_alg_by_name(const char *name)
 {
 	const struct kexalg *k;
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	if (strcmp(name, KEX_MLKEM768X25519_SHA256) == 0
 		&& !is_mlkem768_available())
 	return NULL;
+# endif
 
 	for (k = kexalgs; k->name != NULL; k++) {
 		if (strcmp(k->name, name) == 0)

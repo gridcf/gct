@@ -52,6 +52,7 @@
 #include <openssl/evp.h>
 #include <stdio.h>
 
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 mlkem768_keypair_gen(unsigned char *pubkeybuf, unsigned char *privkeybuf)
 {
@@ -164,11 +165,12 @@ mlkem768_decap_secret(const u_char *privkeybuf, const u_char *wrapped, u_char *s
 
     return r;
 }
+#endif
 
 int
 kex_kem_mlkem768x25519_keypair(struct kex *kex)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *buf = NULL;
 	u_char rnd[LIBCRUX_ML_KEM_KEY_PAIR_PRNG_LEN], *cp = NULL;
 	size_t need;
@@ -203,7 +205,7 @@ kex_kem_mlkem768x25519_keypair(struct kex *kex)
 	explicit_bzero(rnd, sizeof(rnd));
 	sshbuf_free(buf);
 	return r;
-#else
+#else /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 	struct sshbuf *buf = NULL;
 	u_char *cp = NULL;
 	size_t need;
@@ -232,7 +234,7 @@ kex_kem_mlkem768x25519_keypair(struct kex *kex)
  out:
 	sshbuf_free(buf);
 	return r;
-#endif
+#endif /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 }
 
 int
@@ -240,7 +242,7 @@ kex_kem_mlkem768x25519_enc(struct kex *kex,
    const struct sshbuf *client_blob, struct sshbuf **server_blobp,
    struct sshbuf **shared_secretp)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *server_blob = NULL;
 	struct sshbuf *buf = NULL;
 	const u_char *client_pub;
@@ -333,7 +335,7 @@ kex_kem_mlkem768x25519_enc(struct kex *kex,
 	sshbuf_free(server_blob);
 	sshbuf_free(buf);
 	return r;
-#else
+#else /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 	struct sshbuf *server_blob = NULL;
 	struct sshbuf *buf = NULL;
 	const u_char *client_pub;
@@ -416,14 +418,14 @@ kex_kem_mlkem768x25519_enc(struct kex *kex,
 	sshbuf_free(server_blob);
 	sshbuf_free(buf);
 	return r;
-#endif
+#endif /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 }
 
 int
 kex_kem_mlkem768x25519_dec(struct kex *kex,
     const struct sshbuf *server_blob, struct sshbuf **shared_secretp)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *buf = NULL;
 	u_char mlkem_key[crypto_kem_mlkem768_BYTES];
 	const u_char *ciphertext, *server_pub;
@@ -491,7 +493,7 @@ kex_kem_mlkem768x25519_dec(struct kex *kex,
 	explicit_bzero(mlkem_key, sizeof(mlkem_key));
 	sshbuf_free(buf);
 	return r;
-#else
+#else /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 	struct sshbuf *buf = NULL;
 	const u_char *ciphertext, *server_pub;
 	u_char hash[SSH_DIGEST_MAX_LENGTH];
@@ -548,7 +550,7 @@ kex_kem_mlkem768x25519_dec(struct kex *kex,
 	explicit_bzero(decap, sizeof(decap));
 	sshbuf_free(buf);
 	return r;
-#endif
+#endif /* !(OPENSSL_VERSION_NUMBER < 0x30000000L) */
 }
 #else /* USE_MLKEM768X25519 */
 int

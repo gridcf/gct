@@ -38,8 +38,10 @@
 # include <openssl/dh.h>
 # include <openssl/ecdsa.h>
 # include <openssl/evp.h>
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 # include <openssl/core_names.h>
 # include <openssl/param_build.h>
+# endif
 # ifdef OPENSSL_HAS_ECC
 #  include <openssl/ec.h>
 # else /* OPENSSL_HAS_ECC */
@@ -314,9 +316,11 @@ int	kexc25519_shared_key_ext(const u_char key[CURVE25519_SIZE],
     const u_char pub[CURVE25519_SIZE], struct sshbuf *out, int)
 	__attribute__((__bounded__(__minbytes__, 1, CURVE25519_SIZE)))
 	__attribute__((__bounded__(__minbytes__, 2, CURVE25519_SIZE)));
+# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int	kex_create_evp_dh(EVP_PKEY **, const BIGNUM *, const BIGNUM *,
     const BIGNUM *, const BIGNUM *, const BIGNUM *);
 int    kex_create_evp_ec(EC_KEY *k, int ecdsa_nid, EVP_PKEY **pkey);
+# endif
 
 #if defined(DEBUG_KEX) || defined(DEBUG_KEXDH) || defined(DEBUG_KEXECDH)
 void	dump_digest(const char *, const u_char *, int);
