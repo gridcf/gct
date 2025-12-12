@@ -1,4 +1,4 @@
-/* $OpenBSD: session.c,v 1.338 2024/05/17 00:30:24 djm Exp $ */
+/* $OpenBSD: session.c,v 1.341 2025/04/09 07:00:03 djm Exp $ */
 /*
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
  *                    All rights reserved
@@ -1518,7 +1518,7 @@ do_pwchange(Session *s)
 	fprintf(stderr, "WARNING: Your password has expired.\n");
 	if (s->ttyfd != -1) {
 		fprintf(stderr,
-		    "You must change your password now and login again!\n");
+		    "You must change your password now and log in again!\n");
 #ifdef PASSWD_NEEDS_USERNAME
 		execl(_PATH_PASSWD_PROG, "passwd", s->pw->pw_name,
 		    (char *)NULL);
@@ -1578,7 +1578,7 @@ child_destory_sensitive_data(struct ssh *ssh)
 #endif
 
 	/* remove hostkey from the child's memory */
-	destroy_sensitive_data(ssh);
+	/* FIXME beldmit destroy_sensitive_data(ssh); */
 	/*
 	 * We can audit this, because we hacked the pipe to direct the
 	 * messages over postauth child. But this message requires answer
@@ -2259,10 +2259,6 @@ session_signal_req(struct ssh *ssh, Session *s)
 	if (s->forced || s->is_subsystem) {
 		error_f("refusing to send signal %s to %s session",
 		    signame, s->forced ? "forced-command" : "subsystem");
-		goto out;
-	}
-	if (mm_is_monitor()) {
-		error_f("session signalling requires privilege separation");
 		goto out;
 	}
 

@@ -1,4 +1,4 @@
-/* $OpenBSD: packet.c,v 1.317 2024/08/23 04:51:00 deraadt Exp $ */
+/* $OpenBSD: packet.c,v 1.318 2025/02/18 08:02:12 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -1100,9 +1100,9 @@ ssh_set_newkeys(struct ssh *ssh, int mode)
 	*max_blocks = cipher_rekey_blocks(enc->cipher);
 
 	/* if we have a custom oRekeyLimit use that. */
-        if (state->rekey_limit)
-                *max_blocks = MINIMUM(*max_blocks,
-                    state->rekey_limit / enc->block_size);
+	if (state->rekey_limit)
+		*max_blocks = MINIMUM(*max_blocks,
+		    state->rekey_limit / enc->block_size);
 
 	/* these lines support the debug */
 	strlcpy(blocks_s, "?", sizeof(blocks_s));
@@ -1373,8 +1373,8 @@ ssh_packet_send2_wrapped(struct ssh *ssh)
 	    sshbuf_len(state->outgoing_packet) + authlen, &cp)) != 0)
 		goto out;
 	if ((r = cipher_crypt(state->send_context, state->p_send.seqnr, cp,
-	    sshbuf_ptr(state->outgoing_packet), len - aadlen, aadlen, authlen))
-	    != 0)
+	    sshbuf_ptr(state->outgoing_packet),
+	    len - aadlen, aadlen, authlen)) != 0)
 		goto out;
 	/* append unencrypted MAC */
 	if (mac && mac->enabled) {

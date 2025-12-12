@@ -365,23 +365,6 @@ rsa_hash_id_from_keyname(const char *alg)
 	return -1;
 }
 
-# if OPENSSL_VERSION_NUMBER < 0x30000000L
-static int
-rsa_hash_alg_nid(int type)
-{
-	switch (type) {
-	case SSH_DIGEST_SHA1:
-		return NID_sha1;
-	case SSH_DIGEST_SHA256:
-		return NID_sha256;
-	case SSH_DIGEST_SHA512:
-		return NID_sha512;
-	default:
-		return -1;
-	}
-}
-# endif
-
 int
 ssh_rsa_complete_crt_parameters(const BIGNUM *rsa_d, const BIGNUM *rsa_p,
     const BIGNUM *rsa_q, const BIGNUM *rsa_iqmp, BIGNUM **rsa_dmp1,

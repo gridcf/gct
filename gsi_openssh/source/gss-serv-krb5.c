@@ -43,6 +43,7 @@
 #include "log.h"
 #include "misc.h"
 #include "servconf.h"
+#include "match.h"
 
 #include "ssh-gss.h"
 
@@ -85,6 +86,32 @@ ssh_gssapi_krb5_init(void)
 	}
 
 	return 1;
+}
+
+/* Check if any of the indicators in the Kerberos ticket match
+ * one of indicators in the list of allowed/denied rules.
+ * In case of the match, apply the decision from the rule.
+ * In case of no indicator from the ticket matching the rule, deny
+ */
+
+static int
+ssh_gssapi_check_indicators(ssh_gssapi_client *client, int *matched)
+{
+	int ret;
+	u_int i;
+
+	/* Check indicators */
+	for (i = 0; client->indicators[i] != NULL; i++) {
+		ret = match_pattern_list(client->indicators[i],
+					 options.gss_indicators, 1);
+		/* negative or positive match */
+		if (ret != 0) {
+			*matched = i;
+			return ret;
+		}
+	}
+	/* No rule matched */
+	return 0;
 }
 
 /* Check if this user is OK to login. This only works with krb5 - other
@@ -193,7 +220,7 @@ static int
 ssh_gssapi_krb5_userok(ssh_gssapi_client *client, char *name)
 {
 	krb5_principal princ;
-	int retval;
+	int retval, matched;
 	const char *errmsg;
 	int k5login_exists;
 
@@ -216,17 +243,42 @@ ssh_gssapi_krb5_userok(ssh_gssapi_client *client, char *name)
 	if (k5login_exists &&
 	    ssh_krb5_kuserok(krb_context, princ, name, k5login_exists)) {
 		retval = 1;
-		logit("Authorized to %s, krb5 principal %s (krb5_kuserok)",
-		    name, (char *)client->displayname.value);
+	    errmsg = "krb5_kuserok";
 	} else if (ssh_gssapi_krb5_cmdok(princ, client->exportedname.value,
 		name, k5login_exists)) {
 		retval = 1;
-		logit("Authorized to %s, krb5 principal %s "
-		    "(ssh_gssapi_krb5_cmdok)",
-		    name, (char *)client->displayname.value);
+		errmsg = "ssh_gssapi_krb5_cmdok";
 	} else
 		retval = 0;
 
+	if ((retval == 1) && (options.gss_indicators != NULL)) {
+		/* At this point the configuration enforces presence of indicators
+		 * so we drop the authorization result again */
+		retval = 0;
+		if (client->indicators) {
+			matched = -1;
+			retval = ssh_gssapi_check_indicators(client, &matched);
+			if (retval != 0) {
+				retval = (retval == 1);
+				logit("Ticket contains indicator %s, "
+					"krb5 principal %s is %s",
+					client->indicators[matched],
+					(char *)client->displayname.value,
+				        retval ? "allowed" : "denied");
+				goto cont;
+			}
+		}
+		if (retval == 0) {
+			logit("GSSAPI authentication indicators enforced "
+				"but not matched. krb5 principal %s denied",
+			(char *)client->displayname.value);
+		}
+	}
+cont:
+	if (retval == 1) {
+		logit("Authorized to %s, krb5 principal %s (%s)",
+		    name, (char *)client->displayname.value, errmsg);
+	}
 	krb5_free_principal(krb_context, princ);
 	return retval;
 }

@@ -6,6 +6,9 @@ UsePAM yes
 
 X11Forwarding yes
 
+# rhbz#2352653 - accept COLORTERM
+	AcceptEnv COLORTERM
+
 # It is recommended to use pam_motd in /etc/pam.d/gsisshd instead of PrintMotd,
 # as it is more configurable and versatile than the built-in version.
 PrintMotd no

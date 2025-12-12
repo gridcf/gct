@@ -1,4 +1,4 @@
-/* $OpenBSD: misc.h,v 1.109 2024/06/06 17:15:25 djm Exp $ */
+/* $OpenBSD: misc.h,v 1.110 2024/09/25 01:24:04 djm Exp $ */
 
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>

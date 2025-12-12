@@ -1,4 +1,4 @@
-/* $OpenBSD: sshkey.c,v 1.146 2024/09/04 05:33:34 djm Exp $ */
+/* $OpenBSD: sshkey.c,v 1.148 2024/12/03 15:53:51 tb Exp $ */
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
  * Copyright (c) 2008 Alexander von Gernler.  All rights reserved.
@@ -81,9 +81,6 @@
 #define SALT_LEN		16
 #define DEFAULT_CIPHERNAME	"aes256-ctr"
 #define	DEFAULT_ROUNDS		24
-
-/* Version identification string for SSH v1 identity files. */
-#define LEGACY_BEGIN		"SSH PRIVATE KEY FILE FORMAT 1.1\n"
 
 /*
  * Constants relating to "shielding" support; protection of keys expected
@@ -2818,14 +2815,6 @@ sshkey_ec_validate_public(const EC_GROUP *group, const EC_POINT *public)
 	 * EC_POINT_oct2point then the caller will need to explicitly check.
 	 */
 
-	/*
-	 * We shouldn't ever hit this case because bignum_get_ecpoint()
-	 * refuses to load GF2m points.
-	 */
-	if (EC_METHOD_get_field_type(EC_GROUP_method_of(group)) !=
-	    NID_X9_62_prime_field)
-		goto out;
-
 	/* Q != infinity */
 	if (EC_POINT_is_at_infinity(group, public))
 		goto out;
@@ -2923,11 +2912,6 @@ sshkey_dump_ec_point(const EC_GROUP *group, const EC_POINT *point)
 	}
 	if ((x = BN_new()) == NULL || (y = BN_new()) == NULL) {
 		fprintf(stderr, "%s: BN_new failed\n", __func__);
-		goto out;
-	}
-	if (EC_METHOD_get_field_type(EC_GROUP_method_of(group)) !=
-	    NID_X9_62_prime_field) {
-		fprintf(stderr, "%s: group is not a prime field\n", __func__);
 		goto out;
 	}
 	if (EC_POINT_get_affine_coordinates_GFp(group, point,
@@ -3610,6 +3594,9 @@ translate_libcrypto_error(unsigned long pem_err)
 			return SSH_ERR_LIBCRYPTO_ERROR;
 		}
 	case ERR_LIB_ASN1:
+#ifdef ERR_LIB_OSSL_DECODER
+	case ERR_LIB_OSSL_DECODER:
+#endif
 		return SSH_ERR_INVALID_FORMAT;
 	}
 	return SSH_ERR_LIBCRYPTO_ERROR;

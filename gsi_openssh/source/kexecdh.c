@@ -129,7 +129,7 @@ kex_ecdh_keypair(struct kex *kex)
 	return r;
 }
 # else
-/* Original function in OpenSSH Portable 9.9p1 */
+/* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_ecdh_keypair(struct kex *kex)
 {
@@ -216,7 +216,7 @@ kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
 	return r;
 }
 # else
-/* Original function in OpenSSH Portable 9.9p1 */
+/* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
     struct sshbuf **server_blobp, struct sshbuf **shared_secretp)
@@ -374,7 +374,7 @@ kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
 	return r;
 }
 # else
-/* Original function in OpenSSH Portable 9.9p1 */
+/* Original function in OpenSSH Portable 10.0p1 */
 static int
 kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
     EC_KEY *key, const EC_GROUP *group, struct sshbuf **shared_secretp)

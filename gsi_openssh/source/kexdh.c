@@ -166,7 +166,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	return r;
 }
 # else
-/* Original function in OpenSSH Portable 9.9p1 */
+/* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 {

@@ -1,4 +1,4 @@
-/* $OpenBSD: serverloop.c,v 1.240 2024/06/17 08:28:31 djm Exp $ */
+/* $OpenBSD: serverloop.c,v 1.241 2024/11/26 22:01:37 djm Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -763,7 +763,7 @@ server_input_hostkeys_prove(struct ssh *ssh, struct sshbuf **respp)
 		 * For RSA keys, prefer to use the signature type negotiated
 		 * during KEX to the default (SHA1).
 		 */
-		sigalg = NULL;
+		sigalg = sshkey_ssh_name(key);
 		if (sshkey_type_plain(key->type) == KEY_RSA) {
 			if (kex_rsa_sigalg != NULL)
 				sigalg = kex_rsa_sigalg;

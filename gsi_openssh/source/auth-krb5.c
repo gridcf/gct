@@ -315,7 +315,8 @@ ssh_asprintf_append(char **dsc, const char *fmt, ...) {
 	old = *dsc;
 
 	i = asprintf(dsc, "%s%s", *dsc, src);
-	if (i == -1 || src == NULL) {
+	if (i == -1) {
+		*dsc = old;
 		free(src);
 		return -1;
 	}
