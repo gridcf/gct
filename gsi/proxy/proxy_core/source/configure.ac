@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gsi_proxy_core],[9.8],[https://github.com/gridcf/gct/issues])
+AC_INIT([globus_gsi_proxy_core],[9.9],[https://github.com/gridcf/gct/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -50,6 +50,7 @@ if test "$use_symbol_versions" = yes; then
     AC_DEFINE(USE_SYMBOL_VERSIONS, 1, [Use backward-compatibility symbol versioning])
 fi
 
+AM_CONDITIONAL(USES_LTO, [echo $CFLAGS | grep -q -- -flto])
 
 AC_PATH_PROGS([DOXYGEN], doxygen)
 AM_CONDITIONAL([ENABLE_DOXYGEN], [test "$DOXYGEN" != ""])
@@ -58,8 +59,8 @@ AC_OUTPUT(
         globus-gsi-proxy-core.pc
         globus-gsi-proxy-core-uninstalled.pc
         Makefile
-	library/Makefile
+        library/Makefile
         library/Doxyfile
         test/Makefile
-	version.h
+        version.h
 )
