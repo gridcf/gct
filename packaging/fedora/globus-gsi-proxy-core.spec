@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.8
+Version:	9.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -143,6 +143,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Thu Jan 08 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.9-1
+- Fix linking error with gcc 16
+
 * Thu Mar 10 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.8-1
 - Fix some compiler warnings
 

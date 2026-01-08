@@ -9,9 +9,12 @@ libglobus_gsi_proxy_core_la_CPPFLAGS = \
 libglobus_gsi_proxy_core_la_LIBADD = $(PACKAGE_DEP_LIBS) $(OPENSSL_LIBS)
 libglobus_gsi_proxy_core_la_LDFLAGS = \
 	-version-info $(MAJOR_VERSION):$(MINOR_VERSION):$(AGE_VERSION) \
-        -no-undefined
+	-no-undefined
 if USE_SYMBOL_VERSIONS
 libglobus_gsi_proxy_core_la_LDFLAGS += -Wl,--version-script,$(srcdir)/sym
+if USES_LTO
+libglobus_gsi_proxy_core_la_LDFLAGS += -flto-partition=none
+endif
 endif
 
 libglobus_gsi_proxy_core_la_SOURCES = \
