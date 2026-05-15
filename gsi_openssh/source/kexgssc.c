@@ -125,7 +125,7 @@ kexgss_final(struct ssh *ssh)
 
 	/* Verify that the hash matches the MIC we just got. */
 	if (GSS_ERROR(ssh_gssapi_checkmic(gss, &gss->buf, &gss->msg_tok)))
-		sshpkt_disconnect(ssh, "Hash's MIC didn't verify");
+		ssh_packet_disconnect(ssh, "Hash's MIC didn't verify");
 
 	gss_release_buffer(&gss->minor, &gss->msg_tok);
 
@@ -348,10 +348,10 @@ input_kexgss_complete(int type,
 			fatal("Failed to read token: %s", ssh_err(r));
 		/* If we're already complete - protocol error */
 		if (gss->major == GSS_S_COMPLETE)
-			sshpkt_disconnect(ssh, "Protocol error: received token when complete");
+			ssh_packet_disconnect(ssh, "Protocol error: received token when complete");
 	} else {
 		if (gss->major != GSS_S_COMPLETE)
-			sshpkt_disconnect(ssh, "Protocol error: did not receive final token");
+			ssh_packet_disconnect(ssh, "Protocol error: did not receive final token");
 	}
 	if ((r = sshpkt_get_end(ssh)) != 0)
 		fatal("Expecting end of packet.");
@@ -487,7 +487,7 @@ kexgssgex_final(struct ssh *ssh)
 
 	/* Verify that the hash matches the MIC we just got. */
 	if (GSS_ERROR(ssh_gssapi_checkmic(gss, &gss->buf, &gss->msg_tok)))
-		sshpkt_disconnect(ssh, "Hash's MIC didn't verify");
+		ssh_packet_disconnect(ssh, "Hash's MIC didn't verify");
 
 	gss_release_buffer(&gss->minor, &gss->msg_tok);
 
@@ -688,10 +688,10 @@ input_kexgssgex_complete(int type,
 			fatal("Failed to read token: %s", ssh_err(r));
 		/* If we're already complete - protocol error */
 		if (gss->major == GSS_S_COMPLETE)
-			sshpkt_disconnect(ssh, "Protocol error: received token when complete");
+			ssh_packet_disconnect(ssh, "Protocol error: received token when complete");
 	} else {
 		if (gss->major != GSS_S_COMPLETE)
-			sshpkt_disconnect(ssh, "Protocol error: did not receive final token");
+			ssh_packet_disconnect(ssh, "Protocol error: did not receive final token");
 	}
 	if ((r = sshpkt_get_end(ssh)) != 0)
 		fatal("Expecting end of packet.");

@@ -132,7 +132,7 @@ kexgss_final(struct ssh *ssh,
 {
 	struct kex *kex = ssh->kex;
 	Gssctxt *gss = kex->gss;
-	gss_buffer_desc msg_tok;
+	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;;
 	u_char hash[SSH_DIGEST_MAX_LENGTH];
 	size_t hashlen;
 	struct sshbuf *shared_secret = NULL;
@@ -217,7 +217,8 @@ input_kexgss_init(int type,
 	Gssctxt *gss = kex->gss;
 	struct sshbuf *empty;
 	struct sshbuf *client_pubkey = NULL;
-	gss_buffer_desc recv_tok, send_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc recv_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc send_tok = GSS_C_EMPTY_BUFFER;
 	OM_uint32 ret_flags = 0;
 	int r;
 
@@ -293,7 +294,8 @@ input_kexgss_continue(int type,
 		      struct ssh *ssh)
 {
 	Gssctxt *gss = ssh->kex->gss;
-	gss_buffer_desc recv_tok, send_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc recv_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc send_tok = GSS_C_EMPTY_BUFFER;
 	OM_uint32 ret_flags = 0;
 	int r;
 
@@ -384,7 +386,7 @@ kexgssgex_final(struct ssh *ssh,
 {
 	struct kex *kex = ssh->kex;
 	Gssctxt *gss = kex->gss;
-	gss_buffer_desc msg_tok;
+	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;;
 	u_char hash[SSH_DIGEST_MAX_LENGTH];
 	size_t hashlen;
 	const BIGNUM *pub_key, *dh_p, *dh_g;
@@ -526,8 +528,7 @@ input_kexgssgex_groupreq(int type,
 
 	kex->dh = mm_choose_dh(min, nbits, max);
 	if (kex->dh == NULL) {
-		sshpkt_disconnect(ssh, "Protocol error: no matching group found");
-		fatal("Protocol error: no matching group found");
+		ssh_packet_disconnect(ssh, "Protocol error: no matching group found");
 	}
 
 	DH_get0_pqg(kex->dh, &dh_p, NULL, &dh_g);
@@ -560,7 +561,8 @@ input_kexgssgex_init(int type,
 		     struct ssh *ssh)
 {
 	Gssctxt *gss = ssh->kex->gss;
-	gss_buffer_desc recv_tok, send_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc recv_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc send_tok = GSS_C_EMPTY_BUFFER;
 	OM_uint32 ret_flags = 0;
 	int r;
 
@@ -587,7 +589,8 @@ input_kexgssgex_continue(int type,
 			 struct ssh *ssh)
 {
 	Gssctxt *gss = ssh->kex->gss;
-	gss_buffer_desc recv_tok, send_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc recv_tok = GSS_C_EMPTY_BUFFER;
+	gss_buffer_desc send_tok = GSS_C_EMPTY_BUFFER;
 	OM_uint32 ret_flags = 0;
 	int r;
 
