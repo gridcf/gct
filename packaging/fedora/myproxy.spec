@@ -2,7 +2,7 @@
 
 Name:           myproxy
 %global soname 6
-Version:        6.2.20
+Version:        6.2.21
 Release:        1%{?dist}
 Summary:        Manage X.509 Public Key Infrastructure (PKI) security credentials
 
@@ -391,6 +391,10 @@ fi
 %doc %{_pkgdocdir}/LICENSE*
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.21-1
+- Compile with OpenSSL 4
+- Fix compiler warnings
+
 * Fri Jan 17 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.2.20-1
 - Fix incompatible pointer errors (gcc 15)
 

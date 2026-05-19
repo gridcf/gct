@@ -3,7 +3,7 @@
 Name:		globus-gsi-cert-utils
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	10.11
+Version:	10.12
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Cert Utils Library
 
@@ -180,6 +180,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.12-1
+- Compile with OpenSSL 4
+
 * Thu Jan 19 2023 Mischa Salle <msalle@nikhef.nl> - 10.11-1
 - Fix parsing of ASN1 timestamps
 

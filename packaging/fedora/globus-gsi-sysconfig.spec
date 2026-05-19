@@ -3,7 +3,7 @@
 Name:		globus-gsi-sysconfig
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	9.6
+Version:	9.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI System Config Library
 
@@ -150,6 +150,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.7-1
+- Compile with OpenSSL 4
+
 * Fri Nov 10 2023 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.6-1
 - Remove extra comma
 

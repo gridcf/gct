@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gridftp-driver
 %global _name %(echo %{name} | tr - _)
-Version:	3.6
+Version:	3.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Driver
 
@@ -152,6 +152,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.7-1
+- Fix compiler and doxygen warnings
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.6-1
 - Fix some compiler warnings
 

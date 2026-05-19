@@ -3,7 +3,7 @@
 Name:		globus-rsl
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	11.4
+Version:	11.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Resource Specification Language Library
 
@@ -142,6 +142,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.5-1
+- Fix doxygen warnings
+
 * Tue Aug 29 2023 Mattias Ellert <mattias.ellert@physics.uu.se> - 11.4-1
 - Make library linking survive -Wl,--as-needed
 

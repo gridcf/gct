@@ -3,7 +3,7 @@
 Name:		globus-gridftp-server-control
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.5
+Version:	9.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GridFTP Server Library
 
@@ -112,6 +112,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.6-1
+- Fix compiler warnings
+
 * Thu Jul 11 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.5-1
 - Passing argument from incompatible pointer type
 

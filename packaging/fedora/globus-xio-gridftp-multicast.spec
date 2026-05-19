@@ -2,7 +2,7 @@
 
 Name:		globus-xio-gridftp-multicast
 %global _name %(echo %{name} | tr - _)
-Version:	2.2
+Version:	2.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO GridFTP Multicast Driver
 
@@ -103,6 +103,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.3-1
+- Fix compiler warnings
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 2.2-1
 - Fix some compiler warnings
 

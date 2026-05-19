@@ -2,7 +2,7 @@
 
 Name:		globus-xio-pipe-driver
 %global _name %(echo %{name} | tr - _)
-Version:	4.1
+Version:	4.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Pipe Driver
 
@@ -102,6 +102,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.2-1
+- Fix compiler warnings
+
 * Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.1-1
 - Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
 

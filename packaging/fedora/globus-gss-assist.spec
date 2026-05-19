@@ -3,7 +3,7 @@
 Name:		globus-gss-assist
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	12.7
+Version:	12.8
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
@@ -185,6 +185,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.8-1
+- Fix compiler and doxygen warnings
+
 * Sun Mar 06 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.7-1
 - Use sha256 hash when generating test certificates
 

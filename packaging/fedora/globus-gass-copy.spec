@@ -3,7 +3,7 @@
 Name:		globus-gass-copy
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	10.13
+Version:	10.14
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Gass Copy
 
@@ -183,6 +183,10 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.14-1
+- Compile with OpenSSL 4
+- Fix compiler and doxygen warnings
+
 * Thu Oct 26 2023 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.13-1
 - Detect checksum calculation errors due to file read errors
 

@@ -3,7 +3,7 @@
 Name:		globus-gsi-credential
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	8.5
+Version:	8.6
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Credential Library
 
@@ -137,6 +137,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.6-1
+- Compile with OpenSSL 4
+
 * Fri Jan 17 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 8.5-1
 - Fix incompatible pointer errors (gcc 15)
 

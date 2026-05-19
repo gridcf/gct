@@ -3,7 +3,7 @@
 Name:		globus-gfork
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	5.0
+Version:	5.1
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GFork
 
@@ -132,6 +132,9 @@ echo "# This is the default gfork configuration file" > \
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-1
+- Fix compiler warnings
+
 * Sat Mar 31 2018 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.0-1
 - First Grid Community Toolkit release
 

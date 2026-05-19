@@ -3,7 +3,7 @@
 Name:		globus-openssl-module
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	5.2
+Version:	5.3
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus OpenSSL Module Wrapper
 
@@ -135,6 +135,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.3-1
+- Fix compiler warnings
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
 - Make makefiles exit sooner on errors
 

@@ -3,7 +3,7 @@
 Name:		globus-ftp-client
 %global soname 2
 %global _name %(echo %{name} | tr - _)
-Version:	9.9
+Version:	9.10
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GridFTP Client Library
 
@@ -169,6 +169,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.10-1
+- Fix compiler and doxygen warnings
+
 * Fri Mar 01 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.9-1
 - Fix format warnings on 32 bit systems
 - Handle 64 bit time_t on 32 bit systems

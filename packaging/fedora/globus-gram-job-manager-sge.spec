@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager-sge
 %global _name %(echo %{name} | tr - _)
-Version:	3.3
+Version:	3.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Grid Engine Job Manager Support
 
@@ -177,6 +177,9 @@ fi
 %config(noreplace) %{_sysconfdir}/globus/scheduler-event-generator/available/sge
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.4-1
+- Fix compiler warnings
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 3.3-1
 - Fix some compiler warnings
 
