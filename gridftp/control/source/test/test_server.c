@@ -119,7 +119,7 @@ gpftpd_ac_response_callback(
     void *                                     callback_arg,
     globus_ftp_control_handle_t *              handle,
     globus_object_t *                          error)
-{  
+{
     globus_result_t                     result;
     result = globus_ftp_control_read_commands(
         handle,
@@ -227,7 +227,7 @@ gpftpd_accept_callback(
               callback_arg);
 }
 
-void 
+void
 gpftpd_listen_callback(
     void *                                      callback_arg,
     globus_ftp_control_server_t *               server_handle,

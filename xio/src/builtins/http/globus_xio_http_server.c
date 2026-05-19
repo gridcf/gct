@@ -48,7 +48,7 @@ globus_l_xio_http_server_write_response_callback(
  * Accept an HTTP request
  * @ingroup globus_i_xio_http_server
  *
- * Passes the request to the transport driver. In the callback, 
+ * Passes the request to the transport driver. In the callback,
  * the request target information will be generated.
  *
  * @param driver_server
@@ -103,7 +103,7 @@ globus_l_xio_http_accept_callback(
 {
     globus_i_xio_http_target_t *        target_info = NULL;
     GlobusXIOName(globus_l_xio_http_accept_callback);
-    
+
     if (result == GLOBUS_SUCCESS)
     {
         target_info = globus_i_xio_http_target_new();
@@ -194,7 +194,7 @@ globus_i_xio_http_server_open_callback(
  *
  * @retval GLOBUS_SUCCESS
  *     Response was passed to the transport for writing. If this was generated
- *     by a user writing data, then the write will occur after the 
+ *     by a user writing data, then the write will occur after the
  *     globus_l_xio_http_server_write_response_callback() has been called.
  * @retval GLOBUS_XIO_ERROR_MEMORY
  *     Unable to compose the response due to memory constraints.
@@ -299,7 +299,7 @@ globus_i_xio_http_server_write_response(
              GLOBUS_I_XIO_HTTP_HEADER_IS_CONTENT_LENGTH_SET(
                 &http_handle->response_info.headers)))
     {
-        http_handle->response_info.headers.flags |= 
+        http_handle->response_info.headers.flags |=
                 GLOBUS_I_XIO_HTTP_HEADER_CONNECTION_CLOSE;
 
         GLOBUS_XIO_HTTP_COPY_BLOB(&iovecs,
@@ -683,7 +683,7 @@ globus_l_xio_http_server_parse_request(
         globus_assert(rc == 1);
 
         current_offset += parsed;
-        
+
         rc = sscanf(current_offset, "%*s %n", &parsed);
         if (rc < 0)
         {
@@ -809,7 +809,7 @@ globus_i_xio_http_server_read_request_callback(
     if (descriptor == NULL)
     {
         result = GlobusXIOErrorMemory("descriptor");
-        
+
         goto error_exit;
     }
     globus_i_xio_http_request_destroy(&descriptor->request);
@@ -848,7 +848,7 @@ globus_i_xio_http_server_read_request_callback(
         http_handle->read_operation.nbytes = 0;
 
         globus_mutex_unlock(&http_handle->mutex);
-        
+
         globus_xio_driver_finished_read(op, result, nbytes);
 
         return;

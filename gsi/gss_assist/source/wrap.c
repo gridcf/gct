@@ -32,21 +32,21 @@
  * @ingroup globus_gsi_gss_assist
  *
  * @param minor_status
- *        GSSAPI return code.  If the call was successful, the minor 
+ *        GSSAPI return code.  If the call was successful, the minor
  *        status is equal to GLOBUS_SUCCESS.  Otherwise, it is an
- *        error object ID for which  
+ *        error object ID for which
  *        globus_error_get() and globus_object_free()
  *        can be used to get and destroy it.
  * @param context_handle
- *        the context. 
+ *        the context.
  * @param data
  *        pointer to application data to wrap and send
  * @param length
  *        length of the @a data array
  * @param token_status
- *        assist routine get/send token status 
+ *        assist routine get/send token status
  * @param gss_assist_send_token
- *        a send_token routine 
+ *        a send_token routine
  * @param gss_assist_send_context
  *        first arg for the send_token
  * @param fperr
@@ -54,7 +54,7 @@
  *
  * @return
  *        GSS_S_COMPLETE on success
- *        Other GSSAPI errors on failure.  
+ *        Other GSSAPI errors on failure.
  *
  * @see gss_wrap()
  */
@@ -62,9 +62,9 @@ OM_uint32
 globus_gss_assist_wrap_send(
     OM_uint32 *                         minor_status,
     const gss_ctx_id_t                  context_handle,
-    char *			        data,
-    size_t			        length,
-    int *			        token_status,
+    char *                              data,
+    size_t                              length,
+    int *                               token_status,
     int (*gss_assist_send_token)(void *, void *, size_t),
     void *                              gss_assist_send_context,
     FILE *                              fperr)
@@ -91,12 +91,12 @@ globus_gss_assist_wrap_send(
                             input_token,
                             NULL,
                             output_token);
-  
+
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_FPRINTF(
         3, (globus_i_gsi_gss_assist_debug_fstream,
             _GASL("Wrap_send:maj:%8.8x min:%8.8x inlen:%u outlen:%u\n"),
-            (unsigned int) major_status, 
-            (unsigned int) *minor_status, 
+            (unsigned int) major_status,
+            (unsigned int) *minor_status,
             input_token->length = length,
             output_token->length));
 
@@ -118,7 +118,7 @@ globus_gss_assist_wrap_send(
                 local_minor_status,
                 *token_status);
         }
-        
+
         local_result = globus_error_put(error_copy);
         GLOBUS_GSI_GSS_ASSIST_ERROR_CHAIN_RESULT(
             local_result,
@@ -135,7 +135,7 @@ globus_gss_assist_wrap_send(
         GLOBUS_GSI_GSS_ASSIST_ERROR_RESULT(
             local_result,
             GLOBUS_GSI_GSS_ASSIST_ERROR_WITH_WRAP,
-            (_GASL("Error sending output token. token status: %d\n"), 
+            (_GASL("Error sending output token. token status: %d\n"),
              *token_status));
         *minor_status = (OM_uint32) local_result;
         major_status = GSS_S_FAILURE;
@@ -160,7 +160,7 @@ globus_gss_assist_wrap_send(
                        output_token);
 
  exit:
-    
+
     GLOBUS_I_GSI_GSS_ASSIST_DEBUG_EXIT;
     return major_status;
 }

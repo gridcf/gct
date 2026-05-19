@@ -22,7 +22,7 @@
 #endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 /******************************************************************************
-			     Include header files
+                             Include header files
 ******************************************************************************/
 #include "globus_i_common_config.h"
 #include "globus_common.h"
@@ -56,13 +56,13 @@ extern int h_errno;
 
 extern globus_bool_t globus_i_module_initialized;
 /******************************************************************************
-		       Define module specific variables
+                       Define module specific variables
 ******************************************************************************/
 /* mutex to make globus_libc reentrant */
 globus_mutex_t globus_libc_mutex;
 
 /******************************************************************************
-		      Module specific function prototypes
+                      Module specific function prototypes
 ******************************************************************************/
 static int
 globus_l_libc_copy_hostent_data_to_buffer(
@@ -122,9 +122,9 @@ Returns:
  ******************************************************************************/
 int
 globus_libc_strncasecmp(
-	const char *                            s1,
-	const char *                            s2,
-	globus_size_t                           n)
+        const char *                            s1,
+        const char *                            s2,
+        globus_size_t                           n)
 {
     int                                     rc;
     int                                     save_errno;
@@ -144,35 +144,35 @@ globus_libc_strncasecmp(
 
         for(ctr = 0; ctr < n; ctr++)
         {
-	        if(s2[ctr] == '\0' && s1[ctr] == '\0')
-	        {
-	            rc = 0;
-	            goto exit;
-	        }
-        	else if(s2[ctr] == '\0')
-	        {
-	            rc = -1;
-	            goto exit;
-	        }
-	        else if(s1[ctr] == '\0')
-	        {
-	            rc = 1;
-	            goto exit;
-	        }
+                if(s2[ctr] == '\0' && s1[ctr] == '\0')
+                {
+                    rc = 0;
+                    goto exit;
+                }
+                else if(s2[ctr] == '\0')
+                {
+                    rc = -1;
+                    goto exit;
+                }
+                else if(s1[ctr] == '\0')
+                {
+                    rc = 1;
+                    goto exit;
+                }
             else
-	        {
+                {
                 ch1 = toupper(s2[ctr]);
                 ch2 = toupper(s1[ctr]);
                 if(ch2 > ch1)
-		        {
+                        {
                     rc = 1;
                     goto exit;
-		        }
+                        }
                 else if(ch2 < ch1)
-		        {
+                        {
                     rc = -1;
                     goto exit;
-		        }
+                        }
             }
         }
         rc = 0;
@@ -215,26 +215,26 @@ globus_l_libc_vsnprintf(char *s, size_t n, const char *format, va_list ap)
 
     if ( rc < 0 )
     {
-	return rc;
+        return rc;
     }
     else if ( rc < n )
     {
-	return vsprintf( s, format, ap );
+        return vsprintf( s, format, ap );
     }
     else
     {
-	char *buf = malloc( rc + 1 );
-	if (buf == NULL)
-	{
-	    return -1;
-	}
-	rc = vsprintf( buf, format, ap );
-	save_errno = errno;
-	strncpy( s, buf, n - 1 );
-	s[n - 1] = '\0';
-	free( buf );
-	errno = save_errno;
-	return rc;
+        char *buf = malloc( rc + 1 );
+        if (buf == NULL)
+        {
+            return -1;
+        }
+        rc = vsprintf( buf, format, ap );
+        save_errno = errno;
+        strncpy( s, buf, n - 1 );
+        s[n - 1] = '\0';
+        free( buf );
+        errno = save_errno;
+        return rc;
     }
 }
 
@@ -297,7 +297,7 @@ globus_libc_scan_off_t(char * s, globus_off_t * off, int * consumed)
 
     if(consumed == GLOBUS_NULL)
     {
-	consumed = &dummy;
+        consumed = &dummy;
     }
     globus_libc_lock();
 
@@ -324,7 +324,7 @@ globus_libc_gethostname(char *name, int len)
     static globus_mutex_t               gethostname_mutex;
     static int                          initialized = GLOBUS_FALSE;
     char *                              env;
-    
+
     globus_libc_lock();
     if(initialized == GLOBUS_FALSE)
     {
@@ -333,7 +333,7 @@ globus_libc_gethostname(char *name, int len)
         initialized = GLOBUS_TRUE;
     }
     globus_libc_unlock();
-    
+
     globus_mutex_lock(&gethostname_mutex);
 
     /* ToDo: This change should perhaps be applied to unix side as well?
@@ -346,23 +346,23 @@ globus_libc_gethostname(char *name, int len)
     if ((env = getenv("GLOBUS_HOSTNAME")) != GLOBUS_NULL)
     {
         size_t hlen = strlen(env);
-    	if (hlen < (size_t) len)
-    	{
-    	    size_t i;
-    	    strcpy(name, env);
-    	    for (i=0; i < hlen; i++)
-    		name[i] = tolower(name[i]);
-    	    globus_mutex_unlock(&gethostname_mutex);
-    	    return 0;
-    	}
-    	else
-    	{
-    	    globus_mutex_unlock(&gethostname_mutex);
-    	    errno=EFAULT;
-    	    return(-1);
-    	}
+        if (hlen < (size_t) len)
+        {
+            size_t i;
+            strcpy(name, env);
+            for (i=0; i < hlen; i++)
+                name[i] = tolower(name[i]);
+            globus_mutex_unlock(&gethostname_mutex);
+            return 0;
+        }
+        else
+        {
+            globus_mutex_unlock(&gethostname_mutex);
+            errno=EFAULT;
+            return(-1);
+        }
     }
-    #else    
+    #else
     if (hostname_length == 0U &&
         (env = getenv("GLOBUS_HOSTNAME")) != GLOBUS_NULL)
     {
@@ -382,7 +382,7 @@ globus_libc_gethostname(char *name, int len)
             globus_mutex_unlock(&gethostname_mutex);
             return(-1);
         }
-        
+
         hostname_length = strlen(hostname);
         if(strchr(hostname, '.') != GLOBUS_NULL)
         {
@@ -395,13 +395,13 @@ globus_libc_gethostname(char *name, int len)
             globus_mutex_unlock(&gethostname_mutex);
             return 0;
         }
-        
+
         memset(&hints, 0, sizeof(globus_addrinfo_t));
         hints.ai_flags = GLOBUS_AI_CANONNAME;
         hints.ai_family = AF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = 0;
-        
+
         result = globus_libc_getaddrinfo(hostname, NULL, &hints, &addrinfo);
         if(result == GLOBUS_SUCCESS)
         {
@@ -410,7 +410,7 @@ globus_libc_gethostname(char *name, int len)
                 strncpy(hostname, addrinfo->ai_canonname, sizeof(hostname));
                 hostname[sizeof(hostname) - 1] = 0;
             }
-            
+
             globus_libc_freeaddrinfo(addrinfo);
         }
     }
@@ -461,19 +461,19 @@ globus_libc_gethostaddr_by_family(
     globus_addrinfo_t *                 save_addrinfo;
     globus_addrinfo_t *                 addrinfo;
     globus_result_t                     result;
-    
+
     rc = globus_libc_gethostname(hostname, sizeof(hostname));
     if(rc < 0)
     {
         return rc;
     }
-    
+
     memset(&hints, 0, sizeof(globus_addrinfo_t));
     hints.ai_flags = 0;
     hints.ai_family = family;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = 0;
-    
+
     result = globus_libc_getaddrinfo(
         hostname, GLOBUS_NULL, &hints, &save_addrinfo);
     if(result != GLOBUS_SUCCESS)
@@ -486,13 +486,13 @@ globus_libc_gethostaddr_by_family(
         if(GlobusLibcProtocolFamilyIsIP(addrinfo->ai_family))
         {
             memcpy(addr, addrinfo->ai_addr, addrinfo->ai_addrlen);
-            
+
             break;
         }
     }
-    
+
     globus_libc_freeaddrinfo(save_addrinfo);
-    
+
     return 0;
 }
 
@@ -757,8 +757,8 @@ globus_libc_gethostbyname_r(
     {
 
         hp = gethostbyname(hostname);
-	if(hp != GLOBUS_NULL)
-	{
+        if(hp != GLOBUS_NULL)
+        {
             memcpy(result, hp, sizeof(struct hostent));
             if(globus_l_libc_copy_hostent_data_to_buffer(
                    result,
@@ -768,28 +768,28 @@ globus_libc_gethostbyname_r(
                 hp = GLOBUS_NULL;
             }
             else
-            { 
+            {
                 hp = result;
             }
-            
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-		*h_errnop = 0;
-	    }
-	}
-	else
-	{
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-	        *h_errnop = h_errno;
-	    }
-	}
+
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = 0;
+            }
+        }
+        else
+        {
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = h_errno;
+            }
+        }
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYNAME_R_3)
     {
-	    rc = gethostbyname_r(hostname,
-                                 result,
-                                 &hp_data);
+        rc = gethostbyname_r(hostname,
+                             result,
+                             &hp_data);
         if(rc == 0)
         {
             if(globus_l_libc_copy_hostent_data_to_buffer(
@@ -798,7 +798,7 @@ globus_libc_gethostbyname_r(
                 hp = GLOBUS_NULL;
             }
             else
-            { 
+            {
                 hp = result;
             }
             if(h_errnop != GLOBUS_NULL)
@@ -818,23 +818,23 @@ globus_libc_gethostbyname_r(
 #   elif defined(GLOBUS_HAVE_GETHOSTBYNAME_R_5)
     {
         hp = gethostbyname_r(hostname,
-			     result,
-			     buffer,
-			     buflen,
-			     h_errnop);
+                             result,
+                             buffer,
+                             buflen,
+                             h_errnop);
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYNAME_R_6)
     {
         rc = gethostbyname_r(hostname,
-			     result,
-			     buffer,
-			     buflen,
-			     &hp,
-			     h_errnop);
+                             result,
+                             buffer,
+                             buflen,
+                             &hp,
+                             h_errnop);
     }
 #   else
     {
-	    GLOBUS_HAVE_GETHOSTBYNAME symbol must be defined!!!;
+            GLOBUS_HAVE_GETHOSTBYNAME symbol must be defined!!!;
     }
 #   endif
 
@@ -847,23 +847,23 @@ globus_libc_gethostbyname_r(
      */
     if (hp == GLOBUS_NULL)
     {
-	    if(isdigit(hostname[0]))
-	    {
-	        struct in_addr			addr;
+            if(isdigit(hostname[0]))
+            {
+                struct in_addr                  addr;
 
-	        addr.s_addr = inet_addr(hostname);
-	        if ((int) addr.s_addr != -1)
-	        {
-		        hp = globus_libc_gethostbyaddr_r(
-		        (void *) &addr,
-		        sizeof(addr),
-		        AF_INET,
-		        result,
-		        buffer,
-		        buflen,
-		        h_errnop);
-	        }
-	    }
+                addr.s_addr = inet_addr(hostname);
+                if ((int) addr.s_addr != -1)
+                {
+                        hp = globus_libc_gethostbyaddr_r(
+                        (void *) &addr,
+                        sizeof(addr),
+                        AF_INET,
+                        result,
+                        buffer,
+                        buflen,
+                        h_errnop);
+                }
+            }
     }
 
     return hp;
@@ -881,24 +881,24 @@ Returns:
 ******************************************************************************/
 struct hostent *
 globus_libc_gethostbyaddr_r(char *addr,
-			    int length,
-			    int type,
-			    struct hostent *result,
-			    char *buffer,
-			    int buflen,
-			    int *h_errnop)
+                            int length,
+                            int type,
+                            struct hostent *result,
+                            char *buffer,
+                            int buflen,
+                            int *h_errnop)
 {
     struct hostent *hp=GLOBUS_NULL;
 #   if defined(GLOBUS_HAVE_GETHOSTBYADDR_R_5)
         struct hostent_data hp_data;
-	int rc;
+        int rc;
 #   endif
 
 #   if defined(GLOBUS_HAVE_GETHOSTBYADDR_R_8)
-	int rc;
+        int rc;
 #   endif
 #   if defined(GLOBUS_HAVE_GETHOSTBYADDR_R_7)
-	int rc;
+        int rc;
 #   endif
 
 
@@ -907,8 +907,8 @@ globus_libc_gethostbyaddr_r(char *addr,
 #   if !defined(HAVE_GETHOSTBYADDR_R)
     {
         hp = gethostbyaddr(addr, length, type);
-	if(hp != GLOBUS_NULL)
-	{
+        if(hp != GLOBUS_NULL)
+        {
             memcpy(result, hp, sizeof(struct hostent));
             if(globus_l_libc_copy_hostent_data_to_buffer(
                    result, buffer, buflen) == -1)
@@ -916,31 +916,31 @@ globus_libc_gethostbyaddr_r(char *addr,
                 hp = GLOBUS_NULL;
             }
             else
-            { 
+            {
                 hp = result;
             }
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-		*h_errnop = h_errno;
-	    }
-	}
-	else
-	{
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-		*h_errnop = h_errno;
-	    }
-	}
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = h_errno;
+            }
+        }
+        else
+        {
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = h_errno;
+            }
+        }
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYADDR_R_5)
     {
-	rc = gethostbyaddr_r(addr,
-			     length,
-			     type,
-			     result,
-			     &hp_data);
+        rc = gethostbyaddr_r(addr,
+                             length,
+                             type,
+                             result,
+                             &hp_data);
         if(rc == 0)
-	{
+        {
             if(globus_l_libc_copy_hostent_data_to_buffer(
                    result, buffer, buflen) == -1)
             {
@@ -950,45 +950,45 @@ globus_libc_gethostbyaddr_r(char *addr,
             {
                 hp = result;
             }
-            
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-		*h_errnop = h_errno;
-	    }
+
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = h_errno;
+            }
         }
-	else
-	{
-	    hp = GLOBUS_NULL;
-	    if (h_errnop != GLOBUS_NULL)
-	    {
-		*h_errnop = h_errno;
-	    }
+        else
+        {
+            hp = GLOBUS_NULL;
+            if (h_errnop != GLOBUS_NULL)
+            {
+                *h_errnop = h_errno;
+            }
         }
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYADDR_R_7)
     {
         hp = gethostbyaddr_r(addr,
-			     length,
-			     type,
-			     result,
-			     buffer,
-			     buflen,
-			     h_errnop);
+                             length,
+                             type,
+                             result,
+                             buffer,
+                             buflen,
+                             h_errnop);
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYADDR_R_8)
     {
         rc = gethostbyaddr_r(addr,
-			     length,
-			     type,
-			     result,
-			     buffer,
-			     buflen,
-			     &hp,
-			     h_errnop);
+                             length,
+                             type,
+                             result,
+                             buffer,
+                             buflen,
+                             &hp,
+                             h_errnop);
     }
 #   else
     {
-	GLOBUS_HAVE_GETHOSTBYADDR symbol must be defined!!!;
+        GLOBUS_HAVE_GETHOSTBYADDR symbol must be defined!!!;
     }
 #   endif
 
@@ -1009,35 +1009,35 @@ Returns:
 ******************************************************************************/
 char *
 globus_libc_ctime_r(time_t *clock,
-		    char *buf,
-		    int buflen)
+                    char *buf,
+                    int buflen)
 {
     char *tmp_buf;
 
 #   if !defined(HAVE_CTIME_R)
     {
-	globus_libc_lock();
-	tmp_buf = ctime(clock);
+        globus_libc_lock();
+        tmp_buf = ctime(clock);
 
-	if(tmp_buf != GLOBUS_NULL)
-	{
-	    strncpy(buf,tmp_buf,buflen);
-	}
-	globus_libc_unlock();
+        if(tmp_buf != GLOBUS_NULL)
+        {
+            strncpy(buf,tmp_buf,buflen);
+        }
+        globus_libc_unlock();
 
-	tmp_buf = buf;
+        tmp_buf = buf;
     }
 #   endif
 
 #   if defined(GLOBUS_HAVE_CTIME_R_2)
     {
-	tmp_buf = ctime_r(clock, buf);
+        tmp_buf = ctime_r(clock, buf);
     }
 #   endif
 
 #   if defined(GLOBUS_HAVE_CTIME_R_3)
     {
-	tmp_buf = ctime_r(clock, buf, buflen);
+        tmp_buf = ctime_r(clock, buf, buflen);
     }
 #   endif
 
@@ -1056,23 +1056,23 @@ Returns:
 ******************************************************************************/
 struct tm *
 globus_libc_localtime_r(
-    const time_t *timep, 
+    const time_t *timep,
     struct tm *result)
 {
         struct tm * tmp_tm;
-        
+
 #   if !defined(HAVE_LOCALTIME_R)
     {
-	globus_libc_lock();
-	tmp_tm = localtime(timep);
+        globus_libc_lock();
+        tmp_tm = localtime(timep);
 
-	if(tmp_tm != GLOBUS_NULL)
-	{
-	    memcpy(result, tmp_tm, sizeof(struct tm));
-	}
-	globus_libc_unlock();
+        if(tmp_tm != GLOBUS_NULL)
+        {
+            memcpy(result, tmp_tm, sizeof(struct tm));
+        }
+        globus_libc_unlock();
 
-	tmp_tm = result;
+        tmp_tm = result;
     }
 #   else
     {
@@ -1095,23 +1095,23 @@ Returns:
 ******************************************************************************/
 struct tm *
 globus_libc_gmtime_r(
-    const time_t *timep, 
+    const time_t *timep,
     struct tm *result)
 {
         struct tm * tmp_tm;
-        
+
 #   if !defined(HAVE_GMTIME_R)
     {
-	globus_libc_lock();
-	tmp_tm = gmtime(timep);
+        globus_libc_lock();
+        tmp_tm = gmtime(timep);
 
-	if(tmp_tm != GLOBUS_NULL)
-	{
-	    memcpy(result, tmp_tm, sizeof(struct tm));
-	}
-	globus_libc_unlock();
+        if(tmp_tm != GLOBUS_NULL)
+        {
+            memcpy(result, tmp_tm, sizeof(struct tm));
+        }
+        globus_libc_unlock();
 
-	tmp_tm = result;
+        tmp_tm = result;
     }
 #   else
     {
@@ -1140,10 +1140,10 @@ Returns:
 ******************************************************************************/
 int
 globus_libc_getpwnam_r(char *name,
-		       struct passwd *pwd,
-		       char *buffer,
-		       int buflen,
-		       struct passwd **result)
+                       struct passwd *pwd,
+                       char *buffer,
+                       int buflen,
+                       struct passwd **result)
 {
     return getpwnam_r(name, pwd, buffer, buflen, result);
 } /* globus_libc_getpwnam_r */
@@ -1162,10 +1162,10 @@ Returns:
 #endif
 int
 globus_libc_getpwuid_r(uid_t uid,
-		       struct passwd *pwd,
-		       char *buffer,
-		       int buflen,
-		       struct passwd **result)
+                       struct passwd *pwd,
+                       char *buffer,
+                       int buflen,
+                       struct passwd **result)
 {
     return getpwuid_r(uid, pwd, buffer, buflen, result);
 } /* globus_libc_getpwuid_r */
@@ -1191,25 +1191,25 @@ globus_l_libc_copy_hostent_data_to_buffer(
     char **                             ptr;
     char **                             ptr_buffer = (char **) buffer;
     int                                 num_ptrs=0;
-    
+
    /* list of addresses from name server */
     if(h->h_addr_list != GLOBUS_NULL)
     {
-	for(ptr = h->h_addr_list; (*ptr) != GLOBUS_NULL; ptr++)
-	{
-	    num_ptrs++;
-	}
-	num_ptrs++;
+        for(ptr = h->h_addr_list; (*ptr) != GLOBUS_NULL; ptr++)
+        {
+            num_ptrs++;
+        }
+        num_ptrs++;
     }
 
     if(h->h_aliases != GLOBUS_NULL)
     {
-	/* host aliases */
-	for(ptr = h->h_aliases; *ptr != GLOBUS_NULL; ptr++)
-	{
-	    num_ptrs++;
-	}
-	num_ptrs++;
+        /* host aliases */
+        for(ptr = h->h_aliases; *ptr != GLOBUS_NULL; ptr++)
+        {
+            num_ptrs++;
+        }
+        num_ptrs++;
     }
 
     offset += num_ptrs * sizeof(char *);
@@ -1218,68 +1218,68 @@ globus_l_libc_copy_hostent_data_to_buffer(
     {
         return -1;
     }
-    
+
     /* official hostname of host */
     if(h->h_name != NULL)
-    { 
-	size_t     name_len;
+    {
+        size_t     name_len;
 
-	name_len = strlen(h->h_name);
-	if(name_len + 1 + offset > buflen)
-	{
+        name_len = strlen(h->h_name);
+        if(name_len + 1 + offset > buflen)
+        {
             return -1;
-	}
+        }
 
         strncpy(&buffer[offset], h->h_name, name_len);
-	buffer[offset + name_len] = '\0';
-	h->h_name = &buffer[offset];
+        buffer[offset + name_len] = '\0';
+        h->h_name = &buffer[offset];
         offset += name_len + 1;
     }
 
     /* list of addresses from name server */
     if(h->h_addr_list != GLOBUS_NULL)
     {
-	size_t addrsize = h->h_length;
+        size_t addrsize = h->h_length;
 
-	ptr = h->h_addr_list;
-	h->h_addr_list = ptr_buffer;
+        ptr = h->h_addr_list;
+        h->h_addr_list = ptr_buffer;
 
-	for(; (*ptr) != GLOBUS_NULL; ptr++)
-	{
-	    if(offset + addrsize > buflen)
-	    {
+        for(; (*ptr) != GLOBUS_NULL; ptr++)
+        {
+            if(offset + addrsize > buflen)
+            {
                 return -1;
-	    }
+            }
 
             memcpy(&buffer[offset], *ptr, addrsize);
             *ptr_buffer = &buffer[offset];
             ptr_buffer++;
             offset += addrsize;
-	}
-	*ptr_buffer = GLOBUS_NULL;
-	ptr_buffer++;
-    } 
+        }
+        *ptr_buffer = GLOBUS_NULL;
+        ptr_buffer++;
+    }
 
     if(h->h_aliases != GLOBUS_NULL)
     {
-	ptr = h->h_aliases;
-	h->h_aliases = ptr_buffer;
+        ptr = h->h_aliases;
+        h->h_aliases = ptr_buffer;
 
-	/* host aliases */
-	for(; *ptr != GLOBUS_NULL; ptr++)
-	{
-	    if(strlen(*ptr) + offset + 1 > buflen)
-	    {
+        /* host aliases */
+        for(; *ptr != GLOBUS_NULL; ptr++)
+        {
+            if(strlen(*ptr) + offset + 1 > buflen)
+            {
                 return -1;
-	    }
-            
+            }
+
             strcpy(&buffer[offset], *ptr);
             *ptr_buffer = &buffer[offset];
             ptr_buffer++;
             offset += strlen(*ptr) + 1;
-	}
-	*ptr_buffer = GLOBUS_NULL;
-	ptr_buffer++;
+        }
+        *ptr_buffer = GLOBUS_NULL;
+        ptr_buffer++;
     }
     return 0;
 } /* globus_l_libc_copy_hostent_data_to_buffer() */
@@ -1342,59 +1342,59 @@ globus_libc_gethomedir(char *result, int bufsize)
     char *                  p;
     struct passwd *         pwres;
 
-    
+
     globus_libc_lock();
     if (!initialized)
     {
-	globus_mutex_init(&gethomedir_mutex,
-			  (globus_mutexattr_t *) GLOBUS_NULL);
-	initialized = GLOBUS_TRUE;
+        globus_mutex_init(&gethomedir_mutex,
+                          (globus_mutexattr_t *) GLOBUS_NULL);
+        initialized = GLOBUS_TRUE;
     }
     globus_libc_unlock();
 
     globus_mutex_lock(&gethomedir_mutex);
     {
-	rc = 0;
+        rc = 0;
 
-	if (homedir_len == 0)
-	{
-	    p = getenv("HOME");
-	    if (!p || strlen(p)==0)
-	    {
-		p = GLOBUS_NULL;
-		rc = globus_libc_getpwuid_r(geteuid(),
-					    &pw,
-					    buf,
-					    1024,
-					    &pwres);
+        if (homedir_len == 0)
+        {
+            p = getenv("HOME");
+            if (!p || strlen(p)==0)
+            {
+                p = GLOBUS_NULL;
+                rc = globus_libc_getpwuid_r(geteuid(),
+                                            &pw,
+                                            buf,
+                                            1024,
+                                            &pwres);
 
-		if (!rc && pwres && pwres->pw_dir)
-		    p = pwres->pw_dir;
-	    }
+                if (!rc && pwres && pwres->pw_dir)
+                    p = pwres->pw_dir;
+            }
 
-	    if (!rc && p)
-	    {
-		len = strlen(p);
-		homedir = globus_malloc(len + 1);
-		if (homedir)
-		{
-		    memcpy(homedir, p, len);
-		    homedir[len] = '\0';
-		    homedir_len = strlen(homedir);
-		}
-		else
-		    rc = -1;
-	    }
-	}
+            if (!rc && p)
+            {
+                len = strlen(p);
+                homedir = globus_malloc(len + 1);
+                if (homedir)
+                {
+                    memcpy(homedir, p, len);
+                    homedir[len] = '\0';
+                    homedir_len = strlen(homedir);
+                }
+                else
+                    rc = -1;
+            }
+        }
 
-	if (homedir_len > bufsize)
-	    rc = -1;
+        if (homedir_len > bufsize)
+            rc = -1;
 
-	if (!rc)
-	{
-	    memcpy(result, homedir, homedir_len);
-	    result[homedir_len] = '\0';
-	}
+        if (!rc)
+        {
+            memcpy(result, homedir, homedir_len);
+            result[homedir_len] = '\0';
+        }
     }
     globus_mutex_unlock(&gethomedir_mutex);
 
@@ -1472,13 +1472,13 @@ globus_libc_strdup(const char * string)
 
     if(string)
     {
-	l = strlen(string);
+        l = strlen(string);
 
-	ns = globus_malloc(sizeof(char) * (l + 1));
-	if(ns)
-	{
-	    memcpy(ns, string, l + 1);
-	}
+        ns = globus_malloc(sizeof(char) * (l + 1));
+        if(ns)
+        {
+            memcpy(ns, string, l + 1);
+        }
     }
 
     return ns;
@@ -1500,7 +1500,7 @@ globus_libc_strndup(const char * string, globus_size_t length)
         {
             for(i = 0; i < length && string[i] != '\0'; i++)
                 ns[i] = string[i];
-                                                                                
+
             ns[i] = '\0';
         }
     }
@@ -1526,8 +1526,8 @@ Returns:
 
 int
 globus_libc_lseek(int fd,
-		  globus_off_t offset,
-		  int whence)
+                  globus_off_t offset,
+                  int whence)
 {
     int rc;
     int save_errno;
@@ -1574,19 +1574,19 @@ globus_libc_telldir(DIR *dirp)
 
     if(dirp != GLOBUS_NULL)
     {
-	globus_libc_lock();
+        globus_libc_lock();
 
-	pos = telldir(dirp);
-	save_errno=errno;
+        pos = telldir(dirp);
+        save_errno=errno;
 
-	globus_libc_unlock();
-	errno = save_errno;
+        globus_libc_unlock();
+        errno = save_errno;
 
-	return pos;
+        return pos;
     }
     else
     {
-	return pos;
+        return pos;
     }
 }
 #endif /* defined(HAVE_TELLDIR) */
@@ -1595,21 +1595,21 @@ globus_libc_telldir(DIR *dirp)
 #undef globus_libc_seekdir
 extern void
 globus_libc_seekdir(DIR *dirp,
-		    long loc)
+                    long loc)
 {
     int save_errno;
 
     if(dirp != GLOBUS_NULL)
     {
-	globus_libc_lock();
+        globus_libc_lock();
 
-	seekdir(dirp, loc);
+        seekdir(dirp, loc);
 
-	save_errno = errno;
+        save_errno = errno;
 
-	globus_libc_unlock();
-	errno = save_errno;
-	return;
+        globus_libc_unlock();
+        errno = save_errno;
+        return;
     }
 }
 #endif /* defined(HAVE_SEEKDIR) */
@@ -1623,15 +1623,15 @@ globus_libc_rewinddir(DIR *dirp)
 
     if(dirp != GLOBUS_NULL)
     {
-	globus_libc_lock();
+        globus_libc_lock();
 
-	rewinddir(dirp);
+        rewinddir(dirp);
 
-	save_errno = errno;
+        save_errno = errno;
 
-	globus_libc_unlock();
-	errno = save_errno;
-	return;
+        globus_libc_unlock();
+        errno = save_errno;
+        return;
     }
 #else
     errno = EINVAL;
@@ -1664,116 +1664,116 @@ globus_libc_closedir(DIR *dirp)
 #undef globus_libc_readdir_r
 extern int
 globus_libc_readdir_r(DIR *dirp,
-		      struct dirent **result)
+                      struct dirent **result)
 {
 #if HAVE_DIRENT_H
 #if !defined(HAVE_READDIR_R)
     {
-	struct dirent *tmpdir, *entry;
-	int save_errno;
+        struct dirent *tmpdir, *entry;
+        int save_errno;
 
-	globus_libc_lock();
+        globus_libc_lock();
 
-	tmpdir = readdir(dirp);
-	save_errno = errno;
+        tmpdir = readdir(dirp);
+        save_errno = errno;
 
-	if(tmpdir == GLOBUS_NULL)
-	{
-	    *result = GLOBUS_NULL;
+        if(tmpdir == GLOBUS_NULL)
+        {
+            *result = GLOBUS_NULL;
 
-	    globus_libc_unlock();
+            globus_libc_unlock();
 
-	    errno = save_errno;
+            errno = save_errno;
 
-	    return -1;
-	}
+            return -1;
+        }
 
-	entry = (struct dirent *) globus_malloc(offsetof(struct dirent, d_name)
-						+ strlen(tmpdir->d_name)
-						+ 1);
+        entry = (struct dirent *) globus_malloc(offsetof(struct dirent, d_name)
+                                                + strlen(tmpdir->d_name)
+                                                + 1);
 
-	/* copy returned buffer into data structure */
-	entry->d_ino = tmpdir->d_ino;
+        /* copy returned buffer into data structure */
+        entry->d_ino = tmpdir->d_ino;
 #       if defined(GLOBUS_HAVE_DIRENT_OFF)
-	{
-	    entry->d_off = tmpdir->d_off;
-	}
+        {
+            entry->d_off = tmpdir->d_off;
+        }
 #       endif
 #       if defined(GLOBUS_HAVE_DIRENT_OFFSET)
-	{
-	    entry->d_offset = tmpdir->d_offset;
-	}
+        {
+            entry->d_offset = tmpdir->d_offset;
+        }
 #       endif
 #       if defined(GLOBUS_HAVE_DIRENT_TYPE)
-	{
-	    entry->d_type = tmpdir->d_type;
-	}
+        {
+            entry->d_type = tmpdir->d_type;
+        }
 #       endif
-#	if defined(GLOBUS_HAVE_DIRENT_RECLEN)
-	{
-	    entry->d_reclen = tmpdir->d_reclen;
-	}
+#       if defined(GLOBUS_HAVE_DIRENT_RECLEN)
+        {
+            entry->d_reclen = tmpdir->d_reclen;
+        }
 #       endif
-	strcpy(&entry->d_name[0], &tmpdir->d_name[0]);
+        strcpy(&entry->d_name[0], &tmpdir->d_name[0]);
 
-	*result = entry;
-	globus_libc_unlock();
-	errno = save_errno;
-	return 0;
+        *result = entry;
+        globus_libc_unlock();
+        errno = save_errno;
+        return 0;
     }
 #   else
     {
-	int errno;
+        int errno;
 
 #       if defined(GLOBUS_HAVE_READDIR_R_3)
-	{
-	    int rc = 0;
-	    struct dirent *entry = globus_malloc(offsetof(struct dirent, d_name)
-						 + NAME_MAX
-						 + 1);
+        {
+            int rc = 0;
+            struct dirent *entry = globus_malloc(offsetof(struct dirent, d_name)
+                                                 + NAME_MAX
+                                                 + 1);
 
-	    rc = readdir_r(dirp, entry, result);
+            rc = readdir_r(dirp, entry, result);
 
             if(rc != 0 || *result == NULL)
             {
-		globus_free(entry);
-		*result = GLOBUS_NULL;
+                globus_free(entry);
+                *result = GLOBUS_NULL;
             }
             return rc;
-	}
+        }
 #       elif defined(GLOBUS_HAVE_READDIR_R_2)
-	{
-	    struct dirent *entry = globus_malloc(offsetof(struct dirent, d_name)
-						 + NAME_MAX
-						 + 1);
-	    int rc=0;
+        {
+            struct dirent *entry = globus_malloc(offsetof(struct dirent, d_name)
+                                                 + NAME_MAX
+                                                 + 1);
+            int rc=0;
 
 #           if defined(TARGET_ARCH_SOLARIS)
-	    {
-		*result = readdir_r(dirp, entry);
-		if(*result == GLOBUS_NULL)
-		{
-		    rc = -1;
-		}
-	    }
+            {
+                *result = readdir_r(dirp, entry);
+                if(*result == GLOBUS_NULL)
+                {
+                    rc = -1;
+                }
+            }
 #           elif defined(TARGET_ARCH_HPUX)
-	    {
-		rc = readdir_r(dirp, entry);
-		*result = entry;
-	    }
+            {
+                rc = readdir_r(dirp, entry);
+                *result = entry;
+            }
 #           endif
 
-	    if(rc != GLOBUS_SUCCESS)
-	    {
-		globus_free(entry);
-		*result = GLOBUS_NULL;
-		return rc;
-	    }
-	    else
-	    {
-		return 0;
-	    }
-	}
+            if(rc != GLOBUS_SUCCESS)
+            {
+                globus_free(entry);
+                *result = GLOBUS_NULL;
+                return rc;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 #       endif
     }
 #   endif
@@ -1787,14 +1787,14 @@ globus_libc_readdir_r(DIR *dirp,
 int
 globus_libc_vprintf_length(const char * fmt, va_list ap)
 {
-    static FILE *			devnull = GLOBUS_NULL;
+    static FILE *                       devnull = GLOBUS_NULL;
     int save_errno;
 
     globus_libc_lock();
     if(devnull == GLOBUS_NULL)
     {
 #ifndef _WIN32
-	devnull = fopen("/dev/null", "w");
+        devnull = fopen("/dev/null", "w");
 
         if(devnull == GLOBUS_NULL)
         {
@@ -1805,7 +1805,7 @@ globus_libc_vprintf_length(const char * fmt, va_list ap)
         }
         fcntl(fileno(devnull), F_SETFD, FD_CLOEXEC);
 #else
-	devnull = fopen("NUL", "w");
+        devnull = fopen("NUL", "w");
         if(devnull == GLOBUS_NULL)
         {
             save_errno = errno;
@@ -1881,7 +1881,7 @@ globus_common_v_create_string(
     va_list                             ap_copy;
 
     globus_libc_va_copy(ap_copy,ap);
-    
+
     len = globus_libc_vprintf_length(format,ap_copy);
 
     va_end(ap_copy);
@@ -1890,19 +1890,19 @@ globus_common_v_create_string(
     {
         return NULL;
     }
-    
+
     len++;
 
     if((new_string = malloc(len)) == NULL)
     {
         return NULL;
     }
-    
+
     globus_libc_vsnprintf(new_string,
                           len,
                           format,
                           ap);
-    
+
     return new_string;
 }
 
@@ -1970,37 +1970,37 @@ globus_libc_vsnprintf(char *s, size_t n, const char *format, va_list ap)
    STACK_DIRECTION = 0 => direction of growth unknown  */
 
 #ifndef STACK_DIRECTION
-#define	STACK_DIRECTION	0	/* Direction unknown.  */
+#define STACK_DIRECTION 0       /* Direction unknown.  */
 #endif
 
 #if STACK_DIRECTION != 0
 
-#define	STACK_DIR	STACK_DIRECTION	/* Known at compile-time.  */
+#define STACK_DIR       STACK_DIRECTION /* Known at compile-time.  */
 
 #else /* STACK_DIRECTION == 0; need run-time code.  */
 
-static int stack_dir=0;		/* 1 or -1 once known.  */
-#define	STACK_DIR	stack_dir
+static int stack_dir=0;         /* 1 or -1 once known.  */
+#define STACK_DIR       stack_dir
 
 static void
 find_stack_direction ()
 {
-  static char *addr = GLOBUS_NULL;	/* Address of first `dummy', once known.  */
-  auto char dummy;		/* To get stack address.  */
+  static char *addr = GLOBUS_NULL;      /* Address of first `dummy', once known.  */
+  auto char dummy;              /* To get stack address.  */
 
   if (addr == GLOBUS_NULL)
-    {				/* Initial entry.  */
+    {                           /* Initial entry.  */
       addr = ADDRESS_FUNCTION (dummy);
 
-      find_stack_direction ();	/* Recurse once.  */
+      find_stack_direction ();  /* Recurse once.  */
     }
   else
     {
       /* Second entry.  */
       if (ADDRESS_FUNCTION (dummy) > addr)
-	stack_dir = 1;		/* Stack grew upward.  */
+        stack_dir = 1;          /* Stack grew upward.  */
       else
-	stack_dir = -1;		/* Stack grew downward.  */
+        stack_dir = -1;         /* Stack grew downward.  */
     }
 }
 
@@ -2012,21 +2012,21 @@ find_stack_direction ()
    It is very important that sizeof(header) agree with malloc
    alignment chunk size.  The following default should work okay.  */
 
-#ifndef	ALIGN_SIZE
-#define	ALIGN_SIZE	sizeof(double)
+#ifndef ALIGN_SIZE
+#define ALIGN_SIZE      sizeof(double)
 #endif
 
 typedef union hdr
 {
-  char align[ALIGN_SIZE];	/* To force sizeof(header).  */
+  char align[ALIGN_SIZE];       /* To force sizeof(header).  */
   struct
     {
-      union hdr *next;		/* For chaining headers.  */
-      char *deep;		/* For stack depth measure.  */
+      union hdr *next;          /* For chaining headers.  */
+      char *deep;               /* For stack depth measure.  */
     } h;
 } header;
 
-static header *last_alloca_header = GLOBUS_NULL;	/* -> last alloca header.  */
+static header *last_alloca_header = GLOBUS_NULL;        /* -> last alloca header.  */
 
 /* Return a pointer to at least SIZE bytes of storage,
    which will be automatically reclaimed upon exit from
@@ -2039,11 +2039,11 @@ void *
 alloca (size)
      unsigned size;
 {
-  auto char probe;		/* Probes stack depth: */
+  auto char probe;              /* Probes stack depth: */
   register char *depth = ADDRESS_FUNCTION (probe);
 
 #if STACK_DIRECTION == 0
-  if (STACK_DIR == 0)		/* Unknown growth direction.  */
+  if (STACK_DIR == 0)           /* Unknown growth direction.  */
     find_stack_direction ();
 #endif
 
@@ -2051,7 +2051,7 @@ alloca (size)
      was allocated from deeper in the stack than currently.  */
 
   {
-    register header *hp;	/* Traverses linked list.  */
+    register header *hp;        /* Traverses linked list.  */
 
 #ifdef emacs
     BLOCK_INPUT;
@@ -2059,18 +2059,18 @@ alloca (size)
 
     for (hp = last_alloca_header; hp != GLOBUS_NULL;)
       if ((STACK_DIR > 0 && hp->h.deep > depth)
-	  || (STACK_DIR < 0 && hp->h.deep < depth))
-	{
-	  register header *np = hp->h.next;
+          || (STACK_DIR < 0 && hp->h.deep < depth))
+        {
+          register header *np = hp->h.next;
 
-	  free ((void *) hp);	/* Collect garbage.  */
+          free ((void *) hp);   /* Collect garbage.  */
 
-	  hp = np;		/* -> next header.  */
-	}
+          hp = np;              /* -> next header.  */
+        }
       else
-	break;			/* Rest are not deeper.  */
+        break;                  /* Rest are not deeper.  */
 
-    last_alloca_header = hp;	/* -> last valid storage.  */
+    last_alloca_header = hp;    /* -> last valid storage.  */
 
 #ifdef emacs
     UNBLOCK_INPUT;
@@ -2078,7 +2078,7 @@ alloca (size)
   }
 
   if (size == 0)
-    return GLOBUS_NULL;		/* No allocation required.  */
+    return GLOBUS_NULL;         /* No allocation required.  */
 
   /* Allocate combined header + user data storage.  */
 
@@ -2107,10 +2107,10 @@ alloca (size)
 /* Stack structures for CRAY-1, CRAY X-MP, and CRAY Y-MP */
 struct stack_control_header
   {
-    long shgrow:32;		/* Number of times stack has grown.  */
-    long shaseg:32;		/* Size of increments to stack.  */
-    long shhwm:32;		/* High water mark of stack.  */
-    long shsize:32;		/* Current size of stack (all segments).  */
+    long shgrow:32;             /* Number of times stack has grown.  */
+    long shaseg:32;             /* Size of increments to stack.  */
+    long shhwm:32;              /* High water mark of stack.  */
+    long shsize:32;             /* Current size of stack (all segments).  */
   };
 
 /* The stack segment linkage control information occurs at
@@ -2122,21 +2122,21 @@ struct stack_control_header
 
 struct stack_segment_linkage
   {
-    long ss[0200];		/* 0200 overflow words.  */
-    long sssize:32;		/* Number of words in this segment.  */
-    long ssbase:32;		/* Offset to stack base.  */
+    long ss[0200];              /* 0200 overflow words.  */
+    long sssize:32;             /* Number of words in this segment.  */
+    long ssbase:32;             /* Offset to stack base.  */
     long:32;
-    long sspseg:32;		/* Offset to linkage control of previous
-				   segment of stack.  */
+    long sspseg:32;             /* Offset to linkage control of previous
+                                   segment of stack.  */
     long:32;
-    long sstcpt:32;		/* Pointer to task common address block.  */
-    long sscsnm;		/* Private control structure number for
-				   microtasking.  */
-    long ssusr1;		/* Reserved for user.  */
-    long ssusr2;		/* Reserved for user.  */
-    long sstpid;		/* Process ID for pid based multi-tasking.  */
-    long ssgvup;		/* Pointer to multitasking thread giveup.  */
-    long sscray[7];		/* Reserved for Cray Research.  */
+    long sstcpt:32;             /* Pointer to task common address block.  */
+    long sscsnm;                /* Private control structure number for
+                                   microtasking.  */
+    long ssusr1;                /* Reserved for user.  */
+    long ssusr2;                /* Reserved for user.  */
+    long sstpid;                /* Process ID for pid based multi-tasking.  */
+    long ssgvup;                /* Pointer to multitasking thread giveup.  */
+    long sscray[7];             /* Reserved for Cray Research.  */
     long ssa0;
     long ssa1;
     long ssa2;
@@ -2160,27 +2160,27 @@ struct stack_segment_linkage
    returned by the STKSTAT library routine.  */
 struct stk_stat
   {
-    long now;			/* Current total stack size.  */
-    long maxc;			/* Amount of contiguous space which would
-				   be required to satisfy the maximum
-				   stack demand to date.  */
-    long high_water;		/* Stack high-water mark.  */
-    long overflows;		/* Number of stack overflow ($STKOFEN) calls.  */
-    long hits;			/* Number of internal buffer hits.  */
-    long extends;		/* Number of block extensions.  */
-    long stko_mallocs;		/* Block allocations by $STKOFEN.  */
-    long underflows;		/* Number of stack underflow calls ($STKRETN).  */
-    long stko_free;		/* Number of deallocations by $STKRETN.  */
-    long stkm_free;		/* Number of deallocations by $STKMRET.  */
-    long segments;		/* Current number of stack segments.  */
-    long maxs;			/* Maximum number of stack segments so far.  */
-    long pad_size;		/* Stack pad size.  */
-    long current_address;	/* Current stack segment address.  */
-    long current_size;		/* Current stack segment size.  This
-				   number is actually corrupted by STKSTAT to
-				   include the fifteen word trailer area.  */
-    long initial_address;	/* Address of initial segment.  */
-    long initial_size;		/* Size of initial segment.  */
+    long now;                   /* Current total stack size.  */
+    long maxc;                  /* Amount of contiguous space which would
+                                   be required to satisfy the maximum
+                                   stack demand to date.  */
+    long high_water;            /* Stack high-water mark.  */
+    long overflows;             /* Number of stack overflow ($STKOFEN) calls.  */
+    long hits;                  /* Number of internal buffer hits.  */
+    long extends;               /* Number of block extensions.  */
+    long stko_mallocs;          /* Block allocations by $STKOFEN.  */
+    long underflows;            /* Number of stack underflow calls ($STKRETN).  */
+    long stko_free;             /* Number of deallocations by $STKRETN.  */
+    long stkm_free;             /* Number of deallocations by $STKMRET.  */
+    long segments;              /* Current number of stack segments.  */
+    long maxs;                  /* Maximum number of stack segments so far.  */
+    long pad_size;              /* Stack pad size.  */
+    long current_address;       /* Current stack segment address.  */
+    long current_size;          /* Current stack segment size.  This
+                                   number is actually corrupted by STKSTAT to
+                                   include the fifteen word trailer area.  */
+    long initial_address;       /* Address of initial segment.  */
+    long initial_size;          /* Size of initial segment.  */
   };
 
 /* The following structure describes the data structure which trails
@@ -2189,13 +2189,13 @@ struct stk_stat
 
 struct stk_trailer
   {
-    long this_address;		/* Address of this block.  */
-    long this_size;		/* Size of this block (does not include
-				   this trailer).  */
+    long this_address;          /* Address of this block.  */
+    long this_size;             /* Size of this block (does not include
+                                   this trailer).  */
     long unknown2;
     long unknown3;
-    long link;			/* Address of trailer block of previous
-				   segment.  */
+    long link;                  /* Address of trailer block of previous
+                                   segment.  */
     long unknown5;
     long unknown6;
     long unknown7;
@@ -2233,8 +2233,8 @@ globus_l_libc_i00afunc (long *address)
   /* Set up the iteration.  */
 
   trailer = (struct stk_trailer *) (status.current_address
-				    + status.current_size
-				    - 15);
+                                    + status.current_size
+                                    - 15);
 
   /* There must be at least one stack segment.  Therefore it is
      a fatal error if "trailer" is null.  */
@@ -2249,10 +2249,10 @@ globus_l_libc_i00afunc (long *address)
       block = (long *) trailer->this_address;
       size = trailer->this_size;
       if (block == 0 || size == 0)
-	abort ();
+        abort ();
       trailer = (struct stk_trailer *) trailer->link;
       if ((block <= address) && (address < (block + size)))
-	break;
+        break;
     }
 
   /* Set the result to the offset in this segment and add the sizes
@@ -2268,7 +2268,7 @@ globus_l_libc_i00afunc (long *address)
   do
     {
       if (trailer->this_size <= 0)
-	abort ();
+        abort ();
       result += trailer->this_size;
       trailer = (struct stk_trailer *) trailer->link;
     }
@@ -2331,7 +2331,7 @@ globus_l_libc_i00afunc (long address)
       fprintf (stderr, "%011o %011o %011o\n", this_segment, address, stkl);
 #endif
       if (pseg == 0)
-	break;
+        break;
       stkl = stkl - pseg;
       ssptr = (struct stack_segment_linkage *) stkl;
       size = ssptr->sssize;
@@ -2377,11 +2377,11 @@ globus_l_libc_copy_addrinfo(
     globus_addrinfo_t *                 new_addrinfo;
     globus_addrinfo_t *                 addrinfo;
     char *                              canonname = NULL;
-    
+
     addrinfo = in_addrinfo;
     if(addrinfo)
     {
-        new_addrinfo = (globus_addrinfo_t *) 
+        new_addrinfo = (globus_addrinfo_t *)
             globus_malloc(sizeof(globus_addrinfo_t));
         memcpy(new_addrinfo, addrinfo, sizeof(globus_addrinfo_t));
         new_addrinfo->ai_addr = (struct sockaddr *)
@@ -2397,19 +2397,19 @@ globus_l_libc_copy_addrinfo(
             addrinfo;
             addrinfo = addrinfo->ai_next)
         {
-            new_addrinfo->ai_next = (globus_addrinfo_t *) 
+            new_addrinfo->ai_next = (globus_addrinfo_t *)
                 globus_malloc(sizeof(globus_addrinfo_t));
             new_addrinfo = new_addrinfo->ai_next;
             memcpy(new_addrinfo, addrinfo, sizeof(globus_addrinfo_t));
             new_addrinfo->ai_addr = (struct sockaddr *)
                 globus_malloc(addrinfo->ai_addrlen);
-            memcpy(new_addrinfo->ai_addr, addrinfo->ai_addr, 
+            memcpy(new_addrinfo->ai_addr, addrinfo->ai_addr,
                 addrinfo->ai_addrlen);
             new_addrinfo->ai_canonname = canonname;
         }
     }
-    
-    return 0;       
+
+    return 0;
 }
 #endif
 
@@ -2423,7 +2423,7 @@ globus_libc_getaddrinfo(
     int                                 rc;
     globus_result_t                     result;
     const char *                        port_str = service;
-    
+
 #ifdef TARGET_ARCH_AIX5
     if(port_str && port_str[0] == '0' && port_str[1] == '\0')
     {
@@ -2434,7 +2434,7 @@ globus_libc_getaddrinfo(
         port_str = "56789";
     }
 #endif
-    
+
     result = GLOBUS_SUCCESS;
 
     rc = getaddrinfo(node, port_str, hints, res);
@@ -2474,7 +2474,7 @@ globus_libc_getaddrinfo(
 #ifdef TARGET_ARCH_AIX5
     {
         globus_addrinfo_t *             addrinfo;
-        
+
         /* aix's getaddrinfo also doesnt fill in the family and len fields of
          * the sockaddrs
          */
@@ -2526,7 +2526,7 @@ globus_libc_getnameinfo(
     /*
      * Code to work around a bug in getnameinfo() on OS X on Intel (bug
      * #4292 in Globus bugzilla).
-     * Problem observed on OS X 10.4.8: 
+     * Problem observed on OS X 10.4.8:
      *    getnameinfo() fails to convert port number to host byte order
      *    when generating service port string. If the host is requested
      *    in numeric form, a different code path in getnameinfo() is used
@@ -2685,7 +2685,7 @@ globus_libc_addr_is_loopback(
     switch(_addr->sa_family)
     {
       case AF_INET:
-        if(*(uint8_t *) &((struct sockaddr_in *) 
+        if(*(uint8_t *) &((struct sockaddr_in *)
                 _addr)->sin_addr.s_addr == 127)
         {
             result = GLOBUS_TRUE;
@@ -2695,8 +2695,8 @@ globus_libc_addr_is_loopback(
       case AF_INET6:
         if(IN6_IS_ADDR_LOOPBACK(&((struct sockaddr_in6 *) _addr)->sin6_addr) ||
             (IN6_IS_ADDR_V4MAPPED(&((struct sockaddr_in6 *) _addr)->sin6_addr) &&
-            *(uint8_t *) &((struct sockaddr_in6 *) 
-                _addr)->sin6_addr.s6_addr[12] == 127))        
+            *(uint8_t *) &((struct sockaddr_in6 *)
+                _addr)->sin6_addr.s6_addr[12] == 127))
         {
             result = GLOBUS_TRUE;
         }
@@ -2717,7 +2717,7 @@ globus_libc_addr_is_wildcard(
 {
     struct sockaddr *                   _addr = (struct sockaddr *) addr;
     globus_bool_t                       result = GLOBUS_FALSE;
-    
+
     switch(_addr->sa_family)
     {
       case AF_INET:
@@ -2740,7 +2740,7 @@ globus_libc_addr_is_wildcard(
         break;
 #endif
       default:
-	    printf("%d\n%d\n", _addr->sa_family, AF_INET6);
+            printf("%d\n%d\n", _addr->sa_family, AF_INET6);
         globus_assert(0 &&
                       "Unknown family in globus_libc_addr_is_wildcard");
         break;
@@ -2859,7 +2859,7 @@ globus_libc_addr_to_contact_string(
     int                                 port_no;
     int                                 ni_flags = 0;
     char *                              cs;
-    
+
     if(!GlobusLibcProtocolFamilyIsIP(GlobusLibcSockaddrGetFamily(*addr)))
     {
         result = globus_error_put(
@@ -2873,12 +2873,12 @@ globus_libc_addr_to_contact_string(
                "Invalid addr family"));
         goto error_nameinfo;
     }
-        
+
     if(opts_mask & GLOBUS_LIBC_ADDR_LOCAL ||
         globus_libc_addr_is_wildcard(addr))
     {
         int                             family;
-        
+
 #if AF_INET6
         family = (opts_mask & GLOBUS_LIBC_ADDR_IPV6)
             ? AF_INET6 : ((opts_mask & GLOBUS_LIBC_ADDR_IPV4)
@@ -2887,7 +2887,7 @@ globus_libc_addr_to_contact_string(
         family = (opts_mask & GLOBUS_LIBC_ADDR_IPV4)
             ? AF_INET : AF_UNSPEC;
 #endif
-            
+
         if(globus_libc_gethostaddr_by_family(&myaddr, family) != 0)
         {
             result = globus_error_put(
@@ -2901,12 +2901,12 @@ globus_libc_addr_to_contact_string(
                     "globus_libc_gethostaddr failed"));
             goto error_nameinfo;
         }
-        
+
         GlobusLibcSockaddrGetPort(*addr, port_no);
         GlobusLibcSockaddrSetPort(myaddr, port_no);
         addr = &myaddr;
     }
-    
+
     ni_flags = GLOBUS_NI_NUMERICSERV;
 
     if(opts_mask & GLOBUS_LIBC_ADDR_NUMERIC)
@@ -2920,7 +2920,7 @@ globus_libc_addr_to_contact_string(
     {
         goto error_nameinfo;
     }
-    
+
     cs = globus_malloc(strlen(host) + strlen(port) + 4);
     if(!cs)
     {
@@ -2935,7 +2935,7 @@ globus_libc_addr_to_contact_string(
                 "malloc failed"));
         goto error_memory;
     }
-    
+
     if(strchr(host, ':'))
     {
         sprintf(cs, "[%s]:%s", host, port);
@@ -2944,9 +2944,9 @@ globus_libc_addr_to_contact_string(
     {
         sprintf(cs, "%s:%s", host, port);
     }
-    
+
     *contact_string = cs;
-    
+
     return GLOBUS_SUCCESS;
 
 error_memory:
@@ -2955,7 +2955,7 @@ error_nameinfo:
 }
 
 /** convert a numeric contact string to an array of ints
- * 
+ *
  * (port is optional and may be NULL.  0 will be passed back if no port is
  * found)
  * host needs to have room for at least 16 ints
@@ -2977,13 +2977,13 @@ globus_libc_contact_string_to_ints(
     struct in6_addr                     addr6;
 #endif
     unsigned char *                     paddr;
-#ifdef WIN32        
+#ifdef WIN32
     int                                 rc;
     struct addrinfo                     hints;
     struct addrinfo *                   pres = NULL;
     struct sockaddr_in6                 sockaddr6;
 #endif
-    
+
     memset(host, 0, sizeof(int) * 16);
     strncpy(buf, contact_string, sizeof(buf));
     buf[255] = 0;
@@ -3014,7 +3014,7 @@ globus_libc_contact_string_to_ints(
     else
     {
         char *                          pbuf = buf;
-        
+
         *count = 16;
         if(*pbuf == '[')
         {
@@ -3028,7 +3028,7 @@ globus_libc_contact_string_to_ints(
             if(*(s++) != ':')
             {
                 s = NULL;
-            } 
+            }
         }
         else
         {
@@ -3057,7 +3057,7 @@ globus_libc_contact_string_to_ints(
         {
             goto error_parse;
         }
-        
+
         paddr = (unsigned char *) &((struct sockaddr_in6*)pres->ai_addr)->sin6_addr;
 #else
 #ifdef AF_INET6
@@ -3071,7 +3071,7 @@ globus_libc_contact_string_to_ints(
 #endif
 #endif
     }
-    
+
     if(port)
     {
         *port = 0;
@@ -3080,7 +3080,7 @@ globus_libc_contact_string_to_ints(
             sscanf(s, "%hu", port);
         }
     }
-    
+
     for(i = 0; i < *count; i++)
     {
         host[i] = paddr[i];
@@ -3092,9 +3092,9 @@ globus_libc_contact_string_to_ints(
     }
 #endif
 
-    
+
     return GLOBUS_SUCCESS;
-    
+
 error_parse:
     return globus_error_put(
         globus_error_construct_error(
@@ -3121,7 +3121,7 @@ globus_libc_ints_to_contact_string(
     int                                 b = 0;
     globus_bool_t                       need_bracket = GLOBUS_FALSE;
     globus_bool_t                       compressed = GLOBUS_FALSE;
-    
+
     if(count == 16)
     {
         if(port)
@@ -3129,7 +3129,7 @@ globus_libc_ints_to_contact_string(
             layout[l++] = "[";
             need_bracket = GLOBUS_TRUE;
         }
-        
+
         /* count up leading zeros */
         while(h < 16 && host[h] == 0) h++;
         if(h == 12)
@@ -3166,7 +3166,7 @@ globus_libc_ints_to_contact_string(
                     {
                         layout[l++] = ":";
                     }
-                    
+
                     h += 6;
                     while(h < 15 && host[h] == 0 && host[h + 1] == 0) h += 2;
                 }
@@ -3181,43 +3181,43 @@ globus_libc_ints_to_contact_string(
                         snprintf(bufs[b], 10, "%X%.2X",
                             host[h] & 0xff, host[h + 1] & 0xff);
                     }
-                    
+
                     layout[l++] = bufs[b++];
                     if(h < 14)
                     {
                         layout[l++] = ":";
                     }
-                    
+
                     h += 2;
                 }
             }
         }
     }
-    
+
     if(count == 4)
     {
         snprintf(ipv4, sizeof(ipv4),
             "%d.%d.%d.%d", host[h + 0], host[h + 1], host[h + 2], host[h + 3]);
         layout[l++] = ipv4;
     }
-    
+
     if(need_bracket)
     {
         layout[l++] = "]";
     }
-    
+
     if(port && l > 0)
     {
         sprintf(bufs[b], ":%d", (int) port);
         layout[l++] = bufs[b++];
     }
-    
+
     return globus_libc_join((const char **)layout, l);
 }
 
 /**
  * create a new string from all of the strings in array
- * 
+ *
  * @param array
  *      an array of strings to concatenate (null entries are skipped)
  * @param count
@@ -3232,24 +3232,24 @@ globus_libc_join(
     int                                 len;
     char *                              s;
     int                                 i;
-    
+
     if(count <= 0)
     {
         return NULL;
     }
-    
+
     lens = (int *) globus_malloc(sizeof(int) * count);
     if(!lens)
     {
         return NULL;
     }
-    
+
     len = 0;
     for(i = 0; i < count; i++)
     {
         len += lens[i] = array[i] ? strlen(array[i]) : 0;
     }
-    
+
     if(len)
     {
         s = (char *) globus_malloc(sizeof(char) * (len + 1));
@@ -3264,7 +3264,7 @@ globus_libc_join(
                     len += lens[i];
                 }
             }
-            
+
             s[len] = '\0';
         }
     }
@@ -3272,9 +3272,9 @@ globus_libc_join(
     {
         s = NULL;
     }
-    
+
     globus_free(lens);
-    
+
     return s;
 }
 

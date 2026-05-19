@@ -73,7 +73,7 @@ globus_l_gsi_cert_utils_activate(void)
     if(tmp_string != GLOBUS_NULL)
     {
         globus_i_gsi_cert_utils_debug_level = atoi(tmp_string);
-        
+
         if(globus_i_gsi_cert_utils_debug_level < 0)
         {
             globus_i_gsi_cert_utils_debug_level = 0;
@@ -103,7 +103,7 @@ globus_l_gsi_cert_utils_activate(void)
     {
         goto activate_openssl_fail;
     }
-    
+
     result = globus_module_activate(GLOBUS_GSI_OPENSSL_ERROR_MODULE);
     if (result != GLOBUS_SUCCESS)
     {
@@ -220,7 +220,7 @@ globus_gsi_cert_utils_make_time(
  * values returned, see globus_gsi_cert_utils_cert_type_t.
  *
  * @param cert
- *        The X509 certificate 
+ *        The X509 certificate
  * @param type
  *        The returned X509 certificate type
  *
@@ -248,13 +248,13 @@ globus_gsi_cert_utils_get_cert_type(
     BASIC_CONSTRAINTS *                 x509v3_bc = NULL;
     static char *                       _function_name_ =
         "globus_gsi_cert_utils_get_cert_type";
-    
+
     GLOBUS_I_GSI_CERT_UTILS_DEBUG_ENTER;
 
     /* assume it is a EEC if nothing else matches */
-    
+
     *type = GLOBUS_GSI_CERT_UTILS_TYPE_EEC;
-    
+
     if((x509v3_bc = X509_get_ext_d2i(cert,
                                      NID_basic_constraints,
                                      &critical,
@@ -263,9 +263,9 @@ globus_gsi_cert_utils_get_cert_type(
         *type = GLOBUS_GSI_CERT_UTILS_TYPE_CA;
         goto exit;
     }
-    
+
     subject = X509_get_subject_name(cert);
-    
+
     if((ne = X509_NAME_get_entry(subject, X509_NAME_entry_count(subject)-1))
        == NULL)
     {
@@ -303,7 +303,7 @@ globus_gsi_cert_utils_get_cert_type(
                      "extension to internal form")));
                 goto exit;
             }
-            
+
             if((policy = pci->proxyPolicy) == NULL)
             {
                 GLOBUS_GSI_CERT_UTILS_OPENSSL_ERROR_RESULT(
@@ -324,7 +324,7 @@ globus_gsi_cert_utils_get_cert_type(
             }
 
             policy_nid = OBJ_obj2nid(policy_lang);
-            
+
             if (policy_nid == NID_id_ppl_inheritAll)
             {
                 *type = GLOBUS_GSI_CERT_UTILS_TYPE_RFC_IMPERSONATION_PROXY;
@@ -341,11 +341,11 @@ globus_gsi_cert_utils_get_cert_type(
             {
                 *type = GLOBUS_GSI_CERT_UTILS_TYPE_RFC_RESTRICTED_PROXY;
             }
-            
+
             if(X509_get_ext_by_NID(cert,
                                    NID_proxyCertInfo,
                                    index) != -1)
-            { 
+            {
                 GLOBUS_GSI_CERT_UTILS_OPENSSL_ERROR_RESULT(
                     result,
                     GLOBUS_GSI_CERT_UTILS_ERROR_NON_COMPLIANT_PROXY,
@@ -368,7 +368,7 @@ globus_gsi_cert_utils_get_cert_type(
                      "extension to internal form")));
                 goto exit;
             }
-            
+
             if((policy = pci->proxyPolicy) == NULL)
             {
                 GLOBUS_GSI_CERT_UTILS_OPENSSL_ERROR_RESULT(
@@ -389,7 +389,7 @@ globus_gsi_cert_utils_get_cert_type(
             }
 
             policy_nid = OBJ_obj2nid(policy_lang);
-            
+
             if (policy_nid == NID_id_ppl_inheritAll)
             {
                 *type = GLOBUS_GSI_CERT_UTILS_TYPE_GSI_3_IMPERSONATION_PROXY;
@@ -406,11 +406,11 @@ globus_gsi_cert_utils_get_cert_type(
             {
                 *type = GLOBUS_GSI_CERT_UTILS_TYPE_GSI_3_RESTRICTED_PROXY;
             }
-            
+
             if(X509_get_ext_by_NID(cert,
                                    OBJ_txt2nid(PROXYCERTINFO_OLD_OID),
                                    index) != -1)
-            { 
+            {
                 GLOBUS_GSI_CERT_UTILS_OPENSSL_ERROR_RESULT(
                     result,
                     GLOBUS_GSI_CERT_UTILS_ERROR_NON_COMPLIANT_PROXY,
@@ -427,7 +427,7 @@ globus_gsi_cert_utils_get_cert_type(
              */
 
             GLOBUS_I_GSI_CERT_UTILS_DEBUG_FPRINTF(
-                2, (globus_i_gsi_cert_utils_debug_fstream, 
+                2, (globus_i_gsi_cert_utils_debug_fstream,
                     "Subject is %s\n", data->data));
 
             if((name = X509_NAME_dup(
@@ -439,7 +439,7 @@ globus_gsi_cert_utils_get_cert_type(
                     (_CUSL("Error copying X509_NAME struct")));
                 goto exit;
             }
-            
+
             if((new_ne = X509_NAME_ENTRY_create_by_NID(NULL, NID_commonName,
                                                        data->type,
                                                        data->data, -1)) == NULL)
@@ -450,7 +450,7 @@ globus_gsi_cert_utils_get_cert_type(
                     (_CUSL("Error creating X509 name entry of: %s"), data->data));
                 goto exit;
             }
-            
+
             if(!X509_NAME_add_entry(name, new_ne, X509_NAME_entry_count(name),0))
             {
                 X509_NAME_ENTRY_free(new_ne);
@@ -462,13 +462,13 @@ globus_gsi_cert_utils_get_cert_type(
                      data->data));
                 goto exit;
             }
- 
+
             if(new_ne)
             {
                 X509_NAME_ENTRY_free(new_ne);
                 new_ne = NULL;
             }
-           
+
             if (X509_NAME_cmp(name,subject))
             {
                 /*
@@ -535,7 +535,7 @@ globus_gsi_cert_utils_get_cert_type(
  *        The resulting X509_NAME object
  *
  * @return
- *        GLOBUS_SUCCESS unless an error occurred, in which case, 
+ *        GLOBUS_SUCCESS unless an error occurred, in which case,
  *        a globus error object ID is returned
  */
 globus_result_t
@@ -573,7 +573,7 @@ globus_gsi_cert_utils_get_x509_name(
     if (*index == '/')
     {
         /* skip first / */
-        name_entry_str = index + 1;                 
+        name_entry_str = index + 1;
         while ((index != NULL) && (*index != '\0'))
         {
             /* point at name = */
@@ -588,35 +588,35 @@ globus_gsi_cert_utils_get_x509_name(
                 goto exit;
             }
             /* terminate name string */
-            *index = '\0';           
+            *index = '\0';
 
             name_value_str = index + 1;
 
             /* find next =, then last / */
-            index = strchr(name_value_str, '=');   
+            index = strchr(name_value_str, '=');
             if (index != NULL)
             {
                 /* for now set = to \0 */
-                *index = '\0';	
-                    
+                *index = '\0';
+
                 /* find last / in  value */
-                index2 = strrchr(name_value_str, '/');   
+                index2 = strrchr(name_value_str, '/');
 
                 /* reset = */
-                *index = '=';	
+                *index = '=';
 
                 if (index2 != NULL)
                 {
                     /* terminate value string */
-                    *index2 = '\0'; 
+                    *index2 = '\0';
                 }
             }
 
             nid = OBJ_txt2nid(name_entry_str);
-            
+
             if (nid == NID_undef)
             {
-                /* 
+                /*
                  * not found, lets try upper case instead
                  */
                 uc_index = name_entry_str;
@@ -641,7 +641,7 @@ globus_gsi_cert_utils_get_x509_name(
             x509_name_entry = X509_NAME_ENTRY_create_by_NID(
                 &x509_name_entry,
                 nid,
-                V_ASN1_APP_CHOOSE, 
+                V_ASN1_APP_CHOOSE,
                 (unsigned char *) name_value_str,
                 -1);
 
@@ -654,8 +654,8 @@ globus_gsi_cert_utils_get_x509_name(
                      name_entry_str, name_value_str));
                 goto exit;
             }
-            
-            res = X509_NAME_add_entry(x509_name, x509_name_entry, 
+
+            res = X509_NAME_add_entry(x509_name, x509_name_entry,
                                       X509_NAME_entry_count(x509_name), 0);
             if (!res)
             {
@@ -665,7 +665,7 @@ globus_gsi_cert_utils_get_x509_name(
                     (_CUSL("Couldn't add name entry to  X509_NAME object")));
                 goto exit;
             }
-            
+
             X509_NAME_ENTRY_free(x509_name_entry);
             x509_name_entry = NULL;
 
@@ -763,9 +763,9 @@ globus_gsi_cert_utils_get_base_name(
             break;
         }
     }
-    
-    /* 
-     * drop all the proxy related /CN=* entries 
+
+    /*
+     * drop all the proxy related /CN=* entries
      */
     for(i=0;i<depth;i++)
     {
@@ -827,7 +827,7 @@ globus_gsi_cert_utils_get_eec(
             break;
         }
     }
-    
+
 
  exit:
     GLOBUS_I_GSI_CERT_UTILS_DEBUG_EXIT;
@@ -882,7 +882,7 @@ globus_gsi_cert_utils_get_identity_cert(
             break;
         }
     }
-    
+
 
  exit:
     GLOBUS_I_GSI_CERT_UTILS_DEBUG_EXIT;
@@ -986,7 +986,7 @@ globus_i_gsi_cert_utils_dn_cmp(
         {
             return -1;
         }
-        
+
         tmp_dn2 = globus_l_gsi_cert_utils_normalize_dn(dn2);
 
         if(tmp_dn2 == NULL)
@@ -994,12 +994,12 @@ globus_i_gsi_cert_utils_dn_cmp(
             free(tmp_dn1);
             return -1;
         }
-        
+
         result = strcasecmp(tmp_dn1, tmp_dn2);
 
         free(tmp_dn1);
         free(tmp_dn2);
-        
+
         return result;
     }
 }

@@ -898,16 +898,16 @@ myproxy_authenticate_init(myproxy_socket_attrs_t *attrs,
            int s;
            OM_uint32 major_status, minor_status;
 
-             fqhn = GSI_SOCKET_get_peer_hostname(attrs->gsi_socket);
-             if (!fqhn) {
-                 GSI_SOCKET_get_error_string(attrs->gsi_socket, error_string,
-                                             sizeof(error_string));
-                 verror_put_string("Error getting name of remote party: %s\n",
-                                   error_string);
-                 goto error;
-             }
-             for (s = 0; s < (sizeof services)/(sizeof *services); s++)
-             {
+           fqhn = GSI_SOCKET_get_peer_hostname(attrs->gsi_socket);
+           if (!fqhn) {
+               GSI_SOCKET_get_error_string(attrs->gsi_socket, error_string,
+                                           sizeof(error_string));
+               verror_put_string("Error getting name of remote party: %s\n",
+                                 error_string);
+               goto error;
+           }
+           for (s = 0; s < (sizeof services)/(sizeof *services); s++)
+           {
                name_buf.value = globus_common_create_string("%s@%s",
                     services[s], fqhn);
                name_buf.length = strlen(name_buf.value);
@@ -917,9 +917,9 @@ myproxy_authenticate_init(myproxy_socket_attrs_t *attrs,
                     &name_buf,
                     GSS_C_NT_HOSTBASED_SERVICE,
                     &accepted_peer_names[s]);
-             }
+           }
 
-             free(fqhn);
+           free(fqhn);
        }
    }
 

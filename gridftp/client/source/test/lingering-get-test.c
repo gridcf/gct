@@ -18,7 +18,7 @@
  * simple authenticated get which is not completed before
  * deactivation.
  *
- * makes sure that the ftp client and control libraries will 
+ * makes sure that the ftp client and control libraries will
  * correctly deal with a handle in a unfinished state before
  * deactivation.
  */
@@ -33,9 +33,9 @@ static int done = 0;
 static
 void
 done_cb(
-	void *					user_arg,
-	globus_ftp_client_handle_t *		handle,
-	globus_object_t *			err)
+        void *                                  user_arg,
+        globus_ftp_client_handle_t *            handle,
+        globus_object_t *                       err)
 {
     char * tmpstr;
 
@@ -47,18 +47,18 @@ done_cb(
     done = GLOBUS_TRUE;
     globus_cond_signal(&cond);
     globus_mutex_unlock(&lock);
-       
+
 }
 
 int main(int argc,
-	 char *argv[])
+         char *argv[])
 {
-    globus_ftp_client_handle_t			handle;
-    globus_ftp_client_operationattr_t		attr;
-    globus_result_t				result;
-    char *					src;
-    char *					dst;
-    globus_ftp_client_handleattr_t		handle_attr;
+    globus_ftp_client_handle_t                  handle;
+    globus_ftp_client_operationattr_t           attr;
+    globus_result_t                             result;
+    char *                                      src;
+    char *                                      dst;
+    globus_ftp_client_handleattr_t              handle_attr;
 
     LTDL_SET_PRELOADED_SYMBOLS();
     globus_module_activate(GLOBUS_FTP_CLIENT_MODULE);
@@ -66,12 +66,12 @@ int main(int argc,
     globus_ftp_client_handleattr_init(&handle_attr);
     globus_ftp_client_operationattr_init(&attr);
 
-    test_parse_args(argc, 
-		    argv,
-		    &handle_attr,
-		    &attr,
-		    &src,
-		    &dst);
+    test_parse_args(argc,
+                    argv,
+                    &handle_attr,
+                    &attr,
+                    &src,
+                    &dst);
 
     globus_mutex_init(&lock, GLOBUS_NULL);
     globus_cond_init(&cond, GLOBUS_NULL);
@@ -80,11 +80,11 @@ int main(int argc,
 
     done = GLOBUS_FALSE;
     result = globus_ftp_client_get(&handle,
-				   src,
-				   &attr,
-				   GLOBUS_NULL,
-				   done_cb,
-				   0);
+                                   src,
+                                   &attr,
+                                   GLOBUS_NULL,
+                                   done_cb,
+                                   0);
     globus_module_deactivate_all();
 
     return done;

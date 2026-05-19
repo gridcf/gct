@@ -69,7 +69,7 @@ indicate_mechs_test(void)
 
     for (i = 0; i < oids->count; i++)
     {
-    static gss_OID_desc                 gssapi_mech_gsi = 
+    static gss_OID_desc                 gssapi_mech_gsi =
             {9, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01"};
         if (oids->elements[i].length == gssapi_mech_gsi.length &&
             memcmp(oids->elements[i].elements,
@@ -105,8 +105,8 @@ indicate_mechs_v2_test(void)
     OM_uint32                           major_status = 0;
     OM_uint32                           minor_status = 0;
     int                                 i;
-    static gss_OID_desc                 gssapi_mech_gsi = 
-	{10, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01"};
+    static gss_OID_desc                 gssapi_mech_gsi =
+        {10, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01"};
 
     if (OPENSSL_VERSION_NUMBER < 0x10001000L)
     {

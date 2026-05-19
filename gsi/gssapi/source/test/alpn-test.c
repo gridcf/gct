@@ -1095,7 +1095,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "ALPN not supported\n");
         exit(77);
     }
-    
+
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
 
     printf("1..%zu\n", num_test_cases);

@@ -69,7 +69,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
         major_status = GSS_S_FAILURE;
         goto exit;
     }
-    
+
     if(context_handle == GSS_C_NO_CONTEXT)
     {
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
@@ -108,7 +108,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     /* lock the context mutex */
     globus_mutex_lock(&context->mutex);
 
-    local_result = 
+    local_result =
         globus_gsi_callback_get_cert_depth(context->callback_data,
                                            &cert_count);
     if(local_result != GLOBUS_SUCCESS)
@@ -124,7 +124,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     {
         goto unlock_exit;
     }
-    
+
     major_status = gss_create_empty_buffer_set(&local_minor_status, data_set);
 
     if(GSS_ERROR(major_status))
@@ -134,7 +134,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
             GLOBUS_GSI_GSSAPI_ERROR_WITH_BUFFER);
         goto unlock_exit;
     }
-    
+
     local_result = globus_gsi_callback_get_cert_chain(
         context->callback_data,
         &cert_chain);
@@ -260,7 +260,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
               gss_ext_x509_cert_chain_oid->length))
     {
         /* figure out what object was asked for */
-        
+
         asn1_desired_obj = ASN1_OBJECT_create(
             NID_undef,
             desired_object->elements,
@@ -285,10 +285,10 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
             data_set_buffer.value = NULL;
             data_set_buffer.length = 0;
 
-            found_index = X509_get_ext_by_OBJ(cert, 
-                                              asn1_desired_obj, 
+            found_index = X509_get_ext_by_OBJ(cert,
+                                              asn1_desired_obj,
                                               found_index);
-        
+
             if(found_index >= 0)
             {
                 extension = X509_get_ext(cert, found_index);
@@ -331,7 +331,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                 data_set_buffer.length = asn1_oct_string->length;
 
                 OPENSSL_free(asn1_oct_string);
-            
+
                 major_status = gss_add_buffer_set_member(
                     &local_minor_status,
                     &data_set_buffer,
@@ -344,7 +344,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     goto unlock_exit;
                 }
             }
-        } 
+        }
     }
     else
     {
@@ -363,9 +363,9 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
                     (_GGSL("Failed to serialize certificate")));
                 major_status = GSS_S_FAILURE;
-                goto unlock_exit;                
+                goto unlock_exit;
             }
-            
+
             tmp_ptr = realloc(data_set_buffer.value,
                               data_set_buffer.length);
 
@@ -373,11 +373,11 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
             {
                 GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
                 major_status = GSS_S_FAILURE;
-                goto unlock_exit;                
+                goto unlock_exit;
             }
 
             data_set_buffer.value = tmp_ptr;
-            
+
             if(i2d_X509(cert,&tmp_ptr) < 0)
             {
                 free(data_set_buffer.value);
@@ -386,7 +386,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     GLOBUS_GSI_GSSAPI_ERROR_WITH_OPENSSL,
                     (_GGSL("Failed to serialize certificate")));
                 major_status = GSS_S_FAILURE;
-                goto unlock_exit;                
+                goto unlock_exit;
             }
 
             major_status = gss_add_buffer_set_member(
@@ -401,7 +401,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                 goto unlock_exit;
             }
         }
-        
+
         if(data_set_buffer.value != NULL)
         {
             free(data_set_buffer.value);
@@ -421,7 +421,7 @@ exit:
     {
         sk_X509_pop_free(cert_chain, X509_free);
     }
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
 }

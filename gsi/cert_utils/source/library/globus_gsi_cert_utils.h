@@ -77,7 +77,7 @@ extern "C" {
    @endcode
  *
  * This function should be called once for each time Globus GSI Cert Utils
- * was activated. 
+ * was activated.
  *
  */
 
@@ -88,11 +88,11 @@ extern "C" {
  */
 #define GLOBUS_GSI_CERT_UTILS_MODULE    (&globus_i_gsi_cert_utils_module)
 
-extern 
+extern
 globus_module_descriptor_t              globus_i_gsi_cert_utils_module;
 
 #define _CUSL(s) globus_common_i18n_get_string(GLOBUS_GSI_CERT_UTILS_MODULE,\
-		s)
+                s)
 
 #ifndef DOXYGEN
 

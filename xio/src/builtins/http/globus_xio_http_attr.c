@@ -31,7 +31,7 @@
  * driver via globus_xio_attr_init().
  *
  * @param out_attr
- *     Pointer value will be set to point to a 
+ *     Pointer value will be set to point to a
  *     newly allocated and initilized #globus_i_xio_http_attr_t
  *     structure.
  *

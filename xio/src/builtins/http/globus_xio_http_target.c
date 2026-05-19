@@ -108,7 +108,7 @@ globus_i_xio_http_target_init(
         else
         {
             res = GlobusXIOErrorParameter("port");
-    
+
             goto free_target_exit;
         }
     }

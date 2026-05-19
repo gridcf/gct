@@ -41,7 +41,7 @@ gss_l_resolve_ip(
  *
  * Creates a new gss_name_t which contains a mechanism-specific representation
  * of the input name. GSSAPI OpenSSL implements the following name types, based
- * on the input_name_type OID: 
+ * on the input_name_type OID:
  *
  * - GSS_C_NT_ANONYMOUS (input_name_buffer is ignored)
  * - GSS_C_NT_HOSTBASED_SERVICE (input_name_buffer contains a string
@@ -84,7 +84,7 @@ gss_l_resolve_ip(
  *     indicates that the requested operation could not be performed for
  *     reasons unspecified at the GSS-API level.
  */
-OM_uint32 
+OM_uint32
 GSS_CALLCONV gss_import_name(
     OM_uint32 *                         minor_status,
     const gss_buffer_t                  input_name_buffer,
@@ -119,14 +119,14 @@ GSS_CALLCONV gss_import_name(
     *minor_status = (OM_uint32) GLOBUS_SUCCESS;
 
     output_name = calloc(1, sizeof(gss_name_desc));
-    
+
     if (output_name == NULL)
     {
         GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
         major_status = GSS_S_FAILURE;
         goto out;
-    } 
-    
+    }
+
     output_name->name_oid = input_name_type;
     output_name->x509n = X509_NAME_new();
     if (output_name->x509n == NULL)
@@ -289,7 +289,7 @@ GSS_CALLCONV gss_import_name(
             goto release_name_out;
         }
         memcpy(output_name->user_name,
-               input_name_buffer->value, 
+               input_name_buffer->value,
                input_name_buffer->length);
         output_name->user_name[input_name_buffer->length] = '\0';
 
@@ -493,7 +493,7 @@ GSS_CALLCONV gss_import_name(
     else
     {
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status, 
+                minor_status,
                 GLOBUS_GSI_GSSAPI_ERROR_BAD_NAME,
                 (_GGSL("Bad name type")));
 
@@ -510,12 +510,12 @@ release_name_out:
     }
 
     *output_name_P = output_name;
-    
+
  out:
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
-} 
+}
 /* gss_import_name */
 
 

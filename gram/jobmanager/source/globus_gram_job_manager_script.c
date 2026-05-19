@@ -95,11 +95,11 @@ globus_gram_job_manager_script_context_t;
 static
 void
 globus_l_gram_job_manager_script_read(
-    globus_xio_handle_t                 handle, 
+    globus_xio_handle_t                 handle,
     globus_result_t                     result,
     globus_byte_t *                     buffer,
     globus_size_t                       len,
-    globus_size_t                       nbytes, 
+    globus_size_t                       nbytes,
     globus_xio_data_descriptor_t        data_desc,
     void *                              user_arg);
 
@@ -197,7 +197,7 @@ globus_l_gram_script_open_callback(
 static
 int
 globus_l_gram_script_register_read_and_write(
-    globus_gram_job_manager_script_context_t * 
+    globus_gram_job_manager_script_context_t *
                                         script_context);
 
 static
@@ -353,11 +353,11 @@ fifo_init_failed:
 static
 void
 globus_l_gram_job_manager_script_read(
-    globus_xio_handle_t                 handle, 
+    globus_xio_handle_t                 handle,
     globus_result_t                     result,
     globus_byte_t *                     buffer,
     globus_size_t                       len,
-    globus_size_t                       nbytes, 
+    globus_size_t                       nbytes,
     globus_xio_data_descriptor_t        data_desc,
     void *                              user_arg)
 {
@@ -563,18 +563,18 @@ globus_l_gram_job_manager_script_read(
         if (sizeof(script_handle->return_buf) >
                 script_handle->return_buf_offset)
         {
-		globus_gram_job_manager_request_log(
-			script_context->request,
-			GLOBUS_GRAM_JOB_MANAGER_LOG_TRACE,
-			"event=gram.script_read.info "
-			"level=TRACE "
-			"message=\"registering read\" "
-			"return_buf_offset=%d "
-			"read_len=%d "
-			"\n",
-			(int) script_handle->return_buf_offset,
-			(int) (sizeof(script_handle->return_buf) - script_handle->return_buf_offset),
-			p);
+                globus_gram_job_manager_request_log(
+                        script_context->request,
+                        GLOBUS_GRAM_JOB_MANAGER_LOG_TRACE,
+                        "event=gram.script_read.info "
+                        "level=TRACE "
+                        "message=\"registering read\" "
+                        "return_buf_offset=%d "
+                        "read_len=%d "
+                        "\n",
+                        (int) script_handle->return_buf_offset,
+                        (int) (sizeof(script_handle->return_buf) - script_handle->return_buf_offset),
+                        p);
             result = globus_xio_register_read(
                     script_handle->handle,
                     &script_handle->return_buf[script_handle->return_buf_offset],
@@ -638,7 +638,7 @@ globus_l_gram_job_manager_script_read(
             globus_list_search_pred(
                     request->manager->scripts_per_client,
                     globus_l_match_script_client_addr,
-                    request->job_stats.client_address 
+                    request->job_stats.client_address
                         ? request->job_stats.client_address
                         : (void *) GLOBUS_GRAM_SCRIPT_NO_CLIENT));
 
@@ -686,7 +686,7 @@ globus_l_gram_job_manager_script_read(
  * Submit a job request to a local scheduler.
  *
  * This function submits the passed job request to the local scheduler
- * script. 
+ * script.
  *
  * @param request
  *        The request containing the job description and related information.
@@ -815,7 +815,7 @@ static void job_contact_strip_port(
  * Try to poll status of job request using Condor grid_manager_monitor_agent
  *
  * If the Condor grid_manager_monitor_agent is running on the machine, this
- * function retrieve job request status using that, otherwise it fails. 
+ * function retrieve job request status using that, otherwise it fails.
  * Expected to be called exclusively from globus_gram_job_manager_script_poll.
  */
 int
@@ -1024,7 +1024,7 @@ FAST_POLL_EXIT_FAILURE:
     return_val = GLOBUS_FAILURE;
 
 FAST_POLL_EXIT:
-    if(grid_monitor_file) 
+    if(grid_monitor_file)
         fclose(grid_monitor_file);
     for ( i = 0; grid_monitor_files[i]; i++ ) {
         free(grid_monitor_files[i]);
@@ -1050,7 +1050,7 @@ FAST_POLL_EXIT:
  * is the same as the result from the value of request's status field. This
  * field will be updated if the job's status has changed.
  */
-int 
+int
 globus_gram_job_manager_script_poll(
     globus_gram_jobmanager_request_t *  request)
 {
@@ -1066,7 +1066,7 @@ globus_gram_job_manager_script_poll(
     /* Keep the state file's timestamp up to date so that
      * anything scrubbing the state files of old and dead
      * processes leaves it alone
-     */ 
+     */
     if(request->job_state_file)
     {
         utime(request->job_state_file, NULL);
@@ -1176,7 +1176,7 @@ globus_gram_job_manager_script_signal(
 }
 /* globus_gram_job_manager_script_signal() */
 
-int 
+int
 globus_gram_job_manager_script_stage_in(
     globus_gram_jobmanager_request_t *  request)
 {
@@ -1205,7 +1205,7 @@ globus_gram_job_manager_script_stage_in(
 }
 /* globus_gram_job_manager_script_stage_in() */
 
-int 
+int
 globus_gram_job_manager_script_stage_out(
     globus_gram_jobmanager_request_t *  request)
 {
@@ -1269,7 +1269,7 @@ globus_l_gram_job_manager_default_done(
 
         if(script_status < 0)
         {
-            request->failure_code = 
+            request->failure_code =
                 GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
             globus_gram_job_manager_request_log(
                     request,
@@ -1314,7 +1314,7 @@ globus_l_gram_job_manager_default_done(
             globus_gram_job_manager_request_set_status(request, GLOBUS_GRAM_PROTOCOL_JOB_STATE_FAILED);
             if(script_status <= 0)
             {
-                request->failure_code = 
+                request->failure_code =
                     GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
                 globus_gram_job_manager_request_log(
                         request,
@@ -1460,7 +1460,7 @@ globus_l_gram_job_manager_default_done(
     else if(request->jobmanager_state == starting_jobmanager_state)
     {
         globus_gram_job_manager_request_set_status(request, GLOBUS_GRAM_PROTOCOL_JOB_STATE_FAILED);
-        request->failure_code = 
+        request->failure_code =
             GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
         request->unsent_status_change = GLOBUS_TRUE;
         globus_gram_job_manager_request_log(
@@ -1523,7 +1523,7 @@ globus_l_gram_job_manager_query_done(
 
         if(script_status <= 0)
         {
-            query->failure_code = 
+            query->failure_code =
                 GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
         }
         else
@@ -1537,7 +1537,7 @@ globus_l_gram_job_manager_query_done(
 
         if(script_status <= 0)
         {
-            query->failure_code = 
+            query->failure_code =
                 GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
         }
         else if((query->type == GLOBUS_GRAM_JOB_MANAGER_CANCEL ||
@@ -1560,7 +1560,7 @@ globus_l_gram_job_manager_query_done(
                 globus_i_gram_job_manager_script_valid_state_change(
                                                  request,
                                                  script_status))
-                
+
         {
             globus_gram_job_manager_request_set_status(request, script_status);
             request->unsent_status_change = GLOBUS_TRUE;
@@ -1582,7 +1582,7 @@ globus_l_gram_job_manager_query_done(
     }
     else
     {
-        query->failure_code = 
+        query->failure_code =
             GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_SCRIPT_STATUS;
     }
 
@@ -1726,7 +1726,7 @@ globus_l_gram_enqueue_rsl(
         {
             return 0;
         }
-                  
+
         rc = globus_l_gram_enqueue_string(
                 fifo,
                 "    '%s' => ",
@@ -2019,7 +2019,7 @@ globus_l_gram_request_validate(
                 -rc,
                 errno,
                 strerror(errno));
-        
+
         goto script_path_not_found;
     }
 
@@ -2088,7 +2088,7 @@ globus_l_gram_request_validate(
                 -rc,
                 errno,
                 strerror(errno));
-        
+
         goto lrm_module_not_found;
     }
 
@@ -2334,7 +2334,7 @@ globus_i_gram_job_manager_script_valid_state_change(
 /**
  * Queue and perhaps start a job manager script
  *
- * If the job manager isn't currently running too many simultaneous scripts, 
+ * If the job manager isn't currently running too many simultaneous scripts,
  * start the script described in the @a context parameter. Otherwise, queue
  * it in the manager's script fifo and it will start when another one finishes.
  *
@@ -2463,11 +2463,11 @@ fifo_enqueue_failed:
  *
  * For each script context queued in the script fifo, either write its command
  * to an existing XIO handle or create a new XIO handle to process the script,
- * provided there are slots available for running more scripts. 
+ * provided there are slots available for running more scripts.
  *
  * The mutex associated with the @a manager parameter must be locked when this
  * procedure is called.
- * 
+ *
  * @param manager
  *     Job manager state
  * @param scripts
@@ -2517,7 +2517,7 @@ globus_l_gram_process_script_queue_locked(
                 continue;
             }
         }
-        else 
+        else
         {
             /* Create a new script if more slots are available */
             assert(scripts->script_slots_available > 0);
@@ -2605,7 +2605,7 @@ globus_l_gram_script_open_callback(
                         request->job_stats.client_address
                         ? request->job_stats.client_address
                         : (void *) GLOBUS_GRAM_SCRIPT_NO_CLIENT));
-        
+
         globus_xio_register_close(
                 handle,
                 NULL,
@@ -2640,7 +2640,7 @@ globus_l_gram_script_open_callback(
 static
 int
 globus_l_gram_script_register_read_and_write(
-    globus_gram_job_manager_script_context_t * 
+    globus_gram_job_manager_script_context_t *
                                         script_context)
 {
     int                                 i, total_iov_contents;
@@ -2648,7 +2648,7 @@ globus_l_gram_script_register_read_and_write(
     globus_gram_job_manager_t *         manager;
     globus_gram_jobmanager_request_t *  request = script_context->request;
     globus_gram_job_manager_scripts_t * scripts;
-    
+
     manager = script_context->handle->manager;
 
     scripts = globus_list_first(
@@ -2796,7 +2796,7 @@ malloc_iov_failed:
  *
  * @param manager
  *     Job manager state
- * 
+ *
  * @return void
  */
 static

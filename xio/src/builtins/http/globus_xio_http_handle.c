@@ -282,7 +282,7 @@ globus_i_xio_http_handle_destroy(
  * @retval GLOBUS_XIO_ERROR_MEMORY
  *     The command failed due to memory constraints.
  * @retval GLOBUS_XIO_ERROR_PARAMETER
- *     Invalid @a cmd parameter or invlaid value of cmd-specific parameters 
+ *     Invalid @a cmd parameter or invlaid value of cmd-specific parameters
  *     in @a ap
  */
 globus_result_t
@@ -448,7 +448,7 @@ globus_i_xio_http_set_end_of_entity(
     globus_result_t                     result = GLOBUS_SUCCESS;
     globus_i_xio_http_header_info_t *   headers;
     static globus_xio_iovec_t           end_of_body_iovec = {
-        .iov_base = "0\r\n\r\n", 
+        .iov_base = "0\r\n\r\n",
         .iov_len = 5
     };
     GlobusXIOName(globus_i_xio_http_set_end_of_entity);
@@ -467,7 +467,7 @@ globus_i_xio_http_set_end_of_entity(
     {
         headers = &http_handle->response_info.headers;
     }
-    
+
     if (http_handle->send_state == GLOBUS_XIO_HTTP_STATUS_LINE)
     {
         /* To send an empty response from server */

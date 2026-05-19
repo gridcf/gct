@@ -142,7 +142,7 @@ error_exit:
  * Adds a new header to a header info structure, or updates the value of an
  * existing header. Copies of the name and value will be stored in a
  * #globus_xio_http_header_t in a hashtable in the header info structure.
- * 
+ *
  * @param headers
  *     Pointer to the header info structure.
  * @param header_name
@@ -229,7 +229,7 @@ globus_i_xio_http_header_info_set_header(
     {
         store = GLOBUS_TRUE;
     }
-    
+
     if(store)
     {
         /*

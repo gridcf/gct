@@ -584,15 +584,15 @@ globus_l_gram_job_manager_cancel(
     case GLOBUS_GRAM_JOB_MANAGER_STATE_POLL_QUERY1:
     case GLOBUS_GRAM_JOB_MANAGER_STATE_POLL_QUERY2:
         query = calloc(1, sizeof(globus_gram_job_manager_query_t));
-  
+
         query->type = GLOBUS_GRAM_JOB_MANAGER_CANCEL;
         query->handle = handle;
         query->signal = 0;
         query->signal_arg = NULL;
-  
+
         globus_fifo_enqueue(&request->pending_queries, query);
         *reply = GLOBUS_FALSE;
-  
+
         if(request->jobmanager_state == GLOBUS_GRAM_JOB_MANAGER_STATE_POLL2)
         {
             request->jobmanager_state =
@@ -764,7 +764,7 @@ globus_l_gram_job_manager_renew(
                 -rc,
                 msg,
                 globus_gram_protocol_error_string(rc));
-        
+
         globus_gram_job_manager_remove_reference(
                 request->manager,
                 request->job_contact_path,
@@ -1026,7 +1026,7 @@ globus_l_gram_job_manager_signal(
         }
         else if(request->jobmanager_state ==
                     GLOBUS_GRAM_JOB_MANAGER_STATE_TWO_PHASE ||
-		request->jobmanager_state == 
+                request->jobmanager_state ==
                     GLOBUS_GRAM_JOB_MANAGER_STATE_START)
         {
             request->jobmanager_state =

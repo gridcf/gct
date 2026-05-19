@@ -40,7 +40,7 @@
             "%s",                                                           \
             (error_msg)))
 
-enum 
+enum
 {
     GLOBUS_DYNCLIENT_ERROR_PARM = 1
 };
@@ -219,7 +219,7 @@ main(
         goto error_open;
     }
     result = globus_xio_write(
-        g_xio_handle, buffer, 
+        g_xio_handle, buffer,
         GF_DYN_PACKET_LEN, GF_DYN_PACKET_LEN, &nbytes, NULL);
     if(result != GLOBUS_SUCCESS)
     {

@@ -4,7 +4,7 @@
  * Client program to store a end-entity credential to a myproxy-server
  */
 
-#include "myproxy_common.h"	/* all needed headers included here */
+#include "myproxy_common.h"     /* all needed headers included here */
 
 /* Location of default proxy */
 #define MYPROXY_DEFAULT_USERCERT  "usercert.pem"
@@ -85,27 +85,27 @@ static char version[] =
     "myproxy-store version " MYPROXY_VERSION " (" MYPROXY_VERSION_DATE ") "
     "\n";
 
-static char *certfile               = NULL;	/* certificate file name */
-static char *keyfile                = NULL;	/* key file name */
+static char *certfile               = NULL;     /* certificate file name */
+static char *keyfile                = NULL;     /* key file name */
 static int   dn_as_username         = 0;
 static int   verbose                = 0;
 
 /* Function declarations */
-int 
+int
 init_arguments(    int                      argc,
-	           char                    *argv[],
-	           myproxy_socket_attrs_t  *attrs,
+                   char                    *argv[],
+                   myproxy_socket_attrs_t  *attrs,
                    myproxy_request_t       *request);
 
-int 
+int
 makecertfile(      const char               certfile[],
-	           const char               keyfile[],
+                   const char               keyfile[],
                    char                   **credbuf);
 
-#define		SECONDS_PER_HOUR			(60 * 60)
+#define         SECONDS_PER_HOUR                        (60 * 60)
 
-int 
-main(int   argc, 
+int
+main(int   argc,
      char *argv[])
 {
     char                   *pshost             = NULL;
@@ -120,10 +120,10 @@ main(int   argc,
 
     /* check library version */
     if (myproxy_check_version()) {
-	fprintf(stderr, "MyProxy library version mismatch.\n"
-		"Expecting %s.  Found %s.\n",
-		MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
-	exit(1);
+        fprintf(stderr, "MyProxy library version mismatch.\n"
+                "Expecting %s.  Found %s.\n",
+                MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
+        exit(1);
     }
 
     myproxy_log_use_stream(stderr);
@@ -145,18 +145,18 @@ main(int   argc,
     pshost = getenv("MYPROXY_SERVER");
 
     if (pshost != NULL) {
-	socket_attrs->pshost = strdup(pshost);
+        socket_attrs->pshost = strdup(pshost);
     }
 
     if (getenv("MYPROXY_SERVER_PORT")) {
-	socket_attrs->psport = atoi(getenv("MYPROXY_SERVER_PORT"));
+        socket_attrs->psport = atoi(getenv("MYPROXY_SERVER_PORT"));
     } else {
-	socket_attrs->psport = MYPROXY_SERVER_PORT;
+        socket_attrs->psport = MYPROXY_SERVER_PORT;
     }
 
     globus_module_activate(GLOBUS_GSI_SYSCONFIG_MODULE);
     GLOBUS_GSI_SYSCONFIG_GET_USER_CERT_FILENAME( &certfile,
-						 &keyfile );
+                                                 &keyfile );
 
     client_request->proxy_lifetime = SECONDS_PER_HOUR *
                                      MYPROXY_DEFAULT_DELEG_HOURS;
@@ -168,17 +168,17 @@ main(int   argc,
     }
 
     if (!certfile && !keyfile) {
-	fprintf(stderr, "Credentials not found in default location.\n"
-		"Use --certfile and --keyfile options.\n");
-	goto cleanup;
+        fprintf(stderr, "Credentials not found in default location.\n"
+                "Use --certfile and --keyfile options.\n");
+        goto cleanup;
     } else if (!certfile) {
-	fprintf(stderr, "Certificate not found in default location.\n"
-		"Use --certfile option.\n");
-	goto cleanup;
+        fprintf(stderr, "Certificate not found in default location.\n"
+                "Use --certfile option.\n");
+        goto cleanup;
     } else if (!keyfile) {
-	fprintf(stderr, "Private key not found in default location.\n"
-		"Use --keyfile option.\n");
-	goto cleanup;
+        fprintf(stderr, "Private key not found in default location.\n"
+                "Use --keyfile option.\n");
+        goto cleanup;
     }
 
     /*
@@ -192,7 +192,7 @@ main(int   argc,
 
     /* Set up client socket attributes */
     if (myproxy_init_client(socket_attrs) < 0) {
-	verror_print_error(stderr);
+        verror_print_error(stderr);
         goto cleanup;
     }
 
@@ -217,7 +217,7 @@ main(int   argc,
 
     /* Authenticate client to server */
     if (myproxy_authenticate_init(socket_attrs, NULL) < 0) {
-	verror_print_error(stderr);
+        verror_print_error(stderr);
         goto cleanup;
     }
 
@@ -239,14 +239,14 @@ main(int   argc,
 
     /* Continue unless the response is not OK */
     if (myproxy_recv_response_ex(socket_attrs,
-				 server_response, client_request) != 0) {
+                                 server_response, client_request) != 0) {
         verror_print_error(stderr);
         goto cleanup;
     }
 
     /* Send end-entity credentials to server. */
     if (myproxy_init_credentials(socket_attrs,
-				 credkeybuf) < 0) {
+                                 credkeybuf) < 0) {
         verror_print_error(stderr);
         goto cleanup;
     }
@@ -273,93 +273,93 @@ main(int   argc,
 
 int
 init_arguments(int                     argc,
-	       char                   *argv[],
-	       myproxy_socket_attrs_t *attrs, 
+               char                   *argv[],
+               myproxy_socket_attrs_t *attrs,
                myproxy_request_t      * request)
 {
     extern char *optarg;
-    int expr_type = MATCH_CN_ONLY;	/*default */
+    int expr_type = MATCH_CN_ONLY;      /*default */
     int arg;
 
     while ((arg = getopt_long(argc,
-				  argv,
-				  short_options,
-				  long_options, NULL)) != EOF) {
-	switch (arg) {
-	case 's':		/* pshost name */
-	    attrs->pshost = strdup(optarg);
-	    break;
+                                  argv,
+                                  short_options,
+                                  long_options, NULL)) != EOF) {
+        switch (arg) {
+        case 's':               /* pshost name */
+            attrs->pshost = strdup(optarg);
+            break;
 
-	case 'p':		/* psport */
-	    attrs->psport = atoi(optarg);
-	    break;
+        case 'p':               /* psport */
+            attrs->psport = atoi(optarg);
+            break;
 
-	case 'c':		/* credential file name */
-	    if (certfile) free(certfile);
-	    certfile = strdup(optarg);
-	    break;
+        case 'c':               /* credential file name */
+            if (certfile) free(certfile);
+            certfile = strdup(optarg);
+            break;
 
-	case 'y':		/* key file name */
-	    if (keyfile) free(keyfile);
-	    keyfile = strdup(optarg);
-	    break;
+        case 'y':               /* key file name */
+            if (keyfile) free(keyfile);
+            keyfile = strdup(optarg);
+            break;
 
-	case 'u':		/* print help and exit */
-	    printf("%s", usage);
-	    exit(0);
-	    break;
+        case 'u':               /* print help and exit */
+            printf("%s", usage);
+            exit(0);
+            break;
 
-	case 't':		/* Specify proxy lifetime in hours */
-	    request->proxy_lifetime = SECONDS_PER_HOUR * atoi(optarg);
+        case 't':               /* Specify proxy lifetime in hours */
+            request->proxy_lifetime = SECONDS_PER_HOUR * atoi(optarg);
         if (request->proxy_lifetime < 0) {
             fprintf(stderr, "Requested lifetime (-t option) out of bounds.\n");
             exit(1);
         }
-	    break;
+            break;
 
-	case 'h':		/* print help and exit */
-	    printf("%s", usage);
-	    exit(0);
-	    break;
+        case 'h':               /* print help and exit */
+            printf("%s", usage);
+            exit(0);
+            break;
 
-	case 'l':		/* username */
-	    request->username = strdup(optarg);
-	    break;
+        case 'l':               /* username */
+            request->username = strdup(optarg);
+            break;
 
-	case 'v':		/* verbose */
-	    myproxy_debug_set_level(1);
-	    verbose = 1;
-	    break;
+        case 'v':               /* verbose */
+            myproxy_debug_set_level(1);
+            verbose = 1;
+            break;
 
-	case 'V':		/* print version and exit */
-	    printf("%s", version);
-	    exit(0);
-	    break;
+        case 'V':               /* print version and exit */
+            printf("%s", version);
+            exit(0);
+            break;
 
 
-	case 'r':		/* retrievers list */
-	    if (request->retrievers) {
-		fprintf(stderr,
-			"Only one -a or -r option may be specified.\n");
-		exit(1);
-	    }
+        case 'r':               /* retrievers list */
+            if (request->retrievers) {
+                fprintf(stderr,
+                        "Only one -a or -r option may be specified.\n");
+                exit(1);
+            }
 
-	    if (expr_type == REGULAR_EXP) {
-		
+            if (expr_type == REGULAR_EXP) {
+
                 /* Copy as is */
-		request->retrievers = strdup(optarg);
-	    } else {
-		request->retrievers =
-		    (char *) malloc(strlen(optarg) + 6);
-		strcpy(request->retrievers, "*/CN=");
-		myproxy_debug("authorized retriever %s",
-			      request->retrievers);
-		request->retrievers =
-		    strcat(request->retrievers, optarg);
-	    }
-	    break;
+                request->retrievers = strdup(optarg);
+            } else {
+                request->retrievers =
+                    (char *) malloc(strlen(optarg) + 6);
+                strcpy(request->retrievers, "*/CN=");
+                myproxy_debug("authorized retriever %s",
+                              request->retrievers);
+                request->retrievers =
+                    strcat(request->retrievers, optarg);
+            }
+            break;
 
-	case 'R':		/* renewers list */
+        case 'R':               /* renewers list */
             /*
             ** This needs to be readdressed.  Right now, the private key is
             ** being stored encrypted.  This is a problem if the user calls
@@ -368,127 +368,127 @@ init_arguments(int                     argc,
             ** So, do we want to add code to unencrypt the private key if
             ** this option is used?
             */
-	    if (request->renewers) {
-		fprintf(stderr,
-			"Only one -A or -R option may be specified.\n");
-		exit(1);
-	    }
+            if (request->renewers) {
+                fprintf(stderr,
+                        "Only one -A or -R option may be specified.\n");
+                exit(1);
+            }
 
-	    if (expr_type == REGULAR_EXP) {
-		/* Copy as is */
-		request->renewers = strdup(optarg);
-	    } else {
-		request->renewers =
-		    (char *) malloc(strlen(optarg) + 6);
-		strcpy(request->renewers, "*/CN=");
-		myproxy_debug("authorized renewer %s", request->renewers);
-		request->renewers = strcat(request->renewers, optarg);
-	    }
-	    break;
-
-	case 'Z':		/* retrievers list */
-	    if (request->trusted_retrievers) {
-		fprintf(stderr,
-			"Only one -Z option may be specified.\n");
-		exit(1);
-	    }
-
-	    if (expr_type == REGULAR_EXP) {
-		
+            if (expr_type == REGULAR_EXP) {
                 /* Copy as is */
-		request->trusted_retrievers = strdup(optarg);
-	    } else {
-		request->trusted_retrievers =
-		    (char *) malloc(strlen(optarg) + 6);
-		strcpy(request->trusted_retrievers, "*/CN=");
-		myproxy_debug("trusted retriever %s",
-			      request->trusted_retrievers);
-		request->trusted_retrievers =
-		    strcat(request->trusted_retrievers, optarg);
-	    }
-	    break;
+                request->renewers = strdup(optarg);
+            } else {
+                request->renewers =
+                    (char *) malloc(strlen(optarg) + 6);
+                strcpy(request->renewers, "*/CN=");
+                myproxy_debug("authorized renewer %s", request->renewers);
+                request->renewers = strcat(request->renewers, optarg);
+            }
+            break;
 
-        case 'E' :              /* key retriever list */ 
-	    if (expr_type == REGULAR_EXP) {
-		/* Copy as is */
-		request->keyretrieve = strdup(optarg);
-	    } else {
-		request->keyretrieve =
-		    (char *) malloc(strlen(optarg) + 6);
-		strcpy(request->keyretrieve, "*/CN=");
-		myproxy_debug("authorized key retriever %s",
-			      request->keyretrieve);
-		request->keyretrieve =
-		    strcat(request->keyretrieve, optarg);
-	    }
-	    break;
+        case 'Z':               /* retrievers list */
+            if (request->trusted_retrievers) {
+                fprintf(stderr,
+                        "Only one -Z option may be specified.\n");
+                exit(1);
+            }
 
-	case 'd':		/* 
-				 ** use the certificate subject (DN) as the 
-				 ** default username instead of LOGNAME 
-				 */
-	    dn_as_username = 1;
-	    break;
+            if (expr_type == REGULAR_EXP) {
 
-	case 'x':		/*set expression type to regex */
-	    expr_type = REGULAR_EXP;
-	    myproxy_debug("expr-type = regex");
-	    break;
+                /* Copy as is */
+                request->trusted_retrievers = strdup(optarg);
+            } else {
+                request->trusted_retrievers =
+                    (char *) malloc(strlen(optarg) + 6);
+                strcpy(request->trusted_retrievers, "*/CN=");
+                myproxy_debug("trusted retriever %s",
+                              request->trusted_retrievers);
+                request->trusted_retrievers =
+                    strcat(request->trusted_retrievers, optarg);
+            }
+            break;
 
-	case 'X':		/*set expression type to common name */
-	    expr_type = MATCH_CN_ONLY;
-	    myproxy_debug("expr-type = CN");
-	    break;
+        case 'E' :              /* key retriever list */
+            if (expr_type == REGULAR_EXP) {
+                /* Copy as is */
+                request->keyretrieve = strdup(optarg);
+            } else {
+                request->keyretrieve =
+                    (char *) malloc(strlen(optarg) + 6);
+                strcpy(request->keyretrieve, "*/CN=");
+                myproxy_debug("authorized key retriever %s",
+                              request->keyretrieve);
+                request->keyretrieve =
+                    strcat(request->keyretrieve, optarg);
+            }
+            break;
 
-	case 'a':		/*allow anonymous retrievers */
-	    if (request->retrievers) {
-		fprintf(stderr,
-			"Only one -a or -r option may be specified.\n");
-		exit(1);
-	    }
+        case 'd':               /*
+                                 ** use the certificate subject (DN) as the
+                                 ** default username instead of LOGNAME
+                                 */
+            dn_as_username = 1;
+            break;
 
-	    request->retrievers = strdup("*");
-	    myproxy_debug("anonymous retrievers allowed");
-	    break;
+        case 'x':               /*set expression type to regex */
+            expr_type = REGULAR_EXP;
+            myproxy_debug("expr-type = regex");
+            break;
 
-	case 'A':		/*allow anonymous renewers */
-	    if (request->renewers) {
-		fprintf(stderr,
-			"Only one -A or -R option may be specified.\n");
-		exit(1);
-	    }
+        case 'X':               /*set expression type to common name */
+            expr_type = MATCH_CN_ONLY;
+            myproxy_debug("expr-type = CN");
+            break;
 
-	    request->renewers = strdup("*");
-	    myproxy_debug("anonymous renewers allowed");
-	    break;
+        case 'a':               /*allow anonymous retrievers */
+            if (request->retrievers) {
+                fprintf(stderr,
+                        "Only one -a or -r option may be specified.\n");
+                exit(1);
+            }
 
-	case 'k':		/*credential name */
-	    request->credname = strdup(optarg);
-	    break;
+            request->retrievers = strdup("*");
+            myproxy_debug("anonymous retrievers allowed");
+            break;
 
-	case 'K':		/*credential description */
-	    request->creddesc = strdup(optarg);
-	    break;
+        case 'A':               /*allow anonymous renewers */
+            if (request->renewers) {
+                fprintf(stderr,
+                        "Only one -A or -R option may be specified.\n");
+                exit(1);
+            }
 
-	default:		/* print usage and exit */
-	    fprintf(stderr, "%s", usage);
-	    exit(1);
-	    break;
-	}
+            request->renewers = strdup("*");
+            myproxy_debug("anonymous renewers allowed");
+            break;
+
+        case 'k':               /*credential name */
+            request->credname = strdup(optarg);
+            break;
+
+        case 'K':               /*credential description */
+            request->creddesc = strdup(optarg);
+            break;
+
+        default:                /* print usage and exit */
+            fprintf(stderr, "%s", usage);
+            exit(1);
+            break;
+        }
     }
 
     /* Check to see if myproxy-server specified */
     if (attrs->pshost == NULL) {
         fprintf(stderr, "%s", usage);
-	fprintf(stderr,
-		"Unspecified myproxy-server! Either set the MYPROXY_SERVER environment variable or explicitly set the myproxy-server via the -s flag\n");
-	return -1;
+        fprintf(stderr,
+                "Unspecified myproxy-server! Either set the MYPROXY_SERVER environment variable or explicitly set the myproxy-server via the -s flag\n");
+        return -1;
     }
 
     return 0;
 }
 
-int 
+int
 makecertfile(const char   certfile[],
              const char   keyfile[],
              char       **credbuf)
@@ -506,10 +506,10 @@ makecertfile(const char   certfile[],
     static char ENDKEY1[] = "-----END RSA PRIVATE KEY-----";
     static char ENDKEY2[] = "-----END PRIVATE KEY-----";
     static char ENDKEY3[] = "-----END ENCRYPTED PRIVATE KEY-----";
-    char        *certstart; 
+    char        *certstart;
     char        *certend;
     int          size;
-    char        *keystart; 
+    char        *keystart;
     char        *keyend;
 
 
@@ -530,8 +530,8 @@ makecertfile(const char   certfile[],
 
     /* Read the certificate(s) into a buffer. */
     if (buffer_from_file(certfile, &certbuf, NULL) < 0) {
-	fprintf(stderr, "Failed to read %s\n", certfile);
-	goto cleanup;
+        fprintf(stderr, "Failed to read %s\n", certfile);
+        goto cleanup;
     }
 
     /* Read the key into a buffer. */
@@ -554,29 +554,29 @@ makecertfile(const char   certfile[],
     certend += strlen(ENDCERT);
     size = certend-certstart;
 
-    strncat( *credbuf, certstart, size ); 
+    strncat( *credbuf, certstart, size );
     strcat( *credbuf, "\n" );
     certstart += size;
 
     /* Write the key. */
     if ((keystart = strstr((const char *)keybuf, BEGINKEY1)) == NULL
-	&& (keystart = strstr((const char *)keybuf, BEGINKEY2)) == NULL
-	&& (keystart = strstr((const char *)keybuf, BEGINKEY3)) == NULL) {
-	fprintf(stderr, "%s doesn't contain '%s' nor '%s' nor %s.\n", keyfile,
-					BEGINKEY1, BEGINKEY2, BEGINKEY3);
-	goto cleanup;
+        && (keystart = strstr((const char *)keybuf, BEGINKEY2)) == NULL
+        && (keystart = strstr((const char *)keybuf, BEGINKEY3)) == NULL) {
+        fprintf(stderr, "%s doesn't contain '%s' nor '%s' nor %s.\n", keyfile,
+                                        BEGINKEY1, BEGINKEY2, BEGINKEY3);
+        goto cleanup;
     }
 
     if ((keyend = strstr(keystart, ENDKEY1)) != NULL)
-	keyend += strlen(ENDKEY1);
+        keyend += strlen(ENDKEY1);
     else if ((keyend = strstr(keystart, ENDKEY2)) != NULL)
-	keyend += strlen(ENDKEY2);
+        keyend += strlen(ENDKEY2);
     else if ((keyend = strstr(keystart, ENDKEY3)) != NULL)
-	keyend += strlen(ENDKEY3);
+        keyend += strlen(ENDKEY3);
     else {
-	fprintf(stderr, "%s doesn't contain '%s' nor '%s' nor %s.\n", keyfile, ENDKEY1,
-						ENDKEY2, ENDKEY3);
-	goto cleanup;
+        fprintf(stderr, "%s doesn't contain '%s' nor '%s' nor %s.\n", keyfile, ENDKEY1,
+                                                ENDKEY2, ENDKEY3);
+        goto cleanup;
     }
 
     size = keyend-keystart;
@@ -595,8 +595,8 @@ makecertfile(const char   certfile[],
         certend += strlen(ENDCERT);
         size = certend-certstart;
 
-        strncat( *credbuf, certstart, size ); 
-        strcat( *credbuf, "\n" ); 
+        strncat( *credbuf, certstart, size );
+        strcat( *credbuf, "\n" );
         certstart += size;
     }
 

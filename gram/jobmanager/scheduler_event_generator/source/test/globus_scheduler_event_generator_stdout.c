@@ -269,7 +269,7 @@ globus_l_seg_stdout_activate(void)
     {
 
         goto close_out_handle_error;
-    
+
     }
 
     result = globus_xio_open(globus_l_seg_input_handle, "", in_attr);

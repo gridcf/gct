@@ -103,8 +103,8 @@ typedef struct
 
 static globus_mutex_t                   globus_i_gfs_config_mutex;
 
-static const globus_l_gfs_config_option_t option_list[] = 
-{ 
+static const globus_l_gfs_config_option_t option_list[] =
+{
 {NULL, "Informational Options", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, GLOBUS_FALSE, NULL},
  {"help", "help", NULL, "help", "h", GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "Show usage information and exit.", NULL, NULL,GLOBUS_FALSE, NULL},
@@ -133,7 +133,7 @@ static const globus_l_gfs_config_option_t option_list[] =
     "Directory to chdir to after starting.  Will use / if not set.  Note that this is the "
     "directory of the process, not the client's home directory.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"threads", "threads", NULL, "threads", NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
-    "Enable threaded operation and set the number of threads.  The default is 0, which " 
+    "Enable threaded operation and set the number of threads.  The default is 0, which "
     "is non-threaded.  When threading is required, a thread count of 1 or 2 should "
     "be sufficient.", NULL, NULL, GLOBUS_TRUE, NULL},
  {"fork", "fork", NULL, "fork", "f", GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_TRUE, NULL,
@@ -142,9 +142,9 @@ static const globus_l_gfs_config_option_t option_list[] =
     "accept a single connection, and then exit.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"fork_fallback", "fork_fallback", NULL, "fork-fallback", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     NULL /* attempt to run non-forked if fork fails */, NULL, NULL, GLOBUS_FALSE, NULL},
- {"single", "single", NULL, "single", "1", GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL, 
+ {"single", "single", NULL, "single", "1", GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "Exit after a single connection.", NULL, NULL,GLOBUS_FALSE, NULL},
- {"chroot_path", "chroot_path", NULL, "chroot-path", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL, 
+ {"chroot_path", "chroot_path", NULL, "chroot-path", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Path to become the new root after authentication.  This path must contain a valid "
     "certificate structure, /etc/passwd, and /etc/group.  The command "
     "globus-gridftp-server-setup-chroot can help create a suitable directory structure.", NULL, NULL,GLOBUS_FALSE, NULL},
@@ -282,7 +282,7 @@ static const globus_l_gfs_config_option_t option_list[] =
     "replaced by the authenticated user's home directory, or the '-home-dir' option, if used. "
     "Note that if the home directory is not accessible, '~' will be set to '/'.  "
     "By default all paths are allowed, and access control is handled by the OS. "
-    "In a striped or split process configuration, this should be set on both the frontend and data nodes.", 
+    "In a striped or split process configuration, this should be set on both the frontend and data nodes.",
     NULL, NULL,GLOBUS_FALSE, NULL},
  {"rp_follow_symlinks", "rp_follow_symlinks", NULL, "rp-follow-symlinks", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "Do not verify that a symlink points to an allowed path before following.  By default, symlinks are "
@@ -290,7 +290,7 @@ static const globus_l_gfs_config_option_t option_list[] =
     "will be followed even if they point to a path that is otherwise restricted.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"acl", "acl", NULL, "acl", "em", GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "A comma separated list of ACL or event modules to load.",
-    NULL, NULL,GLOBUS_FALSE, NULL}, 
+    NULL, NULL,GLOBUS_FALSE, NULL},
 {NULL, "Logging Options", NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL},
  {"log_level", "log_level", NULL, "log-level", "d", GLOBUS_L_GFS_CONFIG_STRING, 0, "ERROR",
     "Log level. A comma separated list of levels from: 'ERROR, WARN, INFO, TRANSFER, DUMP, ALL'. "
@@ -426,7 +426,7 @@ static const globus_l_gfs_config_option_t option_list[] =
     "to unauthenticated clients.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"banner_append", "banner_append", NULL, "banner-append", NULL, GLOBUS_L_GFS_CONFIG_BOOL, GLOBUS_FALSE, NULL,
     "When this is set, the message set in the 'banner' or 'banner_file' option "
-    "will be appended to the default banner message rather than replacing it.", 
+    "will be appended to the default banner message rather than replacing it.",
     NULL, NULL,GLOBUS_FALSE, NULL},
  {"version_tag", "version_tag", NULL, "version-tag", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Add an identifying string to the existing toolkit version.  This is displayed in the default "
@@ -439,12 +439,12 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"load_dsi_module", "load_dsi_module", NULL, "dsi", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Data Storage Interface module to load. File and remote modules are defined by the server. "
     "If not set, the file module is loaded, unless the 'remote' option is specified, in which case the remote "
-    "module is loaded.  An additional configuration string can be passed to the DSI using the format " 
+    "module is loaded.  An additional configuration string can be passed to the DSI using the format "
     "[module name]:[configuration string] to this option.  The format of the configuration "
     "string is defined by the DSI being loaded.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"allowed_modules", "allowed_modules", NULL, "allowed-modules", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Comma separated list of ERET/ESTO modules to allow, and optionally specify an alias for. "
-    "Example: module1,alias2:module2,module3 (module2 will be loaded when a client asks for alias2).", NULL, NULL,GLOBUS_FALSE, NULL}, 
+    "Example: module1,alias2:module2,module3 (module2 will be loaded when a client asks for alias2).", NULL, NULL,GLOBUS_FALSE, NULL},
  {"dc_whitelist", "dc_whitelist", NULL, "dc-whitelist", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "A comma separated list of drivers allowed on the network stack.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"fs_whitelist", "fs_whitelist", NULL, "fs-whitelist", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
@@ -484,7 +484,7 @@ static const globus_l_gfs_config_option_t option_list[] =
     "Sets options that make server easier to debug.  Forces no-fork, no-chdir, "
     "and allows core dumps on bad signals instead of exiting cleanly. "
     "Not recommended for production servers.  Note that non-forked servers running "
-    "as 'root' will only accept a single connection, and then exit.", NULL, NULL,GLOBUS_FALSE, NULL}, 
+    "as 'root' will only accept a single connection, and then exit.", NULL, NULL,GLOBUS_FALSE, NULL},
  {"pidfile", "pidfile", NULL, "pidfile", NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     "Write PID of the GridFTP server to this path. May contain variable references to ${localstatedir}", NULL, NULL, GLOBUS_FALSE, NULL},
 
@@ -498,7 +498,7 @@ static const globus_l_gfs_config_option_t option_list[] =
  {"slow_dirlist", "slow_dirlist", NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL, NULL, NULL,GLOBUS_FALSE, NULL}, /* fake stat responses on dirs with more than this many entries */
  {"checksum_throttle", "checksum_throttle", NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
-    NULL, NULL, NULL,GLOBUS_FALSE, NULL}, /* delay checksum reads by this many microseconds per blocksize'd read, 
+    NULL, NULL, NULL,GLOBUS_FALSE, NULL}, /* delay checksum reads by this many microseconds per blocksize'd read,
     * effectively setting a floor on the checksum rate to size/blocksize*delay per size */
  {"test_acl", NULL, NULL, NULL, "testacl", GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     NULL /* load and pass arguments to the test acl module. the string
@@ -554,13 +554,13 @@ static const globus_l_gfs_config_option_t option_list[] =
     NULL /* Data node connection count. */, NULL, NULL, GLOBUS_TRUE, NULL},
  {"tcp_mem_limit", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL /* TCP memory limit */, NULL, NULL, GLOBUS_TRUE, NULL},
- {"max_bw", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL, 
+ {"max_bw", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL, NULL, NULL, GLOBUS_TRUE, NULL},
- {"current_bw", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL, 
+ {"current_bw", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL, NULL, NULL, GLOBUS_TRUE, NULL},
  {"file_transfer_count", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_INT, 0, NULL,
     NULL, NULL, NULL, GLOBUS_TRUE, NULL},
- {"byte_transfer_count", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL, 
+ {"byte_transfer_count", NULL, NULL, NULL, NULL, GLOBUS_L_GFS_CONFIG_STRING, 0, NULL,
     NULL, NULL, NULL, GLOBUS_TRUE, NULL},
 {NULL, /* END */ NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL,GLOBUS_FALSE, NULL}
 };
@@ -573,7 +573,7 @@ static char *                           globus_l_gfs_port_range = NULL;
 static globus_bool_t                    globus_l_gfs_common_loaded = GLOBUS_FALSE;
 static globus_bool_t                    globus_l_gfs_is_worker = GLOBUS_FALSE;
 
-/* for string options, setting with an int_val of 1 will free the old one */ 
+/* for string options, setting with an int_val of 1 will free the old one */
 static
 int
 globus_l_gfs_config_set(
@@ -583,24 +583,24 @@ globus_l_gfs_config_set(
 {
     globus_l_gfs_config_option_t *      option;
     int                                 i;
-    int                                 rc; 
+    int                                 rc;
     GlobusGFSName(globus_l_gfs_config_set);
     GlobusGFSDebugEnter();
 
     option = (globus_l_gfs_config_option_t *) globus_hashtable_remove(
-            &option_table, option_name);   
+            &option_table, option_name);
     if(!option)
     {
         option = (globus_l_gfs_config_option_t *)
             globus_calloc(1, sizeof(globus_l_gfs_config_option_t));
-        for(i = 0; 
+        for(i = 0;
             i < option_count && option_list[i].option_name &&
-                strcmp(option_name, option_list[i].option_name); 
+                strcmp(option_name, option_list[i].option_name);
             i++);
         if(i == option_count)
         {
             goto error;
-        }    
+        }
         memcpy(option, &option_list[i], sizeof(globus_l_gfs_config_option_t));
     }
     switch(option->type)
@@ -636,7 +636,7 @@ globus_l_gfs_config_set(
 error:
     globus_free(option);
     GlobusGFSDebugExitWithError();
-    return 1;             
+    return 1;
 }
 
 #define GLOBUS_L_GFS_LINEBUFLEN 1024
@@ -668,7 +668,7 @@ globus_l_gfs_config_load_config_file(
         GlobusGFSDebugExitWithError();
         return -2; /* XXX construct real error */
     }
-    globus_l_gfs_config_set("loaded_config", 0, globus_libc_strdup(filename));  
+    globus_l_gfs_config_set("loaded_config", 0, globus_libc_strdup(filename));
 
     line_num = 0;
     linebuf = globus_malloc(linebuflen);
@@ -686,7 +686,7 @@ globus_l_gfs_config_load_config_file(
     {
         goto error_mem;
     }
-    
+
     while(fgets(linebuf, linebuflen, fptr) != NULL)
     {
         p = linebuf;
@@ -704,7 +704,7 @@ globus_l_gfs_config_load_config_file(
                     goto error_mem;
                 }
                 strncat(linebuf, part_line, linebuflen);
-                
+
                 optionbuf = globus_realloc(optionbuf, linebuflen);
                 if(!optionbuf)
                 {
@@ -719,7 +719,7 @@ globus_l_gfs_config_load_config_file(
         }
         line_num++;
         p = linebuf;
-        optlen = 0;               
+        optlen = 0;
         while(*p && isspace(*p))
         {
             p++;
@@ -731,11 +731,11 @@ globus_l_gfs_config_load_config_file(
         if(*p == '#')
         {
             continue;
-        }        
+        }
         if(*p == '$')
         {
             continue;
-        }        
+        }
 
         if(*p == '"')
         {
@@ -745,14 +745,14 @@ globus_l_gfs_config_load_config_file(
         else
         {
             rc = sscanf(p, "%s", optionbuf);
-        }        
+        }
         if(rc != 1)
-        {   
+        {
             goto error_parse;
         }
         optlen += strlen(optionbuf);
         p = p + optlen;
-               
+
         optlen = 0;
         while(*p && isspace(*p))
         {
@@ -766,13 +766,13 @@ globus_l_gfs_config_load_config_file(
         else
         {
             rc = sscanf(p, "%s", valuebuf);
-        }        
+        }
         if(rc != 1)
-        {   
+        {
             goto error_parse;
-        }        
+        }
         optlen += strlen(valuebuf);
-        p = p + optlen;        
+        p = p + optlen;
         while(*p && isspace(*p))
         {
             p++;
@@ -781,7 +781,7 @@ globus_l_gfs_config_load_config_file(
         {
             goto error_parse;
         }
-        
+
         found = GLOBUS_FALSE;
         for(i = 0; !found && i < option_count; i++)
         {
@@ -789,16 +789,16 @@ globus_l_gfs_config_load_config_file(
             {
                 continue;
             }
-            if(!option_list[i].configfile_option || 
+            if(!option_list[i].configfile_option ||
                 strcmp(optionbuf, option_list[i].configfile_option))
             {
                 continue;
             }
-            
+
             found = GLOBUS_TRUE;
-            
+
             option = (globus_l_gfs_config_option_t *) globus_hashtable_remove(
-                    &option_table, option_list[i].option_name);   
+                    &option_table, option_list[i].option_name);
             if(!option)
             {
                 option = (globus_l_gfs_config_option_t *)
@@ -818,19 +818,19 @@ globus_l_gfs_config_load_config_file(
                 }
                 else
                 {
-                    globus_gfs_log_exit_message("Value for %s must be 0 or 1.\n", 
+                    globus_gfs_log_exit_message("Value for %s must be 0 or 1.\n",
                         option_list[i].option_name);
                     goto error_parse;
-                }                    
+                }
                 break;
               case GLOBUS_L_GFS_CONFIG_INT:
                 rc = globus_args_bytestr_to_num(valuebuf, &tmp_off);
                 if(rc != 0)
                 {
-                    globus_gfs_log_exit_message("Invalid value for %s\n", 
+                    globus_gfs_log_exit_message("Invalid value for %s\n",
                         option_list[i].option_name);
                     goto error_parse;
-                }                  
+                }
                 option->int_value = (int) tmp_off;
                 break;
               case GLOBUS_L_GFS_CONFIG_STRING:
@@ -842,7 +842,7 @@ globus_l_gfs_config_load_config_file(
             rc = globus_hashtable_insert(&option_table,
                 option->option_name,
                 (void *) option);
-            
+
             if(rc)
             {
                 /* XXX error, log something */
@@ -851,24 +851,24 @@ globus_l_gfs_config_load_config_file(
         if(!found)
         {
             globus_gfs_log_exit_message("Problem parsing config file %s: line %d. "
-                "Unknown option '%s'.\n", 
+                "Unknown option '%s'.\n",
                 filename, line_num, optionbuf);
             goto error_param;
         }
     }
 
     fclose(fptr);
-    
+
     globus_free(linebuf);
     globus_free(valuebuf);
     globus_free(optionbuf);
-    
+
     GlobusGFSDebugExit();
     return GLOBUS_SUCCESS;
 
 error_parse:
     fclose(fptr);
-    globus_gfs_log_exit_message("Problem parsing config file %s: line %d.\n", 
+    globus_gfs_log_exit_message("Problem parsing config file %s: line %d.\n",
         filename, line_num);
 error_param:
 error_mem:
@@ -878,9 +878,9 @@ error_mem:
 
 }
 
-/* handle options needed before module inits.  
+/* handle options needed before module inits.
     no return - errors get caught on next pass */
-static 
+static
 void
 globus_l_gfs_config_parse_preinit_opt(
     char *                              line,
@@ -889,15 +889,15 @@ globus_l_gfs_config_parse_preinit_opt(
 {
     int                                 rc;
     char *                              p = line;
-    
+
     if((rc = sscanf(p, "%s", optionbuf)) == 1)
     {
-        if(!globus_l_gfs_is_worker && 
+        if(!globus_l_gfs_is_worker &&
             (!strcmp(optionbuf, "inetd") || !strcmp(optionbuf, "debug") ||
             !strcmp(optionbuf, "ssh") || !strcmp(optionbuf, "fork")))
         {
             p = p + strlen(optionbuf);
-                   
+
             while(*p && isspace(*p))
             {
                 p++;
@@ -909,7 +909,7 @@ globus_l_gfs_config_parse_preinit_opt(
             else
             {
                 rc = sscanf(p, "%s", valuebuf);
-            }  
+            }
             if(rc == 1)
             {
                 globus_l_gfs_is_worker = atoi(valuebuf);
@@ -922,7 +922,7 @@ globus_l_gfs_config_parse_preinit_opt(
         if(globus_l_gfs_num_threads == -1 && !strcmp(optionbuf, "threads"))
         {
             p = p + strlen(optionbuf);
-                   
+
             while(*p && isspace(*p))
             {
                 p++;
@@ -934,7 +934,7 @@ globus_l_gfs_config_parse_preinit_opt(
             else
             {
                 rc = sscanf(p, "%s", valuebuf);
-            }  
+            }
             if(rc == 1)
             {
                 globus_l_gfs_num_threads = atoi(valuebuf);
@@ -943,7 +943,7 @@ globus_l_gfs_config_parse_preinit_opt(
         if(!globus_l_gfs_port_range && !strcmp(optionbuf, "port_range"))
         {
             p = p + strlen(optionbuf);
-                   
+
             while(*p && isspace(*p))
             {
                 p++;
@@ -955,7 +955,7 @@ globus_l_gfs_config_parse_preinit_opt(
             else
             {
                 rc = sscanf(p, "%s", valuebuf);
-            }  
+            }
             if(rc == 1)
             {
                 setenv("GLOBUS_TCP_PORT_RANGE", valuebuf, 1);
@@ -1022,7 +1022,7 @@ globus_l_gfs_config_load_envs_from_file(
                     goto error_mem;
                 }
                 strncat(linebuf, part_line, linebuflen);
-                
+
                 optionbuf = realloc(optionbuf, linebuflen);
                 if(!optionbuf)
                 {
@@ -1037,12 +1037,12 @@ globus_l_gfs_config_load_envs_from_file(
         }
         line_num++;
         p = linebuf;
-        optlen = 0;               
+        optlen = 0;
         while(*p && isspace(*p))
         {
             p++;
         }
-                
+
         /* parse some non-env options */
         if(*p != '$')
         {
@@ -1050,15 +1050,15 @@ globus_l_gfs_config_load_envs_from_file(
             continue;
         }
         p++;
-        
+
         rc = sscanf(p, "%s", optionbuf);
         if(rc != 1)
-        {   
+        {
             goto error_parse;
         }
         optlen += strlen(optionbuf);
         p = p + optlen;
-               
+
         optlen = 0;
         while(*p && isspace(*p))
         {
@@ -1072,13 +1072,13 @@ globus_l_gfs_config_load_envs_from_file(
         else
         {
             rc = sscanf(p, "%s", valuebuf);
-        }        
+        }
         if(rc != 1)
-        {   
+        {
             goto error_parse;
-        }        
+        }
         optlen += strlen(valuebuf);
-        p = p + optlen;        
+        p = p + optlen;
         while(*p && isspace(*p))
         {
             p++;
@@ -1087,14 +1087,14 @@ globus_l_gfs_config_load_envs_from_file(
         {
             goto error_parse;
         }
-        
+
         rc = globus_libc_setenv(optionbuf, valuebuf, 1);
         if(rc < 0)
         {
             char                        errstr[PATH_MAX];
             snprintf(
                 errstr, PATH_MAX,
-                "Problem loading environment from config file %s: line %d.\n", 
+                "Problem loading environment from config file %s: line %d.\n",
                 filename, line_num);
             perror(errstr);
         }
@@ -1105,20 +1105,20 @@ globus_l_gfs_config_load_envs_from_file(
     free(linebuf);
     free(valuebuf);
     free(optionbuf);
-   
+
     return 0;
 
 error_parse:
     if(globus_l_gfs_common_loaded)
     {
-        globus_gfs_log_exit_message("Problem parsing environment from config file %s: line %d.\n", 
+        globus_gfs_log_exit_message("Problem parsing environment from config file %s: line %d.\n",
             filename, line_num);
     }
     else
     {
         fprintf(
             stderr,
-            "Problem parsing environment from config file %s: line %d. \n", 
+            "Problem parsing environment from config file %s: line %d. \n",
             filename, line_num);
     }
 
@@ -1205,7 +1205,7 @@ globus_l_gfs_config_load_config_dir(
                 }
             }
             result = globus_l_gfs_config_load_envs_from_file(full_path);
-            
+
             free(entries[i]);
             free(full_path);
         }
@@ -1233,7 +1233,7 @@ globus_l_gfs_config_load_config_env()
     globus_off_t                        tmp_off;
     GlobusGFSName(globus_l_gfs_config_load_config_env);
     GlobusGFSDebugEnter();
-    
+
 
     for(i = 0; i < option_count; i++)
     {
@@ -1247,14 +1247,14 @@ globus_l_gfs_config_load_config_env()
         }
 
         value = getenv(option_list[i].env_var_option);
-        
+
         if (!value)
         {
             continue;
         }
-                            
+
         option = (globus_l_gfs_config_option_t *) globus_hashtable_remove(
-                &option_table, option_list[i].option_name);   
+                &option_table, option_list[i].option_name);
         if(!option)
         {
             option = (globus_l_gfs_config_option_t *)
@@ -1275,10 +1275,10 @@ globus_l_gfs_config_load_config_env()
             }
             else
             {
-                globus_gfs_log_exit_message("Value for %s must be 0 or 1.\n", 
+                globus_gfs_log_exit_message("Value for %s must be 0 or 1.\n",
                     option_list[i].option_name);
                 return -1;
-            }                    
+            }
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
             rc = globus_args_bytestr_to_num(value, &tmp_off);
@@ -1288,10 +1288,10 @@ globus_l_gfs_config_load_config_env()
                 {
                     free(option);
                 }
-                globus_gfs_log_exit_message("Invalid value for %s\n", 
+                globus_gfs_log_exit_message("Invalid value for %s\n",
                     option_list[i].option_name);
                 return -1;
-            }                  
+            }
             option->int_value = (int) tmp_off;
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
@@ -1303,12 +1303,12 @@ globus_l_gfs_config_load_config_env()
         rc = globus_hashtable_insert(&option_table,
             option->option_name,
             (void *) option);
-        
+
         if(rc)
         {
             /* XXX error, log something */
         }
-    }       
+    }
 
     GlobusGFSDebugExit();
     return GLOBUS_SUCCESS;
@@ -1333,7 +1333,7 @@ globus_l_gfs_config_load_commandline(
     globus_off_t                        tmp_off;
     GlobusGFSName(globus_l_gfs_config_load_commandline);
     GlobusGFSDebugEnter();
-    
+
     for(arg_num = 1; arg_num < argc; ++arg_num)
     {
         found = GLOBUS_FALSE;
@@ -1341,7 +1341,7 @@ globus_l_gfs_config_load_commandline(
 
         argp = argv[arg_num];
         len = strlen(argp);
-        
+
         if(len && *argp == '-')
         {
             argp++;
@@ -1364,25 +1364,25 @@ globus_l_gfs_config_load_commandline(
             len--;
             negate = GLOBUS_TRUE;
         }
-        
+
         for(i = 0; i < option_count && !found && len; i++)
         {
             if(option_list[i].option_name == NULL)
             {
                 continue;
             }
-            if((!option_list[i].short_cmdline_option || 
-                strcmp(argp, option_list[i].short_cmdline_option)) && 
-                (!option_list[i].long_cmdline_option || 
+            if((!option_list[i].short_cmdline_option ||
+                strcmp(argp, option_list[i].short_cmdline_option)) &&
+                (!option_list[i].long_cmdline_option ||
                 strcmp(argp, option_list[i].long_cmdline_option)) )
             {
                 continue;
             }
-            
+
             found = GLOBUS_TRUE;
-                       
+
             option = (globus_l_gfs_config_option_t *) globus_hashtable_remove(
-                    &option_table, option_list[i].option_name);   
+                    &option_table, option_list[i].option_name);
             if(!option)
             {
                 opt_is_new = GLOBUS_TRUE;
@@ -1419,10 +1419,10 @@ globus_l_gfs_config_load_commandline(
                     }
                     globus_gfs_log_exit_message("Invalid value for %s\n", argp);
                     return -1;
-                }                  
+                }
                 option->int_value = (int) tmp_off;
                 break;
-                
+
               case GLOBUS_L_GFS_CONFIG_STRING:
                 if(++arg_num >= argc)
                 {
@@ -1443,14 +1443,14 @@ globus_l_gfs_config_load_commandline(
             rc = globus_hashtable_insert(&option_table,
                 option->option_name,
                 (void *) option);
-            
+
             if(rc)
             {
                 /* XXX error, log something */
             }
-            
+
         }
-        
+
         if(!found)
         {
             if(opt_is_new)
@@ -1462,7 +1462,7 @@ globus_l_gfs_config_load_commandline(
             return -1;
         }
     }
-      
+
     GlobusGFSDebugExit();
     return GLOBUS_SUCCESS;
 
@@ -1478,9 +1478,9 @@ globus_l_gfs_config_load_defaults()
     globus_l_gfs_config_option_t *      option;
     GlobusGFSName(globus_l_gfs_config_load_defaults);
     GlobusGFSDebugEnter();
-    
+
     for(i = 0; i < option_count; i++)
-    {        
+    {
         if(option_list[i].option_name == NULL)
         {
             continue;
@@ -1488,11 +1488,11 @@ globus_l_gfs_config_load_defaults()
         option = (globus_l_gfs_config_option_t *)
             globus_malloc(sizeof(globus_l_gfs_config_option_t));
         memcpy(option, &option_list[i], sizeof(globus_l_gfs_config_option_t));
-        
-        rc = globus_hashtable_insert(&option_table, 
-            option->option_name, 
+
+        rc = globus_hashtable_insert(&option_table,
+            option->option_name,
             (void *) option);
-        
+
         if(rc)
         {
             /* XXX error, log something */
@@ -1500,7 +1500,7 @@ globus_l_gfs_config_load_defaults()
     }
 
     GlobusGFSDebugExit();
-    return GLOBUS_SUCCESS; 
+    return GLOBUS_SUCCESS;
 }
 
 static
@@ -1514,18 +1514,18 @@ globus_l_config_loadfile(
     char *                              out_buf;
     GlobusGFSName(globus_l_config_loadfile);
     GlobusGFSDebugEnter();
-     
+
     file = fopen(filename, "r");
     if(!file)
     {
         goto error;
     }
-         
+
     fseek(file, 0L, SEEK_END);
     file_len = ftell(file);
-    fseek(file, 0L, SEEK_SET);	
+    fseek(file, 0L, SEEK_SET);
 
-    out_buf = (char *) malloc((file_len + 1) * sizeof(char));	
+    out_buf = (char *) malloc((file_len + 1) * sizeof(char));
     if(!out_buf)
     {
         fclose(file);
@@ -1537,7 +1537,7 @@ globus_l_config_loadfile(
     out_buf[file_len] = '\0';
 
     *data_out = out_buf;
-         
+
     GlobusGFSDebugExit();
     return 0;
 
@@ -1554,18 +1554,18 @@ globus_l_gfs_config_display_html_usage()
     globus_l_gfs_config_option_t *      o;
     GlobusGFSName(globus_l_gfs_config_display_html_usage);
     GlobusGFSDebugEnter();
-    
+
     printf("<!-- generated by globus-gridftp-server -help -html -->\n");
     printf("<p>\n"
-        "The table below lists config file options, associated command line " 
+        "The table below lists config file options, associated command line "
         "options (if available) and descriptions. Note that any boolean "
-        "option can be negated on the command line by preceding the specified " 
+        "option can be negated on the command line by preceding the specified "
         "option with '-no-' or '-n'.  Example: -no-cas or -nf.\n"
         "</p>\n");
 
     printf("<ul>\n");
     for(i = 0; i < option_count; i++)
-    {        
+    {
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name == NULL && o->configfile_option != NULL)
         {
@@ -1579,12 +1579,12 @@ globus_l_gfs_config_display_html_usage()
 
     printf("<table border=\"1\" cellpadding=\"5\">\n");
     for(i = 0; i < option_count; i++)
-    {        
+    {
         char *                          shortflag;
         char *                          longflag;
         char *                          value;
         char *                          defval;
-        
+
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name == NULL && o->configfile_option != NULL)
         {
@@ -1606,26 +1606,26 @@ globus_l_gfs_config_display_html_usage()
           case GLOBUS_L_GFS_CONFIG_BOOL:
             shortflag = "-";
             longflag = "-";
-            value = " &lt;0|1&gt;"; 
+            value = " &lt;0|1&gt;";
             defval = o->int_value ? "TRUE" : "FALSE";
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
             shortflag = "-";
             longflag = "-";
-            value = " &lt;number&gt;"; 
-            defval = o->int_value > 0 ? 
+            value = " &lt;number&gt;";
+            defval = o->int_value > 0 ?
                 globus_common_create_string("%d", o->int_value) : "not set";
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
             shortflag = "-";
             longflag = "-";
-            value = " &lt;string&gt;"; 
+            value = " &lt;string&gt;";
             defval = o->value ? o->value : "not set";
             break;
           default:
             shortflag = "";
             longflag = "";
-            value = ""; 
+            value = "";
             defval = o->value ? o->value : "not set";
             break;
         }
@@ -1638,17 +1638,17 @@ globus_l_gfs_config_display_html_usage()
             "     </table>\n"
             "    </td>\n"
             "    <td valign=\"top\"><p>%s</p><p>Default value: %s</p></td>\n"
-            "  </tr>\n", 
-            o->configfile_option, 
+            "  </tr>\n",
+            o->configfile_option,
             value,
-            o->short_cmdline_option ? shortflag : "", 
+            o->short_cmdline_option ? shortflag : "",
             o->short_cmdline_option ? o->short_cmdline_option : "",
-            o->type != GLOBUS_L_GFS_CONFIG_BOOL && 
+            o->type != GLOBUS_L_GFS_CONFIG_BOOL &&
                 o->short_cmdline_option ? value : "",
-            o->short_cmdline_option ? "\n" : "", 
+            o->short_cmdline_option ? "\n" : "",
             o->long_cmdline_option ? longflag : "",
             o->long_cmdline_option ? o->long_cmdline_option : "",
-            o->type != GLOBUS_L_GFS_CONFIG_BOOL && 
+            o->type != GLOBUS_L_GFS_CONFIG_BOOL &&
                 o->long_cmdline_option ? value : "",
             o->usage,
             defval);
@@ -1680,7 +1680,7 @@ globus_l_gfs_config_display_wsdl()
         out = stdout;
     }
     for(i = 0; i < option_count; i++)
-    {        
+    {
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name != NULL && o->public)
         {
@@ -1709,7 +1709,7 @@ globus_l_gfs_config_display_wsdl()
     fprintf(out, "    <xsd:complexType><xsd:sequence>\n");
 
     for(i = 0; i < option_count; i++)
-    {        
+    {
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name != NULL && o->public)
         {
@@ -1750,7 +1750,7 @@ globus_l_gfs_config_display_c_service()
     globus_bool_t                       close = GLOBUS_TRUE;
     char *                              c_file;
     GlobusGFSDebugEnter();
-    
+
     c_file = globus_common_create_string("%s.c",
         globus_i_gfs_config_string("wsdl"));
     out = fopen(c_file, "w");
@@ -1760,7 +1760,7 @@ globus_l_gfs_config_display_c_service()
         out = stdout;
     }
     for(i = 0; i < option_count; i++)
-    {        
+    {
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name != NULL && o->public)
         {
@@ -1787,7 +1787,7 @@ globus_l_gfs_config_display_c_service()
     fprintf(out, "    globus_result_t                     result;\n");
     fprintf(out, "    globus_i_gfs_config_option_cb_ent_t * cb_handle;\n");
     for(i = 0; i < option_count; i++)
-    {        
+    {
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name != NULL && o->public)
         {
@@ -1867,7 +1867,7 @@ globus_l_gfs_config_display_docbook_usage()
     globus_l_gfs_config_option_t *      o;
     GlobusGFSName(globus_l_gfs_config_display_docbook_usage);
     GlobusGFSDebugEnter();
-    
+
     printf("<!-- generated by globus-gridftp-server -help -docbook -->\n");
     printf("<para>\n"
         "The list below contains the command-line options for the server, "
@@ -1879,10 +1879,10 @@ globus_l_gfs_config_display_docbook_usage()
         "</refsect1>\n");
 
     for(i = 0; i < option_count; i++)
-    {        
+    {
         char *                          value;
         char *                          defval;
-        
+
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name == NULL && o->configfile_option != NULL)
         {
@@ -1911,8 +1911,8 @@ globus_l_gfs_config_display_docbook_usage()
             defval = o->int_value ? "TRUE" : "FALSE";
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
-            value = "number"; 
-            defval = o->int_value > 0 ? 
+            value = "number";
+            defval = o->int_value > 0 ?
                 globus_common_create_string("%d", o->int_value) : NULL;
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
@@ -1920,11 +1920,11 @@ globus_l_gfs_config_display_docbook_usage()
             defval = o->value ? o->value : NULL;
             break;
           default:
-            value = ""; 
+            value = "";
             defval = o->value ? o->value : NULL;
             break;
         }
-        
+
         printf("  <varlistentry>\n");
         if (o->short_cmdline_option)
         {
@@ -1979,7 +1979,7 @@ globus_l_gfs_config_display_asciidoc_usage()
     globus_l_gfs_config_option_t *      o;
     GlobusGFSName(globus_l_gfs_config_display_docbook_usage);
     GlobusGFSDebugEnter();
-    
+
     printf("////\ngenerated by globus-gridftp-server -help -asciidoc\n////\n");
     printf("The list below contains the command-line options for the server, "
         "and also the name of the configuration file entry that implements "
@@ -1989,10 +1989,10 @@ globus_l_gfs_config_display_asciidoc_usage()
         "\n");
 
     for(i = 0; i < option_count; i++)
-    {        
+    {
         char *                          value;
         char *                          defval;
-        
+
         o = (globus_l_gfs_config_option_t *) &option_list[i];
         if(o->option_name == NULL && o->configfile_option != NULL)
         {
@@ -2026,8 +2026,8 @@ globus_l_gfs_config_display_asciidoc_usage()
             defval = o->int_value ? "TRUE" : "FALSE";
             break;
           case GLOBUS_L_GFS_CONFIG_INT:
-            value = "number"; 
-            defval = o->int_value > 0 ? 
+            value = "number";
+            defval = o->int_value > 0 ?
                 globus_common_create_string("%d", o->int_value) : NULL;
             break;
           case GLOBUS_L_GFS_CONFIG_STRING:
@@ -2035,11 +2035,11 @@ globus_l_gfs_config_display_asciidoc_usage()
             defval = o->value ? o->value : NULL;
             break;
           default:
-            value = ""; 
+            value = "";
             defval = o->value ? o->value : NULL;
             break;
         }
-        
+
         printf("*");
         if (o->short_cmdline_option)
         {
@@ -2123,16 +2123,16 @@ globus_i_gfs_config_display_long_usage()
         globus_l_gfs_config_display_c_service();
     }
     else
-    {        
+    {
         for(i = 0; i < option_count; i++)
-        {        
+        {
             o = (globus_l_gfs_config_option_t *) &option_list[i];
             if(o->usage == NULL)
             {
                 continue;
             }
-            
-            printf("%-14s    %s\n%-14s    %sCommand line or ENV args:", 
+
+            printf("%-14s    %s\n%-14s    %sCommand line or ENV args:",
                 o->option_name, o->usage, "",
                 o->type == GLOBUS_L_GFS_CONFIG_BOOL ? "(FLAG)  " : "");
             if(o->short_cmdline_option)
@@ -2172,15 +2172,15 @@ globus_l_gfs_config_format_line(
     int                                 count;
     int                                 last;
     int                                 blanks;
-                                   
+
     len = strlen(in_str);
     count = 0;
     last = 0;
     memset(out_buffer, 0, rows * columns);
-    
+
     for(i = 0; i < rows && count < len; i++)
     {
-        for(j = 0; j < columns - 1 && count < len; j++, count++) 
+        for(j = 0; j < columns - 1 && count < len; j++, count++)
         {
             if(in_str[count] == ' ')
             {
@@ -2205,12 +2205,12 @@ globus_l_gfs_config_format_line(
         while(count < len && in_str[count] == ' ')
         {
             count++;
-        }  
+        }
     }
 
     return 0;
 }
-        
+
 void
 globus_i_gfs_config_display_usage()
 {
@@ -2218,7 +2218,7 @@ globus_i_gfs_config_display_usage()
     globus_l_gfs_config_option_t *      o;
     GlobusGFSName(globus_i_gfs_config_display_short_usage);
     GlobusGFSDebugEnter();
-    
+
     if(globus_i_gfs_config_bool("html"))
     {
         globus_l_gfs_config_display_html_usage();
@@ -2237,7 +2237,7 @@ globus_i_gfs_config_display_usage()
         globus_l_gfs_config_display_c_service();
     }
     else
-    {        
+    {
         for(i = 0; i < option_count; i++)
         {
             char       linebuffer[GLOBUS_GFS_HELP_ROWS * GLOBUS_GFS_HELP_COLS];
@@ -2253,7 +2253,7 @@ globus_i_gfs_config_display_usage()
             {
                 count = 0;
                 printf("\n");
-                len = GLOBUS_GFS_HELP_WIDTH - 
+                len = GLOBUS_GFS_HELP_WIDTH -
                     (strlen(o->configfile_option) + 4);
                 if(len > 0)
                 {
@@ -2280,16 +2280,16 @@ globus_i_gfs_config_display_usage()
             {
                 continue;
             }
-           
+
             switch(o->type)
             {
                 case GLOBUS_L_GFS_CONFIG_BOOL:
-                    value = ""; 
+                    value = "";
                     sprintf(defval, "%s", o->int_value ? "TRUE" : "FALSE");
                     break;
                 case GLOBUS_L_GFS_CONFIG_INT:
-                    value = "<number>"; 
-                    if(o->int_value > 0) 
+                    value = "<number>";
+                    if(o->int_value > 0)
                     {
                         sprintf(defval, "%d", o->int_value);
                     }
@@ -2299,16 +2299,16 @@ globus_i_gfs_config_display_usage()
                     }
                     break;
                 case GLOBUS_L_GFS_CONFIG_STRING:
-                    value = "<string>"; 
-                    sprintf(defval, "%s", 
+                    value = "<string>";
+                    sprintf(defval, "%s",
                         o->value ? (char *) o->value : "not set");
                     break;
                 default:
-                    value = ""; 
+                    value = "";
                     sprintf(defval, "%s", "not set");
                     break;
             }
-            
+
             if(o->short_cmdline_option)
             {
                 count += printf(" -%s", o->short_cmdline_option);
@@ -2330,16 +2330,16 @@ globus_i_gfs_config_display_usage()
                 usage, GLOBUS_GFS_HELP_ROWS, GLOBUS_GFS_HELP_COLS, linebuffer);
 
             len = strlen(linebuffer);
-            for(row = 0; row < GLOBUS_GFS_HELP_ROWS && 
-                linebuffer[row * GLOBUS_GFS_HELP_COLS]; 
+            for(row = 0; row < GLOBUS_GFS_HELP_ROWS &&
+                linebuffer[row * GLOBUS_GFS_HELP_COLS];
                 row++)
             {
                 if(row == 1)
                 {
                     count += printf("  Default: %s ", defval);
                 }
-                for(col = count; 
-                    col < GLOBUS_GFS_HELP_WIDTH - GLOBUS_GFS_HELP_COLS; 
+                for(col = count;
+                    col < GLOBUS_GFS_HELP_WIDTH - GLOBUS_GFS_HELP_COLS;
                     col++)
                 {
                     printf(" ");
@@ -2373,14 +2373,14 @@ globus_i_gfs_config_hostname_to_address_string(
     globus_addrinfo_t                   hints;
     globus_addrinfo_t *                 addrinfo;
     globus_result_t                     result;
-    
+
     memset(&hints, 0, sizeof(globus_addrinfo_t));
     hints.ai_family = PF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = 0;
 
     result = globus_libc_getaddrinfo(hostname, NULL, &hints, &addrinfo);
-    if(result != GLOBUS_SUCCESS || addrinfo == NULL || 
+    if(result != GLOBUS_SUCCESS || addrinfo == NULL ||
         addrinfo->ai_addr == NULL)
     {
         goto error_exit;
@@ -2396,11 +2396,11 @@ globus_i_gfs_config_hostname_to_address_string(
     {
         globus_libc_freeaddrinfo(addrinfo);
         goto error_exit;
-    }       
-    globus_libc_freeaddrinfo(addrinfo);    
-    
+    }
+    globus_libc_freeaddrinfo(addrinfo);
+
     return GLOBUS_SUCCESS;
-    
+
 error_exit:
     return result;
 }
@@ -2462,9 +2462,9 @@ globus_l_gfs_config_misc()
 
 #ifdef WIN32
     globus_l_gfs_config_set("fork", GLOBUS_FALSE, NULL);
-#endif    
+#endif
 
-    if(globus_i_gfs_config_bool("detach") && 
+    if(globus_i_gfs_config_bool("detach") &&
         !globus_i_gfs_config_bool("daemon"))
     {
         globus_l_gfs_config_set("daemon", GLOBUS_TRUE, NULL);
@@ -2510,8 +2510,8 @@ globus_l_gfs_config_misc()
         else if(strchr(value, ':') == NULL)
         {
             globus_l_gfs_config_set(
-                "log_module", 
-                0, 
+                "log_module",
+                0,
                 globus_common_create_string("%s:buffer=0", value));
             globus_free(value);
         }
@@ -2546,29 +2546,29 @@ globus_l_gfs_config_misc()
                 "control_interface", 0, globus_libc_strdup(iface));
         }
     }
-    
-    if((value = 
+
+    if((value =
         globus_i_gfs_config_string("control_interface")) != GLOBUS_NULL)
-    {        
+    {
         memset(ipaddr, 0, sizeof(ipaddr));
         result = globus_i_gfs_config_hostname_to_address_string(
-            value, ipaddr, sizeof(ipaddr));  
+            value, ipaddr, sizeof(ipaddr));
         if(result != GLOBUS_SUCCESS)
-        {   
+        {
             goto error_exit;
         }
         globus_l_gfs_config_set(
             "control_interface", 1, globus_libc_strdup(ipaddr));
     }
 
-    if((value = 
+    if((value =
         globus_i_gfs_config_string("data_interface")) != GLOBUS_NULL)
-    {        
+    {
         memset(ipaddr, 0, sizeof(ipaddr));
         result = globus_i_gfs_config_hostname_to_address_string(
-            value, ipaddr, sizeof(ipaddr));  
+            value, ipaddr, sizeof(ipaddr));
         if(result != GLOBUS_SUCCESS)
-        {   
+        {
             goto error_exit;
         }
         globus_l_gfs_config_set(
@@ -2578,15 +2578,15 @@ globus_l_gfs_config_misc()
     if((value = globus_i_gfs_config_string("hostname")) != GLOBUS_NULL)
     {
         globus_l_gfs_config_set("fqdn", 0, globus_libc_strdup(value));
-        
+
         memset(ipaddr, 0, sizeof(ipaddr));
         result = globus_i_gfs_config_hostname_to_address_string(
-            value, ipaddr, sizeof(ipaddr));  
+            value, ipaddr, sizeof(ipaddr));
         if(result != GLOBUS_SUCCESS)
-        {   
+        {
             goto error_exit;
         }
-                      
+
         if(globus_i_gfs_config_string("control_interface") == NULL)
         {
             globus_l_gfs_config_set(
@@ -2605,18 +2605,18 @@ globus_l_gfs_config_misc()
         globus_libc_gethostname(hostname, 1024);
         globus_l_gfs_config_set("fqdn", 0, globus_libc_strdup(hostname));
         globus_free(hostname);
-    }            
+    }
 
     if((value = globus_i_gfs_config_string("version_tag")) != NULL)
     {
-        toolkit_version = 
+        toolkit_version =
             globus_common_create_string("%s %s", toolkit_id, value);
     }
     else
     {
         toolkit_version = globus_libc_strdup(toolkit_id);
     }
-        
+
     default_banner = globus_common_create_string(
         "%s GridFTP Server %d.%d (%s, %d-%d) [%s] ready.",
         globus_i_gfs_config_string("fqdn"),
@@ -2626,11 +2626,11 @@ globus_l_gfs_config_misc()
         local_version.timestamp,
         local_version.branch_id,
         toolkit_version);
-        
+
     data = NULL;
     if(globus_i_gfs_config_bool("banner_terse"))
     {
-        data = globus_libc_strdup("");                
+        data = globus_libc_strdup("");
     }
     else if((value = globus_i_gfs_config_string("banner_file")) != GLOBUS_NULL)
     {
@@ -2640,13 +2640,13 @@ globus_l_gfs_config_misc()
     {
         data = globus_libc_strdup(value);
     }
-    
+
     if(data != NULL)
     {
         if(globus_i_gfs_config_bool("banner_append"))
         {
             char *                      banner;
-            banner = 
+            banner =
                 globus_common_create_string("%s %s", default_banner, data);
             globus_free(data);
             data = banner;
@@ -2657,8 +2657,8 @@ globus_l_gfs_config_misc()
     {
         data = default_banner;
     }
-    globus_l_gfs_config_set("banner", 1, data);                
-       
+    globus_l_gfs_config_set("banner", 1, data);
+
     data = globus_common_create_string(
             "%d.%d (%s, %d-%d) [%s]",
             local_version.major,
@@ -2673,14 +2673,14 @@ globus_l_gfs_config_misc()
     if((value = globus_i_gfs_config_string("login_msg_file")) != GLOBUS_NULL)
     {
         rc = globus_l_config_loadfile(value, &data);
-        globus_l_gfs_config_set("login_msg", 0, data);                
+        globus_l_gfs_config_set("login_msg", 0, data);
     }
 
     value = globus_i_gfs_config_string("load_dsi_module");
     if(value != NULL)
     {
         char *                          ptr;
-        
+
         ptr = strchr(value, ':');
         if(ptr)
         {
@@ -2700,26 +2700,26 @@ globus_l_gfs_config_misc()
         if(value)
         {
             if(globus_i_gfs_config_string("load_dsi_module") == NULL &&
-                !globus_i_gfs_config_bool("data_node") && 
+                !globus_i_gfs_config_bool("data_node") &&
                 !globus_i_gfs_config_bool("hybrid"))
             {
                 globus_l_gfs_config_set(
-                    "load_dsi_module", 0, globus_libc_strdup("remote"));    
+                    "load_dsi_module", 0, globus_libc_strdup("remote"));
             }
-            
-            /* if stripe_count wasn't set, set it to the number of 
+
+            /* if stripe_count wasn't set, set it to the number of
              * nodes configured */
             if(globus_i_gfs_config_int("stripe_count") == -1)
             {
                 int                         node_count = 1;
                 char *                      ptr;
-                
+
                 ptr = value;
                 while(ptr && *ptr && (ptr = strchr(ptr, ',')) != NULL)
                 {
                     ptr++;
                     node_count++;
-                }            
+                }
                 globus_l_gfs_config_set("stripe_count", node_count, NULL);
             }
         }
@@ -2731,9 +2731,9 @@ globus_l_gfs_config_misc()
                 globus_l_gfs_config_set("stripe_count", 1, NULL);
             }
         }
-                       
+
     }
-    
+
     value = globus_libc_strdup(globus_i_gfs_config_string("popen_whitelist"));
     if(value != NULL)
     {
@@ -2741,21 +2741,21 @@ globus_l_gfs_config_misc()
         while((ptr = strchr(module, ',')) != NULL)
         {
             *ptr = '\0';
-            globus_list_insert(&popen_list, globus_libc_strdup(module)); 
+            globus_list_insert(&popen_list, globus_libc_strdup(module));
             module = ptr + 1;
         }
         if(ptr == NULL)
         {
-            globus_list_insert(&popen_list, globus_libc_strdup(module)); 
-        }               
-        globus_free(value);             
+            globus_list_insert(&popen_list, globus_libc_strdup(module));
+        }
+        globus_free(value);
     }
-    globus_l_gfs_config_set("popen_list", 0, popen_list);   
+    globus_l_gfs_config_set("popen_list", 0, popen_list);
 
     if(globus_i_gfs_config_string("load_dsi_module") == NULL)
     {
-        globus_l_gfs_config_set("load_dsi_module", 0, globus_libc_strdup("file"));    
-    } 
+        globus_l_gfs_config_set("load_dsi_module", 0, globus_libc_strdup("file"));
+    }
 
     value = globus_libc_strdup(globus_i_gfs_config_string("allowed_modules"));
     if(value != NULL)
@@ -2764,17 +2764,17 @@ globus_l_gfs_config_misc()
         while((ptr = strchr(module, ',')) != NULL)
         {
             *ptr = '\0';
-            globus_list_insert(&module_list, globus_libc_strdup(module)); 
+            globus_list_insert(&module_list, globus_libc_strdup(module));
             module = ptr + 1;
         }
         if(ptr == NULL)
         {
-            globus_list_insert(&module_list, globus_libc_strdup(module)); 
-        }               
-        globus_free(value);             
+            globus_list_insert(&module_list, globus_libc_strdup(module));
+        }
+        globus_free(value);
     }
-    globus_l_gfs_config_set("module_list", 0, module_list);   
-    
+    globus_l_gfs_config_set("module_list", 0, module_list);
+
     /* if auth_level is -1 it means it has not yet been touched */
     switch(globus_i_gfs_config_int("auth_level"))
     {
@@ -2820,7 +2820,7 @@ globus_l_gfs_config_misc()
         if(globus_i_gfs_config_bool("fork"))
         {
             /* should log an error */
-            globus_l_gfs_config_set("fork", GLOBUS_FALSE, NULL);   
+            globus_l_gfs_config_set("fork", GLOBUS_FALSE, NULL);
         }
 
         /* set the convenience conf opt */
@@ -2840,9 +2840,9 @@ globus_l_gfs_config_misc()
             globus_l_gfs_config_set("ipc_deny_from", 0, str);
         }
     }
-    
-    if(globus_i_gfs_config_string("remote_nodes") && 
-        !globus_i_gfs_config_bool("data_node") && 
+
+    if(globus_i_gfs_config_string("remote_nodes") &&
+        !globus_i_gfs_config_bool("data_node") &&
         globus_i_gfs_config_string("ipc_subject"))
     {
         char *                          ipc_dn;
@@ -2851,7 +2851,7 @@ globus_l_gfs_config_misc()
         OM_uint32                       maj_stat;
         gss_name_t                      cred_name;
         gss_cred_id_t                   cred;
-            
+
         ipc_dn = globus_i_gfs_config_string("ipc_subject");
 
         if(strcasecmp(ipc_dn, "auto") == 0)
@@ -2888,11 +2888,11 @@ globus_l_gfs_config_misc()
             result = min_stat;
             goto error_exit;
         }
-        globus_l_gfs_config_set("ipc_cred", 0, cred);            
+        globus_l_gfs_config_set("ipc_cred", 0, cred);
     }
-    
-    else if(globus_i_gfs_config_string("remote_nodes") && 
-        !globus_i_gfs_config_bool("data_node") && 
+
+    else if(globus_i_gfs_config_string("remote_nodes") &&
+        !globus_i_gfs_config_bool("data_node") &&
         globus_i_gfs_config_string("ipc_credential"))
     {
         char *                          cred_file;
@@ -2900,13 +2900,13 @@ globus_l_gfs_config_misc()
         OM_uint32                       min_stat;
         OM_uint32                       maj_stat;
         gss_cred_id_t                   cred;
-        
+
         cred_file = globus_i_gfs_config_string("ipc_credential");
 
         buf.value = globus_common_create_string(
             "X509_USER_PROXY=%s", cred_file);
         buf.length = strlen(buf.value);
-    
+
         maj_stat = gss_import_cred(
             &min_stat,
             &cred,
@@ -2920,20 +2920,20 @@ globus_l_gfs_config_misc()
             result = min_stat;
             goto error_exit;
         }
-    
+
         globus_free(buf.value);
-            
-        globus_l_gfs_config_set("ipc_cred", 0, cred);            
+
+        globus_l_gfs_config_set("ipc_cred", 0, cred);
     }
-        
+
     GlobusGFSDebugExit();
     return GLOBUS_SUCCESS;
-    
+
 error_exit:
     GlobusGFSDebugExitWithError();
     return result;
 }
-    
+
 
 /* logging is available in this func */
 void
@@ -2944,7 +2944,7 @@ globus_i_gfs_config_post_init()
 
     if(globus_i_gfs_config_bool("allow_udt") && globus_l_gfs_num_threads < 1)
     {
-        globus_gfs_log_message(GLOBUS_GFS_LOG_WARN, 
+        globus_gfs_log_message(GLOBUS_GFS_LOG_WARN,
             "Disabling UDT: threads must be enabled for UDT to function.\n");
 
         globus_l_gfs_config_set("allow_udt", GLOBUS_FALSE, NULL);
@@ -2954,13 +2954,13 @@ globus_i_gfs_config_post_init()
 }
 
 /**
- * load configuration.  read from defaults, file, env, and command line 
+ * load configuration.  read from defaults, file, env, and command line
  * arguments. each overriding the other.
  * this function will log error messages and exit the server if any
  * errors occur.
  * XXX need to allow config errors to log to syslog, stderr, etc
  */
- 
+
 int
 globus_i_gfs_config_init_envs(
     int                                 argc,
@@ -2988,8 +2988,8 @@ globus_i_gfs_config_init_envs(
     {
         tmp_argv = argv;
     }
-    
-    GLOBUS_GSI_SYSCONFIG_GET_CURRENT_WORKING_DIR(&cwd_str); 
+
+    GLOBUS_GSI_SYSCONFIG_GET_CURRENT_WORKING_DIR(&cwd_str);
 
     global_config_file = "/etc/grid-security/gridftp.conf";
     local_config_file = NULL;
@@ -3002,14 +3002,14 @@ globus_i_gfs_config_init_envs(
         {
             argp++;
         }
-        if(argp[0] == 'c' && argp[1] == '\0' 
+        if(argp[0] == 'c' && argp[1] == '\0'
             && tmp_argv[arg_num + 1])
         {
             local_config_file = strdup(tmp_argv[arg_num + 1]);
             arg_num++;
             cmdline_config = 1;
         }
-        else if(argp[0] == 'C' && argp[1] == '\0' && 
+        else if(argp[0] == 'C' && argp[1] == '\0' &&
             tmp_argv[arg_num + 1])
         {
             conf_dir = strdup(tmp_argv[arg_num + 1]);
@@ -3021,14 +3021,14 @@ globus_i_gfs_config_init_envs(
             arg_num++;
         }
         else if(!strcmp(argp, "threads") && tmp_argv[arg_num + 1])
-        {            
+        {
             globus_l_gfs_num_threads = atoi(tmp_argv[arg_num + 1]);
             arg_num++;
         }
         else if(!strcmp(argp, "inetd") || !strcmp(argp, "debug") ||
-                !strcmp(argp, "i") || !strcmp(argp, "ssh") || 
+                !strcmp(argp, "i") || !strcmp(argp, "ssh") ||
                 !strcmp(argp, "no-fork"))
-        {            
+        {
             globus_l_gfs_is_worker = GLOBUS_TRUE;
         }
         else if(!strcmp(argp, "port-range") && tmp_argv[arg_num + 1])
@@ -3042,7 +3042,7 @@ globus_i_gfs_config_init_envs(
     if(local_config_file == NULL)
     {
         char *                          tmp_gl;
-        
+
         tmp_str = malloc(PATH_MAX);
         tmp_gl = getenv("GLOBUS_LOCATION");
         if(tmp_gl)
@@ -3051,10 +3051,10 @@ globus_i_gfs_config_init_envs(
             if(rc > 0)
             {
                 local_config_file = tmp_str;
-            }          
+            }
         }
     }
-    
+
     if(base_str)
     {
         free(cwd_str);
@@ -3110,7 +3110,7 @@ globus_i_gfs_config_init_envs(
     {
         rc = globus_l_gfs_config_load_envs_from_file(global_config_file);
     }
-    
+
     if(globus_l_gfs_port_range)
     {
         setenv("GLOBUS_TCP_PORT_RANGE", globus_l_gfs_port_range, 1);
@@ -3125,7 +3125,7 @@ globus_i_gfs_config_init_envs(
         setenv("GLOBUS_CALLBACK_POLLING_THREADS", nthreads, 1);
         globus_thread_set_model("pthread");
     }
-    
+
     if(local_config_file != NULL)
     {
         free(local_config_file);
@@ -3138,7 +3138,7 @@ globus_i_gfs_config_init_envs(
     {
         free(base_str);
     }
-    
+
     return 0;
 
 error:
@@ -3166,9 +3166,9 @@ globus_i_gfs_config_init(
     char *                              base_str = NULL;
     GlobusGFSName(globus_i_gfs_config_init);
     GlobusGFSDebugEnter();
-    
+
     globus_l_gfs_common_loaded = GLOBUS_TRUE;
-    
+
     globus_hashtable_init(
         &option_table,
         256,
@@ -3185,9 +3185,9 @@ globus_i_gfs_config_init(
     {
         tmp_argv = argv;
     }
-   
-    GLOBUS_GSI_SYSCONFIG_GET_CURRENT_WORKING_DIR(&cwd_str); 
-    
+
+    GLOBUS_GSI_SYSCONFIG_GET_CURRENT_WORKING_DIR(&cwd_str);
+
     exec_name = tmp_argv[0];
     /* set default exe name */
     globus_location(&tmp_str);
@@ -3211,7 +3211,7 @@ globus_i_gfs_config_init(
     global_config_file = "/etc/grid-security/gridftp.conf";
     local_config_file = NULL;
     conf_dir = NULL;
-    
+
     for(arg_num = 0; arg_num < argc; arg_num++)
     {
         argp = tmp_argv[arg_num];
@@ -3223,7 +3223,7 @@ globus_i_gfs_config_init(
         {
             argp++;
         }
-        
+
         if(argp[0] == 'c' && argp[1] == '\0' && tmp_argv[arg_num + 1])
         {
             local_config_file = globus_libc_strdup(tmp_argv[arg_num + 1]);
@@ -3231,7 +3231,7 @@ globus_i_gfs_config_init(
             arg_num++;
             continue;
         }
-        
+
         if(argp[0] == 'C' && argp[1] == '\0' && tmp_argv[arg_num + 1])
         {
             conf_dir = globus_libc_strdup(tmp_argv[arg_num + 1]);
@@ -3245,14 +3245,14 @@ globus_i_gfs_config_init(
             continue;
         }
     }
-    
+
     if(local_config_file == NULL && !argv_only)
     {
         globus_eval_path("${sysconfdir}/gridftp.conf", &local_config_file);
     }
 
     globus_l_gfs_config_load_defaults();
-        
+
     if(base_str)
     {
         globus_free(cwd_str);
@@ -3279,7 +3279,7 @@ globus_i_gfs_config_init(
             goto error;
         }
     }
-    
+
     if(local_config_file != NULL)
     {
         if(*local_config_file != '/')
@@ -3303,7 +3303,7 @@ globus_i_gfs_config_init(
     {
         rc = globus_l_gfs_config_load_envs_from_file(global_config_file);
     }
-        
+
     if(!argv_only)
     {
         globus_l_gfs_config_load_config_env();
@@ -3313,15 +3313,15 @@ globus_i_gfs_config_init(
     {
         goto error;
     }
-    
+
     result = globus_l_gfs_config_misc();
     if(result != GLOBUS_SUCCESS)
     {
-        globus_gfs_log_exit_message("Error in post config setup:\n %s", 
+        globus_gfs_log_exit_message("Error in post config setup:\n %s",
             globus_error_print_friendly(globus_error_peek(result)));
         goto error;
     }
-    
+
     globus_l_gfs_config_set("exec_name", 0, exec_name);
     globus_l_gfs_config_set("argv", 0, tmp_argv);
     globus_l_gfs_config_set("argc", argc, NULL);
@@ -3338,7 +3338,7 @@ globus_i_gfs_config_init(
     {
         globus_free(base_str);
     }
-    
+
     globus_mutex_init(&globus_i_gfs_config_mutex, NULL);
 
     GlobusGFSDebugExit();
@@ -3354,15 +3354,15 @@ globus_i_gfs_config_int(
     const char *                        option_name)
 {
     globus_l_gfs_config_option_t *      option;
-    int                                 value = 0;    
+    int                                 value = 0;
     GlobusGFSName(globus_i_gfs_config_int);
     GlobusGFSDebugEnter();
-    
-    option = (globus_l_gfs_config_option_t *) 
+
+    option = (globus_l_gfs_config_option_t *)
         globus_hashtable_lookup(&option_table, (void *) option_name);
-        
+
     if(option)
-    {        
+    {
         value = option->int_value;
     }
 
@@ -3376,15 +3376,15 @@ globus_i_gfs_config_get(
     const char *                        option_name)
 {
     globus_l_gfs_config_option_t *      option;
-    void *                              value = NULL;    
+    void *                              value = NULL;
     GlobusGFSName(globus_i_gfs_config_get);
     GlobusGFSDebugEnter();
-    
-    option = (globus_l_gfs_config_option_t *) 
+
+    option = (globus_l_gfs_config_option_t *)
         globus_hashtable_lookup(&option_table, (void *) option_name);
-        
+
     if(option && option->value)
-    {        
+    {
         value = option->value;
     }
 
@@ -3418,7 +3418,7 @@ globus_i_gfs_config_is_anonymous(
             valid = GLOBUS_TRUE;
         }
     }
-    
+
     GlobusGFSDebugExit();
     return valid;
 }
@@ -3444,7 +3444,7 @@ globus_i_gfs_config_allow_addr(
             globus_i_gfs_config_string("ipc_deny_from"));
     }
     else
-    { 
+    {
         allow_list = globus_libc_strdup(
             globus_i_gfs_config_string("allow_from"));
         deny_list = globus_libc_strdup(
@@ -3517,7 +3517,7 @@ globus_i_gfs_config_get_module_name(
     GlobusGFSName(globus_i_gfs_config_get_module_name);
     GlobusGFSDebugEnter();
 
-    module_list = (globus_list_t *) globus_i_gfs_config_get("module_list");  
+    module_list = (globus_list_t *) globus_i_gfs_config_get("module_list");
     for(list = module_list;
         !globus_list_empty(list) && !found;
         list = globus_list_rest(list))
@@ -3539,7 +3539,7 @@ globus_i_gfs_config_get_module_name(
         {
             found = GLOBUS_TRUE;
         }
-    } 
+    }
     if(found)
     {
         out_module = module;
@@ -3560,7 +3560,7 @@ globus_gfs_config_get_bool(
     globus_bool_t                       rc;
 
     globus_mutex_lock(&globus_i_gfs_config_mutex);
-    rc = globus_i_gfs_config_bool(option_name);    
+    rc = globus_i_gfs_config_bool(option_name);
     globus_mutex_unlock(&globus_i_gfs_config_mutex);
     return rc;
 }
@@ -3572,7 +3572,7 @@ globus_gfs_config_get_string(
     char *                              rc;
 
     globus_mutex_lock(&globus_i_gfs_config_mutex);
-    rc = globus_i_gfs_config_string(option_name);    
+    rc = globus_i_gfs_config_string(option_name);
     globus_mutex_unlock(&globus_i_gfs_config_mutex);
     return rc;
 }
@@ -3584,7 +3584,7 @@ globus_gfs_config_get_list(
     globus_list_t *                     rc;
 
     globus_mutex_lock(&globus_i_gfs_config_mutex);
-    rc = globus_i_gfs_config_list(option_name);    
+    rc = globus_i_gfs_config_list(option_name);
     globus_mutex_unlock(&globus_i_gfs_config_mutex);
     return rc;
 }
@@ -3596,7 +3596,7 @@ globus_gfs_config_get(
     void *                              rc;
 
     globus_mutex_lock(&globus_i_gfs_config_mutex);
-    rc = globus_i_gfs_config_get(option_name);    
+    rc = globus_i_gfs_config_get(option_name);
     globus_mutex_unlock(&globus_i_gfs_config_mutex);
     return rc;
 }
@@ -3608,7 +3608,7 @@ globus_gfs_config_get_int(
     int                                 rc;
 
     globus_mutex_lock(&globus_i_gfs_config_mutex);
-    rc = globus_i_gfs_config_int(option_name);    
+    rc = globus_i_gfs_config_int(option_name);
     globus_mutex_unlock(&globus_i_gfs_config_mutex);
     return rc;
 }

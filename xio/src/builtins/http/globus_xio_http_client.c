@@ -47,13 +47,13 @@ globus_l_xio_http_cleanup_cancel(
  * If this function succeeds, the open will remain unfinished until that
  * write completes. If an error happens, this function will close the handle
  * internally and call globus_xio_driver_finished_open() before returning.
- * 
+ *
  * @param op
  *     operation associated with the open call.
  * @param result
  *     Lower-level protocol result from open.
  * @param user_arg
- *     A void pointer pointing to a #globus_i_xio_http_driver_t 
+ *     A void pointer pointing to a #globus_i_xio_http_driver_t
  *
  * @return void
  */
@@ -291,7 +291,7 @@ globus_i_xio_http_client_write_request(
                 strlen(http_handle->target_info.host),
                 free_iovecs_exit);
 
-        if (http_handle->target_info.port != 0 && 
+        if (http_handle->target_info.port != 0 &&
             http_handle->target_info.port != 80)
         {
             char port_buffer[7];
@@ -316,7 +316,7 @@ globus_i_xio_http_client_write_request(
             &http_handle->request_info.headers))
     {
         if ((http_handle->request_info.http_version ==
-                GLOBUS_XIO_HTTP_VERSION_1_0) || 
+                GLOBUS_XIO_HTTP_VERSION_1_0) ||
                 ((http_handle->request_info.headers.transfer_encoding ==
                     GLOBUS_XIO_HTTP_TRANSFER_ENCODING_IDENTITY) &&
                     GLOBUS_I_XIO_HTTP_HEADER_IS_CONTENT_LENGTH_SET(
@@ -339,7 +339,7 @@ globus_i_xio_http_client_write_request(
             size_buffer = globus_common_create_string(
                     "%"GLOBUS_OFF_T_FORMAT"\r\n",
                      http_handle->request_info.headers.content_length);
-            
+
             if (size_buffer == NULL)
             {
                 result = GlobusXIOErrorMemory("iovec.iov_base");
@@ -457,7 +457,7 @@ error_exit:
 /* globus_i_xio_http_client_write_request() */
 
 /**
- * Request Written Callback 
+ * Request Written Callback
  * @ingroup globus_i_xio_http_write_request_callback
  *
  * Called when the response has been completely written by the transport.
@@ -694,7 +694,7 @@ globus_l_xio_http_client_read_response_callback(
             response_error = globus_error_get(result);
 
             http_handle->response_info.status_code = 500;
-            http_handle->response_info.reason_phrase = 
+            http_handle->response_info.reason_phrase =
                 globus_error_print_friendly(response_error);
 
             if (http_handle->write_operation.operation != NULL)
@@ -716,7 +716,7 @@ globus_l_xio_http_client_read_response_callback(
             http_handle->pending_error = globus_object_copy(response_error);
             http_handle->parse_state = GLOBUS_XIO_HTTP_EOF;
             http_handle->send_state = GLOBUS_XIO_HTTP_EOF;
-            
+
             /* Set metadata on this read to contain the response info */
             descriptor = globus_xio_operation_get_data_descriptor(op, GLOBUS_TRUE);
             if (descriptor != NULL)
@@ -726,7 +726,7 @@ globus_l_xio_http_client_read_response_callback(
                         &descriptor->response,
                         &http_handle->response_info);
             }
-    
+
             /* don't go to error exit yet because we may need to clean up
              * the cancel info
              */
@@ -823,13 +823,13 @@ globus_l_xio_http_client_read_response_callback(
         }
     }
 
-    if(http_handle->response_info.status_code > 199 || 
+    if(http_handle->response_info.status_code > 199 ||
         http_handle->response_info.status_code < 100)
     {
         globus_xio_driver_operation_destroy(http_handle->response_read_operation);
         http_handle->response_read_operation = NULL;
     }
-        
+
     globus_mutex_unlock(&http_handle->mutex);
 
     if (finish_read)
@@ -938,7 +938,7 @@ error_exit:
  * @ingroup globus_i_xio_http_client
  *
  * Parses the response line and then uses globus_i_xio_http_header_parse() to
- * parse the header block. If the entire response header section is read, 
+ * parse the header block. If the entire response header section is read,
  * the boolean pointed to by @a done will be modified to be GLOBUS_TRUE.
  *
  * Called with mutex locked.
@@ -951,7 +951,7 @@ error_exit:
  *     globus_i_xio_http_header_parse().
  * @retval GLOBUS_SUCCESS
  *     No parsing errors occurred while parsing the status line or headers.
- *     Parsing may still be incomplete, depending on the final value of 
+ *     Parsing may still be incomplete, depending on the final value of
  *     @a done.
  * @retval <driver>::GLOBUS_XIO_HTTP_ERROR_PARSE
  *     Parse error reading the HTTP Status line
@@ -1005,7 +1005,7 @@ globus_l_xio_http_client_parse_response(
             goto error_exit;
         }
 
-        http_handle->response_info.http_version = 
+        http_handle->response_info.http_version =
             globus_i_xio_http_guess_version(http_major, http_minor);
 
         current_offset += parsed;
@@ -1023,7 +1023,7 @@ globus_l_xio_http_client_parse_response(
 
             goto error_exit;
         }
-       
+
         current_offset += parsed;
 
         /* Reason Phrase */
@@ -1054,7 +1054,7 @@ globus_l_xio_http_client_parse_response(
     {
         http_handle->parse_state = GLOBUS_XIO_HTTP_STATUS_LINE;
     }
-    
+
     return result;
 
 error_exit:
@@ -1120,7 +1120,7 @@ globus_l_xio_http_cleanup_cancel(
     else
     {
         /* Cancel callback occurred in another thread. That thread will
-         * try to cancel this operation. We are obliged to free the 
+         * try to cancel this operation. We are obliged to free the
          * cancel info.
          */
 

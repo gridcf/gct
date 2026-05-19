@@ -203,7 +203,7 @@ globus_scheduler_event_pending(
     event.exit_code = 0;
     event.failure_code = 0;
     event.raw_event = NULL;
-    
+
     if (globus_l_seg_event_handler != NULL)
     {
         (*globus_l_seg_event_handler)(
@@ -298,7 +298,7 @@ globus_scheduler_event_failed(
     event.exit_code = 0;
     event.failure_code = failure_code;
     event.raw_event = NULL;
-    
+
     if (globus_l_seg_event_handler != NULL)
     {
         (*globus_l_seg_event_handler)(
@@ -346,7 +346,7 @@ globus_scheduler_event_done(
     event.exit_code = exit_code;
     event.failure_code = 0;
     event.raw_event = NULL;
-    
+
     if (globus_l_seg_event_handler != NULL)
     {
         (*globus_l_seg_event_handler)(

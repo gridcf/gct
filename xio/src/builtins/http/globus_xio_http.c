@@ -71,7 +71,7 @@ globus_l_xio_http_init(
         globus_i_xio_http_read,
         globus_i_xio_http_write,
         globus_i_xio_http_handle_cntl,
-	NULL);
+        NULL);
 
     globus_xio_driver_set_server(
         driver,
@@ -280,7 +280,7 @@ globus_i_xio_http_find_eol(
     char *                              result;
     globus_size_t                       skip = 0;
 
-    while (((skip + 1) < blob_length) && 
+    while (((skip + 1) < blob_length) &&
         (result = memchr(blob + skip, '\r', blob_length-skip)) != NULL)
     {
         if (result+1 == (blob + skip + blob_length))
@@ -291,7 +291,7 @@ globus_i_xio_http_find_eol(
         {
             return result;
         }
-        else 
+        else
         {
             skip += (result - blob + 1);
         }
@@ -368,7 +368,7 @@ globus_i_xio_http_clean_read_buffer(
             + http_handle->read_buffer_offset
             + http_handle->read_buffer_valid;
 
-    http_handle->read_iovec.iov_len = 
+    http_handle->read_iovec.iov_len =
         http_handle->read_buffer.iov_len
         - http_handle->read_buffer_offset
         - http_handle->read_buffer_valid;
@@ -409,9 +409,9 @@ globus_l_xio_http_deactivate(void)
 {
     globus_i_xio_http_handle_t *        http_handle;
     globus_result_t                     result;
-    
+
     GlobusXIOUnRegisterDriver(http);
-    
+
     globus_mutex_lock(&globus_i_xio_http_cached_handle_mutex);
     while (!globus_list_empty(globus_i_xio_http_cached_handles))
     {

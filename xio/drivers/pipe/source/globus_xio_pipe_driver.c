@@ -28,7 +28,7 @@ GlobusDebugDefine(GLOBUS_XIO_PIPE);
     GlobusXIOPipeDebugPrintf(                                               \
         GLOBUS_L_XIO_PIPE_DEBUG_TRACE,                                      \
         (_XIOSL("[%s] Entering\n"), _xio_name))
-        
+
 #define GlobusXIOPipeDebugExit()                                            \
     GlobusXIOPipeDebugPrintf(                                               \
         GLOBUS_L_XIO_PIPE_DEBUG_TRACE,                                      \
@@ -70,7 +70,7 @@ typedef struct xio_l_pipe_attr_s
 {
     globus_bool_t                       use_blocking_io;
     globus_xio_system_file_t            infd;
-    globus_xio_system_file_t            outfd;    
+    globus_xio_system_file_t            outfd;
 } xio_l_pipe_attr_t;
 
 /* default attr */
@@ -194,7 +194,7 @@ globus_l_xio_pipe_attr_cntl(
         case GLOBUS_XIO_PIPE_SET_OUT_HANDLE:
             attr->outfd = va_arg(ap, globus_xio_system_file_t);
             break;
-            
+
         default:
             break;
     }
@@ -232,9 +232,9 @@ globus_l_xio_pipe_handle_init(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_l_xio_pipe_handle_init);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     *handle = (xio_l_pipe_handle_t *)
         globus_calloc(1, sizeof(xio_l_pipe_handle_t));
     if(!*handle)
@@ -242,7 +242,7 @@ globus_l_xio_pipe_handle_init(
         result = GlobusXIOErrorMemory("handle");
         goto error_handle;
     }
-    
+
     globus_mutex_init(&(*handle)->lock, NULL);
     (*handle)->use_blocking_io = attr->use_blocking_io;
     (*handle)->infd = attr->infd;
@@ -253,7 +253,7 @@ globus_l_xio_pipe_handle_init(
 
 error_handle:
     GlobusXIOPipeDebugExitWithError();
-    return result;    
+    return result;
 }
 
 static
@@ -262,12 +262,12 @@ globus_l_xio_pipe_handle_destroy(
     xio_l_pipe_handle_t *               handle)
 {
     GlobusXIOName(globus_l_xio_pipe_handle_destroy);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     globus_mutex_destroy(&handle->lock);
     globus_free(handle);
-    
+
     GlobusXIOPipeDebugExit();
 }
 
@@ -287,9 +287,9 @@ globus_l_xio_pipe_open(
     xio_l_pipe_attr_t *                 attr;
     globus_result_t                     result;
     GlobusXIOName(globus_l_xio_pipe_open);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     attr = (xio_l_pipe_attr_t *)
         (driver_attr ? driver_attr : &xio_l_pipe_attr_default);
     result = globus_l_xio_pipe_handle_init(&handle, attr);
@@ -314,9 +314,9 @@ globus_l_xio_pipe_open(
             "globus_xio_system_file_init", result);
         goto error_init;
     }
-    
+
     globus_xio_driver_finished_open(handle, op, GLOBUS_SUCCESS);
-    
+
     GlobusXIOPipeDebugExit();
     return GLOBUS_SUCCESS;
 
@@ -341,18 +341,18 @@ globus_l_xio_pipe_close(
     GlobusXIOName(globus_l_xio_pipe_close);
 
     GlobusXIOPipeDebugEnter();
-    
+
     handle = (xio_l_pipe_handle_t *) driver_specific_handle;
-    
+
     globus_xio_system_file_destroy(handle->in_system);
     globus_xio_system_file_destroy(handle->out_system);
-    
+
     globus_xio_system_file_close(handle->infd);
     globus_xio_system_file_close(handle->outfd);
-    
+
     globus_xio_driver_finished_close(op, GLOBUS_SUCCESS);
     globus_l_xio_pipe_handle_destroy(handle);
-    
+
     GlobusXIOPipeDebugExit();
     return GLOBUS_SUCCESS;
 }
@@ -366,13 +366,13 @@ globus_l_xio_pipe_system_read_cb(
 {
     globus_xio_operation_t              op;
     GlobusXIOName(globus_l_xio_pipe_system_read_cb);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     op = (globus_xio_operation_t) user_arg;
-    
+
     globus_xio_driver_finished_read(op, result, nbytes);
-    
+
     GlobusXIOPipeDebugExit();
 }
 
@@ -393,9 +393,9 @@ globus_l_xio_pipe_read(
     GlobusXIOName(globus_l_xio_pipe_read);
 
     GlobusXIOPipeDebugEnter();
-    
+
     handle = (xio_l_pipe_handle_t *) driver_specific_handle;
-    
+
     /* if buflen and waitfor are both 0, we behave like register select */
     if((globus_xio_operation_get_wait_for(op) == 0 &&
         (iovec_count > 1 || iovec[0].iov_len > 0)) ||
@@ -409,7 +409,7 @@ globus_l_xio_pipe_read(
             iovec_count,
             globus_xio_operation_get_wait_for(op),
             &nbytes);
-        
+
         globus_xio_driver_finished_read(op, result, nbytes);
         result = GLOBUS_SUCCESS;
     }
@@ -425,7 +425,7 @@ globus_l_xio_pipe_read(
             globus_l_xio_pipe_system_read_cb,
             op);
     }
-    
+
     GlobusXIOPipeDebugExit();
     return result;
 }
@@ -439,13 +439,13 @@ globus_l_xio_pipe_system_write_cb(
 {
     globus_xio_operation_t              op;
     GlobusXIOName(globus_l_xio_pipe_system_write_cb);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     op = (globus_xio_operation_t) user_arg;
-        
+
     globus_xio_driver_finished_write(op, result, nbytes);
-    
+
     GlobusXIOPipeDebugExit();
 }
 
@@ -464,11 +464,11 @@ globus_l_xio_pipe_write(
     globus_size_t                       nbytes;
     globus_result_t                     result;
     GlobusXIOName(globus_l_xio_pipe_write);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     handle = (xio_l_pipe_handle_t *) driver_specific_handle;
-                
+
     /* if buflen and waitfor are both 0, we behave like register select */
     if((globus_xio_operation_get_wait_for(op) == 0 &&
         (iovec_count > 1 || iovec[0].iov_len > 0)) ||
@@ -482,7 +482,7 @@ globus_l_xio_pipe_write(
             iovec_count,
             globus_xio_operation_get_wait_for(op),
             &nbytes);
-        
+
         globus_xio_driver_finished_write(op, result, nbytes);
         result = GLOBUS_SUCCESS;
     }
@@ -498,7 +498,7 @@ globus_l_xio_pipe_write(
             globus_l_xio_pipe_system_write_cb,
             op);
     }
-    
+
     GlobusXIOPipeDebugExit();
     return result;
 }
@@ -520,11 +520,11 @@ globus_l_xio_pipe_init(
     globus_xio_driver_t                 driver;
     globus_result_t                     result;
     GlobusXIOName(globus_l_xio_pipe_init);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     /* I dont support any driver options, so I'll ignore the ap */
-    
+
     result = globus_xio_driver_init(&driver, "file", GLOBUS_NULL);
     if(result != GLOBUS_SUCCESS)
     {
@@ -553,7 +553,7 @@ globus_l_xio_pipe_init(
         pipe_l_string_opts_table);
 
     *out_driver = driver;
-    
+
     GlobusXIOPipeDebugExit();
     return GLOBUS_SUCCESS;
 
@@ -568,11 +568,11 @@ globus_l_xio_pipe_destroy(
     globus_xio_driver_t                 driver)
 {
     GlobusXIOName(globus_l_xio_pipe_destroy);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     globus_xio_driver_destroy(driver);
-    
+
     GlobusXIOPipeDebugExit();
 }
 
@@ -586,13 +586,13 @@ int
 globus_l_xio_pipe_activate(void)
 {
     int                                 rc;
-    
+
     GlobusXIOName(globus_l_xio_pipe_activate);
-    
+
     GlobusDebugInit(GLOBUS_XIO_PIPE, TRACE INFO);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     rc = globus_module_activate(GLOBUS_XIO_SYSTEM_MODULE);
     if(rc != GLOBUS_SUCCESS)
     {
@@ -602,9 +602,9 @@ globus_l_xio_pipe_activate(void)
     xio_l_pipe_attr_default.infd = GetStdHandle(STD_INPUT_HANDLE);
     xio_l_pipe_attr_default.outfd = GetStdHandle(STD_OUTPUT_HANDLE);
 #   endif
-    
+
     GlobusXIORegisterDriver(pipe);
-    
+
     GlobusXIOPipeDebugExit();
     return GLOBUS_SUCCESS;
 
@@ -619,14 +619,14 @@ int
 globus_l_xio_pipe_deactivate(void)
 {
     GlobusXIOName(globus_l_xio_pipe_deactivate);
-    
+
     GlobusXIOPipeDebugEnter();
-    
+
     GlobusXIOUnRegisterDriver(pipe);
     globus_module_deactivate(GLOBUS_XIO_SYSTEM_MODULE);
-    
+
     GlobusXIOPipeDebugExit();
     GlobusDebugDestroy(GLOBUS_XIO_PIPE);
-    
+
     return GLOBUS_SUCCESS;
 }

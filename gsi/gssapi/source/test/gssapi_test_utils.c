@@ -72,13 +72,13 @@ init_sec_context(
     gss_ctx_id_t *                      context);
 
 
-gss_cred_id_t 
+gss_cred_id_t
 globus_gsi_gssapi_test_acquire_credential()
 {
     gss_cred_id_t                       credential = GSS_C_NO_CREDENTIAL;
     OM_uint32                           major_status = GSS_S_COMPLETE;
     OM_uint32                           minor_status;
-    
+
     major_status = gss_acquire_cred(&minor_status,
                                     GSS_C_NO_NAME,
                                     GSS_C_INDEFINITE,
@@ -87,18 +87,18 @@ globus_gsi_gssapi_test_acquire_credential()
                                     &credential,
                                     NULL,
                                     NULL);
-    
+
     if(major_status != GSS_S_COMPLETE)
     {
         globus_gsi_gssapi_test_print_error(stderr, major_status, minor_status);
         globus_gsi_gssapi_test_print_result(stderr, minor_status);
         return GSS_C_NO_CREDENTIAL;
     }
-    
+
     return credential;
 }
 
-void 
+void
 globus_gsi_gssapi_test_release_credential(
     gss_cred_id_t *                     credential)
 {
@@ -110,27 +110,27 @@ globus_gsi_gssapi_test_release_credential(
 globus_bool_t
 globus_gsi_gssapi_test_authenticate(
     int                                 fd,
-    globus_bool_t                       server, 
-    gss_cred_id_t                       credential, 
-    gss_ctx_id_t *                      context_handle, 
-    char **                             user_id, 
+    globus_bool_t                       server,
+    gss_cred_id_t                       credential,
+    gss_ctx_id_t *                      context_handle,
+    char **                             user_id,
     gss_cred_id_t *                     delegated_cred)
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
-    
-    if (server == GLOBUS_TRUE) 
+
+    if (server == GLOBUS_TRUE)
     {
-        major_status = accept_sec_context(fd, 
-					  user_id,
-					  context_handle, 
-					  delegated_cred, 
-					  credential);
+        major_status = accept_sec_context(fd,
+                                          user_id,
+                                          context_handle,
+                                          delegated_cred,
+                                          credential);
     }
-    else 
+    else
     {
         major_status = init_sec_context(fd,
-					credential,
-					context_handle);
+                                        credential,
+                                        context_handle);
     }
 
     return major_status == GSS_S_COMPLETE ? GLOBUS_TRUE : GLOBUS_FALSE;
@@ -144,7 +144,7 @@ test_establish_contexts_with_mechs(
     OM_uint32                           flags,
     OM_uint32                          *major_status,
     OM_uint32                          *minor_status)
-    
+
 {
     int                                 rc = 0;
     OM_uint32                           init_major_status;
@@ -225,7 +225,7 @@ test_establish_contexts_with_mechs(
     }
     while (init_major_status == GSS_S_CONTINUE_NEEDED &&
            accept_major_status == GSS_S_CONTINUE_NEEDED);
-    
+
     if (rc != 0)
     {
 init_fail:
@@ -261,7 +261,7 @@ test_establish_contexts(
     OM_uint32                           flags,
     OM_uint32                          *major_status,
     OM_uint32                          *minor_status)
-    
+
 {
     return test_establish_contexts_with_mechs(
             init_context,
@@ -273,18 +273,18 @@ test_establish_contexts(
 }
 
 
-void 
+void
 globus_gsi_gssapi_test_cleanup(
     gss_ctx_id_t *                      context_handle,
     char *                              userid,
     gss_cred_id_t *                     delegated_cred)
 {
     OM_uint32                           minor_status;
-    
+
     free(userid);
-    
+
     gss_delete_sec_context(&minor_status, context_handle, GSS_C_NO_BUFFER);
-    
+
     if (delegated_cred != NULL)
     {
         gss_release_cred(&minor_status, delegated_cred);
@@ -321,11 +321,11 @@ globus_gsi_gssapi_test_export_context(
                 __LINE__);
         gss_release_buffer(&minor_status, &export_token);
         result = GLOBUS_FALSE;
-        goto exit;        
+        goto exit;
     }
 
     gss_release_buffer(&minor_status, &export_token);
-    
+
  exit:
     return result;
 }
@@ -346,7 +346,7 @@ globus_gsi_gssapi_test_import_context(
     import_token.value = malloc(import_token.length);
 
     fread(import_token.value, import_token.length, 1, context_file);
-    
+
     major_status = gss_import_sec_context(
         &minor_status,
         (gss_buffer_t) & import_token,
@@ -360,9 +360,9 @@ globus_gsi_gssapi_test_import_context(
         result = GLOBUS_FALSE;
         goto exit;
     }
-    
+
     gss_release_buffer(&minor_status, &import_token);
-    
+
  exit:
 
     return result;
@@ -381,10 +381,10 @@ globus_gsi_gssapi_test_send_hello(
     gss_buffer_desc                     input_token;
     long                                rc;
     long                                written = 0;
-    
+
     input_token.length = 11;
     input_token.value = hello;
-    
+
     major_status = gss_wrap(&minor_status,
                             context,
                             0,
@@ -392,7 +392,7 @@ globus_gsi_gssapi_test_send_hello(
                             (gss_buffer_t) &input_token,
                             NULL,
                             (gss_buffer_t) &send_token);
-    
+
     if(GSS_ERROR(major_status))
     {
         globus_gsi_gssapi_test_print_error(
@@ -412,10 +412,10 @@ globus_gsi_gssapi_test_send_hello(
     }
 
     /*printf("Wrote %d out of %d bytes\n", written, send_token.length); */
-    
+
     gss_release_buffer(&minor_status, &send_token);
 
-    
+
  exit:
     return result;
 }
@@ -432,7 +432,7 @@ globus_gsi_gssapi_test_receive_hello(
     long                                rc;
     gss_buffer_desc                     recv_token = GSS_C_EMPTY_BUFFER;
     gss_buffer_desc                     output_token = GSS_C_EMPTY_BUFFER;
-    
+
     while((rc = recv(fd,&buffer[recv_token.length],128,0)) > 0 &&
           (recv_token.length += rc));
 
@@ -444,7 +444,7 @@ globus_gsi_gssapi_test_receive_hello(
     }
 
     /* printf("Read %d bytes\n", recv_token.length); */
-    
+
     recv_token.value = buffer;
 
     major_status = gss_unwrap(&minor_status,
@@ -466,7 +466,7 @@ globus_gsi_gssapi_test_receive_hello(
         result = GLOBUS_FALSE;
     }
 
-    gss_release_buffer(&minor_status, &output_token);    
+    gss_release_buffer(&minor_status, &output_token);
 
  exit:
     return result;
@@ -483,11 +483,11 @@ globus_gsi_gssapi_test_dump_cert_chain(
     globus_bool_t                       result = GLOBUS_TRUE;
     FILE *                              dump_file;
     gss_OID_desc                        cert_chain_oid =
-        {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x08"}; 
+        {11, "\x2b\x06\x01\x04\x01\x9b\x50\x01\x01\x01\x08"};
     gss_buffer_set_t                    cert_chain_buffers;
     X509 *                              cert;
     const unsigned char *                   tmp_ptr;
-    
+
     dump_file = fopen(filename,"w");
 
     if(dump_file == NULL)
@@ -526,7 +526,7 @@ globus_gsi_gssapi_test_dump_cert_chain(
                                    &cert_chain_buffers);
             goto exit;
         }
-        
+
         X509_print_fp(dump_file,
                       cert);
         X509_free(cert);
@@ -539,7 +539,7 @@ globus_gsi_gssapi_test_dump_cert_chain(
     {
         fclose(dump_file);
     }
-    
+
     return result;
 }
 
@@ -562,20 +562,20 @@ get_token(
         if(n_read < 0)
         {
             if(errno == EINTR)
-            { 
+            {
                 continue;
             }
             else
-            { 
+            {
                 return errno;
             }
         }
         else
-        { 
+        {
             num_read += n_read;
         }
     }
-    
+
     /* decode the token length from network byte order: 4 byte, big endian */
 
     *token_length  = (((size_t) token_length_buffer[0]) << 24) & 0xffff;
@@ -588,7 +588,7 @@ get_token(
         /* token too large */
         return 1;
     }
-    
+
     *token = malloc(*token_length);
 
     if(*token == NULL)
@@ -607,20 +607,20 @@ get_token(
         if(n_read < 0)
         {
             if(errno == EINTR)
-            { 
+            {
                 continue;
             }
             else
-            { 
+            {
                 return errno;
             }
         }
         else
-        { 
+        {
             num_read += n_read;
         }
     }
-    
+
     return 0;
 }
 
@@ -649,20 +649,20 @@ put_token(
         if(n_written < 0)
         {
             if(errno == EINTR)
-            { 
+            {
                 continue;
             }
             else
-            { 
+            {
                 return errno;
             }
         }
         else
-        { 
+        {
             num_written += n_written;
         }
     }
-    
+
     num_written = 0;
 
     while(num_written < token_length)
@@ -673,16 +673,16 @@ put_token(
         if(n_written < 0)
         {
             if(errno == EINTR)
-            { 
+            {
                 continue;
             }
             else
-            { 
+            {
                 return errno;
             }
         }
         else
-        { 
+        {
             num_written += n_written;
         }
     }
@@ -710,7 +710,7 @@ accept_sec_context(
     gss_buffer_desc                     name_buffer;
     gss_OID                             mech_type = GSS_C_NO_OID;
     OM_uint32                           time_ret;
-    
+
     if(credential == GSS_C_NO_CREDENTIAL)
     {
         globus_libc_printf("Failed to acquire credentials\n");
@@ -740,9 +740,9 @@ accept_sec_context(
                                               &time_ret,
                                               delegated_cred);
 
-	if(major_status != GSS_S_COMPLETE &&
-	   major_status != GSS_S_CONTINUE_NEEDED)
-	{
+        if(major_status != GSS_S_COMPLETE &&
+           major_status != GSS_S_CONTINUE_NEEDED)
+        {
             char *                      error_string = NULL;
             globus_object_t *           error_obj = NULL;
 
@@ -751,8 +751,8 @@ accept_sec_context(
             fprintf(stderr, "ERROR CHAIN:\n%s\n", error_string);
             free(error_string);
             globus_object_free(error_obj);
-	    abort();
-	}
+            abort();
+        }
 
         if(output_token.length != 0)
         {
@@ -764,7 +764,7 @@ accept_sec_context(
                 major_status =
                     GSS_S_DEFECTIVE_TOKEN|GSS_S_CALL_INACCESSIBLE_WRITE;
             }
-	    
+
             gss_release_buffer(&minor_status2,
                                &output_token);
         }
@@ -799,9 +799,9 @@ accept_sec_context(
     /* authentication succeeded, figure out who it is */
 
     major_status = gss_display_name(&minor_status,
-				    client_name,
-				    &name_buffer,
-				    NULL);
+                                    client_name,
+                                    &name_buffer,
+                                    NULL);
 
     *name = (char *)name_buffer.value;
 
@@ -817,50 +817,50 @@ init_sec_context(
     gss_cred_id_t                       credential,
     gss_ctx_id_t *                      context)
 {
-    OM_uint32			        minor_status2 = 0;
-    OM_uint32			        minor_status = 0;
-    OM_uint32			        major_status = GSS_S_COMPLETE;
-    OM_uint32			        req_flags  = GSS_C_MUTUAL_FLAG|GSS_C_DELEG_FLAG;
-    OM_uint32			        ret_flags  = 0;
-    int				        token_status = 0;
-    gss_name_t			        target_name = GSS_C_NO_NAME;
-    globus_bool_t		        context_established = GLOBUS_FALSE;
-    gss_OID *			        actual_mech_type = NULL;
-    OM_uint32			        time_ret;
-    gss_buffer_desc		        input_token = GSS_C_EMPTY_BUFFER;
-    gss_buffer_desc 		        output_token = GSS_C_EMPTY_BUFFER;
+    OM_uint32                           minor_status2 = 0;
+    OM_uint32                           minor_status = 0;
+    OM_uint32                           major_status = GSS_S_COMPLETE;
+    OM_uint32                           req_flags  = GSS_C_MUTUAL_FLAG|GSS_C_DELEG_FLAG;
+    OM_uint32                           ret_flags  = 0;
+    int                                 token_status = 0;
+    gss_name_t                          target_name = GSS_C_NO_NAME;
+    globus_bool_t                       context_established = GLOBUS_FALSE;
+    gss_OID *                           actual_mech_type = NULL;
+    OM_uint32                           time_ret;
+    gss_buffer_desc                     input_token = GSS_C_EMPTY_BUFFER;
+    gss_buffer_desc                     output_token = GSS_C_EMPTY_BUFFER;
 
     major_status = gss_inquire_cred(&minor_status,
-				    credential,
-				    &target_name,
-				    NULL,
-				    NULL,
-				    NULL);
+                                    credential,
+                                    &target_name,
+                                    NULL,
+                                    NULL,
+                                    NULL);
 
     if(major_status != GSS_S_COMPLETE)
     {
-	globus_libc_printf("Failed to determine my name\n");
-	return 1;
+        globus_libc_printf("Failed to determine my name\n");
+        return 1;
     }
 
     while(!context_established)
     {
-	major_status = gss_init_sec_context(&minor_status,
-					    credential,
-					    context,
-					    target_name,
-					    GSS_C_NO_OID, /*mech_type*/
-					    req_flags,
-					    0, /* default time */
-					    GSS_C_NO_CHANNEL_BINDINGS,
-					    &input_token,
-					    actual_mech_type,
-					    &output_token,
-					    &ret_flags,
-					    &time_ret);
-	if(major_status != GSS_S_COMPLETE &&
-	   major_status != GSS_S_CONTINUE_NEEDED)
-	{
+        major_status = gss_init_sec_context(&minor_status,
+                                            credential,
+                                            context,
+                                            target_name,
+                                            GSS_C_NO_OID, /*mech_type*/
+                                            req_flags,
+                                            0, /* default time */
+                                            GSS_C_NO_CHANNEL_BINDINGS,
+                                            &input_token,
+                                            actual_mech_type,
+                                            &output_token,
+                                            &ret_flags,
+                                            &time_ret);
+        if(major_status != GSS_S_COMPLETE &&
+           major_status != GSS_S_CONTINUE_NEEDED)
+        {
             char *                      error_string = NULL;
             globus_object_t *           error_obj = NULL;
 
@@ -869,61 +869,61 @@ init_sec_context(
             fprintf(stderr, "ERROR CHAIN:\n%s\n", error_string);
             free(error_string);
             globus_object_free(error_obj);
-	    abort();
-	}
-	/* free any token we've just processed */
-	if(input_token.length > 0)
-	{
-	    gss_release_buffer(&minor_status2,
+            abort();
+        }
+        /* free any token we've just processed */
+        if(input_token.length > 0)
+        {
+            gss_release_buffer(&minor_status2,
                                &input_token);
-	}
-	
-	/* and send any new token to the server */
-	if(output_token.length != 0)
-	{
-	    token_status = put_token(client_fd,
-				     output_token.value,
-				     output_token.length);
-	    if(token_status != 0)
-	    {
-		major_status =
-		    GSS_S_DEFECTIVE_TOKEN|GSS_S_CALL_INACCESSIBLE_WRITE;
-	    }
+        }
+
+        /* and send any new token to the server */
+        if(output_token.length != 0)
+        {
+            token_status = put_token(client_fd,
+                                     output_token.value,
+                                     output_token.length);
+            if(token_status != 0)
+            {
+                major_status =
+                    GSS_S_DEFECTIVE_TOKEN|GSS_S_CALL_INACCESSIBLE_WRITE;
+            }
             gss_release_buffer(&minor_status,
                                &output_token);
-	}
-	
-	if (GSS_ERROR(major_status))
-	{
-	    printf("    Failed to establish security context (init).\n");
+        }
+
+        if (GSS_ERROR(major_status))
+        {
+            printf("    Failed to establish security context (init).\n");
             globus_gsi_gssapi_test_print_error(
                 stderr, major_status, minor_status);
 
-	    if (*context != GSS_C_NO_CONTEXT)
-	    {
-		gss_delete_sec_context(&minor_status2,
-				       context,
-				       GSS_C_NO_BUFFER);
-		break;
-	    }
-	}
-	
-	if(major_status & GSS_S_CONTINUE_NEEDED)
-	{
-	    token_status = get_token(client_fd,
-				     (unsigned char **) &input_token.value,
-				     &input_token.length);
-	    if(token_status != 0)
-	    {
-		major_status = 
-		    GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_READ;
-		break;
-	    }
-	}
-	else
-	{
-	    context_established = 1;
-	}
+            if (*context != GSS_C_NO_CONTEXT)
+            {
+                gss_delete_sec_context(&minor_status2,
+                                       context,
+                                       GSS_C_NO_BUFFER);
+                break;
+            }
+        }
+
+        if(major_status & GSS_S_CONTINUE_NEEDED)
+        {
+            token_status = get_token(client_fd,
+                                     (unsigned char **) &input_token.value,
+                                     &input_token.length);
+            if(token_status != 0)
+            {
+                major_status =
+                    GSS_S_DEFECTIVE_TOKEN | GSS_S_CALL_INACCESSIBLE_READ;
+                break;
+            }
+        }
+        else
+        {
+            context_established = 1;
+        }
     } /* while() */
 
     if (target_name != GSS_C_NO_NAME)

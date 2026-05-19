@@ -33,34 +33,34 @@
 
 /* ----------------------------------------------------------------------
    globus_l_args_create_msg()
-   
+
    creates (and possibly prints) a message
    ---------------------------------------------------------------------- */
 
 int
 globus_l_args_create_msg( char **         msg_storage,
-			  char *          message    )
+                          char *          message    )
 {
     if (msg_storage)
-	*msg_storage = message;
+        *msg_storage = message;
     else
-	globus_libc_fprintf( stderr, "%s", message );
+        globus_libc_fprintf( stderr, "%s", message );
 
     return GLOBUS_SUCCESS;
 }
 
 /* ----------------------------------------------------------------------
    globus_l_args_create_error_msg()
-   
+
    creates (and possibly prints) an error message
    ---------------------------------------------------------------------- */
 
 int
 globus_l_args_create_error_msg( char **        error_msg,
-				int            current_argc,
-				char *         current_argv,
-				char *         error_string,
-				const char *   oneline_usage )
+                                int            current_argc,
+                                char *         current_argv,
+                                char *         error_string,
+                                const char *   oneline_usage )
 {
     char *      my_error_string;
     char *      p;
@@ -78,15 +78,15 @@ globus_l_args_create_error_msg( char **        error_msg,
         + strlen(my_error_string)
         + strlen(oneline_usage)
         + strlen(error_epilogue)
-	+ 10;
+        + 10;
 
     p = globus_l_args_malloc( char, len );
     globus_assert( p );
     globus_libc_sprintf( p,
-			 error_format, 
-			 current_argc, 
-			 current_argv,
-			 my_error_string  );
+                         error_format,
+                         current_argc,
+                         current_argv,
+                         my_error_string  );
 
     usage_len = strlen( oneline_usage );
 
@@ -95,11 +95,11 @@ globus_l_args_create_error_msg( char **        error_msg,
     sprintf( &p[len+usage_len], "%s", error_epilogue );
 
     if (error_msg)
-	*error_msg = p;
+        *error_msg = p;
     else
     {
-	globus_libc_fprintf( stderr, "%s", p );
-	free(p);
+        globus_libc_fprintf( stderr, "%s", p );
+        free(p);
     }
 
     return GLOBUS_SUCCESS;
@@ -119,12 +119,12 @@ globus_l_args_create_error_msg( char **        error_msg,
 
 
 int
-globus_l_args_validate( globus_args_option_descriptor_t *   option, 
-			int                                 start_argc,
-			char **                             argv,
-			char ***                            values,
-			const char *                        oneline_usage,
-			char **                             msg_storage  )
+globus_l_args_validate( globus_args_option_descriptor_t *   option,
+                        int                                 start_argc,
+                        char **                             argv,
+                        char ***                            values,
+                        const char *                        oneline_usage,
+                        char **                             msg_storage  )
 {
     int           rc;
     int           i;
@@ -134,43 +134,43 @@ globus_l_args_validate( globus_args_option_descriptor_t *   option,
 
     *values = globus_l_args_malloc(char*, option->arity);
     globus_assert(*values);
-    
+
     rc = GLOBUS_SUCCESS;
 
     for (i=0; !rc && i<option->arity; i++)
     {
-	argp = argv[start_argc+1+i];
-	if (option->tests && option->tests[i] )
-	{
-	    p = GLOBUS_NULL;
-	    if ( option->test_parms && option->test_parms[i] )
-		p = option->test_parms[i];
+        argp = argv[start_argc+1+i];
+        if (option->tests && option->tests[i] )
+        {
+            p = GLOBUS_NULL;
+            if ( option->test_parms && option->test_parms[i] )
+                p = option->test_parms[i];
 
-	    validation_error = GLOBUS_NULL;
-	    rc = option->tests[i]( argp,
-				   p,
-				   &validation_error );
+            validation_error = GLOBUS_NULL;
+            rc = option->tests[i]( argp,
+                                   p,
+                                   &validation_error );
 
-	    /* API defines non-zero return as an error */
-	    if (rc)
-	    {
-		globus_l_args_create_error_msg( msg_storage,
-						start_argc+1+i,
-						argp,
-						validation_error,
-						oneline_usage   );
-		continue;
-	    }
-	} /* if */
+            /* API defines non-zero return as an error */
+            if (rc)
+            {
+                globus_l_args_create_error_msg( msg_storage,
+                                                start_argc+1+i,
+                                                argp,
+                                                validation_error,
+                                                oneline_usage   );
+                continue;
+            }
+        } /* if */
 
-	(*values)[i] = argp;
+        (*values)[i] = argp;
 
     }   /* for */
 
     if (rc)
     {
-	free(*values);
-	rc = GLOBUS_FAILURE;
+        free(*values);
+        rc = GLOBUS_FAILURE;
     }
 
     return rc;
@@ -180,15 +180,15 @@ globus_l_args_validate( globus_args_option_descriptor_t *   option,
 
 /* ---------------------------------------------------------------------
    globus_l_args_add_instance()
-   
+
    help function : creates an option instance and inserts in the fifo list.
 */
-   
+
 
 int
 globus_l_args_add_instance( globus_fifo_t *                     fifo,
-			    globus_args_option_descriptor_t *   option,
-			    char **                             values )
+                            globus_args_option_descriptor_t *   option,
+                            char **                             values )
 {
     globus_args_option_instance_t *  t;
 
@@ -209,7 +209,7 @@ globus_l_args_add_instance( globus_fifo_t *                     fifo,
    globus_l_args_check_options()
 
    (7) The argument flags "-help", "-usage", "-version", and "-versions" are
-       reserved, and if they are detected the library will create an 
+       reserved, and if they are detected the library will create an
        appropriate message and signal an error.
 
 */
@@ -229,27 +229,27 @@ globus_l_args_check_options(
 
     rc = GLOBUS_SUCCESS;
     for (i=0; !rc && i<option_count; i++)
-    {        
-	if (options[i].id_number == 0)
-	{
-	    globus_l_args_create_msg( error_msg, ERRORID0 );
-	    rc = GLOBUS_FAILURE;
-	}
-	else
-	{
-	    for (alias=options[i].names; (*alias); alias++)
-	    {
-		if (!strcmp(*alias, "-help")   ||
-		    !strcmp(*alias, "-usage")  ||
-		    !strcmp(*alias, "-version")||
-		    !strcmp(*alias, "-versions"))
-		{
-		    globus_l_args_create_msg( error_msg, ERROR7 );
-		    rc = GLOBUS_FAILURE;
-		    break;
-		}
-	    }
-	}
+    {
+        if (options[i].id_number == 0)
+        {
+            globus_l_args_create_msg( error_msg, ERRORID0 );
+            rc = GLOBUS_FAILURE;
+        }
+        else
+        {
+            for (alias=options[i].names; (*alias); alias++)
+            {
+                if (!strcmp(*alias, "-help")   ||
+                    !strcmp(*alias, "-usage")  ||
+                    !strcmp(*alias, "-version")||
+                    !strcmp(*alias, "-versions"))
+                {
+                    globus_l_args_create_msg( error_msg, ERROR7 );
+                    rc = GLOBUS_FAILURE;
+                    break;
+                }
+            }
+        }
     }
 
     return rc;
@@ -265,7 +265,7 @@ globus_l_args_check_options(
 
 */
 
-int 
+int
 globus_args_scan(
     int  *                                argc,
     char ***                              argv,
@@ -294,11 +294,11 @@ globus_args_scan(
     globus_libc_lock();
     if (!args_mutex_initialized)
     {
-	globus_mutex_init(&args_mutex,
-			  (globus_mutexattr_t *) GLOBUS_NULL);
-	args_mutex_initialized = GLOBUS_TRUE;
+        globus_mutex_init(&args_mutex,
+                          (globus_mutexattr_t *) GLOBUS_NULL);
+        args_mutex_initialized = GLOBUS_TRUE;
     }
-    globus_libc_unlock();    
+    globus_libc_unlock();
 
     globus_mutex_lock(&args_mutex);
 
@@ -306,7 +306,7 @@ globus_args_scan(
     globus_fifo_init(&fifo);
     *options_found = GLOBUS_NULL;
     if (error_msg)
-	*error_msg = GLOBUS_NULL;
+        *error_msg = GLOBUS_NULL;
 
     /* precheck : are the options correct? */
     rc = globus_l_args_check_options(option_count, options, error_msg);
@@ -315,7 +315,7 @@ globus_args_scan(
     my_argc=1;
     while (!done)
     {
-        /* any more options? */ 
+        /* any more options? */
         if (my_argc == *argc)
         {
             done=GLOBUS_TRUE;
@@ -327,7 +327,7 @@ globus_args_scan(
 
         if (my_arg[0]!='-' || len<2)
         {
-	    /* unrecognized option */
+            /* unrecognized option */
             done=GLOBUS_TRUE;
             continue;
         }
@@ -345,11 +345,11 @@ globus_args_scan(
             {
                 rc = GLOBUS_FAILURE;
                 globus_l_args_create_error_msg(
-		    error_msg,
-		    my_argc,
-		    my_arg,
-		    _GCSL("double-dashed option syntax is not allowed"),
-		    oneline_usage                               );
+                    error_msg,
+                    my_argc,
+                    my_arg,
+                    _GCSL("double-dashed option syntax is not allowed"),
+                    oneline_usage                               );
             }
             done = GLOBUS_TRUE;
             continue;
@@ -359,16 +359,16 @@ globus_args_scan(
         if (!strcmp("-help",my_arg))
         {
             globus_l_args_create_msg( error_msg ,
-				      (char *) long_usage );
-	    rc = GLOBUS_ARGS_HELP;
+                                      (char *) long_usage );
+            rc = GLOBUS_ARGS_HELP;
             done = GLOBUS_TRUE;
             continue;
         }
         if(!strcmp("-usage",my_arg))
         {
             globus_l_args_create_msg( error_msg ,
-				      (char *) oneline_usage );
-	    rc = GLOBUS_ARGS_HELP;
+                                      (char *) oneline_usage );
+            rc = GLOBUS_ARGS_HELP;
             done = GLOBUS_TRUE;
             continue;
         }
@@ -379,26 +379,26 @@ globus_args_scan(
                 version,
                 stderr,
                 GLOBUS_FALSE);
-                
-	    rc = GLOBUS_ARGS_VERSION;
+
+            rc = GLOBUS_ARGS_VERSION;
             done = GLOBUS_TRUE;
             continue;
         }
         if (!strcmp("-versions",my_arg))
         {
-	    globus_version_print(
+            globus_version_print(
                 name,
                 version,
                 stderr,
                 GLOBUS_TRUE);
-            
+
             globus_module_print_activated_versions(stderr, GLOBUS_TRUE);
-                
-	    rc = GLOBUS_ARGS_VERSION;
+
+            rc = GLOBUS_ARGS_VERSION;
             done = GLOBUS_TRUE;
             continue;
         }
-        
+
         /* is it a known flag? */
         found=GLOBUS_FALSE;
         for (i=0; !found && !rc && i<option_count; i++)
@@ -414,27 +414,27 @@ globus_args_scan(
                         if (my_argc+options[i].arity >= *argc)
                         {
                             globus_l_args_create_error_msg(
-				error_msg,
-				my_argc,
-				my_arg,
-				_GCSL("not enough arguments"),
-				oneline_usage  );
+                                error_msg,
+                                my_argc,
+                                my_arg,
+                                _GCSL("not enough arguments"),
+                                oneline_usage  );
 
                             rc = GLOBUS_FAILURE;
                             continue;
                         }
 
-			rc = globus_l_args_validate( &options[i],
-						     my_argc,
-						     (*argv),
-						     &arglist,
-						     oneline_usage,
-						     error_msg    );
+                        rc = globus_l_args_validate( &options[i],
+                                                     my_argc,
+                                                     (*argv),
+                                                     &arglist,
+                                                     oneline_usage,
+                                                     error_msg    );
                     } /* if */
 
                     if (rc==GLOBUS_SUCCESS)
                     {
-			/* option successfully detected: add it */
+                        /* option successfully detected: add it */
                         globus_l_args_add_instance( &fifo,
                                                     &options[i],
                                                     arglist );
@@ -443,16 +443,16 @@ globus_args_scan(
                 }           /* strcmp(my_arg,*alias)) */
             }               /* alias */
         }                   /* i */
-	if (!found)
-	{
-	    /* my_arg contains an unregistered option */
-	    rc = GLOBUS_FAILURE;
-	    globus_l_args_create_error_msg( error_msg,
-					    my_argc,
-					    my_arg,
-					    _GCSL("unknown option"),
-					    oneline_usage  );
-	}
+        if (!found)
+        {
+            /* my_arg contains an unregistered option */
+            rc = GLOBUS_FAILURE;
+            globus_l_args_create_error_msg( error_msg,
+                                            my_argc,
+                                            my_arg,
+                                            _GCSL("unknown option"),
+                                            oneline_usage  );
+        }
         if (rc!=GLOBUS_SUCCESS)
         {
             done = GLOBUS_TRUE;
@@ -462,20 +462,20 @@ globus_args_scan(
 
     if (rc==GLOBUS_SUCCESS)
     {
-	/* if successful, return number of options found */
-	rc = globus_fifo_size(&fifo);
+        /* if successful, return number of options found */
+        rc = globus_fifo_size(&fifo);
         *options_found = globus_fifo_convert_to_list( &fifo );
 
-	/* modify argc/argv */
-	if (my_argc>1)
-	{
-	    for (i = my_argc; i < *argc; i++)
-		(*argv)[i-my_argc+1] = (*argv)[i];
+        /* modify argc/argv */
+        if (my_argc>1)
+        {
+            for (i = my_argc; i < *argc; i++)
+                (*argv)[i-my_argc+1] = (*argv)[i];
 
-	    *argc -= my_argc - 1;
-	}
+            *argc -= my_argc - 1;
+        }
     }
-    
+
     globus_fifo_destroy(&fifo);
     globus_mutex_unlock(&args_mutex);
     return rc;
@@ -498,18 +498,18 @@ void
 globus_args_option_instance_list_free( globus_list_t **  list )
 {
     globus_args_option_instance_t  *   t;
-    
+
     while(!globus_list_empty(*list))
     {
         t = (globus_args_option_instance_t *)
             globus_list_remove(list, *list);
-	globus_assert(t);
-	if (t->values)
-	    free( t->values );
-	globus_free(t);
-        
+        globus_assert(t);
+        if (t->values)
+            free( t->values );
+        globus_free(t);
+
     }
-    
+
     return;
 }
 
@@ -546,8 +546,8 @@ globus_validate_int( char *         value,
 
     if (!parms)
     {
-	*error_msg = _GCSL(globus_l_validate_error_null_parms);
-	return GLOBUS_FAILURE;
+        *error_msg = _GCSL(globus_l_validate_error_null_parms);
+        return GLOBUS_FAILURE;
     }
 
     format = "%d";
@@ -579,18 +579,18 @@ globus_validate_int( char *         value,
     if ((range->range_type & GLOBUS_VALIDATE_INT_MIN) &&
         (range->range_min > val))
     {
-	globus_libc_sprintf(globus_l_validate_error_buf,
-			    _GCSL("value is smaller than allowed min=%d"),
-			    range->range_min);
-	*error_msg = globus_l_validate_error_buf;
+        globus_libc_sprintf(globus_l_validate_error_buf,
+                            _GCSL("value is smaller than allowed min=%d"),
+                            range->range_min);
+        *error_msg = globus_l_validate_error_buf;
         return GLOBUS_FAILURE;
     }
     if ((range->range_type & GLOBUS_VALIDATE_INT_MAX) &&
         (range->range_max < val))
     {
-	globus_libc_sprintf(globus_l_validate_error_buf,
-			    _GCSL("value is larger than allowed max=%d"),
-			    range->range_max);
+        globus_libc_sprintf(globus_l_validate_error_buf,
+                            _GCSL("value is larger than allowed max=%d"),
+                            range->range_max);
         *error_msg = globus_l_validate_error_buf;
         return GLOBUS_FAILURE;
     }
@@ -618,8 +618,8 @@ globus_validate_filename( char *    value,
 
     if (!parms)
     {
-	*error_msg = _GCSL(globus_l_validate_error_null_parms);
-	return GLOBUS_FAILURE;
+        *error_msg = _GCSL(globus_l_validate_error_null_parms);
+        return GLOBUS_FAILURE;
     }
 
     mode = *((int *)(parms));
@@ -627,8 +627,8 @@ globus_validate_filename( char *    value,
     my_errno = errno;
     if (fd < 0)
     {
-	*error_msg = globus_libc_system_error_string(my_errno);
-	return GLOBUS_FAILURE;
+        *error_msg = globus_libc_system_error_string(my_errno);
+        return GLOBUS_FAILURE;
     }
 
     globus_libc_close(fd);
@@ -640,54 +640,54 @@ globus_validate_filename( char *    value,
 /* ----------------------------------------------------------------------------
     globus_bytestr_to_num()
 
-    converts a string such as 40M, 256K, 2G to an equivalent off_t.  
+    converts a string such as 40M, 256K, 2G to an equivalent off_t.
     Valid multipliers are  G,g, M,m, K,k, B,b.
-    
+
     Returns 0 on success, nonzero on error.
 
 */
 
 int
-globus_args_bytestr_to_num( 
+globus_args_bytestr_to_num(
     const char *                        str,
-    globus_off_t *                      out) 
-{ 
-    char *                              end = NULL; 
+    globus_off_t *                      out)
+{
+    char *                              end = NULL;
     globus_off_t                        size = 0;
     int                                 consumed;
     int                                 rc;
-    
+
     if(str == NULL || !(isdigit(*str) || *str == '-'))
     {
         return 1;
     }
-    
+
     rc = globus_libc_scan_off_t((char *)str, &size, &consumed);
     end = (char *)str + consumed;
     if(size && end && *end)
-    { 
-        switch(*end) 
-        { 
-            case 'g': 
-            case 'G': 
-                size *= 1024; 
-            case 'm': 
-            case 'M': 
-                size *= 1024; 
-            case 'k': 
-            case 'K': 
-                size *= 1024; 
-            case 'b': 
-            case 'B': 
-                break; 
-            
-            default: 
+    {
+        switch(*end)
+        {
+            case 'g':
+            case 'G':
+                size *= 1024;
+            case 'm':
+            case 'M':
+                size *= 1024;
+            case 'k':
+            case 'K':
+                size *= 1024;
+            case 'b':
+            case 'B':
+                break;
+
+            default:
                 return 1;
-                break; 
-        } 
-    } 
-    
+                break;
+        }
+    }
+
     *out = size;
-    
+
     return 0;
-} 
+}

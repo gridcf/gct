@@ -176,7 +176,7 @@ main(int argc, char * argv[])
                 (strcmp(optarg, "HYBRID") == 0))
             {
                 globus_libc_setenv(
-                        "GLOBUS_GSSAPI_NAME_COMPATIBILITY", 
+                        "GLOBUS_GSSAPI_NAME_COMPATIBILITY",
                         optarg,
                         1);
             }
@@ -481,7 +481,7 @@ time_check(void)
         goto sendto_fail;
     }
     now = time(NULL);
-    rc = recv(sfd, buf, 4, 0); 
+    rc = recv(sfd, buf, 4, 0);
     if (rc < 4)
     {
         printf("WARNING: Unparsable response from time.nist.gov\n");
@@ -528,7 +528,7 @@ time_check(void)
                      + (((uint32_t) buf[3]))) - INTMAX_C(2208988800);
 
     local_seconds_since_unix_epoch = (intmax_t)
-            difftime(now, unix_epoch_time) - tz_off; 
+            difftime(now, unix_epoch_time) - tz_off;
 
     delta = imaxabs(local_seconds_since_unix_epoch - seconds_since_unix_epoch);
 
@@ -1103,7 +1103,7 @@ check_trusted_certs(void)
         char hash_string[16];
 
         printf("Checking CA file %s... ", ca_cert_file);
-              
+
         result = globus_gsi_cred_read_cert(handle, ca_cert_file);
         if (result != GLOBUS_SUCCESS)
         {
@@ -1128,7 +1128,7 @@ check_trusted_certs(void)
 
         if (strstr(ca_cert_file, hash_string) == 0)
         {
-            printf("failed\n    CA hash '%s' does not match CA filename\n", hash_string); 
+            printf("failed\n    CA hash '%s' does not match CA filename\n", hash_string);
             continue;
         }
         printf("ok\nChecking CA certificate name for %s...", hash_string);
@@ -1690,7 +1690,7 @@ check_service_cert_chain(
                 printf(" dns:%.*s",
                        (int) subject_alt_name->d.dNSName->length,
                        subject_alt_name->d.dNSName->data);
-                    
+
             }
             else if (subject_alt_name->type == GEN_IPADD)
             {

@@ -38,7 +38,7 @@ globus_l_openssl_deactivate(void);
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 static unsigned long
 globus_l_openssl_thread_id(void);
-    
+
 static void
 globus_l_openssl_locking_cb(
     int                                 mode,
@@ -73,7 +73,7 @@ globus_l_openssl_activate(void)
     int                                 pci_old_NID;
     X509V3_EXT_METHOD *                 pci_x509v3_ext_meth = NULL;
     X509V3_EXT_METHOD *                 pci_old_x509v3_ext_meth = NULL;
-    
+
     SSL_library_init();
     globus_module_activate(GLOBUS_COMMON_MODULE);
     globus_module_activate(GLOBUS_GSI_OPENSSL_ERROR_MODULE);

@@ -128,7 +128,7 @@ extern globus_bool_t                    globus_i_gssapi_active;
     {                                                         \
         globus_libc_fprintf _MESSAGE_;                        \
     }                                                         \
-} 
+}
 
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_FNPRINTF(_LEVEL_, _MESSAGE_) \
 { \
@@ -151,7 +151,7 @@ extern globus_bool_t                    globus_i_gssapi_active;
             "%s", _MESSAGE_);                               \
     }                                                       \
 }
- 
+
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT_OBJECT(_LEVEL_, _TYPE_, _OBJ_) \
 {                                                                      \
     if (GLOBUS_I_GSI_GSSAPI_DEBUG(_LEVEL_))                            \

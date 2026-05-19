@@ -157,7 +157,7 @@ globus_l_xio_system_wakeup_handler(
     GlobusXIOName(globus_l_xio_system_wakeup_handler);
 
     GlobusXIOSystemDebugEnter();
-    
+
     if(!globus_l_xio_system_shutdown_called)
     {
         byte = 0;
@@ -167,7 +167,7 @@ globus_l_xio_system_wakeup_handler(
                 globus_l_xio_system_wakeup_pipe[1], &byte, sizeof(byte));
         } while(rc < 0 && errno == EINTR);
     }
-    
+
     GlobusXIOSystemDebugExit();
 }
 
@@ -180,12 +180,12 @@ globus_l_xio_system_activate(void)
     globus_result_t                     result;
     globus_reltime_t                    period;
     GlobusXIOName(globus_l_xio_system_activate);
-    
+
     if(globus_i_xio_system_common_activate() != GLOBUS_SUCCESS)
     {
         goto error_activate;
     }
-    
+
     GlobusXIOSystemDebugEnter();
 
     globus_cond_init(&globus_l_xio_system_cond, GLOBUS_NULL);
@@ -245,7 +245,7 @@ globus_l_xio_system_activate(void)
     }
     fcntl(globus_l_xio_system_wakeup_pipe[0], F_SETFD, FD_CLOEXEC);
     fcntl(globus_l_xio_system_wakeup_pipe[1], F_SETFD, FD_CLOEXEC);
-    
+
     globus_l_xio_system_highest_fd = globus_l_xio_system_wakeup_pipe[0];
     FD_SET(globus_l_xio_system_wakeup_pipe[0], globus_l_xio_system_read_fds);
 
@@ -262,7 +262,7 @@ globus_l_xio_system_activate(void)
             "globus_callback_register_periodic", result);
         goto error_register;
     }
-    
+
     globus_callback_add_wakeup_handler(
         globus_l_xio_system_wakeup_handler, GLOBUS_NULL);
 
@@ -283,7 +283,7 @@ error_fdsets:
     globus_mutex_destroy(&globus_l_xio_system_cancel_mutex);
     globus_mutex_destroy(&globus_l_xio_system_fdset_mutex);
     globus_cond_destroy(&globus_l_xio_system_cond);
-    
+
     GlobusXIOSystemDebugExitWithError();
     globus_i_xio_system_common_deactivate();
 error_activate:
@@ -297,9 +297,9 @@ globus_l_xio_system_unregister_periodic_cb(
 {
     globus_bool_t *                     signaled;
     GlobusXIOName(globus_l_xio_system_unregister_periodic_cb);
-    
+
     GlobusXIOSystemDebugEnter();
-    
+
     signaled = (globus_bool_t *) user_args;
     globus_mutex_lock(&globus_l_xio_system_fdset_mutex);
     {
@@ -322,7 +322,7 @@ globus_l_xio_system_deactivate(void)
     globus_mutex_lock(&globus_l_xio_system_fdset_mutex);
     {
         globus_bool_t                   signaled;
-        
+
         globus_l_xio_system_shutdown_called = GLOBUS_TRUE;
         signaled = GLOBUS_FALSE;
         globus_callback_unregister(
@@ -354,7 +354,7 @@ globus_l_xio_system_deactivate(void)
     globus_cond_destroy(&globus_l_xio_system_cond);
 
     GlobusXIOSystemDebugExit();
-    
+
     globus_i_xio_system_common_deactivate();
 
     return GLOBUS_SUCCESS;
@@ -381,25 +381,25 @@ globus_l_xio_system_handle_init(
         result = GlobusXIOErrorMemory("handle");
         goto error_alloc;
     }
-    
+
     handle->type = type;
     handle->fd = fd;
-    
+
     handle->file_position = globus_xio_system_file_get_position(fd);
-    
+
     rc = globus_l_xio_system_add_nonblocking(handle);
     if(rc < 0)
     {
         result = GlobusXIOErrorSystemError("fcntl", errno);
         goto error_fcntl;
     }
-    
+
     globus_mutex_init(&handle->lock, NULL);
-    
+
     *u_handle = handle;
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
-    
+
 error_fcntl:
     globus_free(handle);
 error_alloc:
@@ -439,7 +439,7 @@ globus_l_xio_system_handle_destroy(
 
     globus_l_xio_system_remove_nonblocking(handle);
     globus_free(handle);
-    
+
     GlobusXIOSystemDebugExitFD(fd);
 }
 
@@ -473,21 +473,21 @@ globus_l_xio_system_cancel_cb(
 
     globus_mutex_lock(&globus_l_xio_system_cancel_mutex);
     {
-        if(op_info->state != GLOBUS_I_XIO_SYSTEM_OP_COMPLETE && 
+        if(op_info->state != GLOBUS_I_XIO_SYSTEM_OP_COMPLETE &&
             op_info->state != GLOBUS_I_XIO_SYSTEM_OP_CANCELED)
         {
             op_info->error = reason == GLOBUS_XIO_ERROR_TIMEOUT
                 ? GlobusXIOErrorObjTimeout()
                 : GlobusXIOErrorObjCanceled();
-                    
+
             globus_mutex_lock(&globus_l_xio_system_fdset_mutex);
             {
                 globus_bool_t           pend;
-                
+
                 if(op_info->state == GLOBUS_I_XIO_SYSTEM_OP_NEW)
                 {
                     op_info->state = GLOBUS_I_XIO_SYSTEM_OP_CANCELED;
-                        
+
                     GlobusXIOSystemDebugPrintf(
                         GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                         (_XIOSL("[%s] fd=%d, Canceling NEW\n"),
@@ -498,12 +498,12 @@ globus_l_xio_system_cancel_cb(
                     if(globus_l_xio_system_select_active)
                     {
                         op_info->state = GLOBUS_I_XIO_SYSTEM_OP_CANCELED;
-                        
+
                         GlobusXIOSystemDebugPrintf(
                             GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                             (_XIOSL("[%s] fd=%d, Canceling Active\n"),
                                 _xio_name, op_info->handle->fd));
-                            
+
                         /* pend the cancel for after select wakes up */
                         if(!globus_l_xio_system_wakeup_pending)
                         {
@@ -518,12 +518,12 @@ globus_l_xio_system_cancel_cb(
                         globus_result_t result;
 
                         op_info->state = GLOBUS_I_XIO_SYSTEM_OP_COMPLETE;
-                        
+
                         GlobusXIOSystemDebugPrintf(
                             GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                             (_XIOSL("[%s] fd=%d, Canceling Pending\n"),
                                 _xio_name, op_info->handle->fd));
-                                
+
                         /* unregister and kickout now */
                         result = globus_callback_register_oneshot(
                             GLOBUS_NULL,
@@ -621,7 +621,7 @@ globus_l_xio_system_register_read_fd(
             result = GlobusXIOErrorNotActivated();
             goto error_deactivated;
         }
-        
+
         if(fd >= globus_l_xio_system_max_fds)
         {
             result = GlobusXIOErrorSystemResource(_XIOSL("too many fds"));
@@ -661,7 +661,7 @@ globus_l_xio_system_register_read_fd(
          */
         globus_l_xio_system_select_wakeup();
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
 
@@ -706,13 +706,13 @@ globus_l_xio_system_register_write_fd(
             result = globus_error_put(write_info->error);
             goto error_canceled;
         }
-        
+
         if(globus_l_xio_system_shutdown_called)
         {
             result = GlobusXIOErrorNotActivated();
             goto error_deactivated;
         }
-        
+
         if(fd >= globus_l_xio_system_max_fds)
         {
             result = GlobusXIOErrorSystemResource(_XIOSL("too many fds"));
@@ -743,7 +743,7 @@ globus_l_xio_system_register_write_fd(
         write_info->state = GLOBUS_I_XIO_SYSTEM_OP_PENDING;
     }
     globus_mutex_unlock(&globus_l_xio_system_fdset_mutex);
-    
+
     if(do_wakeup)
     {
         /* I do this outside the lock because the select thread is likely
@@ -752,7 +752,7 @@ globus_l_xio_system_register_write_fd(
          */
         globus_l_xio_system_select_wakeup();
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
 
@@ -885,7 +885,7 @@ globus_l_xio_system_kickout(
             op_info->sop.data.start_iov);
         break;
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
     GlobusIXIOSystemFreeOperation(op_info);
 }
@@ -899,7 +899,7 @@ globus_l_xio_system_select_wakeup(void)
     GlobusXIOName(globus_l_xio_system_select_wakeup);
 
     GlobusXIOSystemDebugEnter();
-    
+
     byte = 0;
 
     do
@@ -993,7 +993,7 @@ globus_l_xio_system_handle_read(
                 tmp_handle.type = GLOBUS_XIO_SYSTEM_TCP;
 
                 rc = globus_l_xio_system_remove_nonblocking(&tmp_handle);
-                
+
                 read_info->nbytes++;
                 GlobusXIOSystemDebugPrintf(
                     GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
@@ -1026,12 +1026,12 @@ globus_l_xio_system_handle_read(
         return GLOBUS_FALSE;
         break;
     }
-    
+
     if(result != GLOBUS_SUCCESS)
     {
         read_info->error = globus_error_get(result);
     }
-    
+
     /* always true for accept operations */
     if(read_info->nbytes >= read_info->waitforbytes ||
         result != GLOBUS_SUCCESS)
@@ -1133,12 +1133,12 @@ globus_l_xio_system_handle_write(
         return GLOBUS_FALSE;
         break;
     }
-    
+
     if(result != GLOBUS_SUCCESS)
     {
         write_info->error = globus_error_get(result);
     }
-    
+
     /* always true for connect operations */
     if(write_info->nbytes >= write_info->waitforbytes ||
         result != GLOBUS_SUCCESS)
@@ -1186,7 +1186,7 @@ globus_l_xio_system_bad_apple(void)
     GlobusXIOName(globus_l_xio_system_bad_apple);
 
     GlobusXIOSystemDebugEnter();
-    
+
     globus_mutex_lock(&globus_l_xio_system_fdset_mutex);
     {
         for(fd = 0; fd <= globus_l_xio_system_highest_fd; fd++)
@@ -1199,9 +1199,9 @@ globus_l_xio_system_bad_apple(void)
                 {
                     GlobusXIOSystemDebugPrintf(
                         GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
-                        (_XIOSL("[%s] fd=%d, Canceling read bad apple\n"), 
+                        (_XIOSL("[%s] fd=%d, Canceling read bad apple\n"),
                         _xio_name, fd));
-                    
+
                     op_info = globus_l_xio_system_read_operations[fd];
                     if(op_info->state == GLOBUS_I_XIO_SYSTEM_OP_PENDING)
                     {
@@ -1213,7 +1213,7 @@ globus_l_xio_system_bad_apple(void)
                     }
                 }
             }
-            
+
             if(FD_ISSET(fd, globus_l_xio_system_write_fds))
             {
                 rc = fstat(fd, &stat_buf);
@@ -1224,7 +1224,7 @@ globus_l_xio_system_bad_apple(void)
                         GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                         (_XIOSL("[%s] fd=%d, Canceling write bad apple\n"),
                         _xio_name, fd));
-                    
+
                     op_info = globus_l_xio_system_write_operations[fd];
                     if(op_info->state == GLOBUS_I_XIO_SYSTEM_OP_PENDING)
                     {
@@ -1239,7 +1239,7 @@ globus_l_xio_system_bad_apple(void)
         }
     }
     globus_mutex_unlock(&globus_l_xio_system_fdset_mutex);
-    
+
     GlobusXIOSystemDebugExit();
 }
 
@@ -1264,7 +1264,7 @@ globus_l_xio_system_poll(
         int                             nready;
         int                             fd;
         int                             save_errno;
-        
+
         time_left_is_zero = GLOBUS_FALSE;
         time_left_is_infinity = GLOBUS_FALSE;
 
@@ -1294,11 +1294,11 @@ globus_l_xio_system_poll(
             globus_l_xio_system_select_active = GLOBUS_TRUE;
         }
         globus_mutex_unlock(&globus_l_xio_system_fdset_mutex);
-        
+
         GlobusXIOSystemDebugPrintf(
             GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
             (_XIOSL("[%s] Before select\n"), _xio_name));
-                    
+
         nready = select(
             num,
             globus_l_xio_system_ready_reads,
@@ -1308,7 +1308,7 @@ globus_l_xio_system_poll(
 
         GlobusXIOSystemUpdateErrno();
         save_errno = errno;
-        
+
         GlobusXIOSystemDebugPrintf(
             GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
             (_XIOSL("[%s] After select\n"), _xio_name));
@@ -1339,7 +1339,7 @@ globus_l_xio_system_poll(
                 {
                     globus_l_xio_system_bad_apple();
                 }
-                
+
                 /*
                  * can't really do anything about other errors
                  * so, set ready fds to known state in case there are things
@@ -1361,11 +1361,11 @@ globus_l_xio_system_poll(
                 fd = (int) (intptr_t) globus_list_remove(
                     &globus_l_xio_system_canceled_reads,
                     globus_l_xio_system_canceled_reads);
-                
+
                 GlobusXIOSystemDebugPrintf(
                     GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                     (_XIOSL("[%s] fd=%d, Setting canceled read\n"), _xio_name, fd));
-                    
+
                 if(!FD_ISSET(fd, globus_l_xio_system_ready_reads))
                 {
                     FD_SET(fd, globus_l_xio_system_ready_reads);
@@ -1378,11 +1378,11 @@ globus_l_xio_system_poll(
                 fd = (int) (intptr_t) globus_list_remove(
                     &globus_l_xio_system_canceled_writes,
                     globus_l_xio_system_canceled_writes);
-                
+
                 GlobusXIOSystemDebugPrintf(
                     GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
                     (_XIOSL("[%s] fd=%d, Setting canceled read\n"), _xio_name, fd));
-                    
+
                 if(!FD_ISSET(fd, globus_l_xio_system_ready_writes))
                 {
                     FD_SET(fd, globus_l_xio_system_ready_writes);
@@ -1486,7 +1486,7 @@ globus_xio_system_socket_register_connect(
         goto error_register;
 
     }
-    
+
     /* handle could be destroyed by time we get here - no touch! */
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
@@ -1514,7 +1514,7 @@ globus_xio_system_socket_register_accept(
     GlobusXIOName(globus_xio_system_socket_register_accept);
 
     GlobusXIOSystemDebugEnterFD(fd);
-    
+
     GlobusIXIOSystemAllocOperation(op_info);
     if(!op_info)
     {
@@ -1539,7 +1539,7 @@ globus_xio_system_socket_register_accept(
             _XIOSL("globus_l_xio_system_register_read_fd"), result);
         goto error_register;
     }
-    
+
     /* handle could be destroyed by time we get here - no touch! */
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
@@ -1576,23 +1576,23 @@ globus_l_xio_system_register_read(
     GlobusXIOSystemDebugPrintf(
         GLOBUS_I_XIO_SYSTEM_DEBUG_DATA,
         (_XIOSL("[%s] Waiting for %u bytes\n"), _xio_name, (unsigned) waitforbytes));
-        
+
     GlobusIXIOSystemAllocOperation(op_info);
     if(!op_info)
     {
         result = GlobusXIOErrorMemory("op_info");
         goto error_op_info;
     }
-    
+
     GlobusIXIOSystemAllocIovec(u_iovc, iov);
     if(!iov)
     {
         result = GlobusXIOErrorMemory("iov");
         goto error_iovec;
     }
-    
+
     GlobusIXIOUtilTransferIovec(iov, u_iov, u_iovc);
-    
+
     op_info->type = GLOBUS_I_XIO_SYSTEM_OP_READ;
     op_info->sop.data.start_iov = iov;
     op_info->sop.data.start_iovc = u_iovc;
@@ -1600,7 +1600,7 @@ globus_l_xio_system_register_read(
     op_info->sop.data.iovc = u_iovc;
     op_info->sop.data.addr = from;
     op_info->sop.data.flags = flags;
-    
+
     op_info->state = GLOBUS_I_XIO_SYSTEM_OP_NEW;
     op_info->op = op;
     op_info->handle = handle;
@@ -1608,7 +1608,7 @@ globus_l_xio_system_register_read(
     op_info->sop.data.callback = callback;
     op_info->waitforbytes = waitforbytes;
     op_info->offset = offset;
-    
+
     result = globus_l_xio_system_register_read_fd(fd, op_info);
     if(result != GLOBUS_SUCCESS)
     {
@@ -1616,7 +1616,7 @@ globus_l_xio_system_register_read(
             "globus_l_xio_system_register_read_fd", result);
         goto error_register;
     }
-    
+
     /* handle could be destroyed by time we get here - no touch! */
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
@@ -1705,14 +1705,14 @@ globus_l_xio_system_register_write(
     GlobusXIOSystemDebugPrintf(
         GLOBUS_I_XIO_SYSTEM_DEBUG_DATA,
         (_XIOSL("[%s] Waiting for %u bytes\n"), _xio_name, (unsigned) waitforbytes));
-        
+
     GlobusIXIOSystemAllocOperation(op_info);
     if(!op_info)
     {
         result = GlobusXIOErrorMemory("op_info");
         goto error_op_info;
     }
-    
+
     GlobusIXIOSystemAllocIovec(u_iovc, iov);
     if(!iov)
     {
@@ -1721,7 +1721,7 @@ globus_l_xio_system_register_write(
     }
 
     GlobusIXIOUtilTransferIovec(iov, u_iov, u_iovc);
-    
+
     op_info->type = GLOBUS_I_XIO_SYSTEM_OP_WRITE;
     op_info->sop.data.start_iov = iov;
     op_info->sop.data.start_iovc = u_iovc;
@@ -1729,7 +1729,7 @@ globus_l_xio_system_register_write(
     op_info->sop.data.iovc = u_iovc;
     op_info->sop.data.addr = to;
     op_info->sop.data.flags = flags;
-    
+
     op_info->state = GLOBUS_I_XIO_SYSTEM_OP_NEW;
     op_info->op = op;
     op_info->handle = handle;
@@ -1737,7 +1737,7 @@ globus_l_xio_system_register_write(
     op_info->sop.data.callback = callback;
     op_info->waitforbytes = waitforbytes;
     op_info->offset = offset;
-    
+
     result = globus_l_xio_system_register_write_fd(fd, op_info);
     if(result != GLOBUS_SUCCESS)
     {
@@ -1745,7 +1745,7 @@ globus_l_xio_system_register_write(
             "globus_l_xio_system_register_write_fd", result);
         goto error_register;
     }
-    
+
     /* handle could be destroyed by time we get here - no touch! */
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
@@ -1824,7 +1824,7 @@ globus_l_xio_system_try_read(
     if(handle->type == GLOBUS_XIO_SYSTEM_FILE)
     {
         globus_result_t                 result;
-        
+
         globus_mutex_lock(&handle->lock);
         {
             if(handle->file_position != offset &&
@@ -1835,19 +1835,19 @@ globus_l_xio_system_try_read(
                     ("[globus_l_xio_system_try_read] fd=%d, "
                         "Changing file position to %" GLOBUS_OFF_T_FORMAT "\n",
                             handle->fd, offset));
-                
+
                 /* assume success as possible failures are ignorable */
                 lseek(handle->fd, offset, SEEK_SET);
                 handle->file_position = offset;
             }
-            
+
             result = globus_i_xio_system_file_try_read(
                 handle->fd, iov, iovc, nbytes);
-                
+
             handle->file_position += *nbytes;
         }
         globus_mutex_unlock(&handle->lock);
-        
+
         return result;
     }
     else
@@ -1877,14 +1877,14 @@ globus_l_xio_system_read(
 
     result = globus_l_xio_system_try_read(
         handle, offset, u_iov, u_iovc, flags, from, u_nbytes);
-    
+
     if(result == GLOBUS_SUCCESS && *u_nbytes < waitforbytes)
     {
         struct iovec *                  iov;
         int                             iovc;
         globus_size_t                   nbytes = *u_nbytes;
         globus_size_t                   total = nbytes;
-        
+
         /*
          * XXX this is not thread safe... both reads and writes are mucking
          * with blocking status.
@@ -1902,7 +1902,7 @@ globus_l_xio_system_read(
         GlobusIXIOUtilTransferIovec(iov, u_iov, u_iovc);
         u_iov = iov;
         iovc = u_iovc;
-        
+
         do
         {
             if(total > 0)
@@ -1910,16 +1910,16 @@ globus_l_xio_system_read(
                 /* only capture source first time around */
                 from = GLOBUS_NULL;
             }
-            
+
             offset += nbytes;
             GlobusIXIOUtilAdjustIovec(iov, iovc, nbytes);
             result = globus_l_xio_system_try_read(
                 handle, offset, iov, iovc, flags, from, &nbytes);
             total += nbytes;
         } while(result == GLOBUS_SUCCESS && nbytes && total < waitforbytes);
-        
+
         *u_nbytes = total;
-    
+
         GlobusIXIOSystemFreeIovec(u_iovc, (globus_xio_iovec_t *) u_iov);
         rc = globus_l_xio_system_add_nonblocking(handle);
     }
@@ -1974,7 +1974,7 @@ globus_l_xio_system_try_write(
     if(handle->type == GLOBUS_XIO_SYSTEM_FILE)
     {
         globus_result_t                 result;
-        
+
         globus_mutex_lock(&handle->lock);
         {
             if(handle->file_position != offset &&
@@ -1985,19 +1985,19 @@ globus_l_xio_system_try_write(
                     ("[globus_l_xio_system_try_write] fd=%d, "
                         "Changing file position to %" GLOBUS_OFF_T_FORMAT "\n",
                             handle->fd, offset));
-                
+
                 /* assume success as possible failures are ignorable */
                 lseek(handle->fd, offset, SEEK_SET);
                 handle->file_position = offset;
             }
-            
+
             result = globus_i_xio_system_file_try_write(
                 handle->fd, iov, iovc, nbytes);
-                
+
             handle->file_position += *nbytes;
         }
         globus_mutex_unlock(&handle->lock);
-        
+
         return result;
     }
     else
@@ -2027,14 +2027,14 @@ globus_l_xio_system_write(
 
     result = globus_l_xio_system_try_write(
         handle, offset, u_iov, u_iovc, flags, to, u_nbytes);
-    
+
     if(result == GLOBUS_SUCCESS && *u_nbytes < waitforbytes)
     {
         struct iovec *                  iov;
         int                             iovc;
         globus_size_t                   nbytes = *u_nbytes;
         globus_size_t                   total = nbytes;
-        
+
         /*
          * XXX this is not thread safe... both reads and writes are mucking
          * with blocking status
@@ -2050,7 +2050,7 @@ globus_l_xio_system_write(
         GlobusIXIOUtilTransferIovec(iov, u_iov, u_iovc);
         u_iov = iov;
         iovc = u_iovc;
-        
+
         do
         {
             offset += nbytes;
@@ -2059,9 +2059,9 @@ globus_l_xio_system_write(
                 handle, offset, iov, iovc, flags, to, &nbytes);
             total += nbytes;
         } while(result == GLOBUS_SUCCESS && nbytes && total < waitforbytes);
-        
+
         *u_nbytes = total;
-    
+
         GlobusIXIOSystemFreeIovec(u_iovc, (globus_xio_iovec_t *) u_iov);
         rc = globus_l_xio_system_add_nonblocking(handle);
     }
@@ -2112,19 +2112,19 @@ globus_l_xio_system_close(
     GlobusXIOName(globus_l_xio_system_close);
 
     GlobusXIOSystemDebugEnterFD(fd);
-    
+
     do
     {
         rc = close(fd);
         GlobusXIOSystemUpdateErrno();
     } while(rc < 0 && errno == EINTR);
-    
+
     if(rc < 0)
     {
         result = GlobusXIOErrorSystemError("close", errno);
         goto error_close;
     }
-        
+
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
 
@@ -2139,18 +2139,18 @@ globus_xio_system_file_get_position(
 {
     globus_off_t                        offset;
     GlobusXIOName(globus_xio_system_file_get_position);
-    
+
     GlobusXIOSystemDebugEnterFD(fd);
-    
+
     /* ignore errors, may be a pipe or other unseekable */
     offset = lseek(fd, 0, SEEK_CUR);
     if(offset == -1)
     {
         offset = 0;
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
-    
+
     return offset;
 }
 
@@ -2161,16 +2161,16 @@ globus_xio_system_file_get_size(
     globus_off_t                        size = -1;
     struct stat                         buf;
     GlobusXIOName(globus_xio_system_file_get_size);
-    
+
     GlobusXIOSystemDebugEnterFD(fd);
-    
+
     if(fstat(fd, &buf) == 0)
     {
         size = buf.st_size;
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
-    
+
     return size;
 }
 
@@ -2190,7 +2190,7 @@ globus_xio_system_convert_stdio(
     {
         return fileno(stderr);
     }
-    
+
     return GLOBUS_XIO_SYSTEM_INVALID_FILE;
 }
 
@@ -2202,9 +2202,9 @@ globus_xio_system_file_truncate(
     globus_result_t                     result;
     int                                 rc;
     GlobusXIOName(globus_xio_system_file_truncate);
-    
+
     GlobusXIOSystemDebugEnterFD(fd);
-    
+
 #ifdef TARGET_ARCH_ARM
     setErrno(EINVAL);
 
@@ -2217,7 +2217,7 @@ globus_xio_system_file_truncate(
         result = GlobusXIOErrorSystemError("ftruncate", errno);
         goto error_truncate;
     }
-    
+
     GlobusXIOSystemDebugExitFD(fd);
     return GLOBUS_SUCCESS;
 
@@ -2236,10 +2236,10 @@ globus_xio_system_file_open(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_file_open);
-    
+
     *fd = -1;
     GlobusXIOSystemDebugEnterFD(*fd);
-    
+
     do
     {
         *fd = open(filename, flags, mode);
@@ -2251,10 +2251,10 @@ globus_xio_system_file_open(
         result = GlobusXIOErrorSystemError("open", errno);
         goto error_open;
     }
-        
+
     /* all handles created by me are closed on exec */
     fcntl(*fd, F_SETFD, FD_CLOEXEC);
-    
+
     GlobusXIOSystemDebugPrintf(
         GLOBUS_I_XIO_SYSTEM_DEBUG_INFO,
         ("[%s] Opened file, %s fd=%d\n", _xio_name, filename, *fd));
@@ -2283,10 +2283,10 @@ globus_xio_system_socket_create(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_create);
-    
+
     *fd = -1;
     GlobusXIOSystemDebugEnterFD(*fd);
-    
+
     *fd = socket(domain, type, protocol);
     GlobusXIOSystemUpdateErrno();
     if(*fd == -1)
@@ -2294,7 +2294,7 @@ globus_xio_system_socket_create(
         result = GlobusXIOErrorSystemError("socket", errno);
         goto error_socket;
     }
-    
+
     /* all handles created by me are closed on exec */
     fcntl(*fd, F_SETFD, FD_CLOEXEC);
 
@@ -2316,16 +2316,16 @@ globus_xio_system_socket_setsockopt(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_setsockopt);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(setsockopt(socket, level, optname, (void *) optval, optlen) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("setsockopt", errno);
         goto error_setsockopt;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2344,16 +2344,16 @@ globus_xio_system_socket_getsockopt(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_getsockopt);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(getsockopt(socket, level, optname, optval, optlen) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("getsockopt", errno);
         goto error_getsockopt;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2370,16 +2370,16 @@ globus_xio_system_socket_getsockname(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_getsockname);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(getsockname(socket, name, namelen) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("getsockname", errno);
         goto error_getsockname;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2396,16 +2396,16 @@ globus_xio_system_socket_getpeername(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_getpeername);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(getpeername(socket, name, namelen) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("getpeername", errno);
         goto error_getpeername;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2422,16 +2422,16 @@ globus_xio_system_socket_bind(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_bind);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(bind(socket, addr, addrlen) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("bind", errno);
         goto error_bind;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2447,16 +2447,16 @@ globus_xio_system_socket_listen(
 {
     globus_result_t                     result;
     GlobusXIOName(globus_xio_system_socket_listen);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     if(listen(socket, backlog) < 0)
     {
         GlobusXIOSystemUpdateErrno();
         result = GlobusXIOErrorSystemError("listen", errno);
         goto error_listen;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 
@@ -2474,21 +2474,21 @@ globus_xio_system_socket_connect(
     globus_result_t                     result;
     int                                 rc;
     GlobusXIOName(globus_xio_system_socket_connect);
-    
+
     GlobusXIOSystemDebugEnterFD(socket);
-    
+
     do
     {
         rc = connect(socket, addr, addrlen);
         GlobusXIOSystemUpdateErrno();
     } while(rc < 0 && errno == EINTR);
-        
+
     if(rc < 0)
     {
         result = GlobusXIOErrorSystemError("connect", errno);
         goto error_connect;
     }
-    
+
     GlobusXIOSystemDebugExitFD(socket);
     return GLOBUS_SUCCESS;
 

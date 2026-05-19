@@ -4,19 +4,19 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
- * met: 
+ * met:
  *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the names of the authors nor the names of the
  *    contributors may be used to endorse or promote products derived from
  *    this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -86,7 +86,7 @@ myproxy_ocsp_set_responder_cert(const char *path) {
     int      count;
     int      rval = -1;
 
-	sk_X509_pop_free(responder_cert, X509_free);
+    sk_X509_pop_free(responder_cert, X509_free);
     responder_cert = NULL;
 
     in = BIO_new(BIO_s_file());
@@ -365,7 +365,7 @@ int myproxy_ocsp_verify(X509 *cert, X509 *issuer) {
   if (!responder_cert ||
       (rc = OCSP_basic_verify(basic, responder_cert, store,
                               OCSP_TRUSTOTHER)) <= 0)
-      if ((rc = OCSP_basic_verify(basic, NULL, store, 0)) <= 0) 
+      if ((rc = OCSP_basic_verify(basic, NULL, store, 0)) <= 0)
           goto end;
 
   if (!OCSP_resp_find_status(basic, id, &status, &reason, &producedAt,

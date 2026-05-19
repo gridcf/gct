@@ -59,7 +59,7 @@ typedef struct
     globus_ftp_control_auth_info_t      auth_info;
     bool                                use_auth;
     enum
-    { 
+    {
         CMD_CONNECT,
         CMD_AUTHENTICATE,
         CMD_QUIT,
@@ -80,7 +80,7 @@ void
 globus_l_server_close_callback(
     void *                              callback_arg,
     globus_ftp_control_handle_t        *handle,
-    globus_object_t 		       *error,
+    globus_object_t                    *error,
     globus_ftp_control_response_t      *ftp_response);
 static
 void
@@ -94,7 +94,7 @@ void
 globus_l_client_callback(
     void *                              callback_arg,
     globus_ftp_control_handle_t        *handle,
-    globus_object_t 		       *error,
+    globus_object_t                    *error,
     globus_ftp_control_response_t      *ftp_response)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
@@ -138,7 +138,7 @@ globus_l_client_callback(
                     globus_l_client_callback,
                     client);
                 client->command = CMD_QUIT;
-                if (result == GLOBUS_SUCCESS 
+                if (result == GLOBUS_SUCCESS
                     && ftp_response->code > 399)
                 {
                     client->error = globus_error_construct_string(
@@ -877,7 +877,7 @@ void
 globus_l_server_close_callback(
     void *                              callback_arg,
     globus_ftp_control_handle_t        *handle,
-    globus_object_t 		       *error,
+    globus_object_t                    *error,
     globus_ftp_control_response_t      *ftp_response)
 {
     globus_l_server_response_callback(callback_arg, handle, error);
@@ -892,7 +892,7 @@ globus_l_server_response_callback(
 {
     auth_test_server_session_t         *session = callback_arg;
     globus_result_t                     res = GLOBUS_SUCCESS;
-    globus_ftp_control_auth_requirements_t     
+    globus_ftp_control_auth_requirements_t
                                         auth_req;
 
     if (error)
@@ -974,7 +974,7 @@ globus_l_server_accept_callback(
 }
 
 static
-void 
+void
 globus_l_server_listen_callback(
     void *                              callback_arg,
     globus_ftp_control_server_t *       server_handle,
@@ -1048,7 +1048,7 @@ initialize_servers(void)
     cleartext_server.auth_requirements =
         GLOBUS_FTP_CONTROL_AUTH_REQ_USER
         | GLOBUS_FTP_CONTROL_AUTH_REQ_PASS;
-    
+
     result = globus_ftp_control_server_handle_init(
         &tls_server.server);
     if (result != GLOBUS_SUCCESS)

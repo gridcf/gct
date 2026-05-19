@@ -146,12 +146,12 @@ connect_read_big_buffer_callback(
     globus_bool_t                               resuse,
     globus_object_t *                           error);
 
-void 
+void
 binary_eb_mode(
     globus_ftp_control_handle_t *              handle,
     int                                        plevel);
 
-void 
+void
 binary_stream_mode(
     globus_ftp_control_handle_t *              handle,
     int                                        plevel);
@@ -170,7 +170,7 @@ diff(
     const char *                        dest);
 
 void
-force_close_cb( 
+force_close_cb(
     void *                                     user_arg,
     globus_ftp_control_handle_t *              handle,
     globus_object_t *                          error)
@@ -187,15 +187,15 @@ force_close_cb(
     globus_mutex_unlock(&monitor->mutex);
 }
 
-int 
+int
 main(
     int                                         argc,
     char *                                      argv[])
-{ 
+{
     globus_result_t                             res;
     int                                         ctr;
-    int						rc;
-    int						i;
+    int                                         rc;
+    int                                         i;
     int                                         plevel;
 
     LTDL_SET_PRELOADED_SYMBOLS();
@@ -328,7 +328,7 @@ main(
     for(plevel = 1; plevel <= MAX_PLEVEL; plevel++)
     {
         verbose_printf(2, "parallel level %d\n", plevel);
-        big_buffer_test(binary_eb_mode, plevel);  
+        big_buffer_test(binary_eb_mode, plevel);
     }
     verbose_printf(1, "big buffer in eb mode passed\n");
     printf("ok - big_buffer_test(binary_eb_mode, plevel)\n");
@@ -414,13 +414,13 @@ test_send_eof(
               (void *)&done_monitor);
 
     if(res != GLOBUS_SUCCESS)
-    { 
+    {
         return res;
     }
     globus_mutex_lock(&done_monitor.mutex);
     {
         while(!done_monitor.done)
-        { 
+        {
             globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
         }
     }
@@ -490,7 +490,7 @@ big_buffer_test(
         verbose_printf(3, "waiting for transfer.\n");
         globus_mutex_lock(&done_monitor.mutex);
         {
-            while(done_monitor.count < 2 && 
+            while(done_monitor.count < 2 &&
                   !done_monitor.done)
             {
                 globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
@@ -619,12 +619,12 @@ reuse_handles_test(
                     &port_connections,
                     0);
 
-        verbose_printf(3, 
+        verbose_printf(3,
            "pasv_connection count = %d, port connection count = %d\n",
             pasv_connections, port_connections);
         globus_mutex_lock(&done_monitor.mutex);
         {
-            while(done_monitor.count < 2 && 
+            while(done_monitor.count < 2 &&
                   !done_monitor.done)
             {
                 globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
@@ -684,7 +684,7 @@ reuse_handles_test(
     return GLOBUS_SUCCESS;
 }
 
-void 
+void
 binary_eb_mode(
     globus_ftp_control_handle_t *               handle,
     int                                         plevel)
@@ -696,23 +696,23 @@ binary_eb_mode(
     parallelism.fixed.size = plevel;
 
     res = globus_ftp_control_local_type(
-              handle, 
-              GLOBUS_FTP_CONTROL_TYPE_IMAGE, 
+              handle,
+              GLOBUS_FTP_CONTROL_TYPE_IMAGE,
               0);
     test_result(res, "local_type", __LINE__);
 
     res = globus_ftp_control_local_mode(
-              handle, 
+              handle,
               GLOBUS_FTP_CONTROL_MODE_EXTENDED_BLOCK);
     test_result(res, "local_mode", __LINE__);
 
     res = globus_ftp_control_local_parallelism(
-              handle, 
+              handle,
               &parallelism);
     test_result(res, "local_mode", __LINE__);
 }
 
-void 
+void
 binary_stream_mode(
     globus_ftp_control_handle_t *               handle,
     int                                         plevel)
@@ -720,13 +720,13 @@ binary_stream_mode(
     globus_result_t                             res;
 
     res = globus_ftp_control_local_type(
-              handle, 
-              GLOBUS_FTP_CONTROL_TYPE_IMAGE, 
+              handle,
+              GLOBUS_FTP_CONTROL_TYPE_IMAGE,
               0);
     test_result(res, "local_type", __LINE__);
 
     res = globus_ftp_control_local_mode(
-              handle, 
+              handle,
               GLOBUS_FTP_CONTROL_MODE_STREAM);
     test_result(res, "local_mode", __LINE__);
 }
@@ -743,7 +743,7 @@ cache_multiparallel_test(
     globus_ftp_control_handle_t                pasv_handle;
     ftp_test_monitor_t                         done_monitor;
     data_test_info_t *                         test_info;
-    int                                        nsock_a[] = 
+    int                                        nsock_a[] =
              {4, 16, 8, 32, 2, 4, 0};
 
     ftp_test_monitor_init(&done_monitor);
@@ -794,7 +794,7 @@ cache_multiparallel_test(
             verbose_printf(3, "waiting for transfer.\n");
             globus_mutex_lock(&done_monitor.mutex);
             {
-                while(done_monitor.count < 2 && 
+                while(done_monitor.count < 2 &&
                       !done_monitor.done)
                 {
                     globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
@@ -914,7 +914,7 @@ cache_test(
         verbose_printf(3, "waiting for transfer.\n");
         globus_mutex_lock(&done_monitor.mutex);
         {
-            while(done_monitor.count < 2 && 
+            while(done_monitor.count < 2 &&
                   !done_monitor.done)
             {
                 globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
@@ -974,13 +974,13 @@ cache_test(
  *  It then sends data to all of them and compares the data on both ends
  *  if the trasfers.  In order to ease the testing of some of the clean up
  *  this test does leak some memory.
- * 
+ *
  *  It tests the control library data code for:
  *  1) read and write functionality for data integrity
  *  2) functionality when multiple handles are simaltaneously being used.
  *  3) reads of sizes greater than and smaller than the size of the extended
  *     block.
- *  4) clean up.  At the end of half the transfers close() and destroy() 
+ *  4) clean up.  At the end of half the transfers close() and destroy()
  *     are called.  The other half leave the clean up up to deactivate.
  */
 globus_result_t
@@ -1018,7 +1018,7 @@ transfer_test(
 
         res = globus_i_ftp_control_data_cc_init(pasv_handle);
         test_result(res, "pasv handle init", __LINE__);
-     
+
         res = globus_i_ftp_control_data_cc_init(port_handle);
         test_result(res, "port handle init", __LINE__);
 
@@ -1033,7 +1033,7 @@ transfer_test(
 
         mode_cb(pasv_handle, plevel);
         mode_cb(port_handle, plevel);
- 
+
         if(!g_send_eof)
         {
             res = globus_ftp_control_local_send_eof(
@@ -1082,7 +1082,7 @@ transfer_test(
         if(res == GLOBUS_SUCCESS)
         {
             globus_mutex_lock(&done_monitor.mutex);
-            { 
+            {
                 while(!done_monitor.done)
                 {
                     globus_cond_wait(&done_monitor.cond, &done_monitor.mutex);
@@ -1136,12 +1136,12 @@ connect_read_big_buffer_callback(
     globus_result_t                            res;
 
     test_info = (data_test_info_t *)callback_arg;
-   
-    verbose_printf(3, 
-        "connect_read_big_buffer_callback() : start\n"); 
+
+    verbose_printf(3,
+        "connect_read_big_buffer_callback() : start\n");
     if(error != GLOBUS_NULL)
     {
-        test_result(globus_error_put(error), 
+        test_result(globus_error_put(error),
                     "connect_read_big_buffer_callback error", __LINE__);
     }
 
@@ -1194,8 +1194,8 @@ connect_read_callback(
     globus_result_t                            res;
 
     test_info = (data_test_info_t *)callback_arg;
-   
-    verbose_printf(3, "connect_read_callback() : start\n"); 
+
+    verbose_printf(3, "connect_read_callback() : start\n");
     if(error != GLOBUS_NULL)
     {
         test_result(globus_error_put(error), "connect_read_callback error"
@@ -1213,7 +1213,7 @@ connect_read_callback(
         {
             failure_end("stat failed\n");
         }
-        write_blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1; 
+        write_blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1;
         blk_size = write_blk_size / 2 + 1;
 
         buf = (globus_byte_t *)malloc(blk_size);
@@ -1239,10 +1239,10 @@ data_read_big_buffer_callback(
     globus_off_t                                offset_read,
     globus_bool_t                               eof)
 {
-    data_test_info_t *                          test_info; 
+    data_test_info_t *                          test_info;
 
-    verbose_printf(4, 
-        "data_read_big_buffer_callback():start %d %d %d\n", 
+    verbose_printf(4,
+        "data_read_big_buffer_callback():start %d %d %d\n",
          length_read, offset_read, eof);
 
     if(error != GLOBUS_NULL)
@@ -1262,8 +1262,8 @@ data_read_big_buffer_callback(
         {
             verbose_printf(3, "eof big buffer callback\n");
             /* write out the entire buffer */
-            
-            if(fwrite(buffer, 1, test_info->bb_len, test_info->fout) 
+
+            if(fwrite(buffer, 1, test_info->bb_len, test_info->fout)
                                                      != test_info->bb_len)
             {
                 failure_end("fwrite failed\n");
@@ -1276,7 +1276,7 @@ data_read_big_buffer_callback(
             {
                 verbose_printf(1, "files are not the same: %d\n", __LINE__);
                 test_info->monitor->done = GLOBUS_TRUE;
-                test_info->monitor->result = 
+                test_info->monitor->result =
                       globus_error_put(GLOBUS_ERROR_NO_INFO);
                 globus_cond_signal(&test_info->monitor->cond);
             }
@@ -1331,10 +1331,10 @@ connect_write_big_buffer_callback(
         {
             failure_end("stat failed\n");
         }
-   
+
         offset = 0;
         fseek(test_info->fin, offset, SEEK_SET);
-        blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1; 
+        blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1;
         for(ctr = 0; ctr < WRITE_CHUNK_COUNT; ctr++)
         {
             buf = globus_malloc(blk_size);
@@ -1342,7 +1342,7 @@ connect_write_big_buffer_callback(
             /*
              *  read a chunk
              */
-            nbyte = fread(buf, 1, blk_size, test_info->fin); 
+            nbyte = fread(buf, 1, blk_size, test_info->fin);
             if(nbyte < blk_size)
             {
                 if(feof(test_info->fin))
@@ -1368,7 +1368,7 @@ connect_write_big_buffer_callback(
                       nbyte,
                       offset,
                       eof,
-                      data_write_callback, 
+                      data_write_callback,
                       (void *)test_info);
             test_result(res, "data_write", __LINE__);
             offset += nbyte;
@@ -1377,7 +1377,7 @@ connect_write_big_buffer_callback(
     globus_mutex_unlock(&test_info->monitor->mutex);
 }
 
-void 
+void
 data_read_callback(
     void *                                      callback_arg,
     globus_ftp_control_handle_t *               handle,
@@ -1387,12 +1387,12 @@ data_read_callback(
     globus_off_t                                offset,
     globus_bool_t                               eof)
 {
-    data_test_info_t *                          test_info; 
+    data_test_info_t *                          test_info;
     globus_result_t                             res;
     int                                         blk_size;
     globus_byte_t *                             buf;
 
-    verbose_printf(4, "data_read_callback() : start\n"); 
+    verbose_printf(4, "data_read_callback() : start\n");
     if(error != GLOBUS_NULL)
     {
         failure_end("data_read_callback error\n");
@@ -1420,7 +1420,7 @@ data_read_callback(
             {
                 verbose_printf(1, "files are not the same: %d\n", __LINE__);
                 test_info->monitor->done = GLOBUS_TRUE;
-                test_info->monitor->result = 
+                test_info->monitor->result =
                       globus_error_put(GLOBUS_ERROR_NO_INFO);
                 globus_cond_signal(&test_info->monitor->cond);
             }
@@ -1492,8 +1492,8 @@ connect_write_callback(
         {
             failure_end("stat failed\n");
         }
-       
-        blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1; 
+
+        blk_size = stat_info.st_size / WRITE_CHUNK_COUNT + 1;
         for(ctr = 0; ctr < WRITE_CHUNK_COUNT; ctr++)
         {
             buf = globus_malloc(blk_size);
@@ -1501,7 +1501,7 @@ connect_write_callback(
             /*
              *  read a chunk
              */
-            nbyte = fread(buf, 1, blk_size, test_info->fin); 
+            nbyte = fread(buf, 1, blk_size, test_info->fin);
             if(nbyte < blk_size)
             {
                 if(feof(test_info->fin))
@@ -1518,7 +1518,7 @@ connect_write_callback(
             /*
              *  write a chunk
              */
-            verbose_printf(4, 
+            verbose_printf(4,
                 "registering a write 0x%x offset=%d length=%d eof=%d\n",
                           buf, offset, nbyte, eof);
             res = globus_ftp_control_data_write(
@@ -1527,7 +1527,7 @@ connect_write_callback(
                       nbyte,
                       offset,
                       eof,
-                      data_write_callback, 
+                      data_write_callback,
                       (void *)test_info);
             test_result(res, "data_write", __LINE__);
             offset += nbyte;
@@ -1592,7 +1592,7 @@ connect_write_zero_eof_callback(
         /*
          *  write a chunk
          */
-        verbose_printf(4, 
+        verbose_printf(4,
             "registering a write 0x%x offset=%d length=%d eof=%d\n",
                           buf, offset, nbyte, eof);
         res = globus_ftp_control_data_write(
@@ -1605,7 +1605,7 @@ connect_write_zero_eof_callback(
                   (void *)test_info);
         test_result(res, "data_write", __LINE__);
         offset += nbyte;
-       
+
         res = globus_ftp_control_data_write(
                   handle,
                   buf,
@@ -1658,7 +1658,7 @@ data_write_callback(
             globus_cond_signal(&test_info->monitor->cond);
         }
         globus_mutex_unlock(&test_info->monitor->mutex);
-    } 
+    }
     if(length > 0 &&!eof)
     {
         globus_free(buffer);
@@ -1776,7 +1776,7 @@ diff(
             do
             {
                 b += fread(dbuf + b, 1, a-b, dfp);
-            } 
+            }
             while (b > 0 && b < a && (!feof(dfp)) && (!ferror(dfp)));
 
             if (a == b)

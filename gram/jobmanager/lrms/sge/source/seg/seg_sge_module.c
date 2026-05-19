@@ -182,7 +182,7 @@ globus_l_sge_get_file_timestamp(
 
 GlobusExtensionDefineModule(globus_seg_sge) =
 {
-  "globus_seg_sge",
+    "globus_seg_sge",
     globus_l_sge_module_activate,
     globus_l_sge_module_deactivate,
     NULL,
@@ -859,7 +859,7 @@ globus_l_sge_find_logfile(
 
 	    /* next file */
             state->file_number++;
-	
+
 	    /** now it;s possible under quick file rotations that no
              *  timestamp is put in the file, thus state->file_timestamp = 0.
              *  In this case, as written above, we'll appropriately skip
@@ -998,7 +998,7 @@ globus_l_sge_clean_buffer(
 	}
     }
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_clean_buffer() exits\n"));
+            ("globus_l_sge_clean_buffer() exits\n"));
     return 0;
 }
 /* globus_l_sge_clean_buffer() */
@@ -1014,38 +1014,38 @@ globus_l_sge_clean_buffer(
 static
 int
 globus_l_sge_increase_buffer(
-	globus_l_sge_logfile_state_t *      state)
+        globus_l_sge_logfile_state_t *      state)
 {
     char *                              save = state->buffer;
     const size_t                        GLOBUS_SGE_READ_BUFFER_SIZE = 4096;
     int                                 rc;
 
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_increase_buffer() called\n"));
+            ("globus_l_sge_increase_buffer() called\n"));
 
     /* If the buffer is full of valid data, enlarge it! */
     if (state->buffer_valid == state->buffer_length)
     {
-	state->buffer = globus_libc_realloc(state->buffer,
-		state->buffer_length + GLOBUS_SGE_READ_BUFFER_SIZE);
-	if (state->buffer == NULL)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_ERROR, ("realloc() failed\n"));
+        state->buffer = globus_libc_realloc(state->buffer,
+                state->buffer_length + GLOBUS_SGE_READ_BUFFER_SIZE);
+        if (state->buffer == NULL)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_ERROR, ("realloc() failed\n"));
 
-	    rc = SEG_SGE_ERROR_OUT_OF_MEMORY;
-	    goto error;
-	}
+            rc = SEG_SGE_ERROR_OUT_OF_MEMORY;
+            goto error;
+        }
     }
 
     state->buffer_length += GLOBUS_SGE_READ_BUFFER_SIZE;
 
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_increase_buffer() exits w/success\n"));
+            ("globus_l_sge_increase_buffer() exits w/success\n"));
     return 0;
 
 error:
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
-	    ("globus_l_sge_increase_buffer() exits w/failure\n"));
+            ("globus_l_sge_increase_buffer() exits w/failure\n"));
     state->buffer = save;
     return rc;
 }
@@ -1064,20 +1064,20 @@ int
 globus_l_sge_check_rotated(globus_l_sge_logfile_state_t * state)
 {
 
-  int                            rc;
-  struct stat s;
+    int                            rc;
+    struct stat s;
 
-  SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("globus_l_sge_check_rotated() invoked.\n"));
+    SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("globus_l_sge_check_rotated() invoked.\n"));
 
-  rc = stat(state->path,&s);
-  if(s.st_ino != state->file_inode)
-     {
+    rc = stat(state->path,&s);
+    if(s.st_ino != state->file_inode)
+    {
         SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("file has been rotated().\n"));
         return 1;
-     }
+    }
 
-  SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("globus_l_sge_check_rotated() exit.\n"));
-  return 0;
+    SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("globus_l_sge_check_rotated() exit.\n"));
+    return 0;
 }
 /* globus_l_sge_check_rotated */
 
@@ -1092,7 +1092,7 @@ globus_l_sge_check_rotated(globus_l_sge_logfile_state_t * state)
 static
 int
 globus_l_sge_parse_events(
-	globus_l_sge_logfile_state_t *      state)
+        globus_l_sge_logfile_state_t *      state)
 {
     char *                              eol;
     char *                              rp;
@@ -1105,52 +1105,52 @@ globus_l_sge_parse_events(
     int                                 exit_status;
     int                                 status;
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_parse_events() called\n"));
+            ("globus_l_sge_parse_events() called\n"));
 
     status = 0;
 
     /* Find the next newline */
     while ( (status != SEG_SGE_FOUND_FILE_TIMESTAMP) &&
             (eol = memchr(state->buffer + state->buffer_point,
-		    '\n',
-		    state->buffer_valid)) != NULL)
+                    '\n',
+                    state->buffer_valid)) != NULL)
     {
-	/* Replace the EOL character with a NULL terminator. */
-	*eol = '\0';
+        /* Replace the EOL character with a NULL terminator. */
+        *eol = '\0';
 
-	SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
-		("parsing line %s\n", state->buffer + state->buffer_point));
+        SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+                ("parsing line %s\n", state->buffer + state->buffer_point));
 
-	rc = globus_l_sge_split_into_fields(state, &fields, &nfields);
+        rc = globus_l_sge_split_into_fields(state, &fields, &nfields);
 
-	/* If split_into_fields fails, ignore the line.*/
-	if (rc != GLOBUS_SUCCESS)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
-		    ("Failed to parse line %s\n",
-		     state->buffer + state->buffer_point));
-	    goto free_fields;
-	}
+        /* If split_into_fields fails, ignore the line.*/
+        if (rc != GLOBUS_SUCCESS)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
+                    ("Failed to parse line %s\n",
+                     state->buffer + state->buffer_point));
+            goto free_fields;
+        }
 
-	/* If the first character is a '#', ignore the line. */
-	if (strstr(fields[0], "#") == fields[0]) {
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
-		    ("Line '%s' is a comment, skipping.\n",
-		     state->buffer + state->buffer_point));
-	    goto free_fields;
- 	}
+        /* If the first character is a '#', ignore the line. */
+        if (strstr(fields[0], "#") == fields[0]) {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+                    ("Line '%s' is a comment, skipping.\n",
+                     state->buffer + state->buffer_point));
+            goto free_fields;
+        }
 
-	/* If the number of fields is < 14, ignore the line. */
-	/* This is a safety check -- we will quite happily access fields[13]
-	 * after this point. */
-	if (nfields < 14)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
-		    ("too few fields, freeing and getting next line\n"));
-	    goto free_fields;
-	}
+        /* If the number of fields is < 14, ignore the line. */
+        /* This is a safety check -- we will quite happily access fields[13]
+         * after this point. */
+        if (nfields < 14)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+                    ("too few fields, freeing and getting next line\n"));
+            goto free_fields;
+        }
 
-	/* Extract the timestamp from the first field.
+        /* Extract the timestamp from the first field.
          * Originally this was seconds since the epoch. Univa changed it
          * in UGE 8.2.0 to milliseconds since the epoch
          *
@@ -1162,153 +1162,153 @@ globus_l_sge_parse_events(
             fields[0][10] = '\0';
         }
         /* (rp is a pointer to the char immediately following the timestamp.) */
-	rp = strptime(fields[0],"%s", &tm);
+        rp = strptime(fields[0],"%s", &tm);
 
-	if (rp == NULL || (*rp) != '\0')
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
-		    ("Unable to extract timestamp from first field in line '%s'\n",
-		     state->buffer + state->buffer_point));
-	    goto free_fields;
-	}
-	stamp = mktime(&tm);
-	if (stamp == -1)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
-		    ("mktime generated invalid timestamp\n"));
-	    goto free_fields;
-	}
+        if (rp == NULL || (*rp) != '\0')
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
+                    ("Unable to extract timestamp from first field in line '%s'\n",
+                     state->buffer + state->buffer_point));
+            goto free_fields;
+        }
+        stamp = mktime(&tm);
+        if (stamp == -1)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
+                    ("mktime generated invalid timestamp\n"));
+            goto free_fields;
+        }
 
-	/* for getting file-timestamp only  rjp Jan.2008 */
+        /* for getting file-timestamp only  rjp Jan.2008 */
         if(state->file_timestamp == 0)
-	  {
-	    state->file_timestamp = stamp;
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
-		    ("  Setting the file timestamp to %d\n",state->file_timestamp));
+          {
+            state->file_timestamp = stamp;
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+                    ("  Setting the file timestamp to %d\n",state->file_timestamp));
             if(state->need_timestamp)
-	      {
+              {
                 status = SEG_SGE_FOUND_FILE_TIMESTAMP; /* will kick out of loop */
-	        goto free_fields;
-	      }
-	  }
+                goto free_fields;
+              }
+          }
 
-	when = mktime(&state->start_timestamp);
+        when = mktime(&state->start_timestamp);
 
-	if (stamp < when)
-	{
-	    /* Skip messages which are before our start timestamp */
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
-		    ("Skipping entry as timestamp %d is before checkpoint %d\n",
-		     stamp, when));
-	    status = SEG_SGE_SKIP_LINE;
-	    goto free_fields;
-	}
+        if (stamp < when)
+        {
+            /* Skip messages which are before our start timestamp */
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+                    ("Skipping entry as timestamp %d is before checkpoint %d\n",
+                     stamp, when));
+            status = SEG_SGE_SKIP_LINE;
+            goto free_fields;
+        }
 
-	/* Batch accounting: resources consumed by the job  */
-	/* 
-	 * UGE reporting file notes that an "extra" acct record is sent to the reporting file at
-	 * midnight for long running jobs. These will be uniquely identified with 
-	 * exit_status (fields[14]) = -1 and should be skipped.  rjporter 05/2013
-	 *
-	 */
-	if ((strstr(fields[1], "acct") == fields[1]) && !(strstr(fields[14], "-1") == fields[14]))
-	{
+        /* Batch accounting: resources consumed by the job  */
+        /*
+         * UGE reporting file notes that an "extra" acct record is sent to the reporting file at
+         * midnight for long running jobs. These will be uniquely identified with
+         * exit_status (fields[14]) = -1 and should be skipped.  rjporter 05/2013
+         *
+         */
+        if ((strstr(fields[1], "acct") == fields[1]) && !(strstr(fields[14], "-1") == fields[14]))
+        {
             char * job_id;
-	    int failed;
-	    /* From the SGE 'reporting' man page:
-	     *
-	     * failed:
-	     * Indicates the problem which occurred in case a job could not  be
-	     * started on the execution host (e.g. because the owner of the job
-	     * did not have a valid account on that machine).  If  Grid  Engine
-	     * tries  to  start a job multiple times, this may lead to multiple
-	     * entries in the accounting file corresponding to the same job ID.
-	     *
-	     * exit status:
-	     * Exit status of the job script (or Grid Engine specific status in
-	     * case of certain error conditions)
-	     */
+            int failed;
+            /* From the SGE 'reporting' man page:
+             *
+             * failed:
+             * Indicates the problem which occurred in case a job could not  be
+             * started on the execution host (e.g. because the owner of the job
+             * did not have a valid account on that machine).  If  Grid  Engine
+             * tries  to  start a job multiple times, this may lead to multiple
+             * entries in the accounting file corresponding to the same job ID.
+             *
+             * exit status:
+             * Exit status of the job script (or Grid Engine specific status in
+             * case of certain error conditions)
+             */
 
-	    /* Lookup the exit status of the job. */
-	    rc = sscanf(fields[13], "%d", &failed);
-	    rc = sscanf(fields[14], "%d", &exit_status);
+            /* Lookup the exit status of the job. */
+            rc = sscanf(fields[13], "%d", &failed);
+            rc = sscanf(fields[14], "%d", &exit_status);
 
             job_id = globus_common_create_string(
                     "%s.%s",
                     fields[7], nfields > 37 ? fields[37] : "0");
 
-	    /* Return a job failure event if the exit status is non-zero. */
-	    if ( failed != 0)
-	    {
-		SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-			("New event: job %s has failed with exit status %d.\n",
-			 job_id, exit_status));
-		rc = globus_scheduler_event_failed(stamp, job_id, failed);
-	    }
-	    else
-	    {
-		SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-			("New event: job %s has done with exit status %d.\n",
-			 job_id, exit_status));
-		rc = globus_scheduler_event_done(stamp, job_id, exit_status);
-	    }
+            /* Return a job failure event if the exit status is non-zero. */
+            if ( failed != 0)
+            {
+                SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                        ("New event: job %s has failed with exit status %d.\n",
+                         job_id, exit_status));
+                rc = globus_scheduler_event_failed(stamp, job_id, failed);
+            }
+            else
+            {
+                SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                        ("New event: job %s has done with exit status %d.\n",
+                         job_id, exit_status));
+                rc = globus_scheduler_event_done(stamp, job_id, exit_status);
+            }
             free(job_id);
-	}
-	else if (strstr(fields[1], "job_log") == fields[1])
-	{
+        }
+        else if (strstr(fields[1], "job_log") == fields[1])
+        {
             char * job_id;
 
-	    /* Job state change. */
-	    if (strstr(fields[3], "pending") == fields[3])
-	    {
+            /* Job state change. */
+            if (strstr(fields[3], "pending") == fields[3])
+            {
                 job_id = globus_common_create_string(
                         "%s.%s", fields[4], fields[5]);
 
-		SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-			("New event: job %s now pending at t=%d\n",
+                SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                        ("New event: job %s now pending at t=%d\n",
                             job_id, stamp));
-		rc = globus_scheduler_event_pending(stamp, job_id);
+                rc = globus_scheduler_event_pending(stamp, job_id);
                 free(job_id);
-	    }
-	    else if (strstr(fields[3], "delivered") == fields[3])
-	    {
+            }
+            else if (strstr(fields[3], "delivered") == fields[3])
+            {
                 job_id = globus_common_create_string(
                         "%s.%s", fields[4], fields[5]);
-		SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-			("New event: job %s now active at t=%d\n",
+                SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                        ("New event: job %s now active at t=%d\n",
                             job_id, stamp));
-		rc = globus_scheduler_event_active(stamp, job_id);
+                rc = globus_scheduler_event_active(stamp, job_id);
                 free(job_id);
-	    }
-	    else if (strstr(fields[3], "deleted") == fields[3])
-	    {
+            }
+            else if (strstr(fields[3], "deleted") == fields[3])
+            {
                 job_id = globus_common_create_string(
                         "%s.%s", fields[4], fields[5]);
-		SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-			("New event: job %s now completed at t=%d\n",
+                SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                        ("New event: job %s now completed at t=%d\n",
                         job_id,
                         stamp));
-		rc = globus_scheduler_event_done(stamp, job_id, 0);
+                rc = globus_scheduler_event_done(stamp, job_id, 0);
                 free(job_id);
-	    }
-	}
+            }
+        }
 
 free_fields:
-	if (fields != NULL)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-		    ("freeing fields\n"));
-	    globus_libc_free(fields);
-	    fields = NULL;
-	}
+        if (fields != NULL)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
+                    ("freeing fields\n"));
+            globus_libc_free(fields);
+            fields = NULL;
+        }
 
-	state->buffer_valid -= eol + 1 - state->buffer - state->buffer_point;
-	state->buffer_point = eol + 1 - state->buffer;
+        state->buffer_valid -= eol + 1 - state->buffer - state->buffer_point;
+        state->buffer_point = eol + 1 - state->buffer;
 
     }
 
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_parse_events() exits\n"));
+            ("globus_l_sge_parse_events() exits\n"));
     return status;
 }
 /* globus_l_sge_parse_events() */
@@ -1362,17 +1362,17 @@ globus_l_sge_get_file_timestamp(globus_l_sge_logfile_state_t* state)
 
         /* Actually perform the read. */
          rc = fread(state->buffer + state->buffer_point +
-          	  state->buffer_valid, 1, max_to_read, state->fp);
+                  state->buffer_valid, 1, max_to_read, state->fp);
 
         SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
                    ("Read %d bytes\n", rc));
-	/* If we haven't read the most we could, we have either: */
+        /* If we haven't read the most we could, we have either: */
 
-	if (rc < max_to_read)
-	   {
-	     /* Reached the end of the file or some other problem - either way assume EOF */
-	     eof_hit = GLOBUS_TRUE;
-	   }
+        if (rc < max_to_read)
+           {
+             /* Reached the end of the file or some other problem - either way assume EOF */
+             eof_hit = GLOBUS_TRUE;
+           }
 
         state->buffer_valid += rc;
         /* try to find the file timestamp inside the buffer */
@@ -1397,7 +1397,7 @@ globus_l_sge_get_file_timestamp(globus_l_sge_logfile_state_t* state)
 
     if(state->file_timestamp == 0 )
       {
-	SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
+        SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE,
                      (" Could not get timestamp from file "));
         return -1;
       }
@@ -1428,9 +1428,9 @@ globus_l_sge_get_file_timestamp(globus_l_sge_logfile_state_t* state)
 static
 int
 globus_l_sge_split_into_fields(
-	globus_l_sge_logfile_state_t *      state,
-	char ***                            fields,
-	size_t *                            nfields)
+        globus_l_sge_logfile_state_t *      state,
+        char ***                            fields,
+        size_t *                            nfields)
 {
     size_t                              i = 0;
     size_t                              cnt = 1;
@@ -1448,11 +1448,11 @@ globus_l_sge_split_into_fields(
 
     while (*tmp != '\0')
     {
-	if (*tmp == ':')
-	{
-	    cnt++;
-	}
-	tmp++;
+        if (*tmp == ':')
+        {
+            cnt++;
+        }
+        tmp++;
     }
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE, ("%u fields\n", cnt));
 
@@ -1460,8 +1460,8 @@ globus_l_sge_split_into_fields(
 
     if (*fields == NULL)
     {
-	rc = SEG_SGE_ERROR_OUT_OF_MEMORY;
-	goto error;
+        rc = SEG_SGE_ERROR_OUT_OF_MEMORY;
+        goto error;
     }
     *nfields = cnt;
 
@@ -1471,32 +1471,32 @@ globus_l_sge_split_into_fields(
 
     while (*tmp != '\0' && i < cnt)
     {
-	if (*tmp == ':')
-	{
-	    (*fields)[i++] = tmp+1;
-	    *tmp = '\0';
-	}
-	tmp++;
+        if (*tmp == ':')
+        {
+            (*fields)[i++] = tmp+1;
+            *tmp = '\0';
+        }
+        tmp++;
     }
 
 #   if BUILD_DEBUG
     {
-	for (i = 0; i < cnt; i++)
-	{
-	    SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE, ("field[%u]=%s\n",
-			i, (*fields)[i]));
-	}
+        for (i = 0; i < cnt; i++)
+        {
+            SEG_SGE_DEBUG(SEG_SGE_DEBUG_TRACE, ("field[%u]=%s\n",
+                        i, (*fields)[i]));
+        }
     }
 #   endif
 
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO,
-	    ("globus_l_sge_split_into_fields(): exit success\n"));
+            ("globus_l_sge_split_into_fields(): exit success\n"));
 
     return 0;
 
 error:
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_WARN,
-	    ("globus_l_sge_split_into_fields(): exit failure: %d\n", rc));
+            ("globus_l_sge_split_into_fields(): exit failure: %d\n", rc));
     return rc;;
 }
 /* globus_l_sge_split_into_fields() */

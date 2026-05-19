@@ -102,7 +102,7 @@ typedef struct
     /**
      * buffer to hold the chunk size line
      */
-    globus_byte_t                       chunk_size_buffer[64];             
+    globus_byte_t                       chunk_size_buffer[64];
 }
 globus_i_xio_http_operation_info_t;
 
@@ -335,12 +335,12 @@ typedef struct globus_i_xio_http_handle_s
      * contain unparsed data
      */
     globus_size_t                       read_buffer_valid;
-    
+
     /**
      * Operation used for closing, when an error occurs at open time.
      */
     globus_xio_operation_t              close_operation;
-    
+
     /**
      * Remaining-to-be-read chunk.
      */
@@ -372,7 +372,7 @@ typedef struct globus_i_xio_http_handle_s
      */
     globus_xio_operation_t              response_read_operation;
 
-    
+
     globus_i_xio_http_operation_info_t  read_operation;
     globus_i_xio_http_operation_info_t  write_operation;
 
@@ -402,7 +402,7 @@ typedef struct globus_i_xio_http_handle_s
      * drops us
      */
     globus_bool_t                       reopen_in_progress;
-    
+
     /* error from internal response read, usually with a broken persistent
      * connection
      */
@@ -662,7 +662,7 @@ globus_result_t
 globus_i_xio_http_server_read_next_request(
     globus_i_xio_http_handle_t *        http_handle);
 
-/* globus_xio_http_target.c */ 
+/* globus_xio_http_target.c */
 extern
 globus_result_t
 globus_i_xio_http_target_init(
@@ -711,7 +711,7 @@ globus_result_t
 globus_l_xio_http_client_parse_response(
     globus_i_xio_http_handle_t *        http_handle,
     globus_bool_t *                     done);
-    
+
 void
 globus_l_xio_http_client_read_response_callback(
     globus_xio_operation_t              op,
@@ -748,7 +748,7 @@ globus_i_xio_http_close(
     void *                              attr,
     globus_xio_operation_t              op);
 
-extern 
+extern
 globus_result_t
 globus_i_xio_http_close_internal(
     globus_i_xio_http_handle_t *        http_handle);
