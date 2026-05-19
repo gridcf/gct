@@ -55,7 +55,6 @@ int main(int argc,
 {
     globus_ftp_client_handle_t                  handle;
     globus_ftp_client_operationattr_t           attr;
-    globus_result_t                             result;
     char *                                      src;
     char *                                      dst;
     globus_ftp_client_handleattr_t              handle_attr;
@@ -79,12 +78,12 @@ int main(int argc,
     globus_ftp_client_handle_init(&handle,  &handle_attr);
 
     done = GLOBUS_FALSE;
-    result = globus_ftp_client_get(&handle,
-                                   src,
-                                   &attr,
-                                   GLOBUS_NULL,
-                                   done_cb,
-                                   0);
+    globus_ftp_client_get(&handle,
+                          src,
+                          &attr,
+                          GLOBUS_NULL,
+                          done_cb,
+                          0);
     globus_module_deactivate_all();
 
     return done;

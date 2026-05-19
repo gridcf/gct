@@ -477,7 +477,7 @@ oldgaa_regex_matches_string(
 {
   /* Our result (1 == match) */
   int					                result = 0;
-  char *                                star;
+  const char *                          star;
 
   /* Check arguments */
   if (!string || !regex)

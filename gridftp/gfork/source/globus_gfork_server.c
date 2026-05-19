@@ -388,12 +388,10 @@ gfork_l_write_close_cb(
     globus_xio_data_descriptor_t        data_desc,
     void *                              user_arg)
 {
-    gfork_i_child_handle_t *            kid_handle;
     gfork_i_child_handle_t *            ms_handle;
     gfork_i_msg_t *                     msg;
 
     msg = (gfork_i_msg_t *) user_arg;
-    kid_handle = msg->from_kid;
     ms_handle = msg->to_kid;
 
     globus_mutex_lock(&gfork_l_mutex);
@@ -495,17 +493,13 @@ gfork_l_spawn_master(
     pid_t                               pid;
     int                                 infds[2];
     int                                 outfds[2];
-    int                                 read_fd;
-    int                                 write_fd;
     int                                 rc;
-    gfork_i_options_t *                 gfork_h;
     globus_result_t                     result;
     gfork_i_msg_t *                     msg;
     globus_list_t *                     child_env_list;
     gfork_i_child_handle_t *            master_child_handle = NULL;
     GForkFuncName(gfork_l_spawn_master);
 
-    gfork_h = &gfork_l_options;
     if(ms_ent->master == NULL)
     {
         gfork_log(1, "There is no master program.\n");
@@ -542,9 +536,6 @@ gfork_l_spawn_master(
         /* child node, set uid and exec */
         close(outfds[1]);
         close(infds[0]);
-
-        read_fd = outfds[0];
-        write_fd = infds[1];
 
         environ = child_env;
 
@@ -703,7 +694,6 @@ gfork_l_sigchld(
 {
     int                                 child_pid;
     int                                 child_status;
-    int                                 child_rc;
     globus_bool_t                       dead;
 
     gfork_log(2, "Sigint child\n");
@@ -715,7 +705,6 @@ gfork_l_sigchld(
             if(WIFEXITED(child_status))
             {
                 /* normal exit */
-                child_rc = WEXITSTATUS(child_status);
                 dead = GLOBUS_TRUE;
             }
             else if(WIFSIGNALED(child_status))
@@ -1118,7 +1107,6 @@ gfork_new_child(
     int                                 write_fd,
     globus_list_t *                     list)
 {
-    globus_result_t                     res;
     int                                 rc = 1;
     GlobusGForkFuncName(gfork_new_child);
 
@@ -1132,13 +1120,11 @@ gfork_new_child(
     rc = dup2(socket_handle, STDIN_FILENO);
     if(rc < 0)
     {
-        res = GForkErrorErrno(strerror, errno);
         goto error_dupin;
     }
     rc = dup2(socket_handle, STDOUT_FILENO);
     if(rc < 0)
     {
-        res = GForkErrorErrno(strerror, errno);
         goto error_dupout;
     }
     close(socket_handle);

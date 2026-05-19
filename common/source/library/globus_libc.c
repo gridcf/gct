@@ -747,9 +747,6 @@ globus_libc_gethostbyname_r(
     struct hostent_data                 hp_data;
     int                                 rc;
 #   endif
-#   if defined(GLOBUS_HAVE_GETHOSTBYNAME_R_6)
-    int                                 rc;
-#   endif
 
     globus_libc_lock();
 
@@ -825,12 +822,12 @@ globus_libc_gethostbyname_r(
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYNAME_R_6)
     {
-        rc = gethostbyname_r(hostname,
-                             result,
-                             buffer,
-                             buflen,
-                             &hp,
-                             h_errnop);
+        gethostbyname_r(hostname,
+                        result,
+                        buffer,
+                        buflen,
+                        &hp,
+                        h_errnop);
     }
 #   else
     {
@@ -893,14 +890,6 @@ globus_libc_gethostbyaddr_r(char *addr,
         struct hostent_data hp_data;
         int rc;
 #   endif
-
-#   if defined(GLOBUS_HAVE_GETHOSTBYADDR_R_8)
-        int rc;
-#   endif
-#   if defined(GLOBUS_HAVE_GETHOSTBYADDR_R_7)
-        int rc;
-#   endif
-
 
     globus_libc_lock();
 
@@ -977,14 +966,14 @@ globus_libc_gethostbyaddr_r(char *addr,
     }
 #   elif defined(GLOBUS_HAVE_GETHOSTBYADDR_R_8)
     {
-        rc = gethostbyaddr_r(addr,
-                             length,
-                             type,
-                             result,
-                             buffer,
-                             buflen,
-                             &hp,
-                             h_errnop);
+        gethostbyaddr_r(addr,
+                        length,
+                        type,
+                        result,
+                        buffer,
+                        buflen,
+                        &hp,
+                        h_errnop);
     }
 #   else
     {

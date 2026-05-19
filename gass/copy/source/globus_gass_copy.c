@@ -4932,7 +4932,7 @@ globus_l_gass_copy_io_write_callback(
 
 /**
  * @brief Blocking Transfer between URLs
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * @param handle
  *        The handle to perform the copy operation
@@ -5069,7 +5069,7 @@ error_exit:
 
 /**
  * @brief Blocking Transfer from an URL to an IO handle
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * @param handle
  *        The handle to perform the copy operation
@@ -5199,7 +5199,7 @@ error_exit:
 
 /**
  * @brief Blocking transfer from an IO handle to an URL
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * @param handle
  *        The handle to perform the copy operation
@@ -5334,7 +5334,7 @@ error_exit:
 
 /**
  * Nonblocking Transfer between URLs
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * This functions initiates a transfer from source URL to destination URL,
  * then returns immediately.
@@ -5734,7 +5734,7 @@ error_result_exit:
 
 /**
  * @brief Nonblocking transfer from an URL to an IO handle
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * This functions initiates a transfer from source URL to an IO handle,
  * then returns immediately.
@@ -5894,7 +5894,7 @@ error_result_exit:
 
 /**
  * Nonblocking Transfer From an IO handle to an URL
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * This functions initiates a transfer from an IO handle to destination URL,
  * then returns immediately.
@@ -6053,7 +6053,7 @@ error_result_exit:
 
 /**
  * @brief Cache connections to an FTP or GridFTP server
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * Explicitly cache connections to URL server. When
  * an URL is cached, the connection
@@ -6125,7 +6125,7 @@ globus_gass_copy_cache_url_state(
 
 /**
  * @brief Remove an FTP or GridFTP cached connection
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  * @details
  * Explicitly remove a cached connection to an FTP or GSIFTP server.
  * If an idle connection to an FTP server exists, it will be closed.
@@ -6198,7 +6198,7 @@ globus_gass_copy_flush_url_state(
 
 /**
  * @brief Set the user pointer in a handle
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_set_user_pointer(
@@ -6226,7 +6226,7 @@ globus_gass_copy_set_user_pointer(
 
 /**
  * @brief Get the user pointer in a handle
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_get_user_pointer(
@@ -6254,7 +6254,7 @@ globus_gass_copy_get_user_pointer(
 
 /**
  * @brief Cancel a transfer
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_cancel(
@@ -6716,7 +6716,7 @@ globus_l_gass_copy_generic_cancel(
 #ifdef USE_FTP_ATTRS
 /**
  * @brief Set TCP buffer/window size
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_attr_set_tcpbuffer(
@@ -6761,7 +6761,7 @@ globus_gass_copy_attr_set_tcpbuffer(
 
 /**
  * @brief Set parallelism info
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_attr_set_parallelism(
@@ -6773,7 +6773,7 @@ globus_gass_copy_attr_set_parallelism(
 
 /**
  * @brief Set striping info
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_attr_set_striping(
@@ -6785,7 +6785,7 @@ globus_gass_copy_attr_set_striping(
 
 /**
  * @brief Set authorization info
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_attr_set_authorization(
@@ -6797,7 +6797,7 @@ globus_gass_copy_attr_set_authorization(
 
 /**
  * @brief Set secure channel info
- * @ingroup globus_gass_transfer
+ * @ingroup globus_gass_copy
  */
 globus_result_t
 globus_gass_copy_attr_set_secure_channel(

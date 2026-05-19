@@ -73,7 +73,7 @@ store_credential( char *delegfile,
                   char *keyfile );
 
 int
-buffer2file( char *buffer,
+buffer2file( const char *buffer,
              int   size,
              int   fd );
 
@@ -494,7 +494,7 @@ write_cert( char       *path,
     int          fd = 0;
     static char  BEGINCERT[] = "-----BEGIN CERTIFICATE-----";
     static char  ENDCERT[]   = "-----END CERTIFICATE-----";
-    char        *certstart,
+    const char  *certstart,
                 *certend;
     int          retval      = -1;
     int          size;
@@ -580,7 +580,7 @@ write_key( char       *path,
     static char  ENDKEY1[]   = "-----END RSA PRIVATE KEY-----";
     static char  ENDKEY2[]   = "-----END PRIVATE KEY-----";
     static char  ENDKEY3[]   = "-----END ENCRYPTED PRIVATE KEY-----";
-    char        *keystart,
+    const char  *keystart,
                 *keyend;
     int          retval     = -1;
     int          size;
@@ -648,12 +648,12 @@ error:
 }
 
 int
-buffer2file( char *buffer,
+buffer2file( const char *buffer,
              int   size,
              int   fd )
 {
     int   rval;
-    char *certstart;
+    const char *certstart;
 
     certstart = buffer;
 

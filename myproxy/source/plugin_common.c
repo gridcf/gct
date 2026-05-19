@@ -731,7 +731,7 @@ int _plug_parseuser(const sasl_utils_t *utils,
         return SASL_BADPARAM;
     }
 
-    r = strchr(input, '@');
+    r = (char *) strchr(input, '@');
     if (!r) {
         /* hmmm, the user didn't specify a realm */
         if(user_realm && user_realm[0]) {

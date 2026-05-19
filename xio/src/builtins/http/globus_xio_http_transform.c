@@ -94,6 +94,8 @@ void
 globus_l_xio_http_read_timeout_callback(
     void *                              user_arg);
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Open an HTTP URI
  * @ingroup globus_i_xio_http_transform
@@ -645,8 +647,6 @@ error_exit:
  * @param registered_again
  *     Set to GLOBUS_TRUE by this function if the read operation was passed
  *     down again as a result of a partial read of data.
- *
- * @return void
  */
 globus_result_t
 globus_i_xio_http_parse_residue(
@@ -969,8 +969,6 @@ globus_l_xio_http_copy_residue(
  *     Number of bytes read by the transport.
  * @param user_arg
  *     Void pointer pointing to an HTTP handle.
- *
- * @return void
  */
 static
 void
@@ -1057,8 +1055,6 @@ globus_l_xio_http_read_callback(
  *     Number of bytes read by the transport.
  * @param user_arg
  *     Void pointer pointing to an HTTP handle.
- *
- * @return void
  */
 static
 void
@@ -1393,17 +1389,7 @@ globus_i_xio_http_write(
 {
     globus_i_xio_http_handle_t *            http_handle = handle;
     globus_result_t                         result = GLOBUS_SUCCESS;
-    globus_i_xio_http_header_info_t *       headers;
     GlobusXIOName(globus_i_xio_http_write);
-
-    if (http_handle->target_info.is_client)
-    {
-        headers = &http_handle->request_info.headers;
-    }
-    else
-    {
-        headers = &http_handle->response_info.headers;
-    }
 
     globus_mutex_lock(&http_handle->mutex);
 
@@ -1624,8 +1610,6 @@ error_exit:
  *     Number of bytes written by the transport.
  * @param user_arg
  *     Void pointer to a globus_i_xio_http_handle_t.
- *
- * @return void
  */
 void
 globus_i_xio_http_write_callback(
@@ -1851,18 +1835,8 @@ globus_result_t
 globus_i_xio_http_close_internal(
     globus_i_xio_http_handle_t *        http_handle)
 {
-    globus_i_xio_http_header_info_t *   headers;
     globus_result_t                     result;
     globus_reltime_t                    delay;
-
-    if (http_handle->target_info.is_client)
-    {
-        headers = &http_handle->request_info.headers;
-    }
-    else
-    {
-        headers = &http_handle->response_info.headers;
-    }
 
     http_handle->send_state = GLOBUS_XIO_HTTP_CLOSE;
 
@@ -1899,6 +1873,8 @@ finish:
     return result;
 }
 /* globus_i_xio_http_close_internal() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 void
 globus_i_xio_http_close_callback(

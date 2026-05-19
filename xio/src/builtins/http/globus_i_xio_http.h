@@ -437,7 +437,7 @@ globus_i_xio_http_copy_blob(
 extern
 char *
 globus_i_xio_http_find_eol(
-    const char *                        blob,
+    char *                              blob,
     globus_size_t                       blob_length);
 
 extern

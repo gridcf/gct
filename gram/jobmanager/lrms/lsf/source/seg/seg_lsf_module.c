@@ -810,7 +810,6 @@ globus_l_lsf_parse_events(
     long long                           tmp_timestamp;
     char                                event_type_buffer[64];
     char                                job_id_buffer[32];
-    int                                 rc;
     int                                 job_status;
     int                                 exit_status;
     long                                offset;
@@ -871,7 +870,7 @@ globus_l_lsf_parse_events(
         {
             if (event_timestamp >= state->start_timestamp)
             {
-                rc = globus_scheduler_event_pending(event_timestamp,
+                globus_scheduler_event_pending(event_timestamp,
                         job_id_buffer);
                 state->start_timestamp = event_timestamp;
             }
@@ -880,7 +879,7 @@ globus_l_lsf_parse_events(
         {
             if (event_timestamp >= state->start_timestamp)
             {
-                rc = globus_scheduler_event_active(event_timestamp,
+                globus_scheduler_event_active(event_timestamp,
                         job_id_buffer);
 
                 state->start_timestamp = event_timestamp;
@@ -975,13 +974,13 @@ globus_l_lsf_parse_events(
                     {
                         sscanf(tmp, " %d", &exit_status);
                         exit_status = (exit_status & 0xff00) >> 8;
-                        rc = globus_scheduler_event_done(event_timestamp,
+                        globus_scheduler_event_done(event_timestamp,
                                 job_id_buffer,
                                 exit_status);
                     }
                     else
                     {
-                        rc = globus_scheduler_event_failed(event_timestamp,
+                        globus_scheduler_event_failed(event_timestamp,
                                 job_id_buffer,
                                 exit_status);
                     }
@@ -994,7 +993,7 @@ globus_l_lsf_parse_events(
                  */
                 if (event_timestamp >= state->start_timestamp)
                 {
-                    rc = globus_scheduler_event_done(event_timestamp,
+                    globus_scheduler_event_done(event_timestamp,
                             job_id_buffer,
                             0);
                     state->start_timestamp = event_timestamp;

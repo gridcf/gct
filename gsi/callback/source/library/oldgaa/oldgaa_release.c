@@ -162,7 +162,7 @@ oldgaa_release_sec_context(uint32                 *minor_status,
 {
 
     oldgaa_sec_context_ptr  *context_handle = sec_context;
-    uint32                   inv_minor_status = 0, inv_major_status = 0;
+    uint32                   inv_minor_status = 0;
 
 
 #ifdef DEBUG
@@ -175,41 +175,41 @@ oldgaa_release_sec_context(uint32                 *minor_status,
     /* ignore errors to allow for incomplete context handles */
 
     if ((*context_handle)->identity_cred!= NULL)
-        inv_major_status = oldgaa_release_identity_cred(&inv_minor_status,
+        oldgaa_release_identity_cred(&inv_minor_status,
                               &((*context_handle)->identity_cred));
 
 
     if ((*context_handle)->authr_cred!= NULL)
-        inv_major_status = oldgaa_release_authr_cred(&inv_minor_status,
+        oldgaa_release_authr_cred(&inv_minor_status,
                               &((*context_handle)->authr_cred));
 
 
     if ((*context_handle)->group_membership!= NULL)
-        inv_major_status = oldgaa_release_identity_cred(&inv_minor_status,
+        oldgaa_release_identity_cred(&inv_minor_status,
                               &((*context_handle)->group_membership));
 
 
     if ((*context_handle)->group_non_membership!= NULL)
-        inv_major_status = oldgaa_release_identity_cred(&inv_minor_status,
+        oldgaa_release_identity_cred(&inv_minor_status,
                               &((*context_handle)->group_non_membership));
 
 
     if ((*context_handle)->attributes!= NULL)
-        inv_major_status = oldgaa_release_attributes(&inv_minor_status,
+        oldgaa_release_attributes(&inv_minor_status,
                               &((*context_handle)->attributes));
 
 
     if ((*context_handle)->unevl_cred!= NULL)
-        inv_major_status = oldgaa_release_uneval_cred(&inv_minor_status,
+        oldgaa_release_uneval_cred(&inv_minor_status,
                               &((*context_handle)->unevl_cred));
 
 
     if ((*context_handle)->connection_state!= NULL)
     {
-        inv_major_status = oldgaa_release_buffer_contents(&inv_minor_status,
+        oldgaa_release_buffer_contents(&inv_minor_status,
                               (*context_handle)->connection_state);
 
-        inv_major_status = oldgaa_release_buffer(&inv_minor_status,
+        oldgaa_release_buffer(&inv_minor_status,
                               &((*context_handle)->connection_state));
     }
 
@@ -237,7 +237,7 @@ oldgaa_release_identity_cred (uint32                   *minor_status,
 
 {
     oldgaa_identity_cred_ptr  *cred = identity_cred;
-    uint32                     inv_minor_status = 0, inv_major_status = 0;
+    uint32                     inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_identity_cred:\n");
@@ -250,25 +250,20 @@ oldgaa_release_identity_cred (uint32                   *minor_status,
     /* ignore errors to allow for incomplete context handles */
 
     if ((*cred)->principal!= NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                                                  &((*cred)->principal));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->principal));
 
     if ((*cred)->conditions!= NULL)
-        inv_major_status = oldgaa_release_conditions(&inv_minor_status,
-                                                  &((*cred)->conditions));
+        oldgaa_release_conditions(&inv_minor_status, &((*cred)->conditions));
 
     if ((*cred)->mech_spec_cred!= NULL)
     {
-        inv_major_status =
-                oldgaa_release_buffer_contents(&inv_minor_status,
+        oldgaa_release_buffer_contents(&inv_minor_status,
                                               (*cred)->mech_spec_cred);
-        inv_major_status = oldgaa_release_buffer(&inv_minor_status,
-                                                &((*cred)->mech_spec_cred));
+        oldgaa_release_buffer(&inv_minor_status, &((*cred)->mech_spec_cred));
     }
 
     if ((*cred)->next!= NULL)
-        inv_major_status = oldgaa_release_identity_cred(&inv_minor_status,
-                                                     &((*cred)->next));
+        oldgaa_release_identity_cred(&inv_minor_status, &((*cred)->next));
     free(*cred);
 
     return OLDGAA_SUCCESS;
@@ -292,7 +287,7 @@ oldgaa_release_authr_cred(uint32                *minor_status,
 
 {
     oldgaa_authr_cred_ptr   *cred = authr_cred;
-    uint32                   inv_minor_status = 0, inv_major_status = 0;
+    uint32                   inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_authr_cred:\n");
@@ -304,13 +299,11 @@ oldgaa_release_authr_cred(uint32                *minor_status,
     /* ignore errors to allow for incomplete context handles */
 
     if ((*cred)->grantor != NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                              &((*cred)->grantor));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->grantor));
 
 
     if ((*cred)->grantee != NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                              &((*cred)->grantee));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->grantee));
 
 
     /*
@@ -320,21 +313,17 @@ oldgaa_release_authr_cred(uint32                *minor_status,
      */
 
     if ((*cred)->access_rights!= NULL)
-        inv_major_status = oldgaa_release_rights(&inv_minor_status,
-                                              &((*cred)->access_rights));
+        oldgaa_release_rights(&inv_minor_status, &((*cred)->access_rights));
 
     if ((*cred)->mech_spec_cred!= NULL)
     {
-        inv_major_status =
-                oldgaa_release_buffer_contents(&inv_minor_status,
+        oldgaa_release_buffer_contents(&inv_minor_status,
                                              (*cred)->mech_spec_cred);
-        inv_major_status = oldgaa_release_buffer(&inv_minor_status,
-                                &((*cred)->mech_spec_cred));
+        oldgaa_release_buffer(&inv_minor_status, &((*cred)->mech_spec_cred));
     }
 
     if ((*cred)->next!= NULL)
-        inv_major_status = oldgaa_release_authr_cred(&inv_minor_status,
-                                                 &((*cred)->next));
+        oldgaa_release_authr_cred(&inv_minor_status, &((*cred)->next));
 
     free(*cred);
 
@@ -359,7 +348,7 @@ oldgaa_release_attributes(uint32                *minor_status,
 {
 
     oldgaa_attributes_ptr  *cred = attributes;
-    uint32                  inv_minor_status = 0, inv_major_status = 0;
+    uint32                  inv_minor_status = 0;
 
 
 #ifdef DEBUG
@@ -377,21 +366,18 @@ oldgaa_release_attributes(uint32                *minor_status,
 
 
     if ((*cred)->conditions!= NULL)
-        inv_major_status = oldgaa_release_cond_bindings(&inv_minor_status,
+        oldgaa_release_cond_bindings(&inv_minor_status,
                               &((*cred)->conditions));
 
     if ((*cred)->mech_spec_cred!= NULL)
     {
-        inv_major_status =
-                oldgaa_release_buffer_contents(&inv_minor_status,
+        oldgaa_release_buffer_contents(&inv_minor_status,
                                    (*cred)->mech_spec_cred);
-        inv_major_status = oldgaa_release_buffer(&inv_minor_status,
-                       &((*cred)->mech_spec_cred));
+        oldgaa_release_buffer(&inv_minor_status, &((*cred)->mech_spec_cred));
     }
 
     if ((*cred)->next!= NULL)
-        inv_major_status = oldgaa_release_attributes(&inv_minor_status,
-                                                 &((*cred)->next));
+        oldgaa_release_attributes(&inv_minor_status, &((*cred)->next));
 
     free(*cred);
 
@@ -416,7 +402,7 @@ oldgaa_release_uneval_cred(uint32                 *minor_status,
 
 {
     oldgaa_uneval_cred_ptr  *cred = uneval_cred;
-    uint32                   inv_minor_status = 0, inv_major_status = 0;
+    uint32                   inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_uneval_cred:\n");
@@ -430,27 +416,22 @@ oldgaa_release_uneval_cred(uint32                 *minor_status,
 
 
     if ((*cred)->grantor != NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                              &((*cred)->grantor));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->grantor));
 
 
     if ((*cred)->grantee != NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                              &((*cred)->grantee));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->grantee));
 
 
     if ((*cred)->mech_spec_cred!= NULL)
     {
-        inv_major_status =
-                oldgaa_release_buffer_contents(&inv_minor_status,
+        oldgaa_release_buffer_contents(&inv_minor_status,
                                              (*cred)->mech_spec_cred);
-        inv_major_status = oldgaa_release_buffer(&inv_minor_status,
-                                &((*cred)->mech_spec_cred));
+        oldgaa_release_buffer(&inv_minor_status, &((*cred)->mech_spec_cred));
     }
 
     if ((*cred)->next!= NULL)
-        inv_major_status = oldgaa_release_uneval_cred(&inv_minor_status,
-                                                  &((*cred)->next));
+        oldgaa_release_uneval_cred(&inv_minor_status, &((*cred)->next));
 
     free(*cred);
 
@@ -475,7 +456,7 @@ oldgaa_release_principals(uint32                *minor_status,
 {
 
     oldgaa_principals_ptr  *cred = principals;
-    uint32                  inv_minor_status = 0, inv_major_status = 0;
+    uint32                  inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_principals:\n");
@@ -488,13 +469,11 @@ oldgaa_release_principals(uint32                *minor_status,
 
 
     if ((*cred)->rights != NULL)
-        inv_major_status = oldgaa_release_rights(&inv_minor_status,
-                              &((*cred)->rights));
+        oldgaa_release_rights(&inv_minor_status, &((*cred)->rights));
 
 
     if ((*cred)->next != NULL)
-        inv_major_status = oldgaa_release_principals(&inv_minor_status,
-                              &((*cred)->next));
+        oldgaa_release_principals(&inv_minor_status, &((*cred)->next));
 
     if ((*cred)->type      != NULL) free((*cred)->type);
     if ((*cred)->authority != NULL) free((*cred)->authority);
@@ -523,7 +502,7 @@ oldgaa_release_rights(uint32            *minor_status,
 {
 
     oldgaa_rights_ptr  *cred = rights;
-    uint32              inv_minor_status = 0, inv_major_status = 0;
+    uint32              inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_rights:\n");
@@ -547,13 +526,12 @@ oldgaa_release_rights(uint32            *minor_status,
 
 
     if ((*cred)->cond_bindings != NULL)
-        inv_major_status = oldgaa_release_cond_bindings(&inv_minor_status,
+        oldgaa_release_cond_bindings(&inv_minor_status,
                               &((*cred)->cond_bindings));
 
 
     if ((*cred)->next != NULL)
-        inv_major_status = oldgaa_release_rights(&inv_minor_status,
-                              &((*cred)->next));
+        oldgaa_release_rights(&inv_minor_status, &((*cred)->next));
 
     if ((*cred)->type      != NULL) free((*cred)->type);
     if ((*cred)->authority != NULL) free((*cred)->authority);
@@ -583,7 +561,7 @@ oldgaa_release_cond_bindings(uint32                    *minor_status,
                              oldgaa_cond_bindings_ptr  *cond_bind)
 {
     oldgaa_cond_bindings_ptr  *cred = cond_bind;
-    uint32                     inv_minor_status = 0, inv_major_status = 0;
+    uint32                     inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_cond_bindings:\n");
@@ -606,12 +584,10 @@ oldgaa_release_cond_bindings(uint32                    *minor_status,
     /* ignore errors to allow for incomplete context handles */
 
     if ((*cred)->condition != NULL)
-        inv_major_status = oldgaa_release_conditions(&inv_minor_status,
-                                                 &((*cred)->condition));
+        oldgaa_release_conditions(&inv_minor_status, &((*cred)->condition));
 
     if ((*cred)->next != NULL)
-        inv_major_status = oldgaa_release_cond_bindings(&inv_minor_status,
-                                                    &((*cred)->next));
+        oldgaa_release_cond_bindings(&inv_minor_status, &((*cred)->next));
 
     free(*cred);
     *cond_bind = NULL;
@@ -636,7 +612,7 @@ oldgaa_release_conditions(uint32                *minor_status,
                           oldgaa_conditions_ptr *cond)
 {
     oldgaa_conditions_ptr  *cred = cond;
-    uint32                  inv_minor_status = 0, inv_major_status = 0;
+    uint32                  inv_minor_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_conditions:\n");
@@ -657,8 +633,7 @@ oldgaa_release_conditions(uint32                *minor_status,
     /* ignore errors to allow for incomplete context handles */
 
     if ((*cred)->next != NULL)
-        inv_major_status = oldgaa_release_conditions(&inv_minor_status,
-                              &((*cred)->next));
+        oldgaa_release_conditions(&inv_minor_status, &((*cred)->next));
 
     if ((*cred)->type      != NULL) free((*cred)->type);
     if ((*cred)->authority != NULL) free((*cred)->authority);
@@ -686,7 +661,6 @@ oldgaa_release_answer(uint32            *minor_status,
 {
     oldgaa_answer_ptr  *                cred = answer;
     uint32                              inv_minor_status = 0;
-    uint32                              inv_major_status = 0;
 
 
 #ifdef DEBUG
@@ -701,8 +675,7 @@ oldgaa_release_answer(uint32            *minor_status,
     if ((*cred)->rights!= NULL)
     {
         /* ignore errors to allow for incomplete context handles */
-        inv_major_status =
-            oldgaa_release_rights(&inv_minor_status, &((*cred)->rights));
+        oldgaa_release_rights(&inv_minor_status, &((*cred)->rights));
     }
 
     if ((*cred)->valid_time != NULL)
@@ -733,7 +706,6 @@ oldgaa_release_sec_attrb(uint32               *minor_status,
 {
     oldgaa_sec_attrb_ptr  *             cred = attributes;
     uint32                              inv_minor_status = 0;
-    uint32                              inv_major_status = 0;
 
 #ifdef DEBUG
     fprintf(stderr, "\noldgaa_release_sec_attrb:\n");
@@ -747,8 +719,7 @@ oldgaa_release_sec_attrb(uint32               *minor_status,
     if ((*cred)->next != NULL)
     {
         /* ignore errors to allow for incomplete context handles */
-        inv_major_status =
-            oldgaa_release_sec_attrb(&inv_minor_status, &((*cred)->next));
+        oldgaa_release_sec_attrb(&inv_minor_status, &((*cred)->next));
     }
 
     if ((*cred)->type      != NULL) free((*cred)->type);

@@ -2021,7 +2021,7 @@ globus_i_gsc_concat_path(
         }
         else if(in_path[0] == '~')
         {
-            if((tmp_ptr = strchr(in_path, '/')) != NULL)
+            if((tmp_ptr = (char *) strchr(in_path, '/')) != NULL)
             {
                 tmp_path = globus_common_create_string("%s%s",
                     i_server->default_cwd,
@@ -2199,7 +2199,7 @@ globus_l_gsc_cmd_site(
     GlobusGridFTPServerDebugInternalEnter();
 
     /* to upper in the actual initial buffer */
-    for(tmp_ptr = strstr(full_command, cmd_a[1]); tmp_ptr && *tmp_ptr && *tmp_ptr != ' '; tmp_ptr++)
+    for(tmp_ptr = (char *) strstr(full_command, cmd_a[1]); tmp_ptr && *tmp_ptr && *tmp_ptr != ' '; tmp_ptr++)
     {
         *tmp_ptr = toupper(*tmp_ptr);
     }
@@ -2245,7 +2245,6 @@ globus_l_gsc_command_callout(
     globus_bool_t                       auth = GLOBUS_FALSE;
     char **                             cmd_array;
     char *                              msg;
-    globus_result_t                     res;
     globus_l_gsc_cmd_ent_t *            cmd_ent;
     globus_bool_t                       done = GLOBUS_FALSE;
     globus_i_gsc_op_t *                 op;
@@ -2285,7 +2284,7 @@ globus_l_gsc_command_callout(
                     GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_ERROR);
 
                 globus_i_gsc_op_destroy(op);
-                res = globus_l_gsc_final_reply(server_handle, msg);
+                globus_l_gsc_final_reply(server_handle, msg);
                 done = GLOBUS_TRUE;
             }
             else
@@ -2719,8 +2718,8 @@ globus_gridftp_server_control_destroy(
     }
     if(server_handle->del_cred != GSS_C_NO_CREDENTIAL)
     {
-        OM_uint32 min, maj;
-        maj = gss_release_cred(&min, &server_handle->del_cred);
+        OM_uint32 min;
+        gss_release_cred(&min, &server_handle->del_cred);
     }
     while(!globus_list_empty(server_handle->all_cmd_list))
     {

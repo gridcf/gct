@@ -1660,7 +1660,6 @@ globus_l_gass_transfer_http_request_refer(
 {
     globus_gass_transfer_http_request_proto_t * proto;
     globus_gass_transfer_referral_t             referral;
-    int                                         rc;
     char *                                      referral_string;
     globus_size_t                               referral_count;
     globus_size_t                               body_count=0; /* :) */
@@ -1673,8 +1672,7 @@ globus_l_gass_transfer_http_request_refer(
     globus_l_gass_transfer_http_lock();
     proto = (globus_gass_transfer_http_request_proto_t *) rproto;
 
-    rc = globus_gass_transfer_request_get_referral(request,
-                                                   &referral);
+    globus_gass_transfer_request_get_referral(request, &referral);
 
     /* HTTP/1.1 302 Document Moved CRLF
      * Location: referral.url[0] CRLF

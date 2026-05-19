@@ -137,7 +137,7 @@ typedef enum
 
 /**
  * Restart marker types.
- * @ingroup globus_ftp_client_restart_markers
+ * @ingroup globus_ftp_client_restart_marker
  * @internal
  *
  * This enum defines the different types of restart markers which may be used
@@ -153,7 +153,7 @@ globus_ftp_client_restart_type_t;
 
 /**
  * @brief Stream mode restart marker
- * @ingroup globus_ftp_client_restart_markers
+ * @ingroup globus_ftp_client_restart_marker
  * @internal
  *
  * This structure contains all restart marker information from a
@@ -184,7 +184,7 @@ globus_ftp_client_restart_stream_t;
 
 /**
  * @brief Extended block mode restart marker
- * @ingroup globus_ftp_client_restart_markers
+ * @ingroup globus_ftp_client_restart_marker
  * @internal
  *
  * This structure contains all restart marker information from an

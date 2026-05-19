@@ -2347,7 +2347,7 @@ globus_xio_operation_get_user_driver(
 
 /**
  * @brief Get the XIO transport driver associated with an op
- * @ingroup globus_xio_driver_programming
+ * @ingroup string_globus_xio_driver_programming
  */
 globus_xio_driver_t
 globus_xio_operation_get_transport_user_driver(

@@ -550,16 +550,18 @@ void
 globus_utp_readTime(globus_utp_TimeValue_t *tv)
 {
 #ifdef UNIX
+#ifdef DEBUG
         int flag;
 
         flag = gettimeofday(tv, NULL);
 
-#ifdef DEBUG
         if (flag) {
                 globus_utp_warn("globus_utp_readTime: gettimeofday() failed");
                 globus_utp_warn("globus_utp_readTime: system error message is \"%s\"",
                          sys_errlist[errno]);
         }
+#else
+        gettimeofday(tv, NULL);
 #endif /* #ifdef DEBUG */
 #endif /* #ifdef UNIX */
 
@@ -577,16 +579,18 @@ on p. 59 of the "Optimizing and Tuning Guide for FORTRAN, C, and C++", and
 seems to work just fine.
 */
 
+#ifdef DEBUG
         int flag;
 
         flag = gettimer(TIMEOFDAY, tv);
 
-#ifdef DEBUG
         if (flag) {
                 globus_utp_warn("globus_utp_readTime: gettimer() failed");
                 globus_utp_warn("globus_utp_readTime: system error message is \"%s\"",
                          sys_errlist[errno]);
         }
+#else
+        gettimer(TIMEOFDAY, tv);
 #endif /* #ifdef DEBUG */
 
 #endif /* #ifdef RS6000 */

@@ -1831,8 +1831,8 @@ static
 char *
 indent_string(const char * str)
 {
-    char * new_line;
-    char * old_line;
+    const char * new_line;
+    const char * old_line;
     char * output;
     int i=1;
 
@@ -1841,7 +1841,7 @@ indent_string(const char * str)
         return NULL;
     }
 
-    for (new_line = (char *) str; new_line != NULL; new_line = strchr(new_line+1, '\n'))
+    for (new_line = str; new_line != NULL; new_line = strchr(new_line+1, '\n'))
     {
         i++;
     }
@@ -1849,7 +1849,7 @@ indent_string(const char * str)
     output = malloc(strlen(str) + (i*4) + 1);
     i = 0;
 
-    for (new_line = strchr(str, '\n'), old_line = (char *) str;
+    for (new_line = strchr(str, '\n'), old_line = str;
          new_line != NULL;
          old_line = new_line+1, new_line = strchr(new_line+1, '\n'))
     {

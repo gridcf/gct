@@ -316,8 +316,6 @@ globus_error_get_source(
  *        The error object for which to set the causative error
  * @param source_module
  *        The originating module descriptor
- * @return
- *        void
  */
 void
 globus_error_set_source(
@@ -363,8 +361,6 @@ globus_error_get_cause (
  *        The error object for which to set the causative error.
  * @param causal_error
  *        The causative error.
- * @return
- *        void
  */
 void
 globus_error_set_cause (
@@ -424,8 +420,6 @@ globus_error_get_type(
  *        The error object for which to set the error type
  * @param type
  *        The error type
- * @return
- *        void
  */
 void
 globus_error_set_type(
@@ -489,8 +483,6 @@ globus_error_get_short_desc(
  *        of the error. To be passed on to the user.
  * @param ...
  *        Arguments for the format string.
- * @return
- *        void
  */
 void
 globus_error_set_short_desc(
@@ -585,8 +577,6 @@ globus_error_get_long_desc(
  * @param long_desc_format
  *        Longer format string giving a more detailed explanation of
  *        the error.
- * @return
- *        void
  */
 void
 globus_error_set_long_desc(
@@ -1150,8 +1140,6 @@ error_object:
  *        over 'chain''s memory after this call.
  * @param fmt
  *        a printf style format string describing this chain
- * @return
- *        void
  */
 void
 globus_error_mutliple_add_chain(

@@ -6427,7 +6427,6 @@ globus_l_ftp_client_parse_cksm(
     globus_ftp_control_response_t *             response)
 {
     char *                                      p;
-    int                                         rc;
     GlobusFuncName(globus_l_ftp_client_parse_cksm);
 
     if(response->code != 213)
@@ -6440,7 +6439,7 @@ globus_l_ftp_client_parse_cksm(
     /* skip 213 <SP> */
     p += 4;
 
-    rc=sscanf(p, "%s", client_handle->checksum);
+    sscanf(p, "%s", client_handle->checksum);
 
 }
 

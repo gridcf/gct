@@ -1246,7 +1246,6 @@ globus_l_gram_job_manager_default_done(
     const char *                        value)
 {
     int                                 script_status;
-    int                                 rc;
 
     GlobusGramJobManagerRequestLock(request);
 
@@ -1258,7 +1257,7 @@ globus_l_gram_job_manager_default_done(
     {
         globus_reltime_t delay;
         GlobusTimeReltimeSet(delay, 0, 0);
-        rc = globus_gram_job_manager_state_machine_register(
+        globus_gram_job_manager_state_machine_register(
                 request->manager,
                 request,
                 &delay);
@@ -1499,7 +1498,6 @@ globus_l_gram_job_manager_query_done(
     int                                 script_status;
     globus_gram_job_manager_query_t *   query;
     globus_reltime_t                    delay;
-    int                                 rc;
 
     query = arg;
 
@@ -1512,7 +1510,7 @@ globus_l_gram_job_manager_query_done(
     if(!variable)
     {
         GlobusTimeReltimeSet(delay, 0, 0);
-        rc = globus_gram_job_manager_state_machine_register(
+        globus_gram_job_manager_state_machine_register(
                 request->manager,
                 request,
                 &delay);

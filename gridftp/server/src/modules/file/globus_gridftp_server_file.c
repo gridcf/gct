@@ -1397,7 +1397,6 @@ globus_l_gfs_file_delete_dir(
     DIR *                               dir;
     struct stat                         stat_buf;
     struct dirent *                     dir_entry;
-    int                                 i;
     char                                path[MAXPATHLEN];
     GlobusGFSName(globus_l_gfs_file_delete_dir);
     GlobusGFSFileDebugEnter();
@@ -1428,9 +1427,7 @@ globus_l_gfs_file_delete_dir(
             goto error_open;
         }
 
-        for(i = 0;
-            globus_libc_readdir_r(dir, &dir_entry) == 0 && dir_entry;
-            i++)
+        while(globus_libc_readdir_r(dir, &dir_entry) == 0 && dir_entry)
         {
             if(dir_entry->d_name[0] == '.' &&
                 (dir_entry->d_name[1] == '\0' ||

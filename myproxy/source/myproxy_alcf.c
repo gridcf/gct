@@ -366,7 +366,7 @@ int makeproxy(const char certfile[], const char keyfile[],
     static char ENDKEY2[] = "-----END PRIVATE KEY-----";
     static char ENDKEY3[] = "-----END ENCRYPTED PRIVATE KEY-----";
     unsigned char *certbuf=NULL, *keybuf=NULL;
-    char *certstart, *certend, *keystart, *keyend;
+    const char *certstart, *certend, *keystart, *keyend;
     int return_value = -1, size, rval, fd=0;
     uid_t owner;
 

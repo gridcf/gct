@@ -274,7 +274,6 @@ globus_l_xio_smtp_write_header_cb(
     globus_size_t                       nbytes,
     void *                              user_arg)
 {
-    globus_result_t                     res;
     l_smtp_info_t *                     info;
 
     info = (l_smtp_info_t *) user_arg;
@@ -291,7 +290,7 @@ globus_l_xio_smtp_write_header_cb(
      */
     else
     {
-        res = globus_xio_driver_pass_read(op, &info->iovec, 1,
+        globus_xio_driver_pass_read(op, &info->iovec, 1,
             1, globus_l_xio_smtp_read_header_cb, (void *)  info);
     }
 }
@@ -363,9 +362,7 @@ globus_l_xio_smtp_write_close_cb(
     globus_size_t                       nbytes,
     void *                              user_arg)
 {
-    globus_result_t                     res;
-
-    res = globus_xio_driver_pass_close(
+    globus_xio_driver_pass_close(
             op, globus_l_xio_smtp_close_cb, user_arg);
 }
 

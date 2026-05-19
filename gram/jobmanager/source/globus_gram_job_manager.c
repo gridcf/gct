@@ -2771,7 +2771,6 @@ globus_l_gram_ref_swap_out(
 
     globus_gram_job_manager_ref_t *     ref = arg;
     globus_gram_jobmanager_request_t *  request;
-    int                                 rc;
 
     globus_gram_job_manager_log(
             ref->manager,
@@ -2883,7 +2882,7 @@ globus_l_gram_ref_swap_out(
                 "No new references to job, writing state and freeing data");
 
         /* Is this needed? */
-        rc = globus_gram_job_manager_state_file_write(ref->request);
+        globus_gram_job_manager_state_file_write(ref->request);
 
         globus_gram_job_manager_request_free(ref->request);
         free(ref->request);
@@ -2916,7 +2915,6 @@ globus_l_gram_add_reference_locked(
     globus_gram_jobmanager_request_t ** request)
 {
     int                                 rc = GLOBUS_SUCCESS;
-    globus_result_t                     result;
     globus_gram_job_manager_ref_t *     ref;
 
     globus_gram_job_manager_log(
@@ -2936,7 +2934,7 @@ globus_l_gram_add_reference_locked(
 
         if (ref->cleanup_timer != GLOBUS_NULL_HANDLE)
         {
-            result = globus_callback_unregister(
+            globus_callback_unregister(
                     ref->cleanup_timer,
                     NULL,
                     NULL,

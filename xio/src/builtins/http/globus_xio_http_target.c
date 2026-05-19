@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Allocate a new target
  * @ingroup globus_i_xio_http_target
@@ -218,6 +220,8 @@ globus_i_xio_http_target_destroy(
     return GLOBUS_SUCCESS;
 }
 /* globus_i_xio_http_target_destroy() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 extern
 void

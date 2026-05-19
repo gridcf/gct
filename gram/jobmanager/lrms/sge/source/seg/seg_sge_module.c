@@ -1064,12 +1064,11 @@ int
 globus_l_sge_check_rotated(globus_l_sge_logfile_state_t * state)
 {
 
-    int                            rc;
     struct stat s;
 
     SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("globus_l_sge_check_rotated() invoked.\n"));
 
-    rc = stat(state->path,&s);
+    stat(state->path,&s);
     if(s.st_ino != state->file_inode)
     {
         SEG_SGE_DEBUG(SEG_SGE_DEBUG_INFO, ("file has been rotated().\n"));

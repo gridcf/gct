@@ -608,13 +608,12 @@ globus_l_gfs_auth_session_cb(
             !globus_hashtable_empty(&reply->op_info->custom_command_table))
         {
             globus_list_t *             list;
-            int                         rc;
             globus_i_gfs_cmd_ent_t *    cmd_ent;
 
             auth_info->instance->custom_cmd_table =
                 reply->op_info->custom_command_table;
 
-            rc = globus_hashtable_to_list(
+            globus_hashtable_to_list(
                 &reply->op_info->custom_command_table, &list);
 
             while(!globus_list_empty(list))

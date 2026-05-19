@@ -129,6 +129,10 @@ create_contexts(void)
                     NULL,
                     NULL);
         }
+        else
+        {
+            maj_stat = 0;
+        }
 
         if (GSS_ERROR(maj_stat))
         {

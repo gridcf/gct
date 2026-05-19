@@ -300,9 +300,6 @@ xioperf_l_opts_bandwidth(
     int *                               out_parms_used)
 {
     GlobusXIOPerfFuncName(xioperf_l_opts_bandwidth);
-    globus_i_xioperf_info_t *           info;
-
-    info = (globus_i_xioperf_info_t *) arg;
 
     *out_parms_used = 0;
     return GlobusXIOPerfError(

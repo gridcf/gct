@@ -225,7 +225,6 @@ globus_l_gram_logging_write(
     static char *                       last_path = NULL;
     int                                 fd;
     int                                 flags;
-    int                                 rc;
     globus_gram_jobmanager_request_t *  request;
     globus_symboltable_t *              symboltable;
 
@@ -318,7 +317,7 @@ globus_l_gram_logging_write(
             if (flags >= 0)
             {
                 flags |= FD_CLOEXEC;
-                rc = fcntl(fd, F_SETFD, flags);
+                fcntl(fd, F_SETFD, flags);
             }
         }
     }

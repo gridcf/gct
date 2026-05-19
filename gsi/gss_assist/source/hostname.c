@@ -31,7 +31,7 @@
 #endif
 
 /**
- * @ingroup globus_gss_assist_name
+ * @ingroup globus_gss_assist
  * Create a GSS Name structure from the given hostname. This function tries to
  * resolve the given host name string to the canonical DNS name for the host.
  *

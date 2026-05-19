@@ -506,11 +506,11 @@ makecertfile(const char   certfile[],
     static char ENDKEY1[] = "-----END RSA PRIVATE KEY-----";
     static char ENDKEY2[] = "-----END PRIVATE KEY-----";
     static char ENDKEY3[] = "-----END ENCRYPTED PRIVATE KEY-----";
-    char        *certstart;
-    char        *certend;
+    const char  *certstart;
+    const char  *certend;
     int          size;
-    char        *keystart;
-    char        *keyend;
+    const char  *keystart;
+    const char  *keyend;
 
 
     /* Figure out how much memory we are going to need */

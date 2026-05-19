@@ -594,9 +594,6 @@ globus_callback_space_poll(
  * case in which a user may wish to call this explicitly is if the application
  * has no aspirations of ever being built threaded.
  *
- * @return
- *        - void
- *
  * @see globus_callback_space_poll()
  */
 void

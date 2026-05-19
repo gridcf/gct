@@ -944,7 +944,6 @@ xio_l_gmc_setup_forwarder(
     int                                 max_str_len,
     int                                 each_cast_count)
 {
-    int                                 cast_count;
     char *                              driver_del;
     char *                              stack_str;
     int                                 stack_str_ndx;
@@ -959,7 +958,6 @@ xio_l_gmc_setup_forwarder(
 
     handle = ftp_handle->whos_my_daddy;
 
-    cast_count = 0;
     stack_str = malloc(max_str_len*3); /* 3x for url encoding */
     stack_str_ndx = 0;
     for(i = 0; i < each_cast_count; i++)
@@ -977,7 +975,6 @@ xio_l_gmc_setup_forwarder(
             stack_str_ndx += strlen(str);
 
             free(str);
-            cast_count++;
         }
         stack_str[stack_str_ndx] = '\0';
     }

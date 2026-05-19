@@ -2491,7 +2491,6 @@ globus_ftp_control_data_get_remote_hosts(
     globus_ftp_data_connection_t *              data_conn;
     int                                         ctr;
     int                                         ndx;
-    int                                         count;
     static char *                               myname=
                           "globus_ftp_control_data_get_remote_hosts";
 
@@ -2563,13 +2562,6 @@ globus_ftp_control_data_get_remote_hosts(
                       _FCSL("handle not in proper state.")));
             globus_mutex_unlock(&dc_handle->mutex);
             return res;
-        }
-
-        /* count the total # of connections */
-        count = 0;
-        for(ctr = 0; ctr < transfer_handle->stripe_count; ctr++)
-        {
-            count += globus_list_size(transfer_handle->stripes[ctr].all_conn_list);
         }
 
         ndx = 0;
@@ -8219,7 +8211,6 @@ globus_l_ftp_io_close_callback(
     globus_l_ftp_data_callback_info_t *          callback_info;
     globus_ftp_control_data_callback_t          eof_callback = GLOBUS_NULL;
     globus_l_ftp_handle_table_entry_t *         eof_cb_ent;
-    globus_bool_t                               poll;
 
     callback_info = (globus_l_ftp_data_callback_info_t *)arg;
 
@@ -8266,13 +8257,13 @@ globus_l_ftp_io_close_callback(
 
     globus_mutex_lock(&dc_handle->mutex);
     {
-        poll = !globus_l_ftp_control_dc_dec_ref(transfer_handle);
+        globus_l_ftp_control_dc_dec_ref(transfer_handle);
         /*
          *  decrement the reference the callbacks had
          */
         if(eof_callback != GLOBUS_NULL)
         {
-            poll = !globus_l_ftp_control_dc_dec_ref(transfer_handle);
+            globus_l_ftp_control_dc_dec_ref(transfer_handle);
         }
     }
     globus_mutex_unlock(&dc_handle->mutex);
@@ -8293,14 +8284,6 @@ globus_l_ftp_io_close_callback(
             data_conn->free_me = GLOBUS_TRUE;
         }
     }
-
-    /*
-    This is not needed and introduces a race
-    if(poll)
-    {
-        globus_l_ftp_data_stripe_poll(dc_handle);
-    }
-    */
 }
 
 

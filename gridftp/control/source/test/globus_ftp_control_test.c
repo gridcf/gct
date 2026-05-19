@@ -167,7 +167,7 @@ main(
     /*
      *  first test
      */
-    rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
     tests_run++;
     result = globus_ftp_control_handle_init(&handles[0]);
     connect_control_handle(
@@ -177,14 +177,14 @@ main(
         login_info.dir,
         login_info.hostname,
         login_info.port);
-    rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
     tests_passed++;
     verbose_printf(1, "test #%d) activate/connect/deactivate passed\n", tests_run);
 
     /*
      *  second test
      */
-    rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
     tests_run++;
     for(ctr = 0; ctr < TEST_COUNT; ctr++)
     {
@@ -211,7 +211,7 @@ main(
         }
     }
     rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         tests_failed++;
         verbose_printf(1,
@@ -227,7 +227,7 @@ main(
      *  initailize variables for the test
      */
     rc = globus_module_activate(GLOBUS_COMMON_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate common module\n");
         exit(1);
@@ -236,7 +236,7 @@ main(
      *  run stream mode tests
      */
     rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate gsiftp module\n");
         exit(1);
@@ -285,7 +285,7 @@ main(
     globus_ftp_control_handle_destroy(&control_handle);
 
     rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate gsiftp module\n");
         exit(1);

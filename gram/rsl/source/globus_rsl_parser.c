@@ -181,7 +181,7 @@ yyerror(YYLTYPE *loc, yyscan_t scanner, struct globus_parse_state_s *parse_state
 typedef union YYSTYPE
 #line 61 "../../../../../gram/rsl/source/globus_rsl_parser.y"
 {
-  int	               Int;
+  int                  Int;
   char               * String;
 
   globus_rsl_t       * RSL;
@@ -1867,7 +1867,7 @@ yyerror(YYLTYPE * loc, yyscan_t scanner, struct globus_parse_state_s * parse_sta
 
 /**
  * @brief Parse an RSL string
- * @ingroup globus_rsl_parse
+ * @ingroup globus_rsl
  * @details
  * The globus_rsl_parse() function parses the string pointed to by
  * the @a buf parameter into an RSL syntax tree. The caller is responsible

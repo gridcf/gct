@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Allocate and initialize an HTTP attribute
  * @ingroup globus_i_xio_http_attr
@@ -355,3 +357,5 @@ globus_i_xio_http_attr_destroy(
     return GLOBUS_SUCCESS;
 }
 /* globus_i_xio_http_attr_destroy() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

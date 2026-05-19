@@ -656,13 +656,12 @@ globus_i_gfs_data_http_print_response(
     char *                              header_str = NULL;
     char *                              header_tmp;
     globus_result_t                     result;
-    int                                 rc;
     globus_xio_http_header_t *          header;
     char *                              b64_header = NULL;
     char *                              b64_body = NULL;
     int                                 body_len = 0;
 
-    rc = globus_hashtable_to_list(header_table, &header_list);
+    globus_hashtable_to_list(header_table, &header_list);
 
     header_str = strdup("");
     while(!globus_list_empty(header_list))
@@ -2679,7 +2678,6 @@ globus_l_gfs_data_new_dsi(
     const char *                        in_module_name)
 {
     const char *                        module_name;
-    globus_result_t                     result;
     GlobusGFSName(globus_l_gfs_data_new_dsi);
     GlobusGFSDebugEnter();
 
@@ -2708,7 +2706,7 @@ globus_l_gfs_data_new_dsi(
             globus_extension_release(session_handle->mod_dsi_handle);
 
             session_handle->mod_dsi_name = globus_libc_strdup(module_name);
-            result = globus_i_gfs_data_new_dsi(
+            globus_i_gfs_data_new_dsi(
                 &session_handle->mod_dsi_handle,
                 session_handle->mod_dsi_name,
                 &session_handle->mod_dsi,
@@ -2722,7 +2720,7 @@ globus_l_gfs_data_new_dsi(
     else
     {
         session_handle->mod_dsi_name =  globus_libc_strdup(module_name);
-        result = globus_i_gfs_data_new_dsi(
+        globus_i_gfs_data_new_dsi(
             &session_handle->mod_dsi_handle,
             session_handle->mod_dsi_name,
             &session_handle->mod_dsi,
@@ -13503,7 +13501,6 @@ globus_gridftp_server_get_write_range(
     globus_off_t                        tmp_len = -1;
     globus_off_t                        tmp_write = 0;
     globus_off_t                        tmp_transfer = 0;
-    int                                 rc;
     GlobusGFSName(globus_gridftp_server_get_write_range);
     GlobusGFSDebugEnter();
 
@@ -13511,7 +13508,7 @@ globus_gridftp_server_get_write_range(
 
     if(globus_range_list_size(op->range_list))
     {
-        rc = globus_range_list_remove_at(
+        globus_range_list_remove_at(
             op->range_list,
             0,
             &tmp_off,
@@ -13551,7 +13548,6 @@ globus_gridftp_server_get_read_range(
     globus_off_t                        tmp_off = 0;
     globus_off_t                        tmp_len = -1;
     globus_off_t                        tmp_write = 0;
-    int                                 rc;
     globus_off_t                        start_offset;
     globus_off_t                        end_offset;
     globus_off_t                        stripe_block_size;
@@ -13604,7 +13600,7 @@ globus_gridftp_server_get_read_range(
 
             if(globus_range_list_size(op->stripe_range_list))
             {
-                rc = globus_range_list_remove_at(
+                globus_range_list_remove_at(
                     op->stripe_range_list,
                     0,
                     &tmp_off,
@@ -13616,7 +13612,7 @@ globus_gridftp_server_get_read_range(
             {
                 for(i = 0; i < size; i++)
                 {
-                    rc = globus_range_list_at(
+                    globus_range_list_at(
                         op->range_list,
                         i,
                         &tmp_off,
@@ -13656,7 +13652,7 @@ globus_gridftp_server_get_read_range(
 
                 if(globus_range_list_size(op->stripe_range_list))
                 {
-                    rc = globus_range_list_remove_at(
+                    globus_range_list_remove_at(
                         op->stripe_range_list,
                         0,
                         &tmp_off,
@@ -13678,7 +13674,7 @@ globus_gridftp_server_get_read_range(
         }
         else if(globus_range_list_size(op->range_list))
         {
-            rc = globus_range_list_remove_at(
+            globus_range_list_remove_at(
                 op->range_list,
                 0,
                 &tmp_off,

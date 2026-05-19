@@ -536,7 +536,6 @@ globus_l_gram_job_manager_cancel(
     globus_bool_t *                     reply)
 {
     int                                 rc              = GLOBUS_SUCCESS;
-    globus_result_t                     result;
     globus_gram_job_manager_query_t *   query;
     globus_reltime_t                    delay;
 
@@ -561,7 +560,7 @@ globus_l_gram_job_manager_cancel(
         if(request->poll_timer != GLOBUS_HANDLE_TABLE_NO_HANDLE)
         {
             GlobusTimeReltimeSet(delay, 0, 0);
-            result = globus_callback_adjust_oneshot(
+            globus_callback_adjust_oneshot(
                     request->poll_timer,
                     &delay);
         }
@@ -600,7 +599,7 @@ globus_l_gram_job_manager_cancel(
             if(request->poll_timer != GLOBUS_HANDLE_TABLE_NO_HANDLE)
             {
                 GlobusTimeReltimeSet(delay, 0, 0);
-                result = globus_callback_adjust_oneshot(
+                globus_callback_adjust_oneshot(
                         request->poll_timer,
                         &delay);
             }
@@ -794,7 +793,6 @@ globus_l_gram_job_manager_signal(
     globus_off_t                        err_size = -1;
     globus_reltime_t                    delay;
     globus_gram_job_manager_query_t *   query;
-    globus_result_t                     result;
 
     globus_gram_job_manager_request_log(
             request,
@@ -816,7 +814,7 @@ globus_l_gram_job_manager_signal(
     {
         return GLOBUS_GRAM_PROTOCOL_ERROR_HTTP_UNPACK_FAILED;
     }
-    after_signal = strchr(args,' ');
+    after_signal = (char *) strchr(args,' ');
     if (after_signal)
         *after_signal++ = '\0';
 
@@ -985,7 +983,7 @@ globus_l_gram_job_manager_signal(
         if(request->poll_timer != GLOBUS_HANDLE_TABLE_NO_HANDLE)
         {
             GlobusTimeReltimeSet(delay, 0, 0);
-            result = globus_callback_adjust_oneshot(
+            globus_callback_adjust_oneshot(
                     request->poll_timer,
                     &delay);
         }
@@ -1099,7 +1097,7 @@ globus_l_gram_job_manager_signal(
         if(request->poll_timer != GLOBUS_HANDLE_TABLE_NO_HANDLE)
         {
             GlobusTimeReltimeSet(delay, 0, 0);
-            result = globus_callback_adjust_oneshot(
+            globus_callback_adjust_oneshot(
                     request->poll_timer,
                     &delay);
         }
@@ -1180,7 +1178,7 @@ globus_l_gram_job_manager_signal(
         if(request->poll_timer != GLOBUS_HANDLE_TABLE_NO_HANDLE)
         {
             GlobusTimeReltimeSet(delay, 0, 0);
-            result = globus_callback_adjust_oneshot(
+            globus_callback_adjust_oneshot(
                     request->poll_timer,
                     &delay);
         }

@@ -260,23 +260,18 @@ oldgaa_get_authorized_principals(oldgaa_sec_attrb_ptr *attributes,
 {
   oldgaa_policy_ptr    entry  = policy;
   int               was_anybody    = 0;
-  int               was_neg_rights = 0;
   int               number_of_entries = 1;
   oldgaa_sec_attrb_ptr attrb = NULL;
-  uint32            minor_status;
   oldgaa_error_code    oldgaa_status = OLDGAA_SUCCESS;
 
 #ifdef DEBUG
 fprintf(stderr, "\noldgaa_get_authorized_principals:\n");
 #endif /* DEBUG */
 
-  minor_status = 0;
-
 /* Check arguments */
   if (!policy && !attributes)
   {
     errno = ERRNO_INVALID_ARGUMENT;
-    minor_status = -1;
     return OLDGAA_FAILURE;
   }
 
@@ -302,14 +297,6 @@ fprintf(stderr, "\noldgaa_get_authorized_principals:\n");
          oldgaa_add_attribute(attributes, attrb);
          number_of_entries++;
        }
-    else
-      {
-     if(oldgaa_strings_match(entry->rights->type,      NEGATIVE_RIGHTS)   &&
-        oldgaa_strings_match(entry->rights->authority, rights->authority) &&
-        oldgaa_strings_match(entry->rights->value,     rights->value) ) was_neg_rights = 1;
-     }
-
-
   }
 
    entry = entry->next;

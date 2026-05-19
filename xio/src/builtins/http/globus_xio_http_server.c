@@ -44,6 +44,8 @@ globus_l_xio_http_server_write_response_callback(
     globus_size_t                       nbytes,
     void *                              user_arg);
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Accept an HTTP request
  * @ingroup globus_i_xio_http_server
@@ -86,8 +88,6 @@ globus_i_xio_http_accept(
  *     Result from the transport's attempt to accept a new connection.
  * @param user_arg
  *     Not used.
- *
- * @return void
  *
  * @todo When implemented in the XIO driver framework, parse the request
  * header before returning from this, so the target is populated with
@@ -134,8 +134,6 @@ globus_l_xio_http_accept_callback(
  * @param user_arg
  *     Void * pointing to a #globus_i_xio_http_handle_t associated with
  *     this open.
- *
- * @return void
  */
 void
 globus_i_xio_http_server_open_callback(
@@ -498,8 +496,6 @@ error_exit:
  * finished. If the response was triggered by the
  * GLOBUS_XIO_HTTP_HANDLE_SET_END_OF_ENTITY control, then the operation
  * is simply destroyed.
- *
- * @return void
  */
 static
 void
@@ -739,6 +735,8 @@ error_exit_init:
     return result;
 }
 /* globus_l_xio_http_server_parse_request() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 void
 globus_i_xio_http_server_read_request_callback(

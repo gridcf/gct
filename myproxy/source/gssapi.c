@@ -581,29 +581,29 @@ static context_t *gss_new_context(const sasl_utils_t *utils)
 
 static void sasl_gss_free_context_contents(context_t *text)
 {
-    OM_uint32 maj_stat, min_stat;
+    OM_uint32 min_stat;
 
     if (!text) return;
 
     if (sasl_gss_lib_init(text->utils) != SASL_OK) return;
 
     if (text->gss_ctx != GSS_C_NO_CONTEXT) {
-        maj_stat = (*p_krb5_gss_delete_sec_context)(&min_stat,&text->gss_ctx,GSS_C_NO_BUFFER);
+        (*p_krb5_gss_delete_sec_context)(&min_stat,&text->gss_ctx,GSS_C_NO_BUFFER);
         text->gss_ctx = GSS_C_NO_CONTEXT;
     }
 
     if (text->client_name != GSS_C_NO_NAME) {
-        maj_stat = (*p_krb5_gss_release_name)(&min_stat,&text->client_name);
+        (*p_krb5_gss_release_name)(&min_stat,&text->client_name);
         text->client_name = GSS_C_NO_NAME;
     }
 
     if (text->server_name != GSS_C_NO_NAME) {
-        maj_stat = (*p_krb5_gss_release_name)(&min_stat,&text->server_name);
+        (*p_krb5_gss_release_name)(&min_stat,&text->server_name);
         text->server_name = GSS_C_NO_NAME;
     }
 
     if ( text->server_creds != GSS_C_NO_CREDENTIAL) {
-        maj_stat = (*p_krb5_gss_release_cred)(&min_stat, &text->server_creds);
+        (*p_krb5_gss_release_cred)(&min_stat, &text->server_creds);
         text->server_creds = GSS_C_NO_CREDENTIAL;
     }
 

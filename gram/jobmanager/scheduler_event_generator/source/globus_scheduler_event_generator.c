@@ -92,7 +92,7 @@ globus_l_seg_deactivate(void)
 
 /**
  * Send an arbitrary SEG notification.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param format
  *     Printf-style format of the SEG notification message
@@ -170,7 +170,7 @@ error:
 
 /**
  * Send a job pending event to the JobSchedulerMonitor implementation.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param timestamp
  *        Timestamp to use for the event. If set to 0, the time which
@@ -217,7 +217,7 @@ globus_scheduler_event_pending(
 
 /**
  * Send a job active event to the JobSchedulerMonitor implementation.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param timestamp
  *        Timestamp to use for the event. If set to 0, the time which
@@ -262,7 +262,7 @@ globus_scheduler_event_active(
 
 /**
  * Send a job failed event to the JobSchedulerMonitor implementation.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param timestamp
  *        Timestamp to use for the event. If set to 0, the time which
@@ -310,7 +310,7 @@ globus_scheduler_event_failed(
 
 /**
  * Send a job done event to the JobSchedulerMonitor implementation.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param timestamp
  *        Timestamp to use for the event. If set to 0, the time which
@@ -358,7 +358,7 @@ globus_scheduler_event_done(
 
 /**
  * Get the timestamp for the earliest event an SEG module should send.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param timestamp
  *     Pointer to a time_t which will be set to the timestamp passed to the

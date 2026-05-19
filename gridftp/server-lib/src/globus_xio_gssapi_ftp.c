@@ -2557,7 +2557,6 @@ globus_l_xio_gssapi_ftp_write(
     globus_byte_t *                     out_buf;
     globus_byte_t *                     next_ptr;
     globus_byte_t *                     tmp_ptr;
-    int                                 tmp_i;
     int                                 tmp_i2;
     globus_xio_iovec_t *                l_iov;
     int                                 l_iov_ndx = 1;
@@ -2635,14 +2634,12 @@ globus_l_xio_gssapi_ftp_write(
 
                 l_iov_ndx = 0;
                 out_buf = NULL;
-                tmp_i = 3;
                 tmp_ptr = handle->write_buffer;
                 while(tmp_ptr - handle->write_buffer < length)
                 {
                     if(!first)
                     {
                         out_buf[3] = '-';
-                        tmp_i += tmp_i2;
                     }
                     next_ptr = (globus_byte_t *)
                         strstr((const char *) tmp_ptr, "\r\n");

@@ -3759,10 +3759,7 @@ void
 globus_l_io_server_close_kickout(
     void *                              user_arg)
 {
-    globus_l_io_bounce_t *              bounce_info;
     GlobusIOName(globus_l_io_server_close_kickout);
-
-    bounce_info = (globus_l_io_bounce_t *) user_arg;
 
     globus_l_io_server_close_cb(GLOBUS_NULL, user_arg);
 }
@@ -4180,12 +4177,10 @@ globus_io_register_select(
     globus_io_callback_t                except_callback_func,
     void *                              except_callback_arg)
 {
-    globus_l_io_handle_t *              ihandle;
     globus_result_t                     result;
     GlobusIOName(globus_io_register_select);
 
     GlobusLIOCheckHandle(handle, 0);
-    ihandle = *handle;
 
     if(except_callback_func)
     {

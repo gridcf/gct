@@ -198,7 +198,7 @@ static char *
 voms_get_role_command(const char *str)
 {
     char *buf = NULL;
-    char *p_role = NULL;
+    const char *p_role = NULL;
     size_t buf_len, role_len;;
     int i = 0;
 
@@ -232,7 +232,7 @@ static char *
 voms_get_mapping_command(const char *str)
 {
     char *buf = NULL;
-    char *p_role = NULL;
+    const char *p_role = NULL;
     size_t buf_len = 0, group_len = 0, role_len = 0;
     int i = 0;
 
@@ -315,7 +315,7 @@ voms_get_group_command(const char *str)
 static char *
 voms_convert_command(const char *str)
 {
-    char *p = NULL;
+    const char *p = NULL;
     char *result = NULL;
 
     if (str == NULL) {
@@ -345,7 +345,7 @@ static int
 voms_parse_command(const char *voms, char **vo, char **command)
 {
     int result = 1;
-    char *p_colon = NULL;
+    const char *p_colon = NULL;
     p_colon = strchr(voms, ':');
     if (p_colon == NULL) {
         *vo = strdup(voms);

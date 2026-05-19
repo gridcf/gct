@@ -108,7 +108,6 @@ main(
 {
     int                                 rc;
     char *                              contact = NULL;
-    globus_result_t                     result;
     globus_l_timeout_info_t             client_timeout_info;
     globus_l_timeout_info_t             server_timeout_info;
     globus_reltime_t                    timeout;
@@ -314,12 +313,12 @@ main(
     server_timeout_info.handle = NULL;
     server_timeout_info.result = GLOBUS_SUCCESS;
     server_timeout_info.contact = NULL;
-    result = globus_xio_server_create(
+    globus_xio_server_create(
             &server_timeout_info.server,
             server_timeout_info.attr,
             globus_l_http_stack);
 
-    result = globus_xio_server_get_contact_string(
+    globus_xio_server_get_contact_string(
             server_timeout_info.server,
             &contact);
 
@@ -333,19 +332,19 @@ main(
     client_timeout_info.result = GLOBUS_SUCCESS;
     client_timeout_info.server = NULL;
 
-    result = globus_xio_handle_create(
+    globus_xio_handle_create(
             &client_timeout_info.handle,
             globus_l_http_stack);
 
     /* oneshot to start server state machine */
-    result = globus_callback_register_oneshot(
+    globus_callback_register_oneshot(
             NULL,
             &globus_i_reltime_zero,
             state_machine,
             &server_timeout_info);
 
     /* oneshot to start client state machine */
-    result = globus_callback_register_oneshot(
+    globus_callback_register_oneshot(
             NULL,
             &globus_i_reltime_zero,
             state_machine,
@@ -534,7 +533,6 @@ state_machine(
     void *                              user_arg)
 {
     globus_reltime_t                    delay;
-    globus_result_t                     result;
     globus_l_timeout_info_t *           info = user_arg;
 
     /* If the timeout is to be caused by this side of the transfer, then check
@@ -568,14 +566,14 @@ state_machine(
     {
         case GLOBUS_XIO_OPERATION_TYPE_ACCEPT:
             globus_assert(info->server);
-            result = globus_xio_server_register_accept(
+            globus_xio_server_register_accept(
                     info->server,
                     accept_callback,
                     info);
             break;
 
         case GLOBUS_XIO_OPERATION_TYPE_OPEN:
-            result = globus_xio_register_open(
+            globus_xio_register_open(
                     info->handle,
                     info->contact,
                     info->attr,
@@ -584,7 +582,7 @@ state_machine(
             break;
 
         case GLOBUS_XIO_OPERATION_TYPE_READ:
-            result = globus_xio_register_read(
+            globus_xio_register_read(
                     info->handle,
                     info->buffer,
                     sizeof(info->buffer),
@@ -597,7 +595,7 @@ state_machine(
         case GLOBUS_XIO_OPERATION_TYPE_WRITE:
             strcpy((char *) info->buffer, "ok\n");
 
-            result = globus_xio_register_write(
+            globus_xio_register_write(
                     info->handle,
                     info->buffer,
                     strlen((char *) info->buffer),
@@ -608,7 +606,7 @@ state_machine(
             break;
 
         case GLOBUS_XIO_OPERATION_TYPE_CLOSE:
-            result = globus_xio_register_close(
+            globus_xio_register_close(
                     info->handle,
                     NULL,
                     open_close_callback,

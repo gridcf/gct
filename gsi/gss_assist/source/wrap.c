@@ -29,7 +29,7 @@
 
 /**
  * @brief Wrap
- * @ingroup globus_gsi_gss_assist
+ * @ingroup globus_gss_assist
  *
  * @param minor_status
  *        GSSAPI return code.  If the call was successful, the minor

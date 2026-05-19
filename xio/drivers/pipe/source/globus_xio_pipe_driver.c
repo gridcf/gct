@@ -208,12 +208,9 @@ globus_result_t
 globus_l_xio_pipe_attr_destroy(
     void *                              driver_attr)
 {
-    xio_l_pipe_attr_t *                 attr;
     GlobusXIOName(globus_l_xio_pipe_attr_destroy);
 
     GlobusXIOPipeDebugEnter();
-
-    attr = (xio_l_pipe_attr_t *) driver_attr;
 
     globus_free(driver_attr);
 

@@ -1740,8 +1740,8 @@ globus_l_xio_mode_e_open_new_stream(
 {
     globus_xio_handle_t                 xio_handle;
     globus_l_xio_mode_e_attr_t *        attr;
-    globus_i_xio_mode_e_requestor_t *   requestor;
-    globus_xio_operation_t              op;
+    globus_i_xio_mode_e_requestor_t *   requestor = GLOBUS_NULL;
+    globus_xio_operation_t              op = GLOBUS_XIO_OPERATION_TYPE_NONE;
     globus_result_t                     result;
     GlobusXIOName(globus_l_xio_mode_e_open_new_stream);
 

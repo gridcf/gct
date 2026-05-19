@@ -145,8 +145,6 @@ globus_rsl_assist_attributes_canonicalize(globus_rsl_t * rsl)
  *
  * @param ptr
  *     Pointer to the RSL string to modify in place.
- *
- * @return void
  */
 void
 globus_rsl_assist_string_canonicalize(char * ptr)

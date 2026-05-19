@@ -231,7 +231,7 @@ main(
     {
         globus_byte_t                   buffer[CHUNK_SIZE + 1];
         size_t                          nbytes;
-        int i, x, j = 0;
+        int i, j = 0;
         fp = fopen(filename, "r");
         if (fp == NULL)
         {
@@ -242,7 +242,7 @@ main(
         {
             for (i = 0; i< CHUNK_SIZE + 1; i++)
                 buffer[i] = '\0';
-            x = fread(buffer, CHUNK_SIZE, 1, fp);
+            fread(buffer, CHUNK_SIZE, 1, fp);
             nbytes = strlen((char *) buffer);
             res = globus_xio_write(
                 xio_handle,

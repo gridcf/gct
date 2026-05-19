@@ -732,9 +732,6 @@ globus_module_get_version(
  *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void
@@ -763,9 +760,6 @@ globus_module_print_version(
  *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void
@@ -835,9 +829,6 @@ globus_module_print_activated_versions(
  *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void

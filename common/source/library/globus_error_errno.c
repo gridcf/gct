@@ -157,8 +157,6 @@ globus_error_errno_get_errno(
  *        The error object for which to set the errno
  * @param system_errno
  *        The system errno
- * @return
- *        void
  */
 void
 globus_error_errno_set_errno(

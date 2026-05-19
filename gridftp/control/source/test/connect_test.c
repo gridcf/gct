@@ -954,19 +954,18 @@ globus_l_server_accept_callback(
     globus_ftp_control_handle_t *               handle,
     globus_object_t *                           error)
 {
-    globus_result_t                     res;
     auth_test_server_session_t         *session = callback_arg;
 
     if (error != NULL)
     {
         session->server_state = SERVER_DONE;
-        res = globus_ftp_control_force_close(
+        globus_ftp_control_force_close(
             handle,
             globus_l_server_close_callback,
             callback_arg);
     }
 
-    res = globus_ftp_control_send_response(
+    globus_ftp_control_send_response(
         handle,
         "220 Globus GridFTP Test Server\r\n",
         globus_l_server_response_callback,

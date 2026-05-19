@@ -2002,7 +2002,7 @@ globus_gram_protocol_hash_destroy(
 
 /**
  * Create a GRAM5 protocol extension entry
- * @ingroup globus_gram_protocol_extensions
+ * @ingroup globus_gram_protocol_pack
  *
  * Allocates a new GRAM5 protocol extension entry containing an attribute-value
  * pair. The @a attribute parameter is copied into the extension, and the

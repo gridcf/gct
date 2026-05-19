@@ -161,7 +161,6 @@ globus_l_gass_transfer_deactivate(void)
     {
         globus_gass_transfer_listener_t         tmp;
         globus_gass_transfer_listener_struct_t *l;
-        int                                     rc;
 
         tmp = (globus_gass_transfer_listener_t) (intptr_t)
             globus_list_first(rest);
@@ -172,7 +171,7 @@ globus_l_gass_transfer_deactivate(void)
             &globus_i_gass_transfer_listener_handles,
             tmp);
 
-        rc = globus_i_gass_transfer_close_listener(
+        globus_i_gass_transfer_close_listener(
             tmp,
             l,
             globus_l_gass_transfer_listener_close_callback,

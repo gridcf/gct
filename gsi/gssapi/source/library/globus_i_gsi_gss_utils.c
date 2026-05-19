@@ -2763,7 +2763,7 @@ globus_i_gsi_gssapi_get_hostname(
     int                                 index;
     unsigned int                        length;
     const unsigned char *               data;
-    unsigned char *                     p;
+    const unsigned char *               p;
     const X509_NAME_ENTRY *             name_entry = NULL;
 
     name->service_name = name->host_name = NULL;

@@ -985,14 +985,13 @@ globus_l_xio_system_handle_read(
             }
             else
             {
-                int                     rc;
                 globus_l_xio_system_t   tmp_handle;
 
                 *read_info->sop.non_data.out_fd = new_fd;
                 tmp_handle.fd = new_fd;
                 tmp_handle.type = GLOBUS_XIO_SYSTEM_TCP;
 
-                rc = globus_l_xio_system_remove_nonblocking(&tmp_handle);
+                globus_l_xio_system_remove_nonblocking(&tmp_handle);
 
                 read_info->nbytes++;
                 GlobusXIOSystemDebugPrintf(
@@ -1870,7 +1869,6 @@ globus_l_xio_system_read(
     globus_size_t *                     u_nbytes)
 {
     globus_result_t                     result;
-    int                                 rc;
     GlobusXIOName(globus_l_xio_system_read);
 
     GlobusXIOSystemDebugEnter();
@@ -1891,7 +1889,7 @@ globus_l_xio_system_read(
          * worst case, we read 0 bytes in the loop below, return, and xio
          * calls us again to finish up.
          */
-        rc = globus_l_xio_system_remove_nonblocking(handle);
+        globus_l_xio_system_remove_nonblocking(handle);
         GlobusIXIOSystemAllocIovec(u_iovc, iov);
         if(!iov)
         {
@@ -1921,14 +1919,14 @@ globus_l_xio_system_read(
         *u_nbytes = total;
 
         GlobusIXIOSystemFreeIovec(u_iovc, (globus_xio_iovec_t *) u_iov);
-        rc = globus_l_xio_system_add_nonblocking(handle);
+        globus_l_xio_system_add_nonblocking(handle);
     }
 
     GlobusXIOSystemDebugExit();
     return result;
 
 error_iovec:
-    rc = globus_l_xio_system_add_nonblocking(handle);
+    globus_l_xio_system_add_nonblocking(handle);
     GlobusXIOSystemDebugExitWithError();
     return result;
 }
@@ -2020,7 +2018,6 @@ globus_l_xio_system_write(
     globus_size_t *                     u_nbytes)
 {
     globus_result_t                     result;
-    int                                 rc;
     GlobusXIOName(globus_l_xio_system_write);
 
     GlobusXIOSystemDebugEnter();
@@ -2039,7 +2036,7 @@ globus_l_xio_system_write(
          * XXX this is not thread safe... both reads and writes are mucking
          * with blocking status
          */
-        rc = globus_l_xio_system_remove_nonblocking(handle);
+        globus_l_xio_system_remove_nonblocking(handle);
         GlobusIXIOSystemAllocIovec(u_iovc, iov);
         if(!iov)
         {
@@ -2063,14 +2060,14 @@ globus_l_xio_system_write(
         *u_nbytes = total;
 
         GlobusIXIOSystemFreeIovec(u_iovc, (globus_xio_iovec_t *) u_iov);
-        rc = globus_l_xio_system_add_nonblocking(handle);
+        globus_l_xio_system_add_nonblocking(handle);
     }
 
     GlobusXIOSystemDebugExit();
     return result;
 
 error_iovec:
-    rc = globus_l_xio_system_add_nonblocking(handle);
+    globus_l_xio_system_add_nonblocking(handle);
     GlobusXIOSystemDebugExitWithError();
     return result;
 }

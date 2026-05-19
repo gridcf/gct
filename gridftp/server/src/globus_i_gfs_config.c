@@ -2439,7 +2439,6 @@ globus_l_gfs_config_misc()
     globus_list_t *                     popen_list = NULL;
     char *                              module;
     char *                              ptr;
-    int                                 rc;
     char *                              value;
     char *                              data;
     globus_result_t                     result;
@@ -2634,7 +2633,7 @@ globus_l_gfs_config_misc()
     }
     else if((value = globus_i_gfs_config_string("banner_file")) != GLOBUS_NULL)
     {
-        rc = globus_l_config_loadfile(value, &data);
+        globus_l_config_loadfile(value, &data);
     }
     else if((value = globus_i_gfs_config_string("banner")) != GLOBUS_NULL)
     {
@@ -2672,7 +2671,7 @@ globus_l_gfs_config_misc()
 
     if((value = globus_i_gfs_config_string("login_msg_file")) != GLOBUS_NULL)
     {
-        rc = globus_l_config_loadfile(value, &data);
+        globus_l_config_loadfile(value, &data);
         globus_l_gfs_config_set("login_msg", 0, data);
     }
 
@@ -3120,7 +3119,7 @@ globus_i_gfs_config_init_envs(
     /* only enable threads for real process, not daemon */
     if(globus_l_gfs_num_threads > 0 && globus_l_gfs_is_worker)
     {
-        char                            nthreads[8];
+        char                            nthreads[11];
         snprintf(nthreads, sizeof(nthreads), "%d", globus_l_gfs_num_threads);
         setenv("GLOBUS_CALLBACK_POLLING_THREADS", nthreads, 1);
         globus_thread_set_model("pthread");

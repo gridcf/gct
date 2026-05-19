@@ -326,7 +326,6 @@ globus_l_gfs_mem_limit_release_cb(
     void *                              user_arg)
 {
     globus_xio_iovec_t                  iov[1];
-    globus_result_t                     result;
     globus_byte_t *                     buffer;
     uint32_t                            tmp32;
 
@@ -343,7 +342,7 @@ globus_l_gfs_mem_limit_release_cb(
             iov[0].iov_base = buffer;
             iov[0].iov_len = GF_RELEASE_MSG_LEN;
 
-            result = globus_gfork_send(
+            globus_gfork_send(
                 globus_l_gfs_gfork_handle,
                 -1, /* to the master */
                 iov,

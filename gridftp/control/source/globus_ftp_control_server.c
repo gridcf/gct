@@ -1253,7 +1253,6 @@ globus_ftp_control_server_authenticate(
     globus_ftp_control_auth_callback_t          callback,
     void *                                      callback_arg)
 {
-    globus_object_t *                         error = GLOBUS_NULL;
     globus_ftp_cc_handle_t *                  cc_handle;
     globus_result_t                           rc;
     globus_result_t                           rc2;
@@ -1298,7 +1297,6 @@ globus_ftp_control_server_authenticate(
         &(cc_handle->auth_info),GLOBUS_NULL);
     if(rc != GLOBUS_SUCCESS)
     {
-        error=globus_error_get(rc);
         goto error_std;
     }
 
@@ -1316,7 +1314,6 @@ globus_ftp_control_server_authenticate(
 
         if (rc != GLOBUS_SUCCESS)
         {
-            error = globus_error_get(rc);
             goto error_std;
         }
 
@@ -1330,11 +1327,12 @@ globus_ftp_control_server_authenticate(
             || cc_handle->auth_info.auth_gssapi_context
                 == GSS_C_NO_CONTEXT)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                (rc != GLOBUS_SUCCESS) ? globus_error_get(rc) : NULL,
-                _FCSL("TLS control channel not established"));
-
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    (rc != GLOBUS_SUCCESS) ? globus_error_get(rc) : NULL,
+                    _FCSL("TLS control channel not established"))
+                );
             goto error_std;
         }
 
@@ -1358,10 +1356,12 @@ globus_ftp_control_server_authenticate(
 
         if (maj_stat != GSS_S_COMPLETE)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                globus_error_get(min_stat),
-                _FCSL("gss_inquire_context failed"));
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    globus_error_get(min_stat),
+                    _FCSL("gss_inquire_context failed"))
+                );
             goto error_std;
         }
 
@@ -1378,10 +1378,12 @@ globus_ftp_control_server_authenticate(
 
         if (maj_stat != GSS_S_COMPLETE)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                NULL,
-                _FCSL("gss_display_name failed"));
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    NULL,
+                    _FCSL("gss_display_name failed"))
+                );
             goto error_std;
         }
         cc_handle->auth_info.auth_gssapi_subject
@@ -1391,10 +1393,12 @@ globus_ftp_control_server_authenticate(
         {
             gss_release_buffer(&min_stat, &subject_buf);
 
-            error = globus_error_construct_string(
+            rc = globus_error_put(
+                globus_error_construct_string(
                     GLOBUS_FTP_CONTROL_MODULE,
                     GLOBUS_NULL,
-                    _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
+                    _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"))
+                );
             goto error_std;
         }
 
@@ -1415,7 +1419,6 @@ globus_ftp_control_server_authenticate(
                                handle);
     if(rc != GLOBUS_SUCCESS)
     {
-        error=globus_error_get(rc);
         goto error_std;
     }
 

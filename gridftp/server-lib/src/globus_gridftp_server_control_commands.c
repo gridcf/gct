@@ -425,7 +425,7 @@ globus_l_gsc_cmd_mode(
     ch = (char)toupper((int)cmd_a[1][0]);
     if(strchr(op->server_handle->modes, ch) == NULL)
     {
-        tmp_ptr = strstr(full_command, "\r\n");
+        tmp_ptr = (char *) strstr(full_command, "\r\n");
         if(tmp_ptr != NULL)
         {
             *tmp_ptr = '\0';

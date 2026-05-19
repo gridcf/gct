@@ -789,7 +789,6 @@ oldgaa_globus_parse_policy (policy_file_context_ptr  pcontext,
     char                  *str;
     int                   cond_present     = FALSE;
     int                   new_entry        = TRUE;
-    oldgaa_rights_ptr old_rights = 0;
 
     str = malloc(pcontext->buflen);
     str[0] = 0;
@@ -829,7 +828,6 @@ oldgaa_globus_parse_policy (policy_file_context_ptr  pcontext,
 
         /* get rights */
 
-        old_rights = start_rights;
         oldgaa_error = oldgaa_globus_parse_rights(pcontext,
                                                   str,
                                                   &start_rights,

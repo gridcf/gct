@@ -171,6 +171,8 @@ globus_i_xio_http_copy_blob(
 }
 /* globus_l_xio_http_copy_blob() */
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Determine whether an HTTP method should contain an entity.
  * @ingroup globus_i_xio_http_util
@@ -274,7 +276,7 @@ globus_i_xio_http_guess_version(
  */
 char *
 globus_i_xio_http_find_eol(
-    const char *                        blob,
+    char *                              blob,
     globus_size_t                       blob_length)
 {
     char *                              result;
@@ -378,6 +380,8 @@ error_exit:
     return result;
 }
 /* globus_i_xio_http_cleanup_read_buffer() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 GlobusXIODefineDriver(
     http,

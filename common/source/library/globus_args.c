@@ -655,14 +655,13 @@ globus_args_bytestr_to_num(
     char *                              end = NULL;
     globus_off_t                        size = 0;
     int                                 consumed;
-    int                                 rc;
 
     if(str == NULL || !(isdigit(*str) || *str == '-'))
     {
         return 1;
     }
 
-    rc = globus_libc_scan_off_t((char *)str, &size, &consumed);
+    globus_libc_scan_off_t((char *)str, &size, &consumed);
     end = (char *)str + consumed;
     if(size && end && *end)
     {

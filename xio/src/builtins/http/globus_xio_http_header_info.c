@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Initialize an HTTP header info structure
  * @ingroup globus_i_xio_http_header_info
@@ -71,8 +73,6 @@ globus_i_xio_http_header_info_init(
  *
  * @param header_info
  *     Header information structure to destroy.
- *
- * @return void
  */
 void
 globus_i_xio_http_header_info_destroy(
@@ -308,3 +308,5 @@ error_exit:
     return result;
 }
 /* globus_l_xio_http_header_info_set_header() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

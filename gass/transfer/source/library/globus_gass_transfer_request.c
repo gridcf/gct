@@ -445,11 +445,6 @@ globus_gass_transfer_request_set_url(
  *        A handle to the request to modify.
  * @param length
  *        The length of the file request.
- *
- * @retval GLOBUS_SUCCESS
- *         The URL was set for the request handle.
- * @retval GLOBUS_GASS_TRANSFER_ERROR_INVALID_USE
- *         The request handle was invalid, or the URL had already been set.
  */
 void
 globus_gass_transfer_request_set_length(
@@ -463,7 +458,7 @@ globus_gass_transfer_request_set_length(
                                    request);
     if(req == GLOBUS_NULL)
     {
-        return ;
+        return;
     }
     else
     {

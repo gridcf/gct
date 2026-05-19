@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Initialize an HTTP request
  * @ingroup globus_i_xio_http_request
@@ -57,8 +59,6 @@ globus_i_xio_http_request_init(
  *
  * @param request
  *     Request structure to destroy.
- *
- * @return void
  */
 void
 globus_i_xio_http_request_destroy(
@@ -168,3 +168,5 @@ error_exit:
     return res;
 }
 /* globus_i_xio_http_request_copy() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

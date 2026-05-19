@@ -71,7 +71,6 @@ globus_l_openssl_activate(void)
 {
     int                                 pci_NID;
     int                                 pci_old_NID;
-    X509V3_EXT_METHOD *                 pci_x509v3_ext_meth = NULL;
     X509V3_EXT_METHOD *                 pci_old_x509v3_ext_meth = NULL;
 
     SSL_library_init();
@@ -161,7 +160,9 @@ static
 int
 globus_l_openssl_deactivate(void)
 {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     int                                 i;
+#endif
 
     OBJ_cleanup();
 

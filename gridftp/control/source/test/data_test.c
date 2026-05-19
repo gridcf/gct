@@ -735,7 +735,6 @@ globus_result_t
 cache_multiparallel_test(
     set_handle_mode_cb_t                       mode_cb)
 {
-    int                                        ctr;
     int                                        ctr2;
     globus_result_t                            res;
     globus_ftp_control_host_port_t             host_port;
@@ -769,7 +768,6 @@ cache_multiparallel_test(
     for(ctr2 = 0; nsock_a[ctr2] != 0; ctr2++)
     {
         verbose_printf(2, "parallel level %d\n", nsock_a[ctr2]);
-//        for(ctr = 0; ctr < TEST_ITERATIONS; ctr++)
         {
             mode_cb(&pasv_handle, nsock_a[ctr2]);
             mode_cb(&port_handle, nsock_a[ctr2]);

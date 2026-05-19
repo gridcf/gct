@@ -532,7 +532,7 @@ duplicate_x509_test(void)
 
 int main()
 {
-    int                                 i, rc = 0, failed = 0;
+    int                                 i, rc = 0;
     globus_module_descriptor_t         *modules[] =
     {
         GLOBUS_COMMON_MODULE,
@@ -562,10 +562,6 @@ int main()
     {
         rc = (*(tests[i].func))();
 
-        if (rc != 0)
-        {
-            failed++;
-        }
         printf("%s %s\n", rc == 0 ? "ok" : "not ok", tests[i].name);
     }
 

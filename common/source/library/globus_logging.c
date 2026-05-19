@@ -411,13 +411,12 @@ globus_logging_stdio_header_func(
     globus_size_t *                     len)
 {
     char                                str[256];
-    char *                              tmp;
     time_t                              tm;
     globus_size_t                       str_len;
     int                                 nbytes;
 
     tm = time(NULL);
-    tmp = globus_libc_ctime_r(&tm, str, sizeof(str));
+    globus_libc_ctime_r(&tm, str, sizeof(str));
     str_len = strlen(str);
     if(str[str_len - 1] == '\n')
     {

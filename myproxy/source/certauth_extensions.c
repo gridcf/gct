@@ -825,6 +825,7 @@ generate_certificate( X509_REQ                 *request,
 }
 
 
+#ifndef OPENSSL_NO_ENGINE
 static int
 arraylen(char **options) {
   char **ptr;
@@ -836,7 +837,6 @@ arraylen(char **options) {
   return c;
 }
 
-#ifndef OPENSSL_NO_ENGINE
 void shutdown_openssl_engine(void) {
   if (e_cakey) EVP_PKEY_free( e_cakey );
   if (engine) ENGINE_finish(engine);
@@ -847,7 +847,6 @@ void shutdown_openssl_engine(void) {
 
   if (engine_used) ENGINE_cleanup();
 }
-#endif
 
 static int ui_read_fn(UI *ui, UI_STRING *ui_string) {
     switch(UI_get_string_type(ui_string)) {
@@ -879,7 +878,6 @@ static int ui_write_fn(UI *ui, UI_STRING *ui_string) {
     return 1;
 }
 
-#ifndef OPENSSL_NO_ENGINE
 int initialise_openssl_engine(myproxy_server_context_t *server_context) {
     ENGINE *e;
     EVP_PKEY *cakey;

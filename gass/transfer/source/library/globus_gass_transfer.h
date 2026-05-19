@@ -252,7 +252,7 @@ typedef enum
 
 /**
  * GASS error codes
- * @ingroup globus_gass_constants
+ * @ingroup globus_gass_transfer
  */
 enum
 {
@@ -293,7 +293,7 @@ enum
 };
 
 /**
- * @ingroup globus_gass_constants
+ * @ingroup globus_gass_transfer
  *
  * Default buffer length for the globus_gass_transfer_assist library.
  *
@@ -305,7 +305,7 @@ enum
 };
 
 /**
- * @ingroup globus_gass_constants
+ * @ingroup globus_gass_transfer
  *
  * Value for files we don't know the length of.
  *
@@ -314,7 +314,7 @@ enum
 #define GLOBUS_GASS_TRANSFER_LENGTH_UNKNOWN 0UL
 
 /**
- * @ingroup globus_gass_constants
+ * @ingroup globus_gass_transfer
  *
  * Value for timestamps we don't know the value of.
  *
@@ -504,7 +504,7 @@ globus_gass_transfer_listener_set_user_pointer(
 
 /**
  * @defgroup globus_gass_transfer_data Sending and Receiving Data
- * @ingroup globus_gass_tansfer
+ * @ingroup globus_gass_transfer
  * @brief Sending and Receiving Data
  */
 

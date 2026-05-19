@@ -175,7 +175,7 @@ typedef enum
 
     /** GlobusVarArgEnum(handle)
      * Reposition the offset of the file being read/written.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param seek_offset
      *      Specifies the desired offset.
@@ -188,7 +188,7 @@ typedef enum
      */
     /** GlobusVarArgEnum(attr)
      * Set the ftp client handle to use.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      * Do not create a new ftp client handle, use this handle instead.
      *
      * @param ftp_handle
@@ -200,7 +200,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the ftp client handle on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param ftp_handle_out
      *      The ftp client handle pointer will be stored here. If none is set,
@@ -211,7 +211,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Enable or disable opening the file in append mode.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param append
      *      GLOBUS_TRUE to enable, GLOBUS_FALSE to disable (default).
@@ -221,7 +221,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the append flag on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param append_out
      *      The append flag will be stored here.
@@ -233,7 +233,7 @@ typedef enum
      * Set the ERET algorithm string. This string contains information needed
      * to invoke a server-specific data reduction algorithm on the file being
      * retrieved.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param eret_alg_str
      *      Specifies the ERET algorithm string.
@@ -243,7 +243,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the ERET algorithm string.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param eret_alg_str_out
      *      The ERET algorithm string will be stored here. It is the
@@ -256,7 +256,7 @@ typedef enum
      * Set the ESTO algorithm string. This string contains information needed
      * to invoke a server-specific data reduction algorithm on the file being
      * stored.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param esto_alg_str
      *      Specifies the ESTO algorithm string.
@@ -266,7 +266,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the ESTO algorithm string.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param esto_alg_str_out
      *      The ESTO algorithm string will be stored here. It is the
@@ -278,7 +278,7 @@ typedef enum
     /** GlobusVarArgEnum(attr)
      * Enable or disable partial transfer (associate a transfer with each
      * read/write) on the GridFTP handle.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param partial_xfer
      *      GLOBUS_TRUE to enable, GLOBUS_FALSE to disable (default).
@@ -288,7 +288,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the partial transfer flag on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param partial_xfer_out
      *      The partial xfer flag will be stored here.
@@ -299,7 +299,7 @@ typedef enum
     /** GlobusVarArgEnum(attr)
      * Set the number of TCP streams to be used between the client and the
      * server.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param num_streams
      *      Specifies the number of streams to use.
@@ -309,7 +309,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the number of TCP streams on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param num_streams_out
      *      The stream count will be stored here.
@@ -319,7 +319,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Set the TCP socket send/recv buffer size.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param buf_size
      *      The send/recv buffer size in bytes to use. (default is system
@@ -330,7 +330,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the TCP socket send/recv buffer size on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param buf_size_out
      *      The send/recv buffer size will be stored here.
@@ -340,7 +340,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Set the transmission mode used for data transfer
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param mode
      *      Specifies the data transmission mode. (default is stream mode)
@@ -352,7 +352,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the data transmission mode on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param mode_out
      *      The data transmission mode will be stored here.
@@ -365,7 +365,7 @@ typedef enum
     /** GlobusVarArgEnum(attr)
      * Set the authentication information used to authenticate with the GridFTP
      * server
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param credential
      *      The credential to use for authenticating with a GridFTP server.
@@ -394,7 +394,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the authentication information on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param credential_out
      *      The credential will be stored here.
@@ -416,7 +416,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Set the mode of authentication to be performed on GridFTP data channels.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param dcau_mode
      *      Specifies the authentication mode.
@@ -428,7 +428,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the data channel authentication mode on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param dcau_mode_out
      *      The data channel authentication mode will be stored here.
@@ -440,7 +440,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Set protection level on the data channel.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param protection
      *      Specifies the protection level.
@@ -452,7 +452,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the data channel protection level on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param protection_out
      *      The data channel protection level will be stored here.
@@ -464,7 +464,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Set protection level on the control channel.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param protection
      *      Specifies the protection level.
@@ -476,7 +476,7 @@ typedef enum
 
     /** GlobusVarArgEnum(attr)
      * Get the control channel protection level on the attr.
-     * @ingroup gridftp_driver_cntls
+     * @ingroup globus_xio_gridftp_driver
      *
      * @param protection_out
      *      The control channel protection level will be stored here.

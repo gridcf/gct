@@ -1033,6 +1033,7 @@ gfs_l_gfork_mem_limit_send(
     }
 }
 
+/*
 static
 void
 gfs_l_gfork_kill_send(
@@ -1069,6 +1070,7 @@ gfs_l_gfork_kill_send(
             result, 3, "failed to send kill to %d\n", to_pid);
     }
 }
+*/
 
 static
 void
@@ -1176,6 +1178,7 @@ gfs_l_gfork_mem_try(
     }
 }
 
+/*
 static
 void
 gfs_l_gfork_mem_try_cb(
@@ -1194,6 +1197,7 @@ gfs_l_gfork_mem_try_cb(
     }
     globus_mutex_unlock(&g_mutex);
 }
+*/
 
 static
 void
@@ -2132,6 +2136,7 @@ error_format:
 
 
 
+static
 globus_options_entry_t                   gfork_l_opts_table[] =
 {
     {"help", "h", NULL, NULL,

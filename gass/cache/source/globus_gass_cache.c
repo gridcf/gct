@@ -971,16 +971,15 @@ globus_l_gass_cache_mangle(const globus_gass_cache_t     cache,
 {
     cache_mangling_option_t     *option;
     int                         rc;
-    int                         option_no;
     int                         len;
     char                        *separator;
 
     separator = directory_separator[cache->cache_type];
 
     /* Get the mangled length */
-    for ( option_no = 0, option = &cache_mangling_list[0];
+    for ( option = &cache_mangling_list[0];
           option->flagbits;
-          option_no++, option++ )
+          option++ )
     {
         if ( cache->mangling_options & option->flagbits )
         {
@@ -4351,7 +4350,7 @@ globus_l_gass_cache_list_all_urls_flat( globus_gass_cache_t    cache_handle,
     /* Walk through the matches... */
     for ( dirent_num = 0;  dirent_num < dirent_count; dirent_num++ )
     {
-        const char      *name = dirent_list[dirent_num]->d_name;
+        char            *name = dirent_list[dirent_num]->d_name;
         char            *p;
         url_list_elem_t *elem;
 

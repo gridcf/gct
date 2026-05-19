@@ -378,7 +378,7 @@ globus_l_seg_stdout_deactivate(void)
 
 /**
  * Send an arbitrary SEG notification.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param format
  *     Printf-style format of the SEG notification message

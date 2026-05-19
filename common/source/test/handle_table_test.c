@@ -35,7 +35,6 @@ destructor(void *datum)
 int
 main(void)
 {
-    globus_bool_t                       rc;
     int                                *data,
                                         i;
     globus_handle_table_t               handle_table;
@@ -106,7 +105,7 @@ main(void)
                 (i == object3_count-1), "decrement_object_3_%d", i);
     }
     object3_count = 0;
-    rc = globus_handle_table_decrement_reference(&handle_table, object2_handle);
+    globus_handle_table_decrement_reference(&handle_table, object2_handle);
     object2_count--;
 
     /* perform additional lookups */

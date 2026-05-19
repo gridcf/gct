@@ -63,11 +63,10 @@ data_cb(
     globus_off_t                                offset,
     globus_bool_t                               eof)
 {
-    globus_result_t                             result;
     fwrite(buffer, 1, length, stdout);
     if(!eof)
     {
-        result = globus_ftp_client_register_read(handle,
+        globus_ftp_client_register_read(handle,
                                         buffer,
                                         BUFSIZE,
                                         data_cb,

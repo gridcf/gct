@@ -926,7 +926,6 @@ globus_l_gfs_ipc_event_cb(
     globus_l_gfs_remote_node_info_t *   node_info;
     globus_gfs_transfer_info_t *        info;
     globus_gfs_event_info_t             event_info;
-    globus_result_t                     result;
     int                                 ctr;
     GlobusGFSName(globus_l_gfs_ipc_event_cb);
     GlobusGFSRemoteDebugEnter();
@@ -1008,7 +1007,7 @@ globus_l_gfs_ipc_event_cb(
                     event_info.event_arg = master_node->event_arg;
                     event_info.eof_count = bounce_info->eof_count;
                     event_info.node_count = bounce_info->partial_eof_counts + 1;
-                    result = globus_gfs_ipc_request_transfer_event(
+                    globus_gfs_ipc_request_transfer_event(
                         master_node->ipc_handle,
                         &event_info);
                     bounce_info->final_eof++;
@@ -1774,7 +1773,6 @@ globus_l_gfs_remote_trev(
 {
     globus_bool_t                       free_node = GLOBUS_FALSE;
     int                                 i;
-    globus_result_t                     result;
     globus_l_gfs_remote_handle_t *      my_handle;
     globus_l_gfs_remote_node_info_t *   node_info;
     globus_gfs_event_info_t             new_event_info;
@@ -1795,7 +1793,7 @@ globus_l_gfs_remote_trev(
         node_info = bounce_info->node_handle->nodes[i];
 
         new_event_info.event_arg = node_info->event_arg;
-        result = globus_gfs_ipc_request_transfer_event(
+        globus_gfs_ipc_request_transfer_event(
             node_info->ipc_handle,
             &new_event_info);
     }

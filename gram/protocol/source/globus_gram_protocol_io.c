@@ -1145,7 +1145,7 @@ globus_l_gram_protocol_accept_callback(
 {
     globus_i_gram_protocol_connection_t *
                                         connection;
-    int                                 rc;
+    /* int                                 rc; */
 
     connection = callback_arg;
 
@@ -1154,12 +1154,12 @@ globus_l_gram_protocol_accept_callback(
 
     if(globus_i_gram_protocol_shutdown_called)
     {
-        rc = GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_REQUEST;
+        /* rc = GLOBUS_GRAM_PROTOCOL_ERROR_INVALID_REQUEST; */
         goto error_exit;
     }
     if(result)
     {
-        rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES;
+        /* rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES; */
         goto error_exit;
     }
     connection->buf =
@@ -1168,7 +1168,7 @@ globus_l_gram_protocol_accept_callback(
 
     if(connection->buf == NULL)
     {
-        rc = GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED;
+        /* rc = GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED; */
         goto error_exit;
     }
     connection->replybufsize = GLOBUS_GRAM_PROTOCOL_MAX_MSG_SIZE;
@@ -1182,7 +1182,7 @@ globus_l_gram_protocol_accept_callback(
                  connection);
     if(result)
     {
-        rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES;
+        /* rc = GLOBUS_GRAM_PROTOCOL_ERROR_NO_RESOURCES; */
         goto error_exit;
     }
     globus_mutex_unlock(&globus_i_gram_protocol_mutex);
@@ -1247,7 +1247,7 @@ globus_l_gram_protocol_read_request_callback(
     globus_object_t *                   err;
     globus_i_gram_protocol_connection_t *
                                         connection;
-    char *                              p;
+    const char *                        p;
     int                                 rc;
     globus_size_t                       header_length;
 
@@ -1277,7 +1277,7 @@ globus_l_gram_protocol_read_request_callback(
         connection->buf[connection->n_read] = '\0';
 
         p = strstr((const char *)connection->buf, CRLF CRLF);
-        header_length = (const char *)p - (const char *)connection->buf;
+        header_length = p - (const char *)connection->buf;
 
         if(p)
         {
@@ -1697,7 +1697,7 @@ globus_l_gram_protocol_read_reply_callback(
     globus_object_t *                   err;
     globus_i_gram_protocol_connection_t *
                                         connection;
-    char *                              p;
+    const char *                        p;
     globus_size_t                       header_length;
 
     connection = callback_arg;
@@ -1736,7 +1736,7 @@ globus_l_gram_protocol_read_reply_callback(
         connection->replybuf[connection->n_read] = '\0';
 
         p = strstr((const char *)connection->replybuf, CRLF CRLF);
-        header_length = (const char *)p - (const char *)connection->replybuf;
+        header_length = p - (const char *)connection->replybuf;
 
         if(p)
         {

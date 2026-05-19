@@ -308,7 +308,6 @@ globus_gatekeeper_util_exec(char *args[],
 {
 
     int pid;
-    int err;
     int rc;
     char *path;
     char * cp;
@@ -365,9 +364,9 @@ globus_gatekeeper_util_exec(char *args[],
 
     wait_status = 0;
 #ifdef  HAVE_WAITPID
-    err = waitpid((pid_t) pid, &wait_status, 0);
+    waitpid((pid_t) pid, &wait_status, 0);
 #else   /* HAVE_WAITPID */
-    err = wait4(pid, &wait_status, 0, (struct rusage *) NULL);
+    wait4(pid, &wait_status, 0, (struct rusage *) NULL);
 #endif  /* HAVE_WAITPID */
 
     /* if it worked or failed, continue on. */

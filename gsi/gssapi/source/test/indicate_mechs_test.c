@@ -150,7 +150,7 @@ indicate_mechs_v2_test(void)
 
 int main()
 {
-    int                                 i, rc = 0, failed = 0;
+    int                                 i, rc = 0;
     globus_module_descriptor_t         *modules[] =
     {
         GLOBUS_COMMON_MODULE,
@@ -189,7 +189,6 @@ int main()
         }
         else
         {
-            failed++;
             format = "not ok %d - %s\n";
         }
 

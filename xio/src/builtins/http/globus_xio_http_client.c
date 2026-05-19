@@ -36,6 +36,8 @@ globus_result_t
 globus_l_xio_http_cleanup_cancel(
     globus_i_xio_http_handle_t *        http_handle);
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Client-side connection open callback
  * @ingroup globus_i_xio_http_client
@@ -54,8 +56,6 @@ globus_l_xio_http_cleanup_cancel(
  *     Lower-level protocol result from open.
  * @param user_arg
  *     A void pointer pointing to a #globus_i_xio_http_driver_t
- *
- * @return void
  */
 void
 globus_i_xio_http_client_open_callback(
@@ -476,8 +476,6 @@ error_exit:
  *     Number of bytes in the message that were written.
  * @param user_arg
  *     Void pointer containing the #globus_i_xio_http_handle_t.
- *
- * @return void
  */
 static
 void
@@ -660,10 +658,7 @@ error_exit:
  * @param user_arg
  *     Void * pointing to the #globus_i_xio_http_handle_t associated
  *     with this response.
- *
- * @return void
  */
-
 void
 globus_l_xio_http_client_read_response_callback(
     globus_xio_operation_t              op,
@@ -1133,3 +1128,5 @@ globus_l_xio_http_cleanup_cancel(
 
     return result;
 }
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
