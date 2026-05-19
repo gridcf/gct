@@ -527,7 +527,11 @@ GLOBUS_GSI_SYSCONFIG_GET_PROXY_FILENAME(
 
 globus_result_t
 GLOBUS_GSI_SYSCONFIG_GET_SIGNING_POLICY_FILENAME(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_NAME *                         ca_name,
+#else
+    const X509_NAME *                   ca_name,
+#endif
     char *                              cert_dir,
     char **                             signing_policy_filename);
 

@@ -229,11 +229,11 @@ unsigned char * PROXYPOLICY_get_policy(
 {
     if(policy->policy)
     {
-        (*length) = policy->policy->length;
-        if(*length > 0 && policy->policy->data)
+        (*length) = ASN1_STRING_length(policy->policy);
+        if(*length > 0 && ASN1_STRING_get0_data(policy->policy))
         {
             unsigned char *                 copy = malloc(*length);
-            memcpy(copy, policy->policy->data, *length);
+            memcpy(copy, ASN1_STRING_get0_data(policy->policy), *length);
             return copy;
         }
     }

@@ -245,9 +245,15 @@ globus_i_gsi_gss_create_cred(
     globus_gsi_cred_handle_t *          cred_handle,
     globus_bool_t                       sni_context);
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_i_gsi_gss_verify_extensions_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+int globus_i_gsi_gss_verify_extensions_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
 OM_uint32
 globus_i_gsi_gss_handshake(

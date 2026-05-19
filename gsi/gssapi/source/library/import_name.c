@@ -411,7 +411,7 @@ GSS_CALLCONV gss_import_name(
     }
     else if (g_OID_equal(GLOBUS_GSS_C_NT_X509, input_name_type))
     {
-        X509_NAME                      *n;
+        const X509_NAME                *n;
         X509                           *x509_input;
         GENERAL_NAMES                  *subject_alt_name;
         int                             idx;
@@ -465,7 +465,7 @@ GSS_CALLCONV gss_import_name(
              idx != -1;
              idx = X509_get_ext_by_NID(x509_input, NID_subject_alt_name, idx))
         {
-            X509_EXTENSION * ext_value;
+            const X509_EXTENSION * ext_value;
 
             ext_value = X509_get_ext(x509_input, idx);
             if (!ext_value)

@@ -361,7 +361,7 @@ assign_serial_number( X509 *cert,
       ASN1_INTEGER_set(current, server_context->certificate_serial_skip);
   }
 
-  serial = BN_bin2bn( current->data, current->length, serial );
+  serial = BN_bin2bn( ASN1_STRING_get0_data(current), ASN1_STRING_length(current), serial );
   if ( serial == NULL ) {
     verror_put_string("Error converting to bignum\n");
     ssl_error_to_verror();
@@ -522,7 +522,7 @@ generate_certificate( X509_REQ                 *request,
     goto error;
   }
 
-  subject = X509_get_subject_name(cert);
+  subject = X509_NAME_dup(X509_get_subject_name(cert));
 
   globus_result =
       globus_gsi_cert_utils_get_x509_name(userdn, strlen(userdn), subject);
@@ -536,23 +536,21 @@ generate_certificate( X509_REQ                 *request,
      problems we find.*/
   for (i = 0; i < X509_NAME_entry_count(subject); i++)
   {
-      X509_NAME_ENTRY *ne = NULL;
-      ASN1_STRING *str = NULL;
-      ASN1_OBJECT *obj = NULL;
+      const X509_NAME_ENTRY *ne = NULL;
+      const ASN1_STRING *str = NULL;
+      const ASN1_OBJECT *obj = NULL;
 
       ne = X509_NAME_get_entry(subject, i);
       str = X509_NAME_ENTRY_get_data(ne);
       obj = X509_NAME_ENTRY_get_object(ne);
 
       if ((OBJ_obj2nid(obj) == NID_domainComponent) &&
-          (str->type == V_ASN1_PRINTABLESTRING)) {
-          myproxy_debug("Setting DC type to IA5String.");
-          str->type = V_ASN1_IA5STRING;
+          (ASN1_STRING_type(str) == V_ASN1_PRINTABLESTRING)) {
+          myproxy_debug("Can't set DC type to IA5String.");
       }
       if ((OBJ_obj2nid(obj) == NID_pkcs9_emailAddress) &&
-          (str->type == V_ASN1_PRINTABLESTRING)) {
-          myproxy_debug("Setting emailAddress type to IA5String.");
-          str->type = V_ASN1_IA5STRING;
+          (ASN1_STRING_type(str) == V_ASN1_PRINTABLESTRING)) {
+          myproxy_debug("Can't set emailAddress type to IA5String.");
       }
   }
 
@@ -565,6 +563,9 @@ generate_certificate( X509_REQ                 *request,
       verror_put_errno(errno);
       goto error;
   }
+
+  X509_set_subject_name(cert, subject);
+  X509_NAME_free(subject);
 
   if ((issuer_cert = PEM_read_X509(issuer_cert_file,
                                    NULL, NULL, NULL)) == NULL)

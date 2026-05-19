@@ -164,11 +164,15 @@ static int
 verify_cert_hostname(X509 *cert, char *hostname) {
   int                   extcount, i, j, ok = 0;
   char                  name[256];
-  X509_NAME             *subj;
+  const X509_NAME       *subj;
   const char            *extstr;
   CONF_VALUE            *nval;
   const unsigned char   *data;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
   X509_EXTENSION        *ext;
+#else
+  const X509_EXTENSION  *ext;
+#endif
   X509V3_EXT_METHOD     *meth;
   STACK_OF(CONF_VALUE)  *val;
 
@@ -178,9 +182,9 @@ verify_cert_hostname(X509 *cert, char *hostname) {
       extstr = OBJ_nid2sn(OBJ_obj2nid(X509_EXTENSION_get_object(ext)));
       if (!strcasecmp(extstr, "subjectAltName")) {
         if (!(meth = (X509V3_EXT_METHOD *)X509V3_EXT_get(ext))) break;
-        data = X509_EXTENSION_get_data(ext)->data;
+        data = ASN1_STRING_get0_data(X509_EXTENSION_get_data(ext));
 
-        val = meth->i2v(meth, meth->d2i(0, &data, X509_EXTENSION_get_data(ext)->length), 0);
+        val = meth->i2v(meth, meth->d2i(0, &data, ASN1_STRING_length(X509_EXTENSION_get_data(ext))), 0);
         for (j = 0;  j < sk_CONF_VALUE_num(val);  j++) {
           nval = sk_CONF_VALUE_value(val, j);
           if (!strcasecmp(nval->name, "DNS") && !strcasecmp(nval->value, hostname)) {

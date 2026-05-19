@@ -590,10 +590,17 @@ int globus_gsi_callback_handshake_callback(
  *        1 on success
  *        0 on failure
  */
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_gsi_callback_check_issued(
     X509_STORE_CTX *                    context,
     X509 *                              cert,
     X509 *                              issuer)
+#else
+int globus_gsi_callback_check_issued(
+    X509_STORE_CTX *                    context,
+    const X509 *                        cert,
+    const X509 *                        issuer)
+#endif
 {
     globus_result_t                     result;
     int                                 return_value;
@@ -1592,8 +1599,12 @@ globus_i_gsi_callback_check_critical_extensions(
     X509_STORE_CTX *                    x509_context,
     globus_gsi_callback_data_t          callback_data)
 {
-    ASN1_OBJECT *                       extension_object = NULL;
+    const ASN1_OBJECT *                 extension_object = NULL;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_EXTENSION *                    extension = NULL;
+#else
+    const X509_EXTENSION *              extension = NULL;
+#endif
     PROXY_CERT_INFO_EXTENSION *         proxycertinfo = NULL;
     PROXY_POLICY *                      policy = NULL;
     int                                 nid;

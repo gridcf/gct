@@ -1532,7 +1532,7 @@ check_service_cert_chain(
     globus_result_t                     result;
     globus_gsi_cred_handle_t            handle = NULL;
     globus_gsi_callback_data_t          callback_data = NULL;
-    X509_NAME                          *n = NULL;
+    const X509_NAME                    *n = NULL;
     size_t                              host_len;
     const char                         *no_extensions = " no";
     OM_uint32                           major_status, minor_status;
@@ -1666,7 +1666,11 @@ check_service_cert_chain(
          idx != -1;
          idx = X509_get_ext_by_NID(cert, NID_subject_alt_name, idx))
     {
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
         X509_EXTENSION                 *ext_value;
+#else
+        const X509_EXTENSION           *ext_value;
+#endif
         GENERAL_NAMES                  *subject_alt_names;
 
         no_extensions = "";
@@ -1688,15 +1692,14 @@ check_service_cert_chain(
             if (subject_alt_name->type == GEN_DNS)
             {
                 printf(" dns:%.*s",
-                       (int) subject_alt_name->d.dNSName->length,
-                       subject_alt_name->d.dNSName->data);
-
+                       (int) ASN1_STRING_length(subject_alt_name->d.dNSName),
+                       ASN1_STRING_get0_data(subject_alt_name->d.dNSName));
             }
             else if (subject_alt_name->type == GEN_IPADD)
             {
                 printf(" ip:%.*s",
-                       (int) subject_alt_name->d.iPAddress->length,
-                       subject_alt_name->d.iPAddress->data);
+                       (int) ASN1_STRING_length(subject_alt_name->d.iPAddress),
+                       ASN1_STRING_get0_data(subject_alt_name->d.iPAddress));
             }
             else
             {

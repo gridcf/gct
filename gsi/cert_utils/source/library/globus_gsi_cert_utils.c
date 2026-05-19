@@ -229,15 +229,23 @@ globus_gsi_cert_utils_make_time(
  */
 globus_result_t
 globus_gsi_cert_utils_get_cert_type(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509 *                              cert,
+#else
+    const X509 *                        cert,
+#endif
     globus_gsi_cert_utils_cert_type_t * type)
 {
-    X509_NAME *                         subject = NULL;
+    const X509_NAME *                   subject = NULL;
     X509_NAME *                         name = NULL;
-    X509_NAME_ENTRY *                   ne = NULL;
+    const X509_NAME_ENTRY *             ne = NULL;
     X509_NAME_ENTRY *                   new_ne = NULL;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_EXTENSION *                    pci_ext = NULL;
-    ASN1_STRING *                       data = NULL;
+#else
+    const X509_EXTENSION *              pci_ext = NULL;
+#endif
+    const ASN1_STRING *                 data = NULL;
     PROXY_CERT_INFO_EXTENSION *         pci = NULL;
     PROXY_POLICY *                      policy = NULL;
     ASN1_OBJECT *                       policy_lang = NULL;
@@ -280,11 +288,13 @@ globus_gsi_cert_utils_get_cert_type(
     {
         /* the name entry is of the type: common name */
         data = X509_NAME_ENTRY_get_data(ne);
-        if(data->length == 5 && !memcmp(data->data,"proxy",5))
+        if(ASN1_STRING_length(data) == 5 &&
+           !memcmp(ASN1_STRING_get0_data(data), "proxy", 5))
         {
             *type = GLOBUS_GSI_CERT_UTILS_TYPE_GSI_2_PROXY;
         }
-        else if(data->length == 13 && !memcmp(data->data,"limited proxy",13))
+        else if(ASN1_STRING_length(data) == 13 &&
+                !memcmp(ASN1_STRING_get0_data(data), "limited proxy", 13))
         {
             *type = GLOBUS_GSI_CERT_UTILS_TYPE_GSI_2_LIMITED_PROXY;
         }
@@ -428,7 +438,7 @@ globus_gsi_cert_utils_get_cert_type(
 
             GLOBUS_I_GSI_CERT_UTILS_DEBUG_FPRINTF(
                 2, (globus_i_gsi_cert_utils_debug_fstream,
-                    "Subject is %s\n", data->data));
+                    "Subject is %s\n", ASN1_STRING_get0_data(data)));
 
             if((name = X509_NAME_dup(
                        X509_get_issuer_name(cert))) == NULL)
@@ -441,13 +451,15 @@ globus_gsi_cert_utils_get_cert_type(
             }
 
             if((new_ne = X509_NAME_ENTRY_create_by_NID(NULL, NID_commonName,
-                                                       data->type,
-                                                       data->data, -1)) == NULL)
+                                                       ASN1_STRING_type(data),
+                                                       ASN1_STRING_get0_data(data),
+                                                       -1)) == NULL)
             {
                 GLOBUS_GSI_CERT_UTILS_OPENSSL_ERROR_RESULT(
                     result,
                     GLOBUS_GSI_CERT_UTILS_ERROR_GETTING_CN_ENTRY,
-                    (_CUSL("Error creating X509 name entry of: %s"), data->data));
+                    (_CUSL("Error creating X509 name entry of: %s"),
+                     ASN1_STRING_get0_data(data)));
                 goto exit;
             }
 
@@ -459,7 +471,7 @@ globus_gsi_cert_utils_get_cert_type(
                     result,
                     GLOBUS_GSI_CERT_UTILS_ERROR_ADDING_CN_TO_SUBJECT,
                     (_CUSL("Error adding name entry with value: %s, to subject"),
-                     data->data));
+                     ASN1_STRING_get0_data(data)));
                 goto exit;
             }
 

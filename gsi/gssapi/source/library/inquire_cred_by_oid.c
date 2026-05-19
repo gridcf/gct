@@ -55,11 +55,11 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
     OM_uint32                           local_minor_status;
-    X509_EXTENSION *                    extension;
+    const X509_EXTENSION *              extension;
     X509 *                              cert = NULL;
     STACK_OF(X509) *                    cert_chain = NULL;
     ASN1_OBJECT *                       desired_asn1_obj;
-    ASN1_OCTET_STRING *                 asn1_oct_string;
+    const ASN1_OCTET_STRING *           asn1_oct_string;
     gss_buffer_desc                     data_set_buffer;
     int                                 chain_index;
     int                                 found_index;
@@ -199,8 +199,8 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
                 goto exit;
             }
 
-            data_set_buffer.value = asn1_oct_string->data;
-            data_set_buffer.length = asn1_oct_string->length;
+            data_set_buffer.value = (unsigned char *) ASN1_STRING_get0_data(asn1_oct_string);
+            data_set_buffer.length = ASN1_STRING_length(asn1_oct_string);
 
             major_status = gss_add_buffer_set_member(
                 &local_minor_status,

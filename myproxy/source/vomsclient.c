@@ -779,13 +779,11 @@ voms_create_AC_SEQ_X509_EXTENSION(unsigned char *acseq, int acseq_length)
         goto error;
     }
 
-    ac_DER_string->data = (unsigned char*)malloc(acseq_length);
-    if (ac_DER_string->data == NULL) {
+    if (ASN1_OCTET_STRING_set(ac_DER_string, acseq, acseq_length) == 0) {
         verror_put_string("Couldn't allocate ASN1_OCTET");
         goto error;
     }
-    memcpy(ac_DER_string->data, acseq, acseq_length);
-    ac_DER_string->length = acseq_length;
+
     ext = X509_EXTENSION_create_by_NID(NULL, OBJ_txt2nid("acseq"),
                                        0, ac_DER_string);
     if (ext == NULL) {

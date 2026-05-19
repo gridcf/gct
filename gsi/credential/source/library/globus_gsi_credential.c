@@ -1529,6 +1529,7 @@ globus_gsi_cred_read_pkcs12(
     PKCS7 *                             pkcs7 = NULL;
     STACK_OF(PKCS7) *                   auth_safes = NULL;
     PKCS8_PRIV_KEY_INFO *               pkcs8 = NULL;
+    const PKCS8_PRIV_KEY_INFO *         pkcs8c = NULL;
     BIO *                               pkcs12_bio = NULL;
     int                                 i, j, bag_NID;
 
@@ -1634,8 +1635,8 @@ globus_gsi_cred_read_pkcs12(
             else if(PKCS12_bag_type(bag) == NID_keyBag &&
                     handle->key == NULL)
             {
-                pkcs8 = PKCS12_SAFEBAG_get0_p8inf(bag);
-                handle->key = EVP_PKCS82PKEY(pkcs8);
+                pkcs8c = PKCS12_SAFEBAG_get0_p8inf(bag);
+                handle->key = EVP_PKCS82PKEY(pkcs8c);
                 if (!handle->key)
                 {
                     GLOBUS_GSI_CRED_OPENSSL_ERROR_RESULT(
@@ -2026,7 +2027,11 @@ globus_i_gsi_cred_get_proxycertinfo(
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
     int                                 pci_old_NID;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_EXTENSION *                    pci_extension = NULL;
+#else
+    const X509_EXTENSION *              pci_extension = NULL;
+#endif
     int                                 extension_loc;
 
     GLOBUS_I_GSI_CRED_DEBUG_ENTER;
@@ -2484,8 +2489,8 @@ globus_l_credential_sort_cert_list(
 {
     X509 *                              tmp_cert = NULL;
     X509 *                              tmp_signer = NULL;
-    X509_NAME *                         candidate_issuer;
-    X509_NAME *                         signer_subject;
+    const X509_NAME *                   candidate_issuer;
+    const X509_NAME *                   signer_subject;
     STACK_OF(X509) *                    ordered_certs;
     int                                 i, j, issuer_idx;
 

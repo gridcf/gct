@@ -135,10 +135,17 @@ globus_i_gsi_proxy_utils_key_gen_callback(
     int                                 n,
     void *                              dummy);
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 static int
 globus_l_gsi_proxy_utils_extension_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+static int
+globus_l_gsi_proxy_utils_extension_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
 int
 main(
@@ -1152,13 +1159,19 @@ globus_i_gsi_proxy_utils_print_error(
     exit(1);
 }
 
-static
-int
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
+static int
 globus_l_gsi_proxy_utils_extension_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension)
+#else
+static int
+globus_l_gsi_proxy_utils_extension_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension)
+#endif
 {
-    ASN1_OBJECT *                       extension_object = NULL;
+    const ASN1_OBJECT *                 extension_object = NULL;
     int                                 nid = NID_undef;
     int                                 pci_old_NID = NID_undef;
 

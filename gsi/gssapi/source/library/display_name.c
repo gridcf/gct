@@ -146,7 +146,7 @@ gss_display_name(
         {
             int                         name_length;
             GENERAL_NAME *              name;
-            unsigned char *             dns;
+            const unsigned char *       dns;
             int                         i;
 
             name_length = sk_GENERAL_NAME_num(input_name->subjectAltNames);
@@ -156,9 +156,9 @@ gss_display_name(
 
                 if (name->type == GEN_DNS)
                 {
-                    dns = ASN1_STRING_data(name->d.dNSName);
+                    dns = ASN1_STRING_get0_data(name->d.dNSName);
                     output_name->value =
-                            globus_common_create_string("/CN=%s", (char *) dns);
+                            globus_common_create_string("/CN=%s", (const char *) dns);
                     if (output_name->value == NULL)
                     {
                         GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);

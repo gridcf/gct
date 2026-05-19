@@ -47,11 +47,12 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
     int                                 found_index;
     int                                 chain_index;
     int                                 cert_count;
-    X509_EXTENSION *                    extension;
+    const X509_EXTENSION *              extension;
     X509 *                              cert = NULL;
     STACK_OF(X509) *                    cert_chain = NULL;
     ASN1_OBJECT *                       asn1_desired_obj = NULL;
     ASN1_OCTET_STRING *                 asn1_oct_string;
+    const ASN1_OCTET_STRING *           asn1_oct_string_c;
     gss_buffer_desc                     data_set_buffer = GSS_C_EMPTY_BUFFER;
     globus_result_t                     local_result = GLOBUS_SUCCESS;
     unsigned char *                     tmp_ptr;
@@ -303,8 +304,8 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     goto unlock_exit;
                 }
 
-                asn1_oct_string = X509_EXTENSION_get_data(extension);
-                if(!asn1_oct_string)
+                asn1_oct_string_c = X509_EXTENSION_get_data(extension);
+                if(!asn1_oct_string_c)
                 {
                     GLOBUS_GSI_GSSAPI_OPENSSL_ERROR_RESULT(
                         minor_status,
@@ -315,7 +316,7 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     goto unlock_exit;
                 }
 
-                asn1_oct_string = ASN1_OCTET_STRING_dup(asn1_oct_string);
+                asn1_oct_string = ASN1_OCTET_STRING_dup(asn1_oct_string_c);
 
                 if(!asn1_oct_string)
                 {
@@ -327,8 +328,8 @@ GSS_CALLCONV gss_inquire_sec_context_by_oid(
                     goto unlock_exit;
                 }
 
-                data_set_buffer.value = asn1_oct_string->data;
-                data_set_buffer.length = asn1_oct_string->length;
+                data_set_buffer.value = (unsigned char *) ASN1_STRING_get0_data(asn1_oct_string);
+                data_set_buffer.length = ASN1_STRING_length(asn1_oct_string);
 
                 OPENSSL_free(asn1_oct_string);
 

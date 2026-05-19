@@ -150,7 +150,11 @@ globus_gsi_cert_utils_get_identity_cert(
 
 globus_result_t
 globus_gsi_cert_utils_get_cert_type(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509 *                              cert,
+#else
+    const X509 *                        cert,
+#endif
     globus_gsi_cert_utils_cert_type_t * type);
 
 globus_result_t

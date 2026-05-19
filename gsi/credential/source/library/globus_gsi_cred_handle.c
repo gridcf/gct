@@ -1278,7 +1278,7 @@ globus_gsi_cred_get_policies(
                 goto exit;
             }
             memcpy(policy_string,
-                    ASN1_STRING_data(policy->policy),
+                    ASN1_STRING_get0_data(policy->policy),
                     policy_string_length);
 
         }

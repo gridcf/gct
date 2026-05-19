@@ -548,7 +548,7 @@ globus_gsi_proxy_create_req(
                 }
                 memcpy(
                     policy,
-                    ASN1_STRING_data(handle->proxy_cert_info->proxyPolicy->policy),
+                    ASN1_STRING_get0_data(handle->proxy_cert_info->proxyPolicy->policy),
                     policy_len);
                 policy[policy_len] = '\0';
                 tmp = globus_common_create_string("%s,policy:text:%s",
@@ -676,7 +676,7 @@ globus_gsi_proxy_inquire_req(
     globus_result_t                     result = GLOBUS_SUCCESS;
     PROXY_POLICY *                      policy = NULL;
     ASN1_OBJECT *                       policy_lang = NULL;
-    ASN1_OBJECT *                       extension_oid = NULL;
+    const ASN1_OBJECT *                 extension_oid = NULL;
     int                                 policy_nid = NID_undef;
     int                                 pci_NID = NID_undef;
     int                                 pci_old_NID = NID_undef;
@@ -1169,6 +1169,7 @@ globus_l_gsi_proxy_sign_key(
     X509 *                              issuer_cert = NULL;
     X509_EXTENSION *                    pci_ext = NULL;
     X509_EXTENSION *                    extension;
+    const X509_EXTENSION *              extension_c;
     const EVP_MD *                      issuer_digest;
     int                                 position;
     EVP_PKEY *                          issuer_pkey = NULL;
@@ -1364,8 +1365,7 @@ globus_l_gsi_proxy_sign_key(
             goto done;
         }
 
-        pci_DER_string->data = pci_DER;
-        pci_DER_string->length = pci_DER_length;
+        ASN1_OCTET_STRING_set(pci_DER_string, pci_DER, pci_DER_length);
 
         pci_ext = X509_EXTENSION_create_by_NID(
             &pci_ext,
@@ -1442,7 +1442,7 @@ globus_l_gsi_proxy_sign_key(
                 }
                 memcpy(
                     policy,
-                    ASN1_STRING_data(handle->proxy_cert_info->proxyPolicy->policy),
+                    ASN1_STRING_get0_data(handle->proxy_cert_info->proxyPolicy->policy),
                     policy_len);
                 policy[policy_len] = '\0';
                 tmp = globus_common_create_string("%s,policy:text:%s",
@@ -1507,7 +1507,7 @@ globus_l_gsi_proxy_sign_key(
         unsigned char *                 mod_ku_DER;
         int                             ku_DER_length;
 
-        if(!(extension = X509_get_ext(issuer_cert, position)))
+        if(!(extension_c = X509_get_ext(issuer_cert, position)))
         {
             GLOBUS_GSI_PROXY_OPENSSL_ERROR_RESULT(
                 result,
@@ -1583,8 +1583,8 @@ globus_l_gsi_proxy_sign_key(
             goto done;
         }
 
-        ku_DER_string->data = ku_DER;
-        ku_DER_string->length = ku_DER_length;
+        ASN1_OCTET_STRING_set(ku_DER_string, ku_DER, ku_DER_length);
+        free(ku_DER);
 
         extension = X509_EXTENSION_create_by_NID(
             NULL,
@@ -1619,7 +1619,7 @@ globus_l_gsi_proxy_sign_key(
     if((position =
         X509_get_ext_by_NID(issuer_cert, NID_ext_key_usage, -1)) > -1)
     {
-        if(!(extension = X509_get_ext(issuer_cert, position)))
+        if(!(extension_c = X509_get_ext(issuer_cert, position)))
         {
             GLOBUS_GSI_PROXY_OPENSSL_ERROR_RESULT(
                 result,
@@ -1628,7 +1628,7 @@ globus_l_gsi_proxy_sign_key(
             goto done;
         }
 
-        extension = X509_EXTENSION_dup(extension);
+        extension = X509_EXTENSION_dup(extension_c);
 
         if(extension == NULL)
         {
@@ -1817,32 +1817,15 @@ globus_l_gsi_proxy_sign_key(
             X509_EXTENSION_free(pci_ext);
         }
 
-        #ifdef WIN32
-        /* In Win32 can't mix library and OpenSSL versions of free */
-        /*     so pci_DER can't be freed in ASN1_OCTET_STRING_free */
         if(pci_DER_string)
         {
-            if(pci_DER)
-            {
-                free(pci_DER);
-                pci_DER = NULL;
-            }
-            pci_DER_string->data = NULL;
-            pci_DER_string->length = 0;
             ASN1_OCTET_STRING_free(pci_DER_string);
-            pci_DER_string = NULL;
         }
-        #else
 
-        if(pci_DER_string)
-        {
-            ASN1_OCTET_STRING_free(pci_DER_string);
-        }
-        else if(pci_DER)
+        if(pci_DER)
         {
             free(pci_DER);
         }
-        #endif
 
         if(serial_number)
         {

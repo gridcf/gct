@@ -35,8 +35,14 @@
 #include <openssl/ssl.h>
 #include <openssl/x509v3.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 static AUTHORITY_INFO_ACCESS *
-my_aia_get(X509_EXTENSION *ext) {
+my_aia_get(X509_EXTENSION *ext)
+#else
+static AUTHORITY_INFO_ACCESS *
+my_aia_get(const X509_EXTENSION *ext)
+#endif
+{
     const X509V3_EXT_METHOD *method = NULL;
     void *ext_str = NULL;
     const unsigned char *p;
@@ -53,8 +59,8 @@ my_aia_get(X509_EXTENSION *ext) {
         return(NULL);
     }
 
-    p = X509_EXTENSION_get_data(ext)->data;
-    len = X509_EXTENSION_get_data(ext)->length;
+    p = ASN1_STRING_get0_data(X509_EXTENSION_get_data(ext));
+    len = ASN1_STRING_length(X509_EXTENSION_get_data(ext));
     if (method->it) {
         ext_str = ASN1_item_d2i(NULL, &p, len, ASN1_ITEM_ptr(method->it));
     } else {
@@ -68,8 +74,14 @@ my_aia_get(X509_EXTENSION *ext) {
     return((AUTHORITY_INFO_ACCESS*)ext_str);
 }
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 static void
-my_aia_free(X509_EXTENSION *ext, AUTHORITY_INFO_ACCESS* aia) {
+my_aia_free(X509_EXTENSION *ext, AUTHORITY_INFO_ACCESS* aia)
+#else
+static void
+my_aia_free(const X509_EXTENSION *ext, AUTHORITY_INFO_ACCESS* aia)
+#endif
+{
     const X509V3_EXT_METHOD *method = NULL;
 
     if (ext == NULL) {
@@ -99,7 +111,11 @@ myproxy_get_aia_ocsp_uri(X509 *cert)
          loc >= 0;
          loc = X509_get_ext_by_NID(cert, NID_info_access, loc)) {
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
         X509_EXTENSION  *xe;
+#else
+        const X509_EXTENSION  *xe;
+#endif
         AUTHORITY_INFO_ACCESS   *aia;
         int k;
 
@@ -123,7 +139,7 @@ myproxy_get_aia_ocsp_uri(X509 *cert)
             if (gn->type != GEN_URI) continue;
 
             asn1_uri = gn->d.uniformResourceIdentifier;
-            uri = strdup((const char*)asn1_uri->data);
+            uri = strdup((const char*)ASN1_STRING_get0_data(asn1_uri));
             break;
         }
 

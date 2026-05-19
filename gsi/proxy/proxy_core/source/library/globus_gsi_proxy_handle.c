@@ -819,7 +819,7 @@ globus_gsi_proxy_handle_get_policy(
         *policy_data = malloc(*policy_length + 1);
 
         memcpy(*policy_data,
-                ASN1_STRING_data(handle->proxy_cert_info->proxyPolicy->policy),
+                ASN1_STRING_get0_data(handle->proxy_cert_info->proxyPolicy->policy),
                 *policy_length);
         (*policy_data)[*policy_length] = 0;
     }

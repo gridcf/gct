@@ -88,7 +88,7 @@ int guc_mkcert(X509 **x509p, EVP_PKEY **pkeyp, int bits, int serial, int days)
     X509_gmtime_adj(X509_get_notAfter(x),(long)60*60*24*days);
     X509_set_pubkey(x,pk);
 
-    name = X509_get_subject_name(x);
+    name = X509_NAME_dup(X509_get_subject_name(x));
 
     /* This function creates and adds the entry, working out the
     * correct string type and performing checks on its length.
@@ -102,7 +102,9 @@ int guc_mkcert(X509 **x509p, EVP_PKEY **pkeyp, int bits, int serial, int days)
     /* Its self signed so set the issuer name to be the same as the
     * subject.
     */
+    X509_set_subject_name(x,name);
     X509_set_issuer_name(x,name);
+    X509_NAME_free(name);
 
     if (!X509_sign(x,pk,EVP_md5()))
         goto err;

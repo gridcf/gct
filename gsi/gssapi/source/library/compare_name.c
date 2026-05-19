@@ -415,7 +415,7 @@ gss_l_compare_x509_to_x509(
             {
                 dns_alt_name_found1 = GLOBUS_TRUE;
 
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 for (i2 = 0; i2 < name_count2; i2++)
                 {
@@ -423,7 +423,7 @@ gss_l_compare_x509_to_x509(
 
                     if (gn2->type == GEN_DNS)
                     {
-                        ns2 = (char *) ASN1_STRING_data(gn2->d.dNSName);
+                        ns2 = (char *) ASN1_STRING_get0_data(gn2->d.dNSName);
                         dns_alt_name_found2 = GLOBUS_TRUE;
 
                         major_status = gss_l_compare_hostnames_with_wildcards(
@@ -472,7 +472,7 @@ gss_l_compare_x509_to_x509(
 
                     if (gn2->type == GEN_DNS)
                     {
-                        ns2 = (char *) ASN1_STRING_data(gn2->d.dNSName);
+                        ns2 = (char *) ASN1_STRING_get0_data(gn2->d.dNSName);
 
                         major_status = gss_l_compare_hostnames_with_wildcards(
                                 minor_status,
@@ -596,7 +596,7 @@ gss_l_compare_x509_to_hostbased_service(
             gn1 = sk_GENERAL_NAME_value(name1->subjectAltNames, i1);
             if (gn1->type == GEN_DNS)
             {
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 /* In strict RFC mode, we're going to require the service
                  * portion of the hostbased service name to be "host" (the
@@ -691,7 +691,7 @@ gss_l_compare_x509_to_host_ip(
             gn1 = sk_GENERAL_NAME_value(name1->subjectAltNames, i1);
             if (gn1->type == GEN_DNS)
             {
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 major_status = gss_l_compare_hostnames_with_wildcards(
                         minor_status,
@@ -714,7 +714,7 @@ gss_l_compare_x509_to_host_ip(
             {
                 int ip_as_ints[16], j;
                 int len = ASN1_STRING_length(gn1->d.iPAddress);
-                ns1 = (char *) ASN1_STRING_data(gn1->d.iPAddress);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.iPAddress);
 
                 for (j = 0; j < len; j++)
                 {

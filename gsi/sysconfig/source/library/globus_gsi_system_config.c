@@ -3614,7 +3614,11 @@ globus_gsi_sysconfig_is_superuser_win32(
  */
 globus_result_t
 globus_gsi_sysconfig_get_signing_policy_filename_win32(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_NAME *                         ca_name,
+#else
+    const X509_NAME *                   ca_name,
+#endif
     char *                              cert_dir,
     char **                             signing_policy_filename)
 {
@@ -6057,7 +6061,11 @@ globus_gsi_sysconfig_get_proxy_filename_unix(
  */
 globus_result_t
 globus_gsi_sysconfig_get_signing_policy_filename_unix(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_NAME *                         ca_name,
+#else
+    const X509_NAME *                   ca_name,
+#endif
     char *                              cert_dir,
     char **                             signing_policy_filename)
 {

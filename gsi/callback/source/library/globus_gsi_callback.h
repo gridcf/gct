@@ -125,9 +125,15 @@ typedef struct globus_l_gsi_callback_data_s *
  * Typedef for a callback that may be registered for dealing with unhandled X.509 extension
  * @ingroup globus_gsi_callback
  */
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 typedef int (*globus_gsi_extension_callback_t)(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+typedef int (*globus_gsi_extension_callback_t)(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
 #ifndef DOXYGEN
 
@@ -149,10 +155,17 @@ globus_gsi_callback_handshake_callback(
     int                                 preverify_ok,
     X509_STORE_CTX *                    x509_context);
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_gsi_callback_check_issued(
     X509_STORE_CTX *                    context,
     X509 *                              cert,
     X509 *                              issuer);
+#else
+int globus_gsi_callback_check_issued(
+    X509_STORE_CTX *                    context,
+    const X509 *                        cert,
+    const X509 *                        issuer);
+#endif
 
 int
 globus_gsi_callback_X509_verify_cert(
