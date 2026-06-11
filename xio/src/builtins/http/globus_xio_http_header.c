@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Destroy an HTTP Header
  * @ingroup globus_i_xio_http_header
@@ -33,8 +35,6 @@
  *
  * @param header
  *     A <code>void *</code> pointing to the header to be freed.
- *
- * @return void
  */
 extern
 void
@@ -76,8 +76,6 @@ globus_i_xio_http_header_destroy(
  * @param src_datum
  *     A <code>void *</code> pointing to the HTTP header structure in the
  *     original hashtable to copy.
- *
- * @return void
  */
 extern
 void
@@ -264,7 +262,7 @@ globus_i_xio_http_header_parse(
         {
             http_handle->parse_state = GLOBUS_XIO_HTTP_CHUNK_LINE;
         }
-        else if ((http_handle->target_info.is_client && 
+        else if ((http_handle->target_info.is_client &&
                 http_handle->response_info.http_version
                     == GLOBUS_XIO_HTTP_VERSION_1_0) ||
                 GLOBUS_I_XIO_HTTP_HEADER_IS_CONTENT_LENGTH_SET(headers))
@@ -295,3 +293,5 @@ error_exit:
     return result;
 }
 /* globus_i_xio_http_header_parse() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

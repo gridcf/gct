@@ -49,7 +49,7 @@
  *        The resulting error object. It is the user's responsibility
  *        to eventually free this object using globus_object_free(). A
  *        globus_result_t may be obtained by calling
- *        globus_error_put() on this object.        
+ *        globus_error_put() on this object.
  */
 globus_object_t *
 globus_error_construct_errno_error(
@@ -83,7 +83,7 @@ globus_error_construct_errno_error(
 /**
  * Initialize a previously allocated error of type
  * GLOBUS_ERROR_TYPE_ERRNO
- * @ingroup globus_errno_error_object 
+ * @ingroup globus_errno_error_object
  *
  * @param error
  *        The previously allocated error object.
@@ -125,7 +125,7 @@ globus_error_initialize_errno_error(
 /*@{*/
 /**
  * Retrieve the system errno from a errno error object.
- * @ingroup globus_errno_error_accessor  
+ * @ingroup globus_errno_error_accessor
  *
  * @param error
  *        The error from which to retrieve the errno
@@ -151,14 +151,12 @@ globus_error_errno_get_errno(
 /*@{*/
 /**
  * Set the errno in a errno error object.
- * @ingroup globus_errno_error_accessor  
+ * @ingroup globus_errno_error_accessor
  *
  * @param error
  *        The error object for which to set the errno
  * @param system_errno
  *        The system errno
- * @return
- *        void
  */
 void
 globus_error_errno_set_errno(
@@ -181,7 +179,7 @@ globus_error_errno_set_errno(
 /**
  * Check whether the error originated from a specific module and
  * matches a specific errno.
- * @ingroup globus_errno_error_utility  
+ * @ingroup globus_errno_error_utility
  *
  * This function checks whether the error or any of it's causative
  * errors originated from a specific module and contains a specific
@@ -207,7 +205,7 @@ globus_error_errno_match(
     globus_object_t *                   errno_error = NULL;
     globus_module_descriptor_t *        source_module;
     int                                 current_errno;
-    
+
     if(error == NULL)
     {
         return GLOBUS_FALSE;
@@ -226,7 +224,7 @@ globus_error_errno_match(
 
     source_module = globus_error_get_source(errno_error);
     current_errno = globus_error_errno_get_errno(errno_error);
-    
+
     if(source_module == module && current_errno == system_errno)
     {
         return GLOBUS_TRUE;
@@ -244,7 +242,7 @@ globus_error_errno_match(
 /*@{*/
 /**
  * @brief Search for an errno value in an error chain
- * @ingroup globus_errno_error_utility  
+ * @ingroup globus_errno_error_utility
  * @details
  * This function searches the error object and its causal errors for
  * an error of type GLOBUS_ERROR_TYPE_ERRNO and returns the errno
@@ -256,14 +254,14 @@ globus_error_errno_match(
  * @return
  *        This function returns 0 if no errorno is found, otherwise the
  *        error.
- *        
+ *
  */
 int
 globus_error_errno_search(
     globus_object_t *                   error)
 {
     int                                 current_errno;
-    
+
     if(error == NULL)
     {
         return 0;
@@ -289,7 +287,7 @@ globus_error_errno_search(
 /**
  * Allocate and initialize an error of type GLOBUS_ERROR_TYPE_GLOBUS
  * which contains a causal error of type GLOBUS_ERROR_TYPE_ERRNO.
- * @ingroup globus_errno_error_utility  
+ * @ingroup globus_errno_error_utility
  *
  * @param base_source
  *        Pointer to the originating module.
@@ -315,7 +313,7 @@ globus_error_errno_search(
  *        The resulting error object. It is the user's responsibility
  *        to eventually free this object using globus_object_free(). A
  *        globus_result_t may be obtained by calling
- *        globus_error_put() on this object.        
+ *        globus_error_put() on this object.
  */
 globus_object_t *
 globus_error_wrap_errno_error(
@@ -343,9 +341,9 @@ globus_error_wrap_errno_error(
     {
         return GLOBUS_NULL;
     }
-    
+
     va_start(ap, short_desc_format);
-    
+
     sys_error = strerror(system_errno);
     if(sys_error)
     {
@@ -356,12 +354,12 @@ globus_error_wrap_errno_error(
             sprintf(fmt, "%s: %s", short_desc_format, sys_error);
         }
     }
-    
+
     if(!fmt)
     {
         fmt = (char *) short_desc_format;
     }
-    
+
     error = globus_error_v_construct_error(
         base_source,
         causal_error,
@@ -373,19 +371,19 @@ globus_error_wrap_errno_error(
         ap);
 
     va_end(ap);
-    
+
     if(fmt != short_desc_format)
     {
         globus_free(fmt);
     }
-    
+
     if(error == GLOBUS_NULL)
     {
         globus_object_free(causal_error);
     }
-    
+
     return error;
-    
+
 }/* globus_error_wrap_errno_error */
 /*@}*/
 

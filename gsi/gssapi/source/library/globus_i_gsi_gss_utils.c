@@ -2690,12 +2690,18 @@ globus_i_gsi_gss_get_context_goodtill(
  *
  * @return
  */
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_i_gsi_gss_verify_extensions_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension)
+#else
+int globus_i_gsi_gss_verify_extensions_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension)
+#endif
 {
     gss_OID_set                         extension_oids;
-    ASN1_OBJECT *                       extension_obj;
+    const ASN1_OBJECT *                 extension_obj;
     int                                 index;
     int                                 return_val = 0;
     globus_result_t                     local_result;
@@ -2756,9 +2762,9 @@ globus_i_gsi_gssapi_get_hostname(
     int                                 common_name_NID;
     int                                 index;
     unsigned int                        length;
-    unsigned char *                     data;
-    unsigned char *                     p;
-    X509_NAME_ENTRY *                   name_entry = NULL;
+    const unsigned char *               data;
+    const unsigned char *               p;
+    const X509_NAME_ENTRY *             name_entry = NULL;
 
     name->service_name = name->host_name = NULL;
     *minor_status = GLOBUS_SUCCESS;
@@ -2769,9 +2775,9 @@ globus_i_gsi_gssapi_get_hostname(
         name_entry = X509_NAME_get_entry(name->x509n, index);
         if (OBJ_obj2nid(X509_NAME_ENTRY_get_object(name_entry)) == common_name_NID)
         {
-            ASN1_STRING *s = X509_NAME_ENTRY_get_data(name_entry);
+            const ASN1_STRING *s = X509_NAME_ENTRY_get_data(name_entry);
             length = ASN1_STRING_length(s);
-            data = ASN1_STRING_data(s);
+            data = ASN1_STRING_get0_data(s);
 
             p = memchr(data, '/', length);
 

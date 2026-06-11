@@ -74,7 +74,7 @@
  * @endcode
  *
  * This function should be called once for each time Globus GSI Callback
- * was activated. 
+ * was activated.
  *
  */
 
@@ -89,16 +89,16 @@ extern "C" {
  */
 #define GLOBUS_GSI_CALLBACK_MODULE    (&globus_i_gsi_callback_module)
 
-extern 
+extern
 globus_module_descriptor_t              globus_i_gsi_callback_module;
 
 #define _CLS(s) globus_common_i18n_get_string(GLOBUS_GSI_CALLBACK_MODULE,\
-		s)
+                s)
 /**
  * @defgroup globus_gsi_callback_functions Callback Functions
  * @ingroup globus_gsi_callback
  * @brief Callback Functions
- * 
+ *
  * Functions that plug into various plug points in the OpenSSL path validation
  * mechanism. These functions add CRL checking, X509 Extension handling and
  * proxy validation.
@@ -110,7 +110,7 @@ globus_module_descriptor_t              globus_i_gsi_callback_module;
  * @brief Callback Data Functions
  *
  * Functions that deal with the data structure that contains state associated
- * with the path validation callback. 
+ * with the path validation callback.
  */
 
 
@@ -125,9 +125,15 @@ typedef struct globus_l_gsi_callback_data_s *
  * Typedef for a callback that may be registered for dealing with unhandled X.509 extension
  * @ingroup globus_gsi_callback
  */
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 typedef int (*globus_gsi_extension_callback_t)(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+typedef int (*globus_gsi_extension_callback_t)(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
 #ifndef DOXYGEN
 
@@ -149,12 +155,19 @@ globus_gsi_callback_handshake_callback(
     int                                 preverify_ok,
     X509_STORE_CTX *                    x509_context);
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_gsi_callback_check_issued(
     X509_STORE_CTX *                    context,
     X509 *                              cert,
     X509 *                              issuer);
+#else
+int globus_gsi_callback_check_issued(
+    X509_STORE_CTX *                    context,
+    const X509 *                        cert,
+    const X509 *                        issuer);
+#endif
 
-int 
+int
 globus_gsi_callback_X509_verify_cert(
     X509_STORE_CTX *                    context,
     void *                              arg);
@@ -291,7 +304,7 @@ globus_result_t
 globus_gsi_callback_set_allow_missing_signing_policy(
     globus_gsi_callback_data_t          callback_data,
     globus_bool_t                       allow);
-    
+
 #endif /* DOXYGEN */
 
 #ifdef __cplusplus

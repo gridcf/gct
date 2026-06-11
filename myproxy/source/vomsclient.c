@@ -14,7 +14,7 @@ int voms_init_delegation(myproxy_socket_attrs_t *attrs,
                          char *voname, char *vomses, char *voms_userconf);
 
 
-int voms_contact(SSL_CREDENTIALS *creds, int lifetime, 
+int voms_contact(SSL_CREDENTIALS *creds, int lifetime,
                  char *voname, char *vomses, char *voms_userconf,
                  unsigned char **aclist, int *aclist_length);
 
@@ -35,7 +35,7 @@ voms_put_error_message(struct vomsdata *vd, int err)
  * get the user info for specified vo
  */
 static int
-voms_get_user_info(struct vomsdata *vd, 
+voms_get_user_info(struct vomsdata *vd,
                    voms_command_t *command,
                    char *vomses_path)
 {
@@ -60,7 +60,7 @@ voms_get_user_info(struct vomsdata *vd,
                               info->contact,
                               command->command,
                               vd,
-                              &err); 
+                              &err);
         if (result) {
             /* if contact succeded jumps to other VOs */
             return_code = 0;
@@ -164,7 +164,7 @@ vomses_write_to_temporary(char *vomses, char *template)
 
   done:
 
-    return return_status; 
+    return return_status;
 }
 
 static int
@@ -198,8 +198,8 @@ static char *
 voms_get_role_command(const char *str)
 {
     char *buf = NULL;
-    char *p_role = NULL;
-    size_t buf_len, role_len;; 
+    const char *p_role = NULL;
+    size_t buf_len, role_len;;
     int i = 0;
 
     if ((str == NULL) || (str[0] == '\0')) {
@@ -232,7 +232,7 @@ static char *
 voms_get_mapping_command(const char *str)
 {
     char *buf = NULL;
-    char *p_role = NULL;
+    const char *p_role = NULL;
     size_t buf_len = 0, group_len = 0, role_len = 0;
     int i = 0;
 
@@ -280,7 +280,7 @@ static char *
 voms_get_group_command(const char *str)
 {
     char *buf = NULL;
-    size_t buf_len = 0, str_len = 0; 
+    size_t buf_len = 0, str_len = 0;
     int i = 0;
 
     if ((str == NULL) || (str[0] == '\0')) {
@@ -315,7 +315,7 @@ voms_get_group_command(const char *str)
 static char *
 voms_convert_command(const char *str)
 {
-    char *p = NULL;
+    const char *p = NULL;
     char *result = NULL;
 
     if (str == NULL) {
@@ -341,11 +341,11 @@ voms_convert_command(const char *str)
     return result;
 }
 
-static int 
+static int
 voms_parse_command(const char *voms, char **vo, char **command)
 {
     int result = 1;
-    char *p_colon = NULL;
+    const char *p_colon = NULL;
     p_colon = strchr(voms, ':');
     if (p_colon == NULL) {
         *vo = strdup(voms);
@@ -448,12 +448,12 @@ voms_command_list_add(voms_command_t **headRef, const char *vo, const char *cmd)
             result = 0;
         }
     } else {
-        node = voms_command_list_find(current, vo); 
+        node = voms_command_list_find(current, vo);
         if (node != NULL) {
             /* Append command to the node */
             my_append(&(node->command), ",", cmd, NULL);
             result = 0;
-        } else { 
+        } else {
             /* Create and Add a new node to last */
             node = voms_command_new(vo, cmd);
             if (node != NULL) {
@@ -575,13 +575,13 @@ get_AC_SEQ(struct vomsdata *vd, unsigned char **aclist, int *aclist_length)
 
 /*
  * Get VOMS User info
- * 
+ *
  * @param aclist DER-encoded AC-sequence
  * @param aclist_length length of aclist
  * Returns 0 on success or 1 on error.
  */
-int 
-voms_contact(SSL_CREDENTIALS *creds, int lifetime, 
+int
+voms_contact(SSL_CREDENTIALS *creds, int lifetime,
              char *voname, char *vomses, char *voms_userconf,
              unsigned char **aclist, int *aclist_length)
 
@@ -589,7 +589,7 @@ voms_contact(SSL_CREDENTIALS *creds, int lifetime,
 
     int return_code = 1;
     int verify_ac = 0;
-    struct vomsdata *vd = NULL; 
+    struct vomsdata *vd = NULL;
     int err;
     int result = 1;
     int is_write_temp_vomses = 0;
@@ -642,7 +642,7 @@ voms_contact(SSL_CREDENTIALS *creds, int lifetime,
         }
         is_write_temp_vomses = 1;
     } else {
-        if (voms_userconf == NULL) { 
+        if (voms_userconf == NULL) {
             verror_put_string("No VOMS Server Information");
             goto error;
         }
@@ -661,8 +661,8 @@ voms_contact(SSL_CREDENTIALS *creds, int lifetime,
     /* Set X509_USER_CERT, X509_USER_KEY */
     old_ucert = getenv("X509_USER_CERT");
     old_ukey  = getenv("X509_USER_KEY");
-    /* 
-        Save credential (cert & private key) to cred_path 
+    /*
+        Save credential (cert & private key) to cred_path
         cred_path is modified on success.
      */
     if ( credential_write_to_temporary(creds, cred_path) != SSL_SUCCESS ) {
@@ -755,7 +755,7 @@ void get_voms_proxy(myproxy_socket_attrs_t *attrs,
                              lifetime,
                              request->passphrase,
                              request->voname,
-                             request->vomses, 
+                             request->vomses,
                              config->voms_userconf) < 0) {
         response->response_type = MYPROXY_ERROR_RESPONSE;
         response->error_string = strdup( verror_get_string() );
@@ -779,13 +779,11 @@ voms_create_AC_SEQ_X509_EXTENSION(unsigned char *acseq, int acseq_length)
         goto error;
     }
 
-    ac_DER_string->data = (unsigned char*)malloc(acseq_length);
-    if (ac_DER_string->data == NULL) {
+    if (ASN1_OCTET_STRING_set(ac_DER_string, acseq, acseq_length) == 0) {
         verror_put_string("Couldn't allocate ASN1_OCTET");
         goto error;
     }
-    memcpy(ac_DER_string->data, acseq, acseq_length);
-    ac_DER_string->length = acseq_length;
+
     ext = X509_EXTENSION_create_by_NID(NULL, OBJ_txt2nid("acseq"),
                                        0, ac_DER_string);
     if (ext == NULL) {
@@ -803,11 +801,11 @@ voms_create_AC_SEQ_X509_EXTENSION(unsigned char *acseq, int acseq_length)
 
 static int
 voms_contact_ext(const char *source_credentials, const int lifetime,
-                 char *passphrase, 
+                 char *passphrase,
                  char *voname, char *vomses, char *voms_userconf)
-{ 
+{
     int result = 1;
-    SSL_CREDENTIALS *creds = NULL; 
+    SSL_CREDENTIALS *creds = NULL;
     unsigned char   *acseq= NULL;
     int             acseq_length = 0;
     X509_EXTENSION  *ext = NULL;
@@ -817,7 +815,7 @@ voms_contact_ext(const char *source_credentials, const int lifetime,
     if (creds == NULL) {
         goto done;
     }
-    if (ssl_proxy_load_from_file(creds, source_credentials, 
+    if (ssl_proxy_load_from_file(creds, source_credentials,
                                  passphrase) == SSL_ERROR) {
         goto done;
     }
@@ -862,7 +860,7 @@ voms_init_delegation(myproxy_socket_attrs_t *attrs,
                      const char *delegfile,
                      const int lifetime,
                      char *passphrase,
-                     char *voname, char *vomses, 
+                     char *voname, char *vomses,
                      char *voms_userconf)
 {
 
@@ -874,7 +872,7 @@ voms_init_delegation(myproxy_socket_attrs_t *attrs,
         return -1;
 
 
-    if (voms_contact_ext(delegfile, lifetime, passphrase, 
+    if (voms_contact_ext(delegfile, lifetime, passphrase,
                           voname, vomses, voms_userconf))
     {
         verror_put_string("Couldn't get VOMS User Information.");

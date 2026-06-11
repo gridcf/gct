@@ -36,7 +36,7 @@ release_bad_params(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NT_HOSTBASED_SERVICE;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -90,7 +90,7 @@ release_username(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NO_OID;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -127,7 +127,7 @@ release_anonymous(void)
     name_tok.value = NULL;
     name_tok.length = 0;
     name_type = GSS_C_NT_ANONYMOUS;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -166,7 +166,7 @@ release_hostbase_service(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NT_HOSTBASED_SERVICE;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -205,7 +205,7 @@ release_host_ip(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NT_HOSTBASED_SERVICE;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -258,7 +258,7 @@ release_x509(void)
     for (i = 0; i < SIZEOF_ARRAY(test_certs); i++)
     {
         char * test_cert;
-        
+
         test_cert = globus_common_create_string("%s/%s",
             test_cert_dir, test_certs[i]);
 
@@ -290,7 +290,7 @@ release_x509(void)
         name_tok.value = x509;
         name_tok.length = sizeof(x509);
         name_type = GLOBUS_GSS_C_NT_X509;
-        
+
         major_status = gss_import_name(&minor_status,
                                        &name_tok,
                                        name_type,
@@ -326,7 +326,7 @@ release_x509(void)
 
 int main()
 {
-    int                                 i, rc = 0, failed = 0;
+    int                                 i, rc = 0;
     globus_module_descriptor_t         *modules[] =
     {
         GLOBUS_COMMON_MODULE,
@@ -356,10 +356,6 @@ int main()
     {
         rc = (*(tests[i].func))();
 
-        if (rc != 0)
-        {
-            failed++;
-        }
         printf("%s %s\n", rc == 0 ? "ok" : "not ok", tests[i].name);
     }
 

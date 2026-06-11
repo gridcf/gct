@@ -124,23 +124,30 @@ globus_i_gsi_proxy_utils_print_error(
 
 static int
 globus_i_gsi_proxy_utils_pwstdin_callback(
-    char *                              buf, 
-    int                                 num, 
+    char *                              buf,
+    int                                 num,
     int                                 w,
     void *                              u);
 
 static void
 globus_i_gsi_proxy_utils_key_gen_callback(
-    int                                 p, 
+    int                                 p,
     int                                 n,
     void *                              dummy);
 
-static int 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
+static int
 globus_l_gsi_proxy_utils_extension_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+static int
+globus_l_gsi_proxy_utils_extension_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
-int 
+int
 main(
     int                                 argc,
     char **                             argv)
@@ -177,7 +184,7 @@ main(
     long                                path_length = -1;
     pem_password_cb *                   pw_cb = NULL;
     int                                 return_value = 0;
-    
+
     if(globus_module_activate(GLOBUS_GSI_PROXY_MODULE) != (int)GLOBUS_SUCCESS)
     {
         globus_libc_fprintf(
@@ -276,7 +283,7 @@ main(
         {
             int                         hours;
             int                         minutes;
-            args_verify_next(arg_index, argp, 
+            args_verify_next(arg_index, argp,
                              "valid time argument H:M missing");
             if(sscanf(argv[++arg_index], "%d:%d", &hours, &minutes) < 2)
             {
@@ -292,12 +299,12 @@ main(
                     "be in the range 0-60");
             }
             /* error on overflow */
-            
+
             if(hours > (((time_t)(~0U>>1))/3600-1))
             {
                 hours = (((time_t)(~0U>>1))/3600-1);
             }
-            
+
             valid = (hours * 60) + minutes;
 
         }
@@ -318,7 +325,7 @@ main(
         {
             args_verify_next(arg_index, argp, "integer argument missing");
             key_bits = atoi(argv[arg_index + 1]);
-            if((key_bits != 512) && (key_bits != 1024) && 
+            if((key_bits != 512) && (key_bits != 1024) &&
                (key_bits != 2048) && (key_bits != 4096))
             {
                 args_error(argp, "value must be one of 512,1024,2048,4096");
@@ -333,7 +340,7 @@ main(
         {
             if (cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_PROXY_MASK)
             {
-                args_error(argp, 
+                args_error(argp,
                            "-independent, -limited and -policy/-policy-language are mutually exclusive");
             }
             else
@@ -345,7 +352,7 @@ main(
         {
             if (cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_PROXY_MASK)
             {
-                args_error(argp, 
+                args_error(argp,
                            "-independent, -limited and -policy/-policy-language are mutually exclusive");
             }
             else
@@ -357,7 +364,7 @@ main(
         {
             if ((cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_FORMAT_MASK) != 0)
             {
-                args_error(argp, 
+                args_error(argp,
                            "-old, -rfc, and -draft are mutually exclusive");
             }
             else
@@ -407,7 +414,7 @@ main(
                 args_error(argp,
                            "-independent, -limited and -policy/-policy-language are mutually exclusive");
             }
-            args_verify_next(arg_index, argp, 
+            args_verify_next(arg_index, argp,
                              "policy file name missing");
             policy_filename = argv[++arg_index];
             cert_type |= GLOBUS_GSI_CERT_UTILS_TYPE_RESTRICTED_PROXY;
@@ -418,7 +425,7 @@ main(
             if ((cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_PROXY_MASK) != 0 &&
                 (cert_type & GLOBUS_GSI_CERT_UTILS_TYPE_PROXY_MASK) != GLOBUS_GSI_CERT_UTILS_TYPE_RESTRICTED_PROXY)
             {
-                args_error(argp, 
+                args_error(argp,
                            "-independent, -limited and -policy/-policy-language are mutually exclusive");
             }
             args_verify_next(arg_index, argp, "policy language missing");
@@ -447,14 +454,14 @@ main(
     /* A few sanity checks */
     if(policy_filename && !policy_language)
     {
-        globus_libc_fprintf(stderr, 
+        globus_libc_fprintf(stderr,
                             "\nERROR: If you specify a policy file "
                             "you also need to specify a policy language.\n");
         exit(1);
     }
 
     result = globus_gsi_proxy_handle_attrs_init(&proxy_handle_attrs);
-    
+
     if(result != GLOBUS_SUCCESS)
     {
         globus_i_gsi_proxy_utils_print_error(result, debug, __FILE__, __LINE__,
@@ -474,9 +481,9 @@ main(
             "Couldn't set the key bits for "
             "the private key of the proxy certificate.");
     }
-    
+
     result = globus_gsi_proxy_handle_attrs_set_key_gen_callback(
-        proxy_handle_attrs, 
+        proxy_handle_attrs,
         globus_i_gsi_proxy_utils_key_gen_callback);
     if(result != GLOBUS_SUCCESS)
     {
@@ -500,9 +507,9 @@ main(
             result, debug, __FILE__, __LINE__,
             "Couldn't destroy proxy handle attributes.");
     }
-    
+
     /* set the time valid in the proxy handle
-     * used to be hours - now the time valid needs to be set in minutes 
+     * used to be hours - now the time valid needs to be set in minutes
      */
     result = globus_gsi_proxy_handle_set_time_valid(proxy_handle, valid);
 
@@ -524,7 +531,7 @@ main(
             result, debug, __FILE__, __LINE__,
             "Couldn't set the type of the proxy cert.");
     }
-    
+
     if(!user_cert_filename || !user_key_filename)
     {
         result = GLOBUS_GSI_SYSCONFIG_GET_USER_CERT_FILENAME(
@@ -555,7 +562,7 @@ main(
     {
         user_key_filename = tmp_user_key_filename;
     }
-    
+
     if(debug)
     {
         globus_libc_fprintf(stderr,
@@ -587,8 +594,8 @@ main(
 
     if(debug)
     {
-        globus_libc_fprintf(stderr, 
-                            "\nTrusted CA Cert Dir: %s\n", 
+        globus_libc_fprintf(stderr,
+                            "\nTrusted CA Cert Dir: %s\n",
                             ca_cert_dir ? ca_cert_dir : "(null)");
     }
 
@@ -631,7 +638,7 @@ main(
         {
             free(proxy_out_filename);
         }
-        
+
         proxy_out_filename = proxy_absolute_path;
 
         /* then split */
@@ -644,7 +651,7 @@ main(
             globus_i_gsi_proxy_utils_print_error(
                 result, debug, __FILE__, __LINE__,
                 "Can't split the full path into "
-                "directory and filename. The full path is: %s", 
+                "directory and filename. The full path is: %s",
                 proxy_absolute_path);
             if(proxy_absolute_path)
             {
@@ -652,7 +659,7 @@ main(
                 proxy_absolute_path = NULL;
             }
         }
-                
+
         result = GLOBUS_GSI_SYSCONFIG_DIR_EXISTS(temp_dir);
         if(result != GLOBUS_SUCCESS)
         {
@@ -666,7 +673,7 @@ main(
             }
             else
             {
-                globus_module_deactivate_all();             
+                globus_module_deactivate_all();
                 exit(1);
             }
         }
@@ -676,7 +683,7 @@ main(
             free(temp_dir);
             temp_dir = NULL;
         }
-        
+
         if(temp_filename)
         {
             free(temp_filename);
@@ -731,7 +738,7 @@ main(
                     "user certificate could "
                     "not be retrieved.");
             }
-            
+
             printf("Your identity: %s\n", subject);
             if(subject)
             {
@@ -750,7 +757,7 @@ main(
             globus_i_gsi_proxy_utils_print_error(
                 result, debug, __FILE__, __LINE__,
                 "Couldn't read user certificate\n"
-                "cert file location: %s.", 
+                "cert file location: %s.",
                 user_cert_filename);
         }
 
@@ -766,7 +773,7 @@ main(
                     "user certificate could "
                     "not be retrieved.");
             }
-            
+
             printf("Your identity: %s\n", subject);
             if(subject)
             {
@@ -778,7 +785,7 @@ main(
                 subject = NULL;
             }
         }
-        
+
         result = globus_gsi_cred_read_key(
             cred_handle,
             user_key_filename,
@@ -794,7 +801,7 @@ main(
                                                 PEM_F_PEM_DO_HEADER,
                                                 PEM_R_BAD_DECRYPT)
                == GLOBUS_TRUE)
-            { 
+            {
                 globus_i_gsi_proxy_utils_print_error(
                     result, debug, __FILE__, __LINE__,
                     "Couldn't read user key: Bad passphrase for key in %s",
@@ -823,41 +830,41 @@ main(
                 "Can't set the path length in the proxy handle.");
         }
     }
-    
+
     /* add policies now */
 
     if(policy_filename)
     {
         int                             policy_buf_size = 0;
         FILE *                          policy_fp = NULL;
-        
+
         policy_fp = fopen(policy_filename, "r");
         if(!policy_fp)
         {
-            fprintf(stderr, 
+            fprintf(stderr,
                     "\nERROR: Unable to open policies "
                     " file: %s\n\n", policy_filename);
             exit(1);
         }
 
-        do 
+        do
         {
             policy_buf_size += 512;
-            
+
             /* First time through this is a essentially a malloc() */
             policy_buf = realloc(policy_buf,
                                       policy_buf_size);
 
             if (policy_buf == NULL)
             {
-                fprintf(stderr, 
+                fprintf(stderr,
                         "\nAllocation of space for "
                         "policy buffer failed\n\n");
                 exit(1);
             }
 
-            policy_buf_len += 
-                fread(&policy_buf[policy_buf_len], 1, 
+            policy_buf_len +=
+                fread(&policy_buf[policy_buf_len], 1,
                       512, policy_fp);
 
             /*
@@ -869,13 +876,13 @@ main(
              */
         }
         while (policy_buf_len == policy_buf_size);
-        
+
         if (policy_buf_len > 0)
         {
-	  policy_NID = 
-	      OBJ_create(policy_language,
-			 policy_language,
-			 policy_language);
+          policy_NID =
+              OBJ_create(policy_language,
+                         policy_language,
+                         policy_language);
 
             result = globus_gsi_proxy_handle_set_policy(
                 proxy_handle,
@@ -888,11 +895,11 @@ main(
                     result, debug, __FILE__, __LINE__,
                     "Can't set the policy in the proxy handle.");
             }
-        }   
+        }
 
         fclose(policy_fp);
     }
-    
+
     if (!quiet)
     {
         printf("Creating proxy ");
@@ -937,7 +944,7 @@ main(
                 "Couldn't set the X.509 extension callback in the callback "
                 "data.");
         }
-        
+
         result = globus_gsi_callback_set_cert_dir(
             callback_data,
             ca_cert_dir);
@@ -967,7 +974,7 @@ main(
     else
     {
         result = globus_gsi_cred_verify(proxy_cred_handle);
-        
+
         if(result != GLOBUS_SUCCESS)
         {
             globus_i_gsi_proxy_utils_print_error(
@@ -1025,7 +1032,7 @@ main(
     {
         globus_libc_fprintf(
             stderr,
-            "\nERROR: Your certificate has expired: %s\n\n", 
+            "\nERROR: Your certificate has expired: %s\n\n",
             asctime(localtime(&goodtill)));
         globus_module_deactivate_all();
         exit(2);
@@ -1033,7 +1040,7 @@ main(
     else if(lifetime < (valid * 60))
     {
         globus_libc_fprintf(
-            stderr, 
+            stderr,
             "\nWarning: your certificate and proxy will expire %s "
             "which is within the requested lifetime of the proxy\n",
             asctime(localtime(&goodtill)));
@@ -1042,7 +1049,7 @@ main(
     {
         globus_libc_fprintf(
             stdout,
-            "Your proxy is valid until: %s", 
+            "Your proxy is valid until: %s",
             asctime(localtime(&goodtill)));
     }
 
@@ -1069,8 +1076,8 @@ main(
 
 static int
 globus_i_gsi_proxy_utils_pwstdin_callback(
-    char *                              buf, 
-    int                                 num, 
+    char *                              buf,
+    int                                 num,
     int                                 w,
     void *                              u)
 {
@@ -1086,7 +1093,7 @@ globus_i_gsi_proxy_utils_pwstdin_callback(
         buf[i-1] = '\0';
         i--;
     }
-    return i;       
+    return i;
 
 }
 
@@ -1139,7 +1146,7 @@ globus_i_gsi_proxy_utils_print_error(
     {
         globus_libc_fprintf(stderr, "       %s:%d: %s", filename, line, error_string);
     }
-    else 
+    else
     {
         globus_libc_fprintf(stderr, "Use -debug for further information.\n");
     }
@@ -1152,13 +1159,19 @@ globus_i_gsi_proxy_utils_print_error(
     exit(1);
 }
 
-static
-int 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
+static int
 globus_l_gsi_proxy_utils_extension_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension)
+#else
+static int
+globus_l_gsi_proxy_utils_extension_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension)
+#endif
 {
-    ASN1_OBJECT *                       extension_object = NULL;
+    const ASN1_OBJECT *                 extension_object = NULL;
     int                                 nid = NID_undef;
     int                                 pci_old_NID = NID_undef;
 

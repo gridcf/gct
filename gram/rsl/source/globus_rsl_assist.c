@@ -66,7 +66,7 @@
 int
 globus_rsl_assist_attributes_canonicalize(globus_rsl_t * rsl)
 {
- 
+
     globus_list_t *             lists=GLOBUS_NULL;
     globus_rsl_t *              an_rsl;
 
@@ -80,7 +80,7 @@ globus_rsl_assist_attributes_canonicalize(globus_rsl_t * rsl)
         while (!globus_list_empty(lists))
         {
             an_rsl=globus_list_first(lists);
-            if (globus_rsl_assist_attributes_canonicalize(an_rsl) 
+            if (globus_rsl_assist_attributes_canonicalize(an_rsl)
                 != GLOBUS_SUCCESS)
             {
                 return GLOBUS_FAILURE;
@@ -145,8 +145,6 @@ globus_rsl_assist_attributes_canonicalize(globus_rsl_t * rsl)
  *
  * @param ptr
  *     Pointer to the RSL string to modify in place.
- *
- * @return void
  */
 void
 globus_rsl_assist_string_canonicalize(char * ptr)

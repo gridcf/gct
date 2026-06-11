@@ -137,12 +137,12 @@ globus_gram_job_manager_logging_destroy(void)
     if (globus_i_gram_job_manager_log_sys)
     {
         globus_logging_destroy(globus_i_gram_job_manager_log_sys);
-	globus_i_gram_job_manager_log_sys = NULL;
+        globus_i_gram_job_manager_log_sys = NULL;
     }
     if (globus_i_gram_job_manager_log_stdio)
     {
         globus_logging_destroy(globus_i_gram_job_manager_log_stdio);
-	globus_i_gram_job_manager_log_stdio = NULL;
+        globus_i_gram_job_manager_log_stdio = NULL;
     }
     globus_symboltable_destroy(
             &globus_l_gram_log_symboltable);
@@ -225,7 +225,6 @@ globus_l_gram_logging_write(
     static char *                       last_path = NULL;
     int                                 fd;
     int                                 flags;
-    int                                 rc;
     globus_gram_jobmanager_request_t *  request;
     globus_symboltable_t *              symboltable;
 
@@ -269,7 +268,7 @@ globus_l_gram_logging_write(
             symboltable,
             DATE_SYMBOL,
             now_str);
-            
+
     globus_gram_job_manager_rsl_eval_string(
             symboltable,
             log_pattern,
@@ -318,7 +317,7 @@ globus_l_gram_logging_write(
             if (flags >= 0)
             {
                 flags |= FD_CLOEXEC;
-                rc = fcntl(fd, F_SETFD, flags);
+                fcntl(fd, F_SETFD, flags);
             }
         }
     }

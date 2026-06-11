@@ -59,13 +59,13 @@ response_cb(
     {
         if(response->code == 220)
         {
-            OM_uint32 maj, min;
+            OM_uint32 min;
             gss_buffer_desc buffer;
             gss_cred_id_t g_cred;
             gss_name_t g_name;
             char * g_subject;
 
-            maj = gss_acquire_cred(
+            gss_acquire_cred(
                     &min,
                     GSS_C_NO_NAME,
                     0,

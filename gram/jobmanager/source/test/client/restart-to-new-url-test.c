@@ -131,7 +131,6 @@ test_l_old_accept_callback(
     globus_gass_transfer_request_t      request)
 {
     test_monitor_t                      *monitor = callback_arg;
-    int                                 rc;
 
     globus_mutex_lock(&monitor->mutex);
     monitor->old_request = request;
@@ -141,14 +140,14 @@ test_l_old_accept_callback(
         request,
         GLOBUS_GASS_TRANSFER_LENGTH_UNKNOWN);
 
-    rc = globus_gass_transfer_receive_bytes(
+    globus_gass_transfer_receive_bytes(
         request,
         monitor->old_output,
         sizeof(monitor->old_output),
         1,
         test_l_data_callback,
         monitor);
-    rc = globus_gass_transfer_register_listen(
+    globus_gass_transfer_register_listen(
             monitor->old_listener,
             test_l_old_listener_callback,
             monitor);
@@ -161,25 +160,24 @@ test_l_new_accept_callback(
     globus_gass_transfer_request_t      request)
 {
     test_monitor_t                      *monitor = callback_arg;
-    int                                 rc;
 
     globus_mutex_lock(&monitor->mutex);
     monitor->new_request = request;
     globus_mutex_unlock(&monitor->mutex);
 
 
-    rc = globus_gass_transfer_authorize(
+    globus_gass_transfer_authorize(
         request,
         GLOBUS_GASS_TRANSFER_LENGTH_UNKNOWN);
 
-    rc = globus_gass_transfer_receive_bytes(
+    globus_gass_transfer_receive_bytes(
         request,
         monitor->new_output,
         sizeof(monitor->new_output),
         1,
         test_l_data_callback,
         monitor);
-    rc = globus_gass_transfer_register_listen(
+    globus_gass_transfer_register_listen(
             monitor->new_listener,
             test_l_new_listener_callback,
             monitor);
@@ -190,7 +188,6 @@ test_l_old_listener_callback(
     void *                              callback_arg,
     globus_gass_transfer_listener_t     listener)
 {
-    int                                 rc;
     globus_gass_transfer_request_t      request;
     globus_gass_transfer_requestattr_t  attr;
 
@@ -200,7 +197,7 @@ test_l_old_listener_callback(
             GLOBUS_GASS_TRANSFER_AUTHORIZE_SELF,
             "https");
 
-    rc = globus_gass_transfer_register_accept(
+    globus_gass_transfer_register_accept(
             &request,
             &attr,
             listener,
@@ -215,7 +212,6 @@ test_l_new_listener_callback(
     void *                              callback_arg,
     globus_gass_transfer_listener_t     listener)
 {
-    int                                 rc;
     globus_gass_transfer_request_t      request;
     globus_gass_transfer_requestattr_t  attr;
 
@@ -225,7 +221,7 @@ test_l_new_listener_callback(
             GLOBUS_GASS_TRANSFER_AUTHORIZE_SELF,
             "https");
 
-    rc = globus_gass_transfer_register_accept(
+    globus_gass_transfer_register_accept(
             &request,
             &attr,
             listener,

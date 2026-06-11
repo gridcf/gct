@@ -57,8 +57,8 @@ abort_test_wrapper(
  *  a string describing it to the "test_array" table, and
  *  increase the TEST_COUNT by one.
  ****************************************************************/
-typedef 
-globus_bool_t 
+typedef
+globus_bool_t
     (*globus_ftp_control_test_func_t)(
         globus_ftp_control_handle_t *           control_handle);
 
@@ -74,7 +74,7 @@ test_entry_t                                    test_array[] =
     {disconnect_wrapper, "disconnect handle test"},
     {simple_dir_test_wrapper, "simple directory test"},
     {simple_data_test_wrapper, "simple data test"},
-    {abort_test_wrapper, "abort test"},  
+    {abort_test_wrapper, "abort test"},
     {outstanding_io_test_wrapper, "outstanding io data test"},
     {simple_control_test_wrapper, "simple control test"},
     {async_control_test, "asynchronous control test"},
@@ -99,11 +99,11 @@ login_t                                         login_info = {
     0
 };
 extern int verbose_print_level;
-int 
+int
 main(
     int                                         argc,
     char *                                      argv[])
-{ 
+{
     int                                         ctr;
     globus_ftp_control_handle_t                 control_handle;
     globus_result_t                             result;
@@ -167,24 +167,24 @@ main(
     /*
      *  first test
      */
-    rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
     tests_run++;
     result = globus_ftp_control_handle_init(&handles[0]);
     connect_control_handle(
-        &handles[0], 
+        &handles[0],
         login_info.login,
         login_info.password,
         login_info.dir,
         login_info.hostname,
         login_info.port);
-    rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
     tests_passed++;
     verbose_printf(1, "test #%d) activate/connect/deactivate passed\n", tests_run);
 
     /*
      *  second test
      */
-    rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
+    globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
     tests_run++;
     for(ctr = 0; ctr < TEST_COUNT; ctr++)
     {
@@ -192,8 +192,8 @@ main(
         if(result != GLOBUS_SUCCESS)
         {
             tests_failed++;
-            verbose_printf(1, 
-                        "activate/deactivate test # %d failed\n", 
+            verbose_printf(1,
+                        "activate/deactivate test # %d failed\n",
                        tests_run);
             exit(1);
         }
@@ -203,31 +203,31 @@ main(
             if(result != GLOBUS_SUCCESS)
             {
                 tests_failed++;
-                verbose_printf(1, 
-                        "activate/deactivate test # %d failed\n", 
+                verbose_printf(1,
+                        "activate/deactivate test # %d failed\n",
                        tests_run);
                 exit(1);
             }
         }
     }
     rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         tests_failed++;
-        verbose_printf(1, 
-                       "activate/deactivate test # %d failed\n", 
+        verbose_printf(1,
+                       "activate/deactivate test # %d failed\n",
                        tests_run);
         exit(1);
     }
     tests_passed++;
     verbose_printf(1, "test #%d) activate/deactivate passed\n", tests_run);
 
- 
+
     /*
      *  initailize variables for the test
      */
     rc = globus_module_activate(GLOBUS_COMMON_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate common module\n");
         exit(1);
@@ -236,7 +236,7 @@ main(
      *  run stream mode tests
      */
     rc = globus_module_activate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate gsiftp module\n");
         exit(1);
@@ -249,14 +249,14 @@ main(
         if(eb_test_array[ctr].test_func(&control_handle))
         {
             tests_passed++;
-            verbose_printf(1, "test #%d) \"%s\" passed.\n", 
+            verbose_printf(1, "test #%d) \"%s\" passed.\n",
                        tests_run, eb_test_array[ctr].name);
         }
         else
         {
             tests_failed++;
             printf("Failed\n");
-            verbose_printf(1, "test #%d) \"%s\" failed.\n", 
+            verbose_printf(1, "test #%d) \"%s\" failed.\n",
                        tests_run, eb_test_array[ctr].name);
             exit(1);
         }
@@ -270,14 +270,14 @@ main(
         if(test_array[ctr].test_func(&control_handle))
         {
             tests_passed++;
-            verbose_printf(1, "test #%d) \"%s\" passed.\n", 
+            verbose_printf(1, "test #%d) \"%s\" passed.\n",
                            tests_run, test_array[ctr].name);
         }
         else
         {
             tests_failed++;
             printf("Failed\n");
-            verbose_printf(1, "test #%d) \"%s\" failed.\n", 
+            verbose_printf(1, "test #%d) \"%s\" failed.\n",
                            tests_run, test_array[ctr].name);
             exit(1);
         }
@@ -285,7 +285,7 @@ main(
     globus_ftp_control_handle_destroy(&control_handle);
 
     rc = globus_module_deactivate(GLOBUS_FTP_CONTROL_MODULE);
-    if(result != GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_printf("unable to activate gsiftp module\n");
         exit(1);
@@ -310,12 +310,12 @@ simple_control_test_wrapper(
              login_info.dir,
              login_info.hostname,
              login_info.port);
-    if(rc) 
+    if(rc)
     {
         rc = simple_control_test(control_handle);
     }
     if(rc)
-    { 
+    {
         rc = disconnect_control_handle(control_handle);
     }
 
@@ -362,14 +362,14 @@ simple_data_test_wrapper(
     {
         rc = simple_data_test(control_handle);
     }
-    if(rc) 
+    if(rc)
     {
         rc = disconnect_control_handle(control_handle);
     }
 
     return rc;
 }
-    
+
 globus_bool_t
 eb_simple_data_test_wrapper(
     globus_ftp_control_handle_t *               control_handle)
@@ -386,14 +386,14 @@ eb_simple_data_test_wrapper(
     {
         rc = eb_data_test(control_handle);
     }
-    if(rc) 
+    if(rc)
     {
         rc = disconnect_control_handle(control_handle);
     }
 
     return rc;
 }
-    
+
 globus_bool_t
 outstanding_io_test_wrapper(
     globus_ftp_control_handle_t *               control_handle)
@@ -406,11 +406,11 @@ outstanding_io_test_wrapper(
                login_info.dir,
              login_info.hostname,
              login_info.port);
-    if(rc)  
+    if(rc)
     {
         rc = outstanding_io_test(control_handle);
     }
-    if(rc) 
+    if(rc)
     {
         rc = disconnect_control_handle(control_handle);
     }
@@ -464,4 +464,4 @@ abort_test_wrapper(
     }
 
     return rc;
-} 
+}

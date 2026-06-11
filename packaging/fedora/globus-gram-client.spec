@@ -3,7 +3,7 @@
 Name:		globus-gram-client
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	14.7
+Version:	14.8
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Client Library
 
@@ -137,6 +137,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.8-1
+- Fix compiler warnings
+
 * Fri Mar 08 2024 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.7-1
 - Correct spelling error found by lintian
 

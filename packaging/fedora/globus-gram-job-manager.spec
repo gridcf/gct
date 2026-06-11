@@ -2,7 +2,7 @@
 
 Name:		globus-gram-job-manager
 %global _name %(echo %{name} | tr - _)
-Version:	15.10
+Version:	15.11
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GRAM Jobmanager
 
@@ -169,6 +169,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %{_libdir}/libglobus_seg_job_manager.so
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.11-1
+- Fix compiler warnings
+
 * Sat Apr 26 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 15.10-1
 - Only check write permission for stdout/stderr if path is absolute
 

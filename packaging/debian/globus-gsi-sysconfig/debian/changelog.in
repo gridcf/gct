@@ -1,3 +1,9 @@
+globus-gsi-sysconfig (9.7-1+gct.@distro@) @distro@; urgency=medium
+
+  * Compile with OpenSSL 4
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 19 May 2026 11:47:45 +0200
+
 globus-gsi-sysconfig (9.6-1+gct.@distro@) @distro@; urgency=medium
 
   * Remove extra comma

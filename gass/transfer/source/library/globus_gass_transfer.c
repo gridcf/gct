@@ -57,8 +57,8 @@ globus_module_descriptor_t globus_i_gass_transfer_module =
 static
 void
 globus_l_gass_transfer_listener_close_callback(
-    void *					user_arg,
-    globus_gass_transfer_listener_t		request);
+    void *                                      user_arg,
+    globus_gass_transfer_listener_t             request);
 
 static
 int
@@ -67,9 +67,9 @@ globus_l_gass_transfer_activate(void)
     globus_module_activate(GLOBUS_COMMON_MODULE);
 
     globus_hashtable_init(&globus_i_gass_transfer_protocols,
-			  16,
-			  globus_hashtable_string_hash,
-			  globus_hashtable_string_keyeq);
+                          16,
+                          globus_hashtable_string_hash,
+                          globus_hashtable_string_keyeq);
 
     globus_handle_table_init(
         &globus_i_gass_transfer_request_handles,
@@ -85,25 +85,25 @@ globus_l_gass_transfer_activate(void)
      */
     globus_module_activate(GLOBUS_I_GASS_TRANSFER_FTP_MODULE);
 #endif
-    
+
     globus_gass_transfer_proto_register_protocol(
-	&globus_i_gass_transfer_http_descriptor);
+        &globus_i_gass_transfer_http_descriptor);
     globus_gass_transfer_proto_register_protocol(
-	&globus_i_gass_transfer_https_descriptor);
+        &globus_i_gass_transfer_https_descriptor);
 
 #if 0
     /* we don't want to build this in
      */
     globus_gass_transfer_proto_register_protocol(
-	&globus_i_gass_transfer_ftp_descriptor);
+        &globus_i_gass_transfer_ftp_descriptor);
     globus_gass_transfer_proto_register_protocol(
-	&globus_i_gass_transfer_gsiftp_descriptor);
+        &globus_i_gass_transfer_gsiftp_descriptor);
 #endif
-    
+
     globus_mutex_init(&globus_i_gass_transfer_mutex,
                       GLOBUS_NULL);
     globus_cond_init(&globus_i_gass_transfer_shutdown_cond,
-		     GLOBUS_NULL);
+                     GLOBUS_NULL);
 
     return GLOBUS_SUCCESS;
 }
@@ -113,40 +113,40 @@ static
 int
 globus_l_gass_transfer_deactivate(void)
 {
-    globus_list_t *				rest;
+    globus_list_t *                             rest;
 
     globus_i_gass_transfer_lock();
     globus_i_gass_transfer_deactivating = GLOBUS_TRUE;
-    
+
 #if DEBUG_GASS_TRANSFER
     printf(_GTSL("Entering globus_l_gass_transfer_deactivate()\n"));
 #endif
-    
+
     rest = globus_i_gass_transfer_requests;
-    
+
     while(!globus_list_empty(rest))
     {
-	globus_gass_transfer_request_t 		tmp;
-	globus_gass_transfer_request_struct_t *	req;
-	int					rc;
+        globus_gass_transfer_request_t          tmp;
+        globus_gass_transfer_request_struct_t * req;
+        int                                     rc;
 
-	tmp = (globus_gass_transfer_request_t) (intptr_t)
-	    globus_list_first(rest);
+        tmp = (globus_gass_transfer_request_t) (intptr_t)
+            globus_list_first(rest);
 
-	rest = globus_list_rest(rest);
+        rest = globus_list_rest(rest);
 
-	req = globus_handle_table_lookup(
-	    &globus_i_gass_transfer_request_handles,
-	    tmp);
-	
+        req = globus_handle_table_lookup(
+            &globus_i_gass_transfer_request_handles,
+            tmp);
+
 #if DEBUG_GASS_TRANSFER
-	printf(_GTSL("failing: %s\n"), req->url);
+        printf(_GTSL("failing: %s\n"), req->url);
 #endif
-	rc = globus_i_gass_transfer_fail(
-	    tmp,
-	    req,
-	    globus_i_gass_transfer_deactivate_callback,
-	    GLOBUS_NULL);
+        rc = globus_i_gass_transfer_fail(
+            tmp,
+            req,
+            globus_i_gass_transfer_deactivate_callback,
+            GLOBUS_NULL);
 
         if (rc == GLOBUS_GASS_TRANSFER_ERROR_DONE)
         {
@@ -159,51 +159,50 @@ globus_l_gass_transfer_deactivate(void)
 
     while(!globus_list_empty(rest))
     {
-	globus_gass_transfer_listener_t 	tmp;
-	globus_gass_transfer_listener_struct_t *l;
-	int					rc;
+        globus_gass_transfer_listener_t         tmp;
+        globus_gass_transfer_listener_struct_t *l;
 
-	tmp = (globus_gass_transfer_listener_t) (intptr_t)
-	    globus_list_first(rest);
+        tmp = (globus_gass_transfer_listener_t) (intptr_t)
+            globus_list_first(rest);
 
-	rest = globus_list_rest(rest);
+        rest = globus_list_rest(rest);
 
-	l = globus_handle_table_lookup(
-	    &globus_i_gass_transfer_listener_handles,
-	    tmp);
-	
-	rc = globus_i_gass_transfer_close_listener(
-	    tmp,
-	    l,
-	    globus_l_gass_transfer_listener_close_callback,
-	    GLOBUS_NULL);
+        l = globus_handle_table_lookup(
+            &globus_i_gass_transfer_listener_handles,
+            tmp);
+
+        globus_i_gass_transfer_close_listener(
+            tmp,
+            l,
+            globus_l_gass_transfer_listener_close_callback,
+            GLOBUS_NULL);
     }
-    
+
     while((!globus_list_empty(globus_i_gass_transfer_requests)) ||
-	  (!globus_list_empty(globus_i_gass_transfer_listeners)))
+          (!globus_list_empty(globus_i_gass_transfer_listeners)))
     {
 #if DEBUG_GASS_TRANSFER
-	printf(_GTSL("waiting for requests\n"));
+        printf(_GTSL("waiting for requests\n"));
 #endif
-	globus_cond_wait(&globus_i_gass_transfer_shutdown_cond,
-			 &globus_i_gass_transfer_mutex);	 
+        globus_cond_wait(&globus_i_gass_transfer_shutdown_cond,
+                         &globus_i_gass_transfer_mutex);
     }
 
 #if 0
     /* we don't want to build this in
      */
     globus_gass_transfer_proto_unregister_protocol(
-	&globus_i_gass_transfer_ftp_descriptor);
+        &globus_i_gass_transfer_ftp_descriptor);
     globus_gass_transfer_proto_unregister_protocol(
-	&globus_i_gass_transfer_gsiftp_descriptor);
+        &globus_i_gass_transfer_gsiftp_descriptor);
 #endif
-    
-    globus_gass_transfer_proto_unregister_protocol(
-	&globus_i_gass_transfer_http_descriptor);
-    globus_gass_transfer_proto_unregister_protocol(
-	&globus_i_gass_transfer_https_descriptor);
 
-    
+    globus_gass_transfer_proto_unregister_protocol(
+        &globus_i_gass_transfer_http_descriptor);
+    globus_gass_transfer_proto_unregister_protocol(
+        &globus_i_gass_transfer_https_descriptor);
+
+
 #if 0
     /* we don't want to build this in
      */
@@ -211,13 +210,13 @@ globus_l_gass_transfer_deactivate(void)
 #endif
 
     globus_i_gass_transfer_unlock();
- 
+
     globus_module_deactivate(GLOBUS_I_GASS_TRANSFER_HTTP_MODULE);
- 
+
     globus_handle_table_destroy(&globus_i_gass_transfer_listener_handles);
     globus_handle_table_destroy(&globus_i_gass_transfer_request_handles);
 
-    
+
     globus_hashtable_destroy(&globus_i_gass_transfer_protocols);
 
 #if !defined(BUILD_LITE)
@@ -236,8 +235,8 @@ globus_l_gass_transfer_deactivate(void)
 
 void
 globus_i_gass_transfer_deactivate_callback(
-    void *					user_arg,
-    globus_gass_transfer_request_t		request)
+    void *                                      user_arg,
+    globus_gass_transfer_request_t              request)
 {
     globus_i_gass_transfer_request_destroy(request);
 }
@@ -245,8 +244,8 @@ globus_i_gass_transfer_deactivate_callback(
 static
 void
 globus_l_gass_transfer_listener_close_callback(
-    void *					user_arg,
-    globus_gass_transfer_listener_t		request)
+    void *                                      user_arg,
+    globus_gass_transfer_listener_t             request)
 {
     return;
 }

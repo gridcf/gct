@@ -73,10 +73,10 @@ connect_response_callback(
     {
         memset(&auth, '\0', sizeof(auth));
         {
-            OM_uint32 maj, min;
+            OM_uint32 min;
             gss_buffer_desc buffer;
 
-            maj = gss_acquire_cred(
+            gss_acquire_cred(
                     &min,
                     GSS_C_NO_NAME,
                     0,

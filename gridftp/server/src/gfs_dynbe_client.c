@@ -40,7 +40,7 @@
             "%s",                                                           \
             (error_msg)))
 
-enum 
+enum
 {
     GLOBUS_DYNCLIENT_ERROR_PARM = 1
 };
@@ -219,7 +219,7 @@ main(
         goto error_open;
     }
     result = globus_xio_write(
-        g_xio_handle, buffer, 
+        g_xio_handle, buffer,
         GF_DYN_PACKET_LEN, GF_DYN_PACKET_LEN, &nbytes, NULL);
     if(result != GLOBUS_SUCCESS)
     {
@@ -392,6 +392,7 @@ gfs_l_dynclient_opts_gsi(
     return GLOBUS_SUCCESS;
 }
 
+static
 globus_options_entry_t                   gfork_l_opts_table[] =
 {
     {"quiet", "q", NULL, NULL,

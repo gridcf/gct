@@ -31,8 +31,8 @@
 /**
  * @brief Inquire Cred By OID
  * @ingroup globus_gsi_gssapi_extensions
- * @details 
- * NOTE: Checks both the cert in the credential and 
+ * @details
+ * NOTE: Checks both the cert in the credential and
  * the certs in the cert chain for a valid extension
  * that matches the desired OID.  The first one found
  * is used, starting with the endpoint cert, and then
@@ -55,24 +55,24 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
     OM_uint32                           local_minor_status;
-    X509_EXTENSION *                    extension;
+    const X509_EXTENSION *              extension;
     X509 *                              cert = NULL;
     STACK_OF(X509) *                    cert_chain = NULL;
     ASN1_OBJECT *                       desired_asn1_obj;
-    ASN1_OCTET_STRING *                 asn1_oct_string;
+    const ASN1_OCTET_STRING *           asn1_oct_string;
     gss_buffer_desc                     data_set_buffer;
     int                                 chain_index;
     int                                 found_index;
     globus_result_t                     local_result = GLOBUS_SUCCESS;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
-    
+
     if(minor_status == NULL)
     {
         major_status = GSS_S_FAILURE;
         goto exit;
     }
-    
+
     *minor_status = (OM_uint32) GLOBUS_SUCCESS;
 
     /* parameter checking goes here */
@@ -121,7 +121,7 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
     }
 
     major_status = gss_create_empty_buffer_set(
-        &local_minor_status, 
+        &local_minor_status,
         data_set);
 
     if(GSS_ERROR(major_status))
@@ -199,9 +199,9 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
                 goto exit;
             }
 
-            data_set_buffer.value = asn1_oct_string->data;
-            data_set_buffer.length = asn1_oct_string->length;
-        
+            data_set_buffer.value = (unsigned char *) ASN1_STRING_get0_data(asn1_oct_string);
+            data_set_buffer.length = ASN1_STRING_length(asn1_oct_string);
+
             major_status = gss_add_buffer_set_member(
                 &local_minor_status,
                 &data_set_buffer,
@@ -224,9 +224,9 @@ GSS_CALLCONV gss_inquire_cred_by_oid(
     {
         sk_X509_pop_free(cert_chain, X509_free);
     }
-    
+
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
 }
-    
+
 #endif /* _HAVE_GSI_EXTENDED_GSSAPI */

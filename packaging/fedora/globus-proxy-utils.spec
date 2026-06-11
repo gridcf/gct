@@ -2,7 +2,7 @@
 
 Name:		globus-proxy-utils
 %global _name %(echo %{name} | tr - _)
-Version:	7.4
+Version:	7.5
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Utility Programs
 
@@ -77,6 +77,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.5-1
+- Compile with OpenSSL 4
+- Fix compiler warnings
+
 * Fri Jan 17 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 7.4-1
 - Fix incompatible pointer errors (gcc 15)
 

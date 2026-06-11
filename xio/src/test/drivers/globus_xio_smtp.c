@@ -123,7 +123,7 @@ globus_l_xio_smtp_attr_cntl(
     if(cmd == 1)
     {
         to_addr = (char *) va_arg(ap, char *);
-        sprintf(info->to_address, "%s", to_addr);        
+        sprintf(info->to_address, "%s", to_addr);
     }
 
     return GLOBUS_SUCCESS;
@@ -224,7 +224,7 @@ globus_l_xio_smtp_read_header_cb(
     {
         /* if we have not recieved the entire message repost */
         info->read_offset += nbytes;
-        if(info->read_offset < 2 || 
+        if(info->read_offset < 2 ||
             info->message[info->read_offset - 2] != '\r' ||
             info->message[info->read_offset - 1] != '\n')
         {
@@ -274,7 +274,6 @@ globus_l_xio_smtp_write_header_cb(
     globus_size_t                       nbytes,
     void *                              user_arg)
 {
-    globus_result_t                     res;
     l_smtp_info_t *                     info;
 
     info = (l_smtp_info_t *) user_arg;
@@ -291,7 +290,7 @@ globus_l_xio_smtp_write_header_cb(
      */
     else
     {
-        res = globus_xio_driver_pass_read(op, &info->iovec, 1,
+        globus_xio_driver_pass_read(op, &info->iovec, 1,
             1, globus_l_xio_smtp_read_header_cb, (void *)  info);
     }
 }
@@ -318,7 +317,7 @@ globus_l_xio_smtp_open_cb(
     {
         next_state(info, op);
     }
-}   
+}
 
 static
 globus_result_t
@@ -352,9 +351,9 @@ globus_l_xio_smtp_close_cb(
     globus_xio_operation_t              op,
     globus_result_t                     result,
     void *                              user_arg)
-{   
+{
     globus_xio_driver_finished_close(op, result);
-}   
+}
 
 void
 globus_l_xio_smtp_write_close_cb(
@@ -363,9 +362,7 @@ globus_l_xio_smtp_write_close_cb(
     globus_size_t                       nbytes,
     void *                              user_arg)
 {
-    globus_result_t                     res;
-
-    res = globus_xio_driver_pass_close(
+    globus_xio_driver_pass_close(
             op, globus_l_xio_smtp_close_cb, user_arg);
 }
 
@@ -515,7 +512,7 @@ globus_l_xio_smtp_activate(void)
 
     globus_l_return_address = globus_common_create_string("%s@%s",
         username, globus_l_hostname);
-    
+
     if(rc == GLOBUS_SUCCESS)
     {
         GlobusXIORegisterDriver(smtp);

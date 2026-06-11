@@ -294,9 +294,13 @@ ggvm_get_eppn(
 {
     ASN1_OBJECT *                       eppn_obj;
     int                                 extpos;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_EXTENSION *                    eppn_ext;
-    ASN1_STRING *                       eppn_str;
-    unsigned char *                     eppn_data;
+#else
+    const X509_EXTENSION *              eppn_ext;
+#endif
+    const ASN1_STRING *                 eppn_str;
+    const unsigned char *               eppn_data;
     int                                 tag;
     int                                 xclass;
 
@@ -312,14 +316,14 @@ ggvm_get_eppn(
     if (!(eppn_str = X509_EXTENSION_get_data(eppn_ext)))
         return GLOBUS_FAILURE;
 
-    eppn_data = eppn_str->data;
+    eppn_data = ASN1_STRING_get0_data(eppn_str);
 
     if (ASN1_get_object(GT_ASN1_GET_OBJECT_CAST &eppn_data,
-            length, &tag, &xclass, eppn_str->length) == 0x80)
+            length, &tag, &xclass, ASN1_STRING_length(eppn_str)) == 0x80)
         return GLOBUS_FAILURE;
 
     *data = (char *) eppn_data;
-    *length = eppn_str->length;
+    *length = ASN1_STRING_length(eppn_str);
 
     return GLOBUS_SUCCESS;
 }

@@ -127,7 +127,7 @@ typedef struct globus_l_callback_space_attr_s * globus_callback_space_attr_t;
  */
 
 /**
- * @name Convenience Macros 
+ * @name Convenience Macros
  */
 
 /* @{ */
@@ -285,16 +285,16 @@ typedef struct globus_l_callback_space_attr_s * globus_callback_space_attr_t;
  * @ingroup globus_callback_api
  *
  * @details
- * This is the signature of the function registered with the 
+ * This is the signature of the function registered with the
  * globus_callback_register_* calls.
  *
  * If this is a periodic callback, it is guaranteed that the call canNOT
  * be reentered unless globus_thread_blocking_space_will_block() is called
  * (explicitly, or implicitly via globus_cond_wait()).  Also, if
- * globus_callback_unregister() is called to cancel this periodic from within 
+ * globus_callback_unregister() is called to cancel this periodic from within
  * this callback, it is guaranteed that the callback will NOT be requeued again
- * 
- * If the function will block at all, the user should call 
+ *
+ * If the function will block at all, the user should call
  * globus_callback_get_timeout() to see how long this function can safely block
  * or call globus_thread_blocking_space_will_block()
  *
@@ -324,7 +324,7 @@ void
  *
  * @details
  * This function registers the callback_func to start some delay_time from
- * now.  
+ * now.
  *
  * @param callback_handle
  *        Storage for a handle.  This may be NULL.  If it is NOT NULL, you
@@ -347,7 +347,7 @@ void
  *        - GLOBUS_CALLBACK_ERROR_INVALID_ARGUMENT
  *        - GLOBUS_CALLBACK_ERROR_MEMORY_ALLOC
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_func_t
  * @see globus_callback_spaces
  */
@@ -371,7 +371,7 @@ globus_callback_space_register_oneshot(
  * @ingroup globus_callback_api
  *
  * @details
- * This function registers a periodic callback_func to start some delay_time 
+ * This function registers a periodic callback_func to start some delay_time
  * and run every period from then.
  *
  * @param callback_handle
@@ -398,7 +398,7 @@ globus_callback_space_register_oneshot(
  *        - GLOBUS_CALLBACK_ERROR_INVALID_ARGUMENT
  *        - GLOBUS_CALLBACK_ERROR_MEMORY_ALLOC
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see #globus_callback_unregister()
  * @see #globus_callback_func_t
  * @see @link globus_callback_spaces @endlink
@@ -452,7 +452,7 @@ globus_callback_space_register_periodic(
  *        - GLOBUS_CALLBACK_ERROR_INVALID_CALLBACK_HANDLE
  *        - GLOBUS_CALLBACK_ERROR_ALREADY_CANCELED
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see #globus_callback_space_register_periodic()
  * @see #globus_callback_func_t
  */
@@ -487,7 +487,7 @@ globus_callback_unregister(
  *        - GLOBUS_CALLBACK_ERROR_INVALID_CALLBACK_HANDLE
  *        - GLOBUS_CALLBACK_ERROR_ALREADY_CANCELED
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_space_register_periodic()
  */
 globus_result_t
@@ -508,7 +508,7 @@ globus_callback_adjust_oneshot(
  * until another time by passing a period of NULL.  The callback can later
  * be resumed by passing in a new period.
  *
- * Note that the callback will not be fired sooner than 'new_period' from now. 
+ * Note that the callback will not be fired sooner than 'new_period' from now.
  * A 'suspended' callback must still be unregistered to free its resources.
  *
  * @param callback_handle
@@ -524,7 +524,7 @@ globus_callback_adjust_oneshot(
  *        - GLOBUS_CALLBACK_ERROR_INVALID_CALLBACK_HANDLE
  *        - GLOBUS_CALLBACK_ERROR_ALREADY_CANCELED
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_space_register_periodic()
  */
 globus_result_t
@@ -543,25 +543,25 @@ globus_callback_adjust_period(
  * @ingroup globus_callback_api
  *
  * @details
- * This function is used to poll for registered callbacks.  
+ * This function is used to poll for registered callbacks.
  *
  * For non-threaded builds, callbacks are not/can not be delivered unless this
- * is called.  Any call to this can cause callbacks registered with the 
- * 'global' space to be fired.  Whereas callbacks registered with a user's 
+ * is called.  Any call to this can cause callbacks registered with the
+ * 'global' space to be fired.  Whereas callbacks registered with a user's
  * space will only be delivered when this is called with that space.
  *
  * For threaded builds, this only needs to be called to poll user spaces with
  * behavior == GLOBUS_CALLBACK_SPACE_BEHAVIOR_SINGLE.  The 'global' space
- * and other user spaces are constantly polled in a separate thread.  
+ * and other user spaces are constantly polled in a separate thread.
  * (If it is called in a threaded build for these spaces, it will just yield
  * its thread)
  *
  * In general, you never need to call this function directly.  It is called
  * (when necessary) by globus_cond_wait().  The only case in which a user may
- * wish to call this explicitly is if the application has no aspirations of 
+ * wish to call this explicitly is if the application has no aspirations of
  * ever being built threaded.
  *
- * This function (when not yielding) will block up to timestop or until 
+ * This function (when not yielding) will block up to timestop or until
  * globus_callback_signal_poll() is called by one of the fired callbacks.  It
  * will always try and kick out ready callbacks, regardless of the timestop.
  *
@@ -591,12 +591,9 @@ globus_callback_space_poll(
  *
  * In general, you never need to call this function directly.  It is called
  * (when necessary) by globus_cond_signal() or globus_cond_broadcast.  The only
- * case in which a user may wish to call this explicitly is if the application 
+ * case in which a user may wish to call this explicitly is if the application
  * has no aspirations of ever being built threaded.
  *
- * @return
- *        - void
- * 
  * @see globus_callback_space_poll()
  */
 void
@@ -615,8 +612,8 @@ globus_callback_signal_poll();
  * @details
  * This function retrieves the remaining time a callback is allowed to run.
  * If a callback has already timed out, time_left will be set to zero and
- * GLOBUS_TRUE returned.  This function is intended to be called within a 
- * callback's stack, but is harmless to call anywhere (will return 
+ * GLOBUS_TRUE returned.  This function is intended to be called within a
+ * callback's stack, but is harmless to call anywhere (will return
  * GLOBUS_FALSE and an infinite time_left)
  *
  * @param time_left
@@ -651,8 +648,8 @@ globus_callback_has_time_expired();
  * @ingroup globus_callback_api
  *
  * @details
- * If the callback is a oneshot, this merely means the callback called 
- * globus_thread_blocking_space_will_block (or globus_cond_wait() at 
+ * If the callback is a oneshot, this merely means the callback called
+ * globus_thread_blocking_space_will_block (or globus_cond_wait() at
  * some point.
  *
  * For a periodic, it signifies the same and also that the periodic has been
@@ -682,7 +679,7 @@ globus_callback_was_restarted();
  * @details
  * The 'global' space handle.
  *
- * This is the default space handle implied if no spaces are 
+ * This is the default space handle implied if no spaces are
  * explicitly created.
  */
 #define GLOBUS_CALLBACK_GLOBAL_SPACE -2
@@ -695,25 +692,25 @@ globus_callback_was_restarted();
  * In a non-threaded build all spaces exhibit a
  * behavior == _BEHAVIOR_SINGLE.  Setting a specific behavior in this case
  * is ignored.
- * 
+ *
  * In a threaded build, _BEHAVIOR_SINGLE retains all the rules and
  * behaviors of a non-threaded build while _BEHAVIOR_THREADED makes the
  * space act as the global space.
  *
- * Setting a space's behavior to _BEHAVIOR_SINGLE guarantees that the 
+ * Setting a space's behavior to _BEHAVIOR_SINGLE guarantees that the
  * poll protection will always be there and all callbacks are serialized and
  * only kicked out when polled for.  In a threaded build, it is still necessary
  * to poll for callbacks in a _BEHAVIOR_SINGLE space. (globus_cond_wait()
  * will take care of this for you also)
  *
- * Setting a space's behavior to _BEHAVIOR_SERIALIZED guarantees that the 
+ * Setting a space's behavior to _BEHAVIOR_SERIALIZED guarantees that the
  * poll protection will always be there and all callbacks are serialized.  In a
- * threaded build, it is NOT necessary to poll for callbacks in a 
+ * threaded build, it is NOT necessary to poll for callbacks in a
  * _BEHAVIOR_SERIALIZED space.  Callbacks in this space will be delivered as
  * soon as possible, but only one outstanding (and unblocked) callback will be
  * allowed at any time.
  *
- * Setting a space's behavior to _BEHAVIOR_THREADED allows the user to 
+ * Setting a space's behavior to _BEHAVIOR_THREADED allows the user to
  * have the poll protection provided by spaces when built non-threaded, yet,
  * be fully threaded when built threaded (where poll protection is not needed)
  */
@@ -723,7 +720,7 @@ typedef enum
      * and single threaded behavior (callbacks need to be explicitly polled for
      */
     GLOBUS_CALLBACK_SPACE_BEHAVIOR_SINGLE,
-    /** Indicates that you want poll protection and all callbacks to be 
+    /** Indicates that you want poll protection and all callbacks to be
      * serialized (but they do not need to be polled for in a threaded build)
      */
     GLOBUS_CALLBACK_SPACE_BEHAVIOR_SERIALIZED,
@@ -788,20 +785,20 @@ globus_callback_space_reference(
  *
  * @details
  * This will destroy a reference to a previously initialized space.  Space will
- * not actually be destroyed until all callbacks registered with this space 
+ * not actually be destroyed until all callbacks registered with this space
  * have been run and unregistered (if the user has a handle to that callback)
  * AND all references (from globus_callback_space_reference()) have been
  * destroyed.
  *
  * @param space
- *        space to destroy, previously initialized by 
- *        globus_callback_space_init() or referenced with 
+ *        space to destroy, previously initialized by
+ *        globus_callback_space_init() or referenced with
  *        globus_callback_space_reference()
  *
  * @return
  *        - GLOBUS_CALLBACK_ERROR_INVALID_SPACE
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_space_init()
  * @see globus_callback_space_reference()
  */
@@ -835,13 +832,13 @@ globus_callback_space_attr_init(
  * @ingroup globus_callback_spaces
  * @details
  * @param attr
- *        attr to destroy, previously initialized with 
+ *        attr to destroy, previously initialized with
  *        globus_callback_space_attr_init()
  *
  * @return
  *        - GLOBUS_CALLBACK_ERROR_INVALID_ARGUMENT on NULL attr
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_space_attr_init()
  */
 globus_result_t
@@ -861,7 +858,7 @@ globus_callback_space_attr_destroy(
  * @return
  *        - GLOBUS_CALLBACK_ERROR_INVALID_ARGUMENT
  *        - GLOBUS_SUCCESS
- * 
+ *
  * @see globus_callback_space_behavior_t
  */
 globus_result_t
@@ -925,7 +922,7 @@ globus_callback_space_get_depth(
     globus_callback_space_t             space);
 
 /**
- * @brief See if the specified space is a single threaded behavior space 
+ * @brief See if the specified space is a single threaded behavior space
  * @ingroup globus_callback_spaces
  *
  * @param space
@@ -949,7 +946,7 @@ globus_callback_space_is_single(
 /**
  * @hideinitializer
  * @ingroup globus_callback_signal
- * 
+ *
  * @details
  * Use this to trap interrupts (SIGINT on unix).  In the future, this will
  * also map to handle ctrl-C on win32.
@@ -963,7 +960,7 @@ globus_callback_space_is_single(
 /**
  * @brief Fire a callback when the specified signal is received.
  * @ingroup globus_callback_signal
- * 
+ *
  * @details
  * Note that there is a tiny delay between the time this call returns
  * and the signal is actually handled by this library.  It is likely that, if
@@ -1006,7 +1003,7 @@ globus_callback_space_register_signal_handler(
 /**
  * @brief Unregister a signal handling callback
  * @ingroup globus_callback_signal
- * 
+ *
  * @param signum
  *        The signal to unregister.
  *
@@ -1036,29 +1033,29 @@ globus_callback_unregister_signal_handler(
 /**
  * @brief Register a wakeup handler with callback library
  * @ingroup globus_callback_signal
- * 
+ *
  * @details
  * This is really only needed in non-threaded builds, but for cross builds
  * should be used everywhere that a callback may sleep for an extended period
  * of time.
- * 
+ *
  * An example use is for an io poller that sleeps indefinitely on select().  If
  * the callback library receives a signal that it needs to deliver asap, it
  * will call the wakeup handler(s), These wakeup handlers must run as though
  * they were called from a signal handler (don't use any thread utilities).
  * The io poll example will likely write a single byte to a pipe that select()
  * is monitoring.
- * 
+ *
  * This handler will not be unregistered until the callback library is
  * deactivated (via common).
- * 
+ *
  * @param wakeup
  *       function to call when callback library needs you to return asap
  *       from any blocked callbacks.
- * 
+ *
  * @param user_arg
  *       user data that will be passed along in the wakeup handler
- * 
+ *
  */
 void
 globus_callback_add_wakeup_handler(

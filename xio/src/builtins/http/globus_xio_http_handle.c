@@ -31,6 +31,8 @@ globus_l_xio_http_write_eof_callback(
     globus_size_t                       nbytes,
     void *                              user_arg);
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Allocate and initialize an HTTP handle
  * @ingroup globus_i_xio_http_handle
@@ -227,8 +229,6 @@ free_mutex_exit:
  *
  * @param http_handle
  *     Handle to be destroyed.
- *
- * @return void
  */
 void
 globus_i_xio_http_handle_destroy(
@@ -282,7 +282,7 @@ globus_i_xio_http_handle_destroy(
  * @retval GLOBUS_XIO_ERROR_MEMORY
  *     The command failed due to memory constraints.
  * @retval GLOBUS_XIO_ERROR_PARAMETER
- *     Invalid @a cmd parameter or invlaid value of cmd-specific parameters 
+ *     Invalid @a cmd parameter or invlaid value of cmd-specific parameters
  *     in @a ap
  */
 globus_result_t
@@ -438,6 +438,8 @@ globus_i_xio_http_handle_cntl(
 }
 /* globus_i_xio_http_handle_cntl() */
 
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
+
 /**
  * Called with mutex locked
  */
@@ -446,9 +448,8 @@ globus_i_xio_http_set_end_of_entity(
     globus_i_xio_http_handle_t *        http_handle)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    globus_i_xio_http_header_info_t *   headers;
     static globus_xio_iovec_t           end_of_body_iovec = {
-        .iov_base = "0\r\n\r\n", 
+        .iov_base = "0\r\n\r\n",
         .iov_len = 5
     };
     GlobusXIOName(globus_i_xio_http_set_end_of_entity);
@@ -459,15 +460,7 @@ globus_i_xio_http_set_end_of_entity(
 
         goto error_exit;
     }
-    else if (http_handle->target_info.is_client)
-    {
-        headers = &http_handle->request_info.headers;
-    }
-    else
-    {
-        headers = &http_handle->response_info.headers;
-    }
-    
+
     if (http_handle->send_state == GLOBUS_XIO_HTTP_STATUS_LINE)
     {
         /* To send an empty response from server */

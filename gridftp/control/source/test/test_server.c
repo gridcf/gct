@@ -119,9 +119,8 @@ gpftpd_ac_response_callback(
     void *                                     callback_arg,
     globus_ftp_control_handle_t *              handle,
     globus_object_t *                          error)
-{  
-    globus_result_t                     result;
-    result = globus_ftp_control_read_commands(
+{
+    globus_ftp_control_read_commands(
         handle,
         gpftpd_command_callback,
         callback_arg);
@@ -213,21 +212,19 @@ gpftpd_accept_callback(
     globus_ftp_control_handle_t *               handle,
     globus_object_t *                           error)
 {
-    globus_result_t                             res;
-
     if(error)
     {
         error_msg(globus_error_put(error), __LINE__);
     }
 
-    res = globus_ftp_control_send_response(
+    globus_ftp_control_send_response(
               handle,
               "220 Globus GridFTP Test Server\r\n",
               gpftpd_response_callback,
               callback_arg);
 }
 
-void 
+void
 gpftpd_listen_callback(
     void *                                      callback_arg,
     globus_ftp_control_server_t *               server_handle,

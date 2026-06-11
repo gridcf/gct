@@ -70,7 +70,7 @@ globus_l_gram_protocol_get_string_attribute(
 
 /**
  * @brief Pack a GRAM Job Request
- * @ingroup globus_gram_protocol_pack 
+ * @ingroup globus_gram_protocol_pack
  *
  * @details
  * The globus_gram_protocol_pack_job_request() function combines its
@@ -305,7 +305,7 @@ bad_param:
  * parameters into a GRAM reply message body. The caller may frame
  * and send the resulting message by calling globus_gram_protocol_reply()
  * or just frame it by calling globus_gram_protocol_frame_reply() and send
- * it by some other mechanism. The 
+ * it by some other mechanism. The
  * globus_gram_protocol_pack_job_request_reply()
  * function returns the packed message by modifying the @a reply parameter to
  * point to a new string containing the message. The caller is responsible for
@@ -380,7 +380,7 @@ globus_gram_protocol_pack_job_request_reply(
  * The globus_gram_protocol_unpack_job_request_reply() function parses the
  * reply message packed in the @a reply message and returns copies of
  * the standard message attributes in the @a status and @a job_contact
- * parameters. 
+ * parameters.
  *
  * @param reply
  *     The unframed job reply message to parse.
@@ -697,7 +697,7 @@ globus_gram_protocol_unpack_job_request_reply_with_extensions(
     globus_gram_protocol_extension_t * entry = NULL;
     int                                 rc;
 
-    if (reply == NULL || status == NULL || job_contact == NULL || 
+    if (reply == NULL || status == NULL || job_contact == NULL ||
             extensions == NULL)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_NULL_PARAMETER;
@@ -741,7 +741,7 @@ globus_gram_protocol_unpack_job_request_reply_with_extensions(
     if (entry == NULL)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_HTTP_UNPACK_FAILED;
-        
+
         goto verify_error;
     }
     *status = atoi(entry->value);
@@ -779,7 +779,7 @@ bad_param:
 
 /**
  * @brief Pack a GRAM query message
- * @ingroup globus_gram_protocol_pack 
+ * @ingroup globus_gram_protocol_pack
  *
  * @details
  * The globus_gram_protocol_pack_status_request()
@@ -867,7 +867,7 @@ globus_gram_protocol_pack_status_request(
  * @param querysize
  *     The length of the query string.
  * @param status_request
- *     A pointer to a string to be set to the query 
+ *     A pointer to a string to be set to the query
  *     value.  The caller must free this string using free().
  *
  * @return
@@ -958,7 +958,7 @@ null_param:
 /* globus_gram_protocol_unpack_status_request() */
 
 /**
- * @brief Pack a GRAM query reply message 
+ * @brief Pack a GRAM query reply message
  * @ingroup globus_gram_protocol_pack
  *
  * @details
@@ -1151,7 +1151,7 @@ null_param:
  *     The error code associated with the job if it has failed. This may
  *     be GLOBUS_SUCCESS if the job has not failed.
  * @param extensions
- *     A pointer to a hash table containing the 
+ *     A pointer to a hash table containing the
  *     names and values of the protocol extensions to add to this message.
  * @param reply
  *     An output parameter which will be set to a new
@@ -1326,7 +1326,7 @@ globus_gram_protocol_unpack_status_reply_with_extensions(
     {
         goto parse_error;
     }
-    
+
     /* Check that required attributes are present */
     entry = globus_hashtable_lookup(
             extensions,
@@ -1350,7 +1350,7 @@ globus_gram_protocol_unpack_status_reply_with_extensions(
     if (entry == NULL)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_HTTP_UNPACK_FAILED;
-        
+
         goto verify_error;
     }
 
@@ -1480,7 +1480,7 @@ globus_gram_protocol_pack_status_update_message(
  * The globus_gram_protocol_pack_status_update_message_with_extensions()
  * function returns the packed message by modifying the @a reply parameter to
  * point to a new string containing the message. The caller is responsible for
- * freeing that string. 
+ * freeing that string.
  *
  * @param job_contact
  *     The job contact string associated with the job.
@@ -1889,7 +1889,7 @@ globus_gram_protocol_unpack_status_update_message_with_extensions(
         failure_code == GLOBUS_GRAM_PROTOCOL_ERROR_STAGING_EXECUTABLE ||
         failure_code == GLOBUS_GRAM_PROTOCOL_ERROR_STAGING_STDIN)
     {
-        if (failure_type && 
+        if (failure_type &&
                 (strcmp(failure_type, "executable") == 0 ||
                  strcmp(failure_type, "stdin") == 0))
         {
@@ -1981,7 +1981,7 @@ globus_l_gram_protocol_extension_destroy(
 /**
  * Destroy message attribute hash
  * @ingroup globus_gram_protocol_unpack
- * 
+ *
  * @param message_hash
  *     Hashtable of globus_gram_protocol_extension_t * values to destroy
  */
@@ -2002,17 +2002,17 @@ globus_gram_protocol_hash_destroy(
 
 /**
  * Create a GRAM5 protocol extension entry
- * @ingroup globus_gram_protocol_extensions
+ * @ingroup globus_gram_protocol_pack
  *
  * Allocates a new GRAM5 protocol extension entry containing an attribute-value
  * pair. The @a attribute parameter is copied into the extension, and the
  * @a format parameter is a printf-style format string used to construct the
  * value of the extension.
- * 
+ *
  * The caller is responsible for freeing the extension when done with it. The
  * quoting rules described in @ref globus_gram_protocol must be implemented
  * by the caller in the format string.
- * 
+ *
  * @param attribute
  *     Name of the extension attribute
  * @param format
@@ -2227,7 +2227,7 @@ bad_param:
 /**
  * @brief Pack a GRAM version request message
  * @ingroup globus_gram_protocol_pack
- * 
+ *
  * @details
  * The globus_gram_protocol_pack_job_request() function creates a copy
  * of the GRAM version request.  The caller may frame
@@ -2253,7 +2253,7 @@ bad_param:
  *     globus_gram_protocol_pack_version_request() returns an integer
  *     error code and the values pointed to by @a request and @a requestsize
  *     are undefined.
- * 
+ *
  * @retval GLOBUS_SUCCESS
  *     Success
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_NULL_PARAMETER

@@ -21,12 +21,12 @@
  *  use is for multicast broad casts in the gridftp server.
  *
  *  If an error occurs on any one gridftp handle it is not imediately
- *  reported to the user.  It is reecorded and no futher buffers will be 
- *  passed down that connection.  Upon closing the handle all errors 
+ *  reported to the user.  It is reecorded and no futher buffers will be
+ *  passed down that connection.  Upon closing the handle all errors
  *  are reported.
  *
  *  However, if a pass error occurs it is reported immediately and all
- *  active ftp connections are terminated. 
+ *  active ftp connections are terminated.
  *
  *  The user is not required to actually pass data down the stack.  In
  *  some cases they will want buffers to hop around servers in a network
@@ -37,7 +37,7 @@
  */
 #include "globus_xio_driver.h"
 #include "globus_xio_gridftp_multicast_driver.h"
-#include "globus_ftp_client.h"  
+#include "globus_ftp_client.h"
 #include "version.h"
 
 GlobusDebugDefine(GLOBUS_XIO_GRIDFTP_MULTICAST);
@@ -73,7 +73,7 @@ GlobusXIODeclareDriver(gridftp_multicast);
         __FILE__,                                                           \
         _xio_name,                                                          \
         __LINE__,                                                           \
-        _XIOSL(_reason))                                
+        _XIOSL(_reason))
 
 #define GMC_ERROR_TOKEN "GMC_ERROR=\n"
 #define GMC_URL_ENC_CHAR "#;:=+ ,"
@@ -236,7 +236,7 @@ xio_l_gmc_handle_destroy(
 
         globus_ftp_client_handleattr_destroy(&ftp_handle->handle_attr);
         globus_ftp_client_operationattr_destroy(&ftp_handle->op_attr);
-        /* free up the client lib stuff 
+        /* free up the client lib stuff
             globus_ftp_client_handle_t          client_h;
         */
     }
@@ -451,20 +451,20 @@ error_xio_system_activate:
 static
 int
 xio_l_gridftp_multicast_deactivate()
-{   
+{
     int rc;
     GlobusXIOName(xio_l_gridftp_multicast_deactivate);
-    
+
     GlobusXIOGridftpMulticastDebugEnter();
     GlobusXIOUnRegisterDriver(gridftp_multicast);
     rc = globus_module_deactivate(GLOBUS_FTP_CLIENT_MODULE);
     if (rc != GLOBUS_SUCCESS)
-    {   
+    {
         goto error_deactivate;
     }
     rc = globus_module_deactivate(GLOBUS_XIO_MODULE);
     if (rc != GLOBUS_SUCCESS)
-    {   
+    {
         goto error_deactivate;
     }
     GlobusXIOGridftpMulticastDebugExit();
@@ -756,7 +756,7 @@ xio_l_gridftp_multicast_open(
         1, sizeof(xio_l_gridftp_multicast_handle_t));
     globus_mutex_init(&handle->mutex, NULL);
     handle->local_url = strdup(contact_info->unparsed);
-    handle->P = attr->P;    
+    handle->P = attr->P;
     handle->tcp_bs = attr->tcp_bs;
     handle->pass_write = attr->pass_write;
 
@@ -922,7 +922,7 @@ xio_l_gmc_destroy_forwarder(
 
     ftp_handle->closing = GLOBUS_TRUE;
     result = globus_ftp_client_abort(&ftp_handle->client_h);
-    
+
     /* not the ost interesting error, but we will hang onto it if there
         wasnt a better one around */
     if(result != GLOBUS_SUCCESS && ftp_handle->result == GLOBUS_SUCCESS)
@@ -944,7 +944,6 @@ xio_l_gmc_setup_forwarder(
     int                                 max_str_len,
     int                                 each_cast_count)
 {
-    int                                 cast_count;
     char *                              driver_del;
     char *                              stack_str;
     int                                 stack_str_ndx;
@@ -959,7 +958,6 @@ xio_l_gmc_setup_forwarder(
 
     handle = ftp_handle->whos_my_daddy;
 
-    cast_count = 0;
     stack_str = malloc(max_str_len*3); /* 3x for url encoding */
     stack_str_ndx = 0;
     for(i = 0; i < each_cast_count; i++)
@@ -977,7 +975,6 @@ xio_l_gmc_setup_forwarder(
             stack_str_ndx += strlen(str);
 
             free(str);
-            cast_count++;
         }
         stack_str[stack_str_ndx] = '\0';
     }
@@ -1239,7 +1236,7 @@ xio_l_gridftp_multicast_write(
     globus_off_t                        offset;
     globus_bool_t                       finish_write = GLOBUS_FALSE;
     GlobusXIOName(xio_l_gridftp_multicast_write);
-    
+
     handle = (xio_l_gridftp_multicast_handle_t *) driver_specific_handle;
 
     globus_mutex_lock(&handle->mutex);
@@ -1253,8 +1250,8 @@ xio_l_gridftp_multicast_write(
                 {
                     ftp_handle = &handle->ftp_handles[i];
                     offset = handle->offset;
-                    for(j = 0; 
-                        j < iovec_count && 
+                    for(j = 0;
+                        j < iovec_count &&
                             ftp_handle->result == GLOBUS_SUCCESS;
                         j++)
                     {
@@ -1403,7 +1400,7 @@ xio_l_gmc_close_cb(
     globus_bool_t                       finish_close = GLOBUS_FALSE;
     xio_l_gridftp_multicast_handle_t *  handle;
     GlobusXIOName(xio_l_gmc_close_cb);
-    
+
     handle = (xio_l_gridftp_multicast_handle_t *) user_arg;
     globus_mutex_lock(&handle->mutex);
     {
@@ -1441,7 +1438,7 @@ xio_l_gridftp_multicast_close(
     xio_l_gmc_ftp_handle_t *            ftp_handle;
     xio_l_gridftp_multicast_handle_t *  handle;
     GlobusXIOName(xio_l_gridftp_multicast_close);
-    
+
     handle = (xio_l_gridftp_multicast_handle_t *) driver_specific_handle;
 
     globus_mutex_lock(&handle->mutex);
@@ -1503,7 +1500,7 @@ xio_l_gridftp_multicast_close(
                     handle->op_count++;
                 }
                 break;
-    
+
             case XIO_GMC_STATE_OPENING_ERROR:
             case XIO_GMC_STATE_OPENING:
             case XIO_GMC_STATE_CLOSING:
@@ -1582,7 +1579,7 @@ xio_l_gridftp_multicast_attr_init(
 {
     xio_l_gridftp_multicast_attr_t *    attr;
 
-    attr = (xio_l_gridftp_multicast_attr_t *) 
+    attr = (xio_l_gridftp_multicast_attr_t *)
         globus_calloc(1, sizeof(xio_l_gridftp_multicast_attr_t));
 
     globus_fifo_init(&attr->url_q);
@@ -1591,14 +1588,14 @@ xio_l_gridftp_multicast_attr_init(
     attr->tcp_bs = xio_l_gmc_default_attr.tcp_bs;
     attr->cast_count = xio_l_gmc_default_attr.cast_count;
     attr->pass_write = xio_l_gmc_default_attr.pass_write;
-    
+
     *out_attr = attr;
 
     return GLOBUS_SUCCESS;
 }
 
 
-static globus_xio_string_cntl_table_t  
+static globus_xio_string_cntl_table_t
     xio_l_gridftp_multicast_string_opts_table[] =
 {
     {"P", GLOBUS_XIO_GRIDFTP_MULTICAST_ATTR_PARALLEL,
@@ -1680,7 +1677,7 @@ xio_l_gridftp_multicast_attr_copy(
 {
     int                                 i;
     char *                              str;
-    xio_l_gridftp_multicast_attr_t *    dst_attr; 
+    xio_l_gridftp_multicast_attr_t *    dst_attr;
     xio_l_gridftp_multicast_attr_t *    src_attr;
 
     src_attr = (xio_l_gridftp_multicast_attr_t *) src;

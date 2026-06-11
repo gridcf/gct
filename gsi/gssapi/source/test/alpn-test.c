@@ -54,7 +54,6 @@ init_no_client_alpn(void)
     {
         3, 'g', 's', 'i',
     };
-    const char                         *why = "";
 
     major_status = gss_set_sec_context_option(
             &minor_status,
@@ -67,9 +66,7 @@ init_no_client_alpn(void)
             });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
     do
@@ -95,7 +92,6 @@ init_no_client_alpn(void)
 
         if (GSS_ERROR(major_status))
         {
-            why = "gss_init_sec_context";
             result = false;
             break;
         }
@@ -120,7 +116,6 @@ init_no_client_alpn(void)
 
             if (GSS_ERROR(major_status))
             {
-                why = "accept_sec_context";
                 result = false;
             }
         }
@@ -139,15 +134,12 @@ init_no_client_alpn(void)
 
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
         if (data->count != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -212,7 +204,6 @@ init_no_server_alpn(void)
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
     OM_uint32                           ignore_minor_status = 0;
-    const char                         *why = "";
     unsigned char                       client_alpn[] =
     {
         3, 'g', 's', 'i',
@@ -229,9 +220,7 @@ init_no_server_alpn(void)
         });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
     do
@@ -257,7 +246,6 @@ init_no_server_alpn(void)
 
         if (GSS_ERROR(major_status))
         {
-            why = "gss_init_sec_context";
             result = false;
             break;
         }
@@ -282,7 +270,6 @@ init_no_server_alpn(void)
 
             if (GSS_ERROR(major_status))
             {
-                why = "accept_sec_context";
                 result = false;
             }
         }
@@ -300,15 +287,12 @@ init_no_server_alpn(void)
             &data);
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
         if (data->count != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -387,7 +371,6 @@ init_alpn1(void)
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
     OM_uint32                           ignore_minor_status = 0;
-    const char                         *why = "";
     unsigned char                       server_alpn[] =
     {
         3, 'g', 's', 'i',
@@ -408,9 +391,7 @@ init_alpn1(void)
         });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
     major_status = gss_set_sec_context_option(
@@ -424,9 +405,7 @@ init_alpn1(void)
         });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
 
@@ -453,7 +432,6 @@ init_alpn1(void)
 
         if (GSS_ERROR(major_status))
         {
-            why = "gss_init_sec_context";
             result = false;
             break;
         }
@@ -478,7 +456,6 @@ init_alpn1(void)
 
             if (GSS_ERROR(major_status))
             {
-                why = "accept_sec_context";
                 result = false;
             }
         }
@@ -495,9 +472,7 @@ init_alpn1(void)
             &data);
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
@@ -508,7 +483,6 @@ init_alpn1(void)
                 &server_alpn[1],
                 server_alpn[0]) != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -521,9 +495,7 @@ init_alpn1(void)
             &data);
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
@@ -534,7 +506,6 @@ init_alpn1(void)
                 &client_alpn[1],
                 client_alpn[0]) != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -611,7 +582,6 @@ init_alpn_secondary_match(void)
     gss_buffer_desc                     accept_generated_token = {0};
     bool                                result = true;
     OM_uint32                           ignore_minor_status = 0;
-    const char                         *why = "";
     unsigned char                       server_alpn[] =
     {
         3, 'g', 's', 's',
@@ -633,9 +603,7 @@ init_alpn_secondary_match(void)
         });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
 
@@ -650,9 +618,7 @@ init_alpn_secondary_match(void)
         });
     if (major_status != GSS_S_COMPLETE)
     {
-        why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
     do
@@ -678,7 +644,6 @@ init_alpn_secondary_match(void)
 
         if (GSS_ERROR(major_status))
         {
-            why = "gss_init_sec_context";
             result = false;
             break;
         }
@@ -703,7 +668,6 @@ init_alpn_secondary_match(void)
 
             if (GSS_ERROR(major_status))
             {
-                why = "accept_sec_context";
                 result = false;
             }
         }
@@ -721,9 +685,7 @@ init_alpn_secondary_match(void)
             &data);
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
@@ -734,7 +696,6 @@ init_alpn_secondary_match(void)
                 &server_alpn[5],
                 server_alpn[4]) != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -747,9 +708,7 @@ init_alpn_secondary_match(void)
             &data);
         if (major_status != GSS_S_COMPLETE)
         {
-            why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
@@ -760,7 +719,6 @@ init_alpn_secondary_match(void)
                 &client_alpn[1],
                 client_alpn[0]) != 0)
         {
-            why = "inquire_result";
             result = false;
             goto fail;
         }
@@ -856,7 +814,6 @@ init_alpn_nomatch(void)
     {
         why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
 
@@ -873,7 +830,6 @@ init_alpn_nomatch(void)
     {
         why = "gss_set_sec_context_option";
         result = false;
-
         goto fail;
     }
     do
@@ -946,7 +902,6 @@ init_alpn_nomatch(void)
         {
             why = "inquire_context_by_oid";
             result = false;
-
             goto fail;
         }
 
@@ -1095,7 +1050,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "ALPN not supported\n");
         exit(77);
     }
-    
+
     size_t num_test_cases = sizeof(test_cases)/sizeof(test_cases[0]);
 
     printf("1..%zu\n", num_test_cases);

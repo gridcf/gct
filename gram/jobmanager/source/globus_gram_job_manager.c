@@ -364,8 +364,8 @@ globus_gram_job_manager_init(
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED;
         goto event_queue_init_failed;
     }
-    manager->usagetracker = 
-        calloc(1, sizeof(globus_i_gram_usage_tracker_t));   
+    manager->usagetracker =
+        calloc(1, sizeof(globus_i_gram_usage_tracker_t));
     if (manager->usagetracker == NULL)
     {
         rc = GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED;
@@ -408,7 +408,7 @@ request_hashtable_init_failed:
         globus_gram_job_manager_validation_destroy(
                 manager->validation_records);
         manager->validation_records = NULL;
-        
+
         globus_cond_destroy(&manager->cond);
 cond_init_failed:
         GlobusGramJobManagerUnlock(manager);
@@ -424,10 +424,10 @@ out:
 
 /**
  * Destroy job manager state
- * 
+ *
  * Memory used for runtime processing is freed, the GRAM listener and the SEG
  * are shut down.
- * 
+ *
  * @param manager
  *     Manager to destroy
  */
@@ -449,7 +449,7 @@ globus_gram_job_manager_destroy(
     globus_gram_job_manager_validation_destroy(
             manager->validation_records);
     manager->validation_records = NULL;
-    
+
     globus_hashtable_destroy(&manager->request_hash);
     globus_hashtable_destroy(&manager->job_id_hash);
 
@@ -458,7 +458,7 @@ globus_gram_job_manager_destroy(
     while (!globus_list_empty(manager->scripts_per_client))
     {
         globus_gram_job_manager_scripts_t *scripts;
-        
+
         scripts = globus_list_remove(
                 &manager->scripts_per_client,
                 manager->scripts_per_client);
@@ -468,12 +468,12 @@ globus_gram_job_manager_destroy(
         free(scripts->client_addr);
         free(scripts);
     }
-    
+
     if(manager->usagetracker)
     {
         free(manager->usagetracker);
     }
-                              
+
     return;
 }
 /* globus_gram_job_manager_destroy() */
@@ -513,7 +513,7 @@ globus_gram_job_manager_log(
         va_end(ap);
         logged = GLOBUS_TRUE;
     }
-    
+
     if ((!logged) && (manager && !manager->done))
     {
         /* Hack to write to stderr in the case the error happens before we
@@ -615,10 +615,10 @@ globus_gram_job_manager_add_request(
     {
         manager->usagetracker->count_current_jobs++;
 
-        if(manager->usagetracker->count_peak_jobs < 
+        if(manager->usagetracker->count_peak_jobs <
             manager->usagetracker->count_current_jobs)
         {
-            manager->usagetracker->count_peak_jobs = 
+            manager->usagetracker->count_peak_jobs =
                 manager->usagetracker->count_current_jobs;
         }
     }
@@ -726,7 +726,7 @@ stop:
  *     Pointer to the reference counter structure that is allocated by
  *     this function.
  *
- * 
+ *
  * @retval GLOBUS_SUCCESS
  *     Success
  * @retval GLOBUS_GRAM_PROTOCOL_ERROR_OLD_JM_ALIVE
@@ -1148,10 +1148,10 @@ globus_l_gram_job_manager_remove_reference_locked(
                     request->manager->seg_started &&
                     request->jobmanager_state !=
                         GLOBUS_GRAM_JOB_MANAGER_STATE_STOP) ||
-                     (request->jobmanager_state == 
+                     (request->jobmanager_state ==
                         GLOBUS_GRAM_JOB_MANAGER_STATE_STOP &&
                         (manager->stop == GLOBUS_TRUE ||
-                         manager->seg_started == GLOBUS_FALSE || 
+                         manager->seg_started == GLOBUS_FALSE ||
                          request->restart_state == GLOBUS_GRAM_JOB_MANAGER_STATE_TWO_PHASE_END ||
                   request->restart_state == GLOBUS_GRAM_JOB_MANAGER_STATE_FAILED_TWO_PHASE)))
             {
@@ -1263,7 +1263,7 @@ globus_gram_job_manager_register_job_id(
             request->job_contact_path,
             job_id);
 
-    if (manager->config->seg_module != NULL || 
+    if (manager->config->seg_module != NULL ||
         strcmp(manager->config->jobmanager_type, "condor") == 0)
     {
         /* If we're using the SEG, split on /,/ so that seg events can be
@@ -1959,7 +1959,7 @@ globus_gram_job_manager_set_grace_period_timer(
 /**
  * Fake a two-phase commit for jobs that are in a done state, but are older
  * than their expiration time.
- * 
+ *
  * @param arg
  *     Pointer to the job manager structure for this job.
  * @return void
@@ -2033,11 +2033,11 @@ globus_gram_job_manager_expire_old_jobs(
                         goto oneshot_failed;
                     }
                 }
-                
+
                 expired++;
             }
 oneshot_failed:
-            rc = globus_l_gram_job_manager_remove_reference_locked( 
+            rc = globus_l_gram_job_manager_remove_reference_locked(
                     manager,
                     ref->key,
                     "expire");
@@ -2202,10 +2202,10 @@ globus_gram_job_manager_stop_all_jobs(
  * Scan the job state directory for jobs to restart
  *
  * The globus_gram_job_manager_request_load_all() function scans the
- * job state directory named in the job manager configuration and then 
- * attempts to reload each job found in that directory. If the job is in 
+ * job state directory named in the job manager configuration and then
+ * attempts to reload each job found in that directory. If the job is in
  * a state where it will be immediately swapped out (waiting for SEG events)
- * then the job is registered for processing 
+ * then the job is registered for processing
  *
  * @param manager
  *     Job Manager
@@ -2268,7 +2268,7 @@ globus_gram_job_manager_request_load_all(
             rc = GLOBUS_GRAM_PROTOCOL_ERROR_MALLOC_FAILED;
             goto state_file_pattern_alloc_failed;
         }
-        
+
         hashed_job_dir = globus_common_create_string(
                 "%s/%s/%s/%s",
                 manager->config->job_state_file_dir,
@@ -2531,7 +2531,7 @@ globus_l_gram_job_manager_request_load_all_from_dir(
             /* Optimize the (hopefully) common case. The job is pending
              * or active in the queue and we will want to wait for
              * job state changes. In this case, we add the reference to
-             * the job's LRM job id 
+             * the job's LRM job id
              */
             if ((request->config->seg_module != NULL ||
                  strcmp(request->config->jobmanager_type, "fork") == 0 ||
@@ -2574,7 +2574,7 @@ globus_l_gram_job_manager_request_load_all_from_dir(
             }
             /* Add a stub in the job manager's request_hash for this job. The
              * Reference count will be left at 0, and we will null out the
-             * ref->request pointer below. This allows queries, SEG events, and 
+             * ref->request pointer below. This allows queries, SEG events, and
              * the restart code to look up the job ID without the entire
              * request remaining in memory.
              */
@@ -2771,7 +2771,6 @@ globus_l_gram_ref_swap_out(
 
     globus_gram_job_manager_ref_t *     ref = arg;
     globus_gram_jobmanager_request_t *  request;
-    int                                 rc;
 
     globus_gram_job_manager_log(
             ref->manager,
@@ -2883,7 +2882,7 @@ globus_l_gram_ref_swap_out(
                 "No new references to job, writing state and freeing data");
 
         /* Is this needed? */
-        rc = globus_gram_job_manager_state_file_write(ref->request);
+        globus_gram_job_manager_state_file_write(ref->request);
 
         globus_gram_job_manager_request_free(ref->request);
         free(ref->request);
@@ -2916,7 +2915,6 @@ globus_l_gram_add_reference_locked(
     globus_gram_jobmanager_request_t ** request)
 {
     int                                 rc = GLOBUS_SUCCESS;
-    globus_result_t                     result;
     globus_gram_job_manager_ref_t *     ref;
 
     globus_gram_job_manager_log(
@@ -2936,7 +2934,7 @@ globus_l_gram_add_reference_locked(
 
         if (ref->cleanup_timer != GLOBUS_NULL_HANDLE)
         {
-            result = globus_callback_unregister(
+            globus_callback_unregister(
                     ref->cleanup_timer,
                     NULL,
                     NULL,
@@ -2979,16 +2977,16 @@ globus_l_gram_add_reference_locked(
                 ref->request->restart_state ==
                         GLOBUS_GRAM_JOB_MANAGER_STATE_POLL_QUERY1 ||
                 ref->request->restart_state ==
-                        GLOBUS_GRAM_JOB_MANAGER_STATE_POLL_QUERY2)         
+                        GLOBUS_GRAM_JOB_MANAGER_STATE_POLL_QUERY2)
             {
-                ref->request->jobmanager_state = GLOBUS_GRAM_JOB_MANAGER_STATE_POLL2;         
-            }         
+                ref->request->jobmanager_state = GLOBUS_GRAM_JOB_MANAGER_STATE_POLL2;
+            }
             else if (!ref->loaded_only)
             {
                 ref->request->jobmanager_state = ref->request->restart_state;
-            }        
+            }
             ref->loaded_only = GLOBUS_FALSE;
-            
+
             ref->request->job_stats.status_count += ref->status_count;
             ref->status_count = 0;
         }
@@ -3263,7 +3261,7 @@ skip_path_lookup:
     pipe_cmd[3] = "-c";
     pipe_cmd[4] = "interactive";
     pipe_cmd[5] = "-l";
-    result = globus_eval_path(  
+    result = globus_eval_path(
         "${libdir}",
         &pipe_cmd[6]);
     if (result != GLOBUS_SUCCESS || pipe_cmd[6] == NULL)

@@ -176,7 +176,7 @@ main(int argc, char * argv[])
                 (strcmp(optarg, "HYBRID") == 0))
             {
                 globus_libc_setenv(
-                        "GLOBUS_GSSAPI_NAME_COMPATIBILITY", 
+                        "GLOBUS_GSSAPI_NAME_COMPATIBILITY",
                         optarg,
                         1);
             }
@@ -481,7 +481,7 @@ time_check(void)
         goto sendto_fail;
     }
     now = time(NULL);
-    rc = recv(sfd, buf, 4, 0); 
+    rc = recv(sfd, buf, 4, 0);
     if (rc < 4)
     {
         printf("WARNING: Unparsable response from time.nist.gov\n");
@@ -528,7 +528,7 @@ time_check(void)
                      + (((uint32_t) buf[3]))) - INTMAX_C(2208988800);
 
     local_seconds_since_unix_epoch = (intmax_t)
-            difftime(now, unix_epoch_time) - tz_off; 
+            difftime(now, unix_epoch_time) - tz_off;
 
     delta = imaxabs(local_seconds_since_unix_epoch - seconds_since_unix_epoch);
 
@@ -1103,7 +1103,7 @@ check_trusted_certs(void)
         char hash_string[16];
 
         printf("Checking CA file %s... ", ca_cert_file);
-              
+
         result = globus_gsi_cred_read_cert(handle, ca_cert_file);
         if (result != GLOBUS_SUCCESS)
         {
@@ -1128,7 +1128,7 @@ check_trusted_certs(void)
 
         if (strstr(ca_cert_file, hash_string) == 0)
         {
-            printf("failed\n    CA hash '%s' does not match CA filename\n", hash_string); 
+            printf("failed\n    CA hash '%s' does not match CA filename\n", hash_string);
             continue;
         }
         printf("ok\nChecking CA certificate name for %s...", hash_string);
@@ -1532,7 +1532,7 @@ check_service_cert_chain(
     globus_result_t                     result;
     globus_gsi_cred_handle_t            handle = NULL;
     globus_gsi_callback_data_t          callback_data = NULL;
-    X509_NAME                          *n = NULL;
+    const X509_NAME                    *n = NULL;
     size_t                              host_len;
     const char                         *no_extensions = " no";
     OM_uint32                           major_status, minor_status;
@@ -1666,7 +1666,11 @@ check_service_cert_chain(
          idx != -1;
          idx = X509_get_ext_by_NID(cert, NID_subject_alt_name, idx))
     {
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
         X509_EXTENSION                 *ext_value;
+#else
+        const X509_EXTENSION           *ext_value;
+#endif
         GENERAL_NAMES                  *subject_alt_names;
 
         no_extensions = "";
@@ -1688,15 +1692,14 @@ check_service_cert_chain(
             if (subject_alt_name->type == GEN_DNS)
             {
                 printf(" dns:%.*s",
-                       (int) subject_alt_name->d.dNSName->length,
-                       subject_alt_name->d.dNSName->data);
-                    
+                       (int) ASN1_STRING_length(subject_alt_name->d.dNSName),
+                       ASN1_STRING_get0_data(subject_alt_name->d.dNSName));
             }
             else if (subject_alt_name->type == GEN_IPADD)
             {
                 printf(" ip:%.*s",
-                       (int) subject_alt_name->d.iPAddress->length,
-                       subject_alt_name->d.iPAddress->data);
+                       (int) ASN1_STRING_length(subject_alt_name->d.iPAddress),
+                       ASN1_STRING_get0_data(subject_alt_name->d.iPAddress));
             }
             else
             {
@@ -1828,8 +1831,8 @@ static
 char *
 indent_string(const char * str)
 {
-    char * new_line;
-    char * old_line;
+    const char * new_line;
+    const char * old_line;
     char * output;
     int i=1;
 
@@ -1838,7 +1841,7 @@ indent_string(const char * str)
         return NULL;
     }
 
-    for (new_line = (char *) str; new_line != NULL; new_line = strchr(new_line+1, '\n'))
+    for (new_line = str; new_line != NULL; new_line = strchr(new_line+1, '\n'))
     {
         i++;
     }
@@ -1846,7 +1849,7 @@ indent_string(const char * str)
     output = malloc(strlen(str) + (i*4) + 1);
     i = 0;
 
-    for (new_line = strchr(str, '\n'), old_line = (char *) str;
+    for (new_line = strchr(str, '\n'), old_line = str;
          new_line != NULL;
          old_line = new_line+1, new_line = strchr(new_line+1, '\n'))
     {

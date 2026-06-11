@@ -3,7 +3,7 @@
 Name:		globus-gssapi-gsi
 %global soname 4
 %global _name %(echo %{name} | tr - _)
-Version:	14.20
+Version:	14.21
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI library
 
@@ -158,6 +158,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.21-1
+- Compile with OpenSSL 4
+- Fix compiler warnings
+
 * Fri May 20 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 14.20-1
 - Disable sending session tickets after the TLS 1.3 handshake
 

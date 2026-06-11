@@ -295,7 +295,6 @@ globus_l_gass_copy_glob_expand_file_url(
     globus_result_t                     result;
     int                                 retval;
     globus_url_t                        parsed_url;
-    int                                 i;
     struct stat                         stat_buf;
     char                                unique_id[256];
     globus_gass_copy_glob_entry_t       type;
@@ -375,9 +374,7 @@ globus_l_gass_copy_glob_expand_file_url(
         goto error_open;
     }
 
-    for(i = 0;
-        globus_libc_readdir_r(dir, &dir_entry) == 0 && dir_entry;
-        i++)
+    while(globus_libc_readdir_r(dir, &dir_entry) == 0 && dir_entry)
     {
         char                        path[MAXPATHLEN];
 

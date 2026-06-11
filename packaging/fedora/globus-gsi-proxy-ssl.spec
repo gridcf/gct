@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-ssl
 %global soname 1
 %global _name %(echo %{name} | tr - _)
-Version:	6.6
+Version:	6.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy SSL Library
 
@@ -142,6 +142,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.7-1
+- Compile with OpenSSL 4
+
 * Fri Jan 17 2025 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.6-1
 - Fix incompatible pointer errors (gcc 15)
 

@@ -896,30 +896,30 @@ myproxy_authenticate_init(myproxy_socket_attrs_t *attrs,
            gss_buffer_desc name_buf;
            const char *services[] = { "myproxy", "host" };
            int s;
-           OM_uint32 major_status, minor_status;
+           OM_uint32 minor_status;
 
-             fqhn = GSI_SOCKET_get_peer_hostname(attrs->gsi_socket);
-             if (!fqhn) {
-                 GSI_SOCKET_get_error_string(attrs->gsi_socket, error_string,
-                                             sizeof(error_string));
-                 verror_put_string("Error getting name of remote party: %s\n",
-                                   error_string);
-                 goto error;
-             }
-             for (s = 0; s < (sizeof services)/(sizeof *services); s++)
-             {
+           fqhn = GSI_SOCKET_get_peer_hostname(attrs->gsi_socket);
+           if (!fqhn) {
+               GSI_SOCKET_get_error_string(attrs->gsi_socket, error_string,
+                                           sizeof(error_string));
+               verror_put_string("Error getting name of remote party: %s\n",
+                                 error_string);
+               goto error;
+           }
+           for (s = 0; s < (sizeof services)/(sizeof *services); s++)
+           {
                name_buf.value = globus_common_create_string("%s@%s",
                     services[s], fqhn);
                name_buf.length = strlen(name_buf.value);
 
-               major_status = gss_import_name(
+               gss_import_name(
                     &minor_status,
                     &name_buf,
                     GSS_C_NT_HOSTBASED_SERVICE,
                     &accepted_peer_names[s]);
-             }
+           }
 
-             free(fqhn);
+           free(fqhn);
        }
    }
 
@@ -2812,7 +2812,7 @@ convert_message(const char                      *buffer,
                 char                            **line)
 {
     int                         foundone = 0;
-    char                        *varname_start;
+    const char                  *varname_start;
     int                         return_value = -1;
     int                         line_index = 0;
     const char                  *buffer_p;
@@ -2836,7 +2836,7 @@ convert_message(const char                      *buffer,
 
     while ((varname_start = strstr(buffer_p, varname)) != NULL)
     {
-        char                    *value_start;
+        const char              *value_start;
         int                     value_length;
 
         /* Have is this the first varname we've found? */

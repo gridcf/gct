@@ -20,15 +20,14 @@
 int main(int argc, char *argv[])
 {
     int rc;
-    int failed = 0;
 
     LTDL_SET_PRELOADED_SYMBOLS();
 
     printf("1..2\n");
-    failed += rc = !(!globus_module_activate(GLOBUS_GRAM_CLIENT_MODULE));
+    rc = !(!globus_module_activate(GLOBUS_GRAM_CLIENT_MODULE));
     printf("%s 1 - activate\n", rc==0?"ok":"not ok");
 
-    failed += rc = !(!globus_module_deactivate(GLOBUS_GRAM_CLIENT_MODULE));
+    rc = !(!globus_module_deactivate(GLOBUS_GRAM_CLIENT_MODULE));
     printf("%s 2 - deactivate\n", rc==0?"ok":"not ok");
 
     return 0;

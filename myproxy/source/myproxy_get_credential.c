@@ -4,7 +4,7 @@
  * Webserver program to retrieve a end-entity credential from a myproxy-server
  */
 
-#include "myproxy_common.h"	/* all needed headers included here */
+#include "myproxy_common.h"     /* all needed headers included here */
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -48,7 +48,7 @@ struct option long_options[] =
     {"version",                no_argument, NULL, 'V'},
     {"authorization",    required_argument, NULL, 'r'},
     {"dn_as_username",         no_argument, NULL, 'd'},
-    {"credname",	 required_argument, NULL, 'k'},
+    {"credname",         required_argument, NULL, 'k'},
     {"stdin_pass",             no_argument, NULL, 'S'},
     {"no_passphrase",          no_argument, NULL, 'n'},
     {"certfile",         required_argument, NULL, 'c'},
@@ -62,18 +62,18 @@ static char short_options[] = "hus:p:l:t:c:y:vVa:dk:SnT";
 static char version[] =
 "myproxy-retrieve version " MYPROXY_VERSION " (" MYPROXY_VERSION_DATE ") "  "\n";
 
-void 
-init_arguments(int argc, char *argv[], 
-	       myproxy_socket_attrs_t *attrs,
-	       myproxy_request_t *request);
- 
+void
+init_arguments(int argc, char *argv[],
+               myproxy_socket_attrs_t *attrs,
+               myproxy_request_t *request);
+
 int
 store_credential( char *delegfile,
                   char *certfile,
                   char *keyfile );
 
 int
-buffer2file( char *buffer,
+buffer2file( const char *buffer,
              int   size,
              int   fd );
 
@@ -92,7 +92,7 @@ mkpath( char *path );
  * Use setvbuf() instead of setlinebuf() since cygwin doesn't support
  * setlinebuf().
  */
-#define my_setlinebuf(stream)	setvbuf((stream), (char *) NULL, _IOLBF, 0)
+#define my_setlinebuf(stream)   setvbuf((stream), (char *) NULL, _IOLBF, 0)
 
 /* location of delegated proxy */
 static char *certfile               = NULL;     /* certificate file name */
@@ -102,8 +102,8 @@ static int   read_passwd_from_stdin = 0;
 static int   use_empty_passwd       = 0;
 
 int
-main(int argc, char *argv[]) 
-{    
+main(int argc, char *argv[])
+{
     myproxy_socket_attrs_t *socket_attrs;
     myproxy_request_t      *client_request;
     myproxy_response_t     *server_response;
@@ -116,10 +116,10 @@ main(int argc, char *argv[])
 
     /* check library version */
     if (myproxy_check_version()) {
-	fprintf(stderr, "MyProxy library version mismatch.\n"
-		"Expecting %s.  Found %s.\n",
-		MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
-	exit(1);
+        fprintf(stderr, "MyProxy library version mismatch.\n"
+                "Expecting %s.  Found %s.\n",
+                MYPROXY_VERSION_DATE, myproxy_version(0,0,0));
+        exit(1);
     }
 
     myproxy_log_use_stream (stderr);
@@ -154,36 +154,36 @@ main(int argc, char *argv[])
     }
 
     if (getuid() == 0) {
-        get_host_credential_filenames( &certfile, &keyfile ); 
+        get_host_credential_filenames( &certfile, &keyfile );
     } else {
-        get_user_credential_filenames( &certfile, &keyfile ); 
+        get_user_credential_filenames( &certfile, &keyfile );
     }
 
     /* Initialize client arguments and create client request object */
     init_arguments(argc, argv, socket_attrs, client_request);
 
     if (!certfile && !keyfile) {
-	fprintf(stderr, "Unable to determine credential output locations.\n"
-		"Use --certfile and --keyfile options.\n");
-	goto error;
+        fprintf(stderr, "Unable to determine credential output locations.\n"
+                "Use --certfile and --keyfile options.\n");
+        goto error;
     } else if (!certfile) {
-	fprintf(stderr, "Unable to determine certificate output location.\n"
-		"Use --certfile option.\n");
-	goto error;
+        fprintf(stderr, "Unable to determine certificate output location.\n"
+                "Use --certfile option.\n");
+        goto error;
     } else if (!keyfile) {
-	fprintf(stderr, "Unable to determine private key output location.\n"
-		"Use --keyfile option.\n");
-	goto error;
+        fprintf(stderr, "Unable to determine private key output location.\n"
+                "Use --keyfile option.\n");
+        goto error;
     }
 
     if (access(certfile, F_OK) == 0) {
-	fprintf(stderr, "%s exists.\n", certfile);
-	goto error;
+        fprintf(stderr, "%s exists.\n", certfile);
+        goto error;
     }
 
     if (access(keyfile, F_OK) == 0) {
-	fprintf(stderr, "%s exists.\n", keyfile);
-	goto error;
+        fprintf(stderr, "%s exists.\n", keyfile);
+        goto error;
     }
 
     /* Bootstrap trusted certificate directory if none exists. */
@@ -205,7 +205,7 @@ main(int argc, char *argv[])
         verror_print_error(stderr);
         goto error;
     }
-    
+
     /* Attempt anonymous-mode credential retrieval if we don't have a
        credential. */
     GSI_SOCKET_allow_anonymous(socket_attrs->gsi_socket, 1);
@@ -239,60 +239,60 @@ main(int argc, char *argv[])
 
     if (!use_empty_passwd) {
        /* Allow user to provide a passphrase */
-	int rval;
-	if (read_passwd_from_stdin) {
-	    rval = myproxy_read_passphrase_stdin(
-			   client_request->passphrase,
-			   sizeof(client_request->passphrase),
-			   NULL);
-	} else {
-	    rval = myproxy_read_passphrase(client_request->passphrase,
-					   sizeof(client_request->passphrase),
-					   NULL);
-	}
-	if (rval == -1) {
-	    verror_print_error(stderr);
+        int rval;
+        if (read_passwd_from_stdin) {
+            rval = myproxy_read_passphrase_stdin(
+                           client_request->passphrase,
+                           sizeof(client_request->passphrase),
+                           NULL);
+        } else {
+            rval = myproxy_read_passphrase(client_request->passphrase,
+                                           sizeof(client_request->passphrase),
+                                           NULL);
+        }
+        if (rval == -1) {
+            verror_print_error(stderr);
             goto error;
-	}
+        }
     }
 
     if (client_request->username == NULL) { /* set default username */
-	if (dn_as_username) {
-	    if (client_request->authzcreds) {
-		if (ssl_get_base_subject_file(client_request->authzcreds,
-					      &client_request->username)) {
-		    fprintf(stderr, "Cannot get subject name from %s\n",
-			    client_request->authzcreds);
+        if (dn_as_username) {
+            if (client_request->authzcreds) {
+                if (ssl_get_base_subject_file(client_request->authzcreds,
+                                              &client_request->username)) {
+                    fprintf(stderr, "Cannot get subject name from %s\n",
+                            client_request->authzcreds);
                     goto error;
-		}
-	    } else {
-		if (ssl_get_base_subject_file(NULL,
-					      &client_request->username)) {
-		    fprintf(stderr,
-			    "Cannot get subject name from your certificate\n");
+                }
+            } else {
+                if (ssl_get_base_subject_file(NULL,
+                                              &client_request->username)) {
+                    fprintf(stderr,
+                            "Cannot get subject name from your certificate\n");
                     goto error;
-		}
-	    }
-	} else {
-	    char *username = NULL;
-	    if (!(username = getenv("LOGNAME"))) {
-		fprintf(stderr, "Please specify a username.\n");
+                }
+            }
+        } else {
+            char *username = NULL;
+            if (!(username = getenv("LOGNAME"))) {
+                fprintf(stderr, "Please specify a username.\n");
                 goto error;
-	    }
-	    client_request->username = strdup(username);
-	}
+            }
+            client_request->username = strdup(username);
+        }
     }
 
     /* Serialize client request object */
     requestlen = myproxy_serialize_request_ex(client_request, &request_buffer);
     if (requestlen < 0) {
-	verror_print_error(stderr);
+        verror_print_error(stderr);
         goto error;
     }
 
     /* Send request to the myproxy-server */
     if (myproxy_send(socket_attrs, request_buffer, requestlen) < 0) {
-	verror_print_error(stderr);
+        verror_print_error(stderr);
         goto error;
     }
     free(request_buffer);
@@ -308,8 +308,8 @@ main(int argc, char *argv[])
     /* Accept delegated credentials from server */
     deletefile = 1;
     if (myproxy_accept_credentials(socket_attrs, delegfile,
-				   sizeof(delegfile)) < 0) {
-	verror_print_error(stderr);
+                                   sizeof(delegfile)) < 0) {
+        verror_print_error(stderr);
         goto error;
     }
 
@@ -338,22 +338,22 @@ main(int argc, char *argv[])
     /* Store file in trusted directory if requested and returned */
     if (client_request->want_trusted_certs) {
         if (server_response->trusted_certs != NULL) {
-            if (myproxy_install_trusted_cert_files(server_response->trusted_certs) != 0) {       
-		verror_print_error(stderr);
-		goto error;
+            if (myproxy_install_trusted_cert_files(server_response->trusted_certs) != 0) {
+                verror_print_error(stderr);
+                goto error;
             } else {
-		char *path;
-		path = get_trusted_certs_path();
+                char *path;
+                path = get_trusted_certs_path();
         if (path) {
             printf("Trust roots have been installed in %s.\n", path);
             free(path);
         }
-	    }
+            }
         } else {
             myproxy_debug("Requested trusted certs but didn't get any.\n");
         }
     }
-    
+
     retval = 0;
 
 error:
@@ -372,89 +372,89 @@ error:
     return retval;
 }
 
-void 
-init_arguments(int argc, 
-	       char *argv[], 
-	       myproxy_socket_attrs_t *attrs,
-	       myproxy_request_t *request) 
-{   
+void
+init_arguments(int argc,
+               char *argv[],
+               myproxy_socket_attrs_t *attrs,
+               myproxy_request_t *request)
+{
     extern char *optarg;
     int arg;
 
-    while((arg = getopt_long(argc, argv, short_options, 
-				 long_options, NULL)) != EOF) 
+    while((arg = getopt_long(argc, argv, short_options,
+                                 long_options, NULL)) != EOF)
     {
-        switch(arg) 
+        switch(arg)
         {
-        case 's': 	/* pshost name */
-	    attrs->pshost = strdup(optarg);
+        case 's':       /* pshost name */
+            attrs->pshost = strdup(optarg);
             break;
-        case 'p': 	/* psport */
+        case 'p':       /* psport */
             attrs->psport = atoi(optarg);
             break;
-	case 'h': 	/* print help and exit */
-        case 'u': 	/* print help and exit */
+        case 'h':       /* print help and exit */
+        case 'u':       /* print help and exit */
             printf("%s", usage);
             exit(0);
             break;
-        case 'l':	/* username */
+        case 'l':       /* username */
             request->username = strdup(optarg);
             break;
-	case 'a':       /* special authorization */
-	    request->authzcreds = strdup(optarg);
-	    use_empty_passwd = 1;
-	    break;
-	case 'n':       /* no passphrase */
-	    use_empty_passwd = 1;
-	    break;
-	case 'v':
-	    myproxy_debug_set_level(1);
-	    break;
+        case 'a':       /* special authorization */
+            request->authzcreds = strdup(optarg);
+            use_empty_passwd = 1;
+            break;
+        case 'n':       /* no passphrase */
+            use_empty_passwd = 1;
+            break;
+        case 'v':
+            myproxy_debug_set_level(1);
+            break;
         case 'V':       /* print version and exit */
             printf("%s", version);
             exit(0);
             break;
-	case 'd':       /* use the certificate subject (DN) as the default
-		           username instead of LOGNAME */
-	    dn_as_username = 1;
-	    break;
-	case 'k':       /* credential name */
-	    request->credname = strdup (optarg);
-	    break;
-	case 'S':
-	    read_passwd_from_stdin = 1;
-	    break;
-	case 'T':
-	    request->want_trusted_certs = 1;
+        case 'd':       /* use the certificate subject (DN) as the default
+                           username instead of LOGNAME */
+            dn_as_username = 1;
+            break;
+        case 'k':       /* credential name */
+            request->credname = strdup (optarg);
+            break;
+        case 'S':
+            read_passwd_from_stdin = 1;
+            break;
+        case 'T':
+            request->want_trusted_certs = 1;
             myproxy_debug("Requesting trusted certificates.\n");
-	    break;
+            break;
         case 'c':       /* credential file name */
-	    if (certfile) free(certfile);
+            if (certfile) free(certfile);
             certfile = strdup(optarg);
             break;
         case 'y':       /* key file name */
-	    if (keyfile) free(keyfile);
+            if (keyfile) free(keyfile);
             keyfile = strdup(optarg);
             break;
-        default:        /* print usage and exit */ 
+        default:        /* print usage and exit */
             fprintf(stderr, "%s", usage);
-	    exit(1);
-	    break;	
+            exit(1);
+            break;
         }
     }
 
     /* Check to see if myproxy-server specified */
     if (attrs->pshost == NULL) {
-	fprintf(stderr, "Unspecified myproxy-server.  Set the MYPROXY_SERVER environment variable to\nthe hostname of the myproxy-server or run with '-s server-hostname'.\n");
-	exit(1);
+        fprintf(stderr, "Unspecified myproxy-server.  Set the MYPROXY_SERVER environment variable to\nthe hostname of the myproxy-server or run with '-s server-hostname'.\n");
+        exit(1);
     }
 
     return;
 }
 
 int
-store_credential( char *delegfile, 
-                  char *certfile, 
+store_credential( char *delegfile,
+                  char *certfile,
                   char *keyfile )
 {
     unsigned char       *input_buffer       = NULL;
@@ -488,13 +488,13 @@ error:
 }
 
 int
-write_cert( char       *path, 
+write_cert( char       *path,
             const char *buffer )
 {
     int          fd = 0;
     static char  BEGINCERT[] = "-----BEGIN CERTIFICATE-----";
     static char  ENDCERT[]   = "-----END CERTIFICATE-----";
-    char        *certstart,
+    const char  *certstart,
                 *certend;
     int          retval      = -1;
     int          size;
@@ -570,7 +570,7 @@ error:
 }
 
 int
-write_key( char       *path, 
+write_key( char       *path,
            const char *buffer )
 {
     int          fd = 0;
@@ -580,7 +580,7 @@ write_key( char       *path,
     static char  ENDKEY1[]   = "-----END RSA PRIVATE KEY-----";
     static char  ENDKEY2[]   = "-----END PRIVATE KEY-----";
     static char  ENDKEY3[]   = "-----END ENCRYPTED PRIVATE KEY-----";
-    char        *keystart,
+    const char  *keystart,
                 *keyend;
     int          retval     = -1;
     int          size;
@@ -607,24 +607,24 @@ write_key( char       *path,
 
     /* Write the key. */
     if ((keystart = strstr(buffer, BEGINKEY1)) == NULL
-	&& (keystart = strstr(buffer, BEGINKEY2)) == NULL
-	&& (keystart = strstr(buffer, BEGINKEY3)) == NULL)
+        && (keystart = strstr(buffer, BEGINKEY2)) == NULL
+        && (keystart = strstr(buffer, BEGINKEY3)) == NULL)
     {
       fprintf(stderr, "CREDKEY doesn't contain '%s' nor '%s' nor '%s'.\n",
-				BEGINKEY1, BEGINKEY2, BEGINKEY3);
+                                BEGINKEY1, BEGINKEY2, BEGINKEY3);
       goto error;
     }
 
     if ((keyend = strstr(keystart, ENDKEY1)) != NULL)
-	keyend += strlen(ENDKEY1);
+        keyend += strlen(ENDKEY1);
     else if ((keyend = strstr(keystart, ENDKEY2)) != NULL)
-	keyend += strlen(ENDKEY2);
+        keyend += strlen(ENDKEY2);
     else if ((keyend = strstr(keystart, ENDKEY3)) != NULL)
-	keyend += strlen(ENDKEY3);
+        keyend += strlen(ENDKEY3);
     else
     {
       fprintf(stderr, "CREDKEY doesn't contain '%s' nor '%s' nor '%s'.\n",
-				ENDKEY1, ENDKEY2, ENDKEY3);
+                                ENDKEY1, ENDKEY2, ENDKEY3);
       goto error;
     }
 
@@ -648,12 +648,12 @@ error:
 }
 
 int
-buffer2file( char *buffer,
+buffer2file( const char *buffer,
              int   size,
              int   fd )
 {
     int   rval;
-    char *certstart;
+    const char *certstart;
 
     certstart = buffer;
 

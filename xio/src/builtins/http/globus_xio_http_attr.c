@@ -23,6 +23,8 @@
  */
 #endif
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Allocate and initialize an HTTP attribute
  * @ingroup globus_i_xio_http_attr
@@ -31,7 +33,7 @@
  * driver via globus_xio_attr_init().
  *
  * @param out_attr
- *     Pointer value will be set to point to a 
+ *     Pointer value will be set to point to a
  *     newly allocated and initilized #globus_i_xio_http_attr_t
  *     structure.
  *
@@ -355,3 +357,5 @@ globus_i_xio_http_attr_destroy(
     return GLOBUS_SUCCESS;
 }
 /* globus_i_xio_http_attr_destroy() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */

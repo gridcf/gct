@@ -76,7 +76,7 @@ extern "C" {
  */
 
 /**
- * @defgroup globus_gsi_sysconfig_win32 Functions for Win32 platforms 
+ * @defgroup globus_gsi_sysconfig_win32 Functions for Win32 platforms
  * @ingroup globus_gsi_sysconfig
  * @brief Functions for Win32 platforms
  *
@@ -91,7 +91,7 @@ extern "C" {
  * @brief Functions for all platforms
  *
  * These functions are platform independent members of the Globus GSI System
- * Configuration API. 
+ * Configuration API.
  *
  */
 
@@ -137,14 +137,14 @@ extern "C" {
  * subsequently called. This function may be called multiple times.
  *
  * To deactivate Globus GSI System Configuration API, the following function
- * must be called: 
+ * must be called:
  *
  * @code
  *    globus_module_deactivate(GLOBUS_GSI_SYSCONFIG_MODULE)
  * @endcode
  *
  * This function should be called once for each time Globus GSI System
- * Configuration API was activated. 
+ * Configuration API was activated.
  */
 
 /** Module descriptor
@@ -153,7 +153,7 @@ extern "C" {
  */
 #define GLOBUS_GSI_SYSCONFIG_MODULE    (&globus_i_gsi_sysconfig_module)
 
-extern 
+extern
 globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 
 #ifdef WIN32
@@ -340,7 +340,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
             globus_gsi_sysconfig_get_signing_policy_filename_unix
 /**
  * Get a list of of trusted CA certificate filenames in a trusted CA
- * certificate directory. 
+ * certificate directory.
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_get_ca_cert_files_unix() and
@@ -376,7 +376,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 #    define GLOBUS_GSI_SYSCONFIG_SPLIT_DIR_AND_FILENAME \
             globus_gsi_sysconfig_split_dir_and_filename_unix
 /**
- * Remove all proxies owned by current uid 
+ * Remove all proxies owned by current uid
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_remove_all_owned_files_unix() and
@@ -385,7 +385,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 #    define GLOBUS_GSI_SYSCONFIG_REMOVE_ALL_OWNED_FILES \
             globus_gsi_sysconfig_remove_all_owned_files_unix
 /**
- * Determine the location of the grid map file. 
+ * Determine the location of the grid map file.
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_get_gridmap_filename_unix() and
@@ -394,7 +394,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 #    define GLOBUS_GSI_SYSCONFIG_GET_GRIDMAP_FILENAME \
             globus_gsi_sysconfig_get_gridmap_filename_unix
 /**
- * Determine the location of the authorization callout config file. 
+ * Determine the location of the authorization callout config file.
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_get_authz_conf_filename_unix()
@@ -403,7 +403,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
             globus_gsi_sysconfig_get_authz_conf_filename_unix
 
 /**
- * Determine the location of the GAA callout config file. 
+ * Determine the location of the GAA callout config file.
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_get_gaa_conf_filename_unix()
@@ -438,7 +438,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
 #    define GLOBUS_GSI_SYSCONFIG_GET_PROC_ID_STRING \
             globus_gsi_sysconfig_get_proc_id_string_unix
 /**
- * Get the current user name 
+ * Get the current user name
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
  * See globus_gsi_sysconfig_get_username_unix() and
@@ -452,7 +452,7 @@ globus_module_descriptor_t              globus_i_gsi_sysconfig_module;
  * Generate a unique proxy file name
  * @ingroup globus_gsi_system_config_defines
  * @hideinitializer
- * See globus_gsi_sysconfig_get_unique_proxy_filename() 
+ * See globus_gsi_sysconfig_get_unique_proxy_filename()
  */
 #define     GLOBUS_GSI_SYSCONFIG_GET_UNIQUE_PROXY_FILENAME \
             globus_gsi_sysconfig_get_unique_proxy_filename
@@ -527,7 +527,11 @@ GLOBUS_GSI_SYSCONFIG_GET_PROXY_FILENAME(
 
 globus_result_t
 GLOBUS_GSI_SYSCONFIG_GET_SIGNING_POLICY_FILENAME(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_NAME *                         ca_name,
+#else
+    const X509_NAME *                   ca_name,
+#endif
     char *                              cert_dir,
     char **                             signing_policy_filename);
 

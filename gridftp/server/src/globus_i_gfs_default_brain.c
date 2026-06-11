@@ -84,7 +84,7 @@ gfs_l_db_node_cmp(
     }
     /* if the total number of connections is capped and we have exceded
         the cap send it to the back */
-    if(n1->total_max_connections > 0 
+    if(n1->total_max_connections > 0
         && n1->total_connections >= n1->total_max_connections)
     {
         return 1;
@@ -121,7 +121,7 @@ gfs_l_db_parse_string_list(
     {
         return NULL;
     }
-    
+
     tmp_str = globus_libc_strdup(str_list);
     last_str = tmp_str;
     while((p = strchr(last_str, ',')) != NULL)
@@ -131,7 +131,7 @@ gfs_l_db_parse_string_list(
         last_str = p + 1;
     }
     globus_list_insert(&list, strdup(last_str));
-    
+
     globus_free(tmp_str);
 
     return list;
@@ -156,7 +156,7 @@ globus_l_brain_log_socket(
     {
         peer_contact = strdup("could get peer addr");
     }
-    
+
     globus_gfs_log_message(
         GLOBUS_GFS_LOG_WARN,
         "[%s]  %s", peer_contact, msg);
@@ -242,7 +242,7 @@ globus_l_gfs_gfork_dyn_reg(
         repo = (gfs_l_db_repo_t *) calloc(1, sizeof(gfs_l_db_repo_t));
         globus_priority_q_init(&repo->node_q, gfs_l_db_node_cmp);
         globus_hashtable_init(
-            &repo->node_table, 
+            &repo->node_table,
             32,
             globus_hashtable_string_hash,
             globus_hashtable_string_keyeq);
@@ -257,7 +257,7 @@ globus_l_gfs_gfork_dyn_reg(
     }
 
     if(node == NULL)
-    { 
+    {
         node = (gfs_l_db_node_t*)globus_calloc(1, sizeof(gfs_l_db_node_t));
         node->host_id = strdup(cs);
         node->cookie_id = cookie_id;
@@ -326,7 +326,6 @@ globus_l_gfs_mem_limit_release_cb(
     void *                              user_arg)
 {
     globus_xio_iovec_t                  iov[1];
-    globus_result_t                     result;
     globus_byte_t *                     buffer;
     uint32_t                            tmp32;
 
@@ -343,7 +342,7 @@ globus_l_gfs_mem_limit_release_cb(
             iov[0].iov_base = buffer;
             iov[0].iov_len = GF_RELEASE_MSG_LEN;
 
-            result = globus_gfork_send(
+            globus_gfork_send(
                 globus_l_gfs_gfork_handle,
                 -1, /* to the master */
                 iov,
@@ -407,14 +406,14 @@ globus_l_gfs_gfork_incoming_cb(
                     {
                         globus_gfs_log_message(
                             GLOBUS_GFS_LOG_ERR,
-                            "[%s] error in dyn reg size\n", 
+                            "[%s] error in dyn reg size\n",
                             "globus_l_gfs_gfork_incoming_cb()");
                     }
                     else
                     {
                         globus_gfs_log_message(
                             GLOBUS_GFS_LOG_INFO,
-                            "[%s] registering a new backend %d\n", 
+                            "[%s] registering a new backend %d\n",
                             "globus_l_gfs_gfork_incoming_cb()",
                             n32);
                         globus_l_gfs_gfork_dyn_reg(
@@ -476,9 +475,9 @@ globus_l_gfs_gfork_incoming_cb(
 
             default:
                globus_gfs_log_message(
-                    GLOBUS_GFS_LOG_WARN, 
+                    GLOBUS_GFS_LOG_WARN,
                     "Unknown GFork message type received.\n");
-                break; 
+                break;
         }
     }
     globus_mutex_unlock(&globus_l_brain_mutex);
@@ -520,7 +519,7 @@ globus_l_gfs_default_brain_init(
             GFS_DB_REPO_SIZE,
             globus_hashtable_string_hash,
             globus_hashtable_string_keyeq);
-            
+
         remote_list = globus_i_gfs_config_string("remote_nodes");
         list = gfs_l_db_parse_string_list(remote_list);
 
@@ -531,7 +530,7 @@ globus_l_gfs_default_brain_init(
         globus_priority_q_init(&default_repo->node_q, gfs_l_db_node_cmp);
 
         globus_hashtable_init(
-            &gfs_l_db_default_repo->node_table, 
+            &gfs_l_db_default_repo->node_table,
             32,
             globus_hashtable_string_hash,
             globus_hashtable_string_keyeq);
@@ -574,7 +573,7 @@ globus_l_gfs_default_brain_init(
         if(result != GLOBUS_SUCCESS)
         {
             globus_gfs_log_result(
-                GLOBUS_GFS_LOG_DUMP, 
+                GLOBUS_GFS_LOG_DUMP,
                 "GFork functionality not enabled.",
                 result);
 
@@ -615,7 +614,7 @@ globus_l_gfs_default_brain_available(
     int *                               count)
 {
     int                                 size;
-    
+
     size = globus_priority_q_size(&gfs_l_db_default_repo->node_q);
     *count = size;
 
@@ -690,7 +689,7 @@ globus_l_gfs_default_brain_select_nodes(
         }
         count = 0;
         e_count = count;
-     
+
         do
         {
             loop_count = 0;
@@ -709,7 +708,7 @@ globus_l_gfs_default_brain_select_nodes(
                 else if(
                     (node->current_connection >= node->max_connection &&
                      node->max_connection < 0) ||
-                    (node->total_max_connections > 0 && 
+                    (node->total_max_connections > 0 &&
                         node->total_connections >= node->total_max_connections))
                 {
                     /* need to up everything for sake of nice clean up*/
@@ -733,8 +732,8 @@ globus_l_gfs_default_brain_select_nodes(
                     GlobusGFSErrorObjParameter("No nodes available."));
                 goto error_short;
             }
-            
-           /* if we are here we were successful and must re-enqueue the nodes 
+
+           /* if we are here we were successful and must re-enqueue the nodes
             * we just took out with new order */
             for(i = count - loop_count; i < count; i++)
             {

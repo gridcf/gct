@@ -121,7 +121,7 @@ globus_l_logging_periodic(
 
     globus_mutex_lock(&handle->mutex);
     {
-        globus_l_logging_flush(handle); 
+        globus_l_logging_flush(handle);
     }
     globus_mutex_unlock(&handle->mutex);
 }
@@ -145,7 +145,7 @@ globus_logging_init(
     globus_logging_handle_t *           out_handle,
     globus_reltime_t *                  flush_period,
     int                                 buffer_length_in,
-    int                                 log_type,   
+    int                                 log_type,
     globus_logging_module_t *           module,
     void *                              user_arg)
 {
@@ -171,7 +171,7 @@ globus_logging_init(
     {
         buffer_length = GLOBUS_L_LOGGING_MAX_MESSAGE;
     }
-    
+
     if(module == NULL || module->write_func == NULL)
     {
         res = GlobusLoggingErrorParameter("module");
@@ -187,7 +187,7 @@ globus_logging_init(
     }
 
     globus_l_logging_pid = getpid();
-    
+
     handle->module.open_func = module->open_func;
     handle->module.write_func = module->write_func;
     handle->module.close_func = module->close_func;
@@ -203,7 +203,7 @@ globus_logging_init(
     {
         handle->module.open_func(handle->user_arg);
     }
-    
+
     GlobusTimeReltimeSet(zero, 0, 0);
     if(flush_period != NULL && globus_reltime_cmp(flush_period, &zero) != 0)
     {
@@ -276,7 +276,7 @@ globus_logging_vwrite(
                 handle->used_length += nbytes;
                 remain -= nbytes;
             }
-            rc = vsnprintf((char *) &handle->buffer[handle->used_length], 
+            rc = vsnprintf((char *) &handle->buffer[handle->used_length],
                 remain, fmt, ap);
             if (rc < 0)
             {
@@ -289,24 +289,24 @@ globus_logging_vwrite(
             if(nbytes > remain)
             {
                 char                    suffix[64];
-                
+
                 globus_libc_snprintf(
-                    suffix, 
-                    sizeof(suffix), 
-                    " *** TRUNCATED %lu bytes\n", 
+                    suffix,
+                    sizeof(suffix),
+                    " *** TRUNCATED %lu bytes\n",
                     (unsigned long) (nbytes - remain + sizeof(suffix)));
-                
+
                 memcpy(
-                    &handle->buffer[handle->buffer_length - sizeof(suffix)], 
+                    &handle->buffer[handle->buffer_length - sizeof(suffix)],
                     suffix,
                     sizeof(suffix));
-                    
+
                 nbytes = remain - sizeof(suffix) + strlen(suffix);
             }
             handle->used_length += nbytes;
             remain -= nbytes;
 
-            if(type & GLOBUS_LOGGING_INLINE || 
+            if(type & GLOBUS_LOGGING_INLINE ||
                 handle->type_mask & GLOBUS_LOGGING_INLINE ||
                 remain < GLOBUS_L_LOGGING_MAX_MESSAGE)
             {
@@ -321,7 +321,7 @@ globus_logging_vwrite(
   err:
     return res;
 }
-    
+
 globus_result_t
 globus_logging_write(
     globus_logging_handle_t             handle,
@@ -411,13 +411,12 @@ globus_logging_stdio_header_func(
     globus_size_t *                     len)
 {
     char                                str[256];
-    char *                              tmp;
     time_t                              tm;
     globus_size_t                       str_len;
     int                                 nbytes;
 
     tm = time(NULL);
-    tmp = globus_libc_ctime_r(&tm, str, sizeof(str));
+    globus_libc_ctime_r(&tm, str, sizeof(str));
     str_len = strlen(str);
     if(str[str_len - 1] == '\n')
     {
@@ -447,14 +446,14 @@ globus_logging_ng_header_func(
     if(gettimeofday(&tv, NULL) == 0)
     {
         globus_libc_gmtime_r(&tv.tv_sec, &tm);
-        nbytes = snprintf(buf, *len, "ts=%04d-%02d-%02dT%02d:%02d:%02d.%06dZ id=%d ", 
-            tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, 
-            tm.tm_hour, tm.tm_min, tm.tm_sec , (int) tv.tv_usec, 
+        nbytes = snprintf(buf, *len, "ts=%04d-%02d-%02dT%02d:%02d:%02d.%06dZ id=%d ",
+            tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+            tm.tm_hour, tm.tm_min, tm.tm_sec , (int) tv.tv_usec,
             globus_l_logging_pid);
     }
     else
     {
-        nbytes = snprintf(buf, *len, "ts=0000-00-00T00:00:00.000000Z id=%d ", 
+        nbytes = snprintf(buf, *len, "ts=0000-00-00T00:00:00.000000Z id=%d ",
             globus_l_logging_pid);
     }
     if(nbytes < 0)
@@ -481,7 +480,7 @@ globus_logging_syslog_close_func(
 {
     closelog();
 }
-    
+
 void
 globus_logging_syslog_write_func(
     globus_byte_t *                     buf,

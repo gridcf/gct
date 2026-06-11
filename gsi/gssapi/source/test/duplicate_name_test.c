@@ -37,7 +37,7 @@ duplicate_bad_params_test(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NT_HOSTBASED_SERVICE;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -96,7 +96,7 @@ duplicate_username_test(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NO_OID;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -165,7 +165,7 @@ duplicate_anonymous_test(void)
     name_tok.value = NULL;
     name_tok.length = 0;
     name_type = GSS_C_NT_ANONYMOUS;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -178,7 +178,7 @@ duplicate_anonymous_test(void)
         return 1;
     }
 
-    
+
     major_status = gss_duplicate_name(&minor_status, gss_name, &name_copy);
     if(major_status != GSS_S_COMPLETE)
     {
@@ -191,7 +191,7 @@ duplicate_anonymous_test(void)
                                     name_copy,
                                     &name_tok,
                                     NULL);
-    
+
     if(major_status != GSS_S_COMPLETE)
     {
         globus_gsi_gssapi_test_print_error(stderr, major_status, minor_status);
@@ -253,7 +253,7 @@ duplicate_hostbase_service_test(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GSS_C_NT_HOSTBASED_SERVICE;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -325,7 +325,7 @@ duplicate_host_ip_test(void)
     name_tok.value = subject;
     name_tok.length = strlen(subject) + 1;
     name_type = GLOBUS_GSS_C_NT_HOST_IP;
-    
+
     major_status = gss_import_name(&minor_status,
                                    &name_tok,
                                    name_type,
@@ -407,7 +407,7 @@ duplicate_x509_test(void)
     for (i = 0; i < SIZEOF_ARRAY(test_certs); i++)
     {
         char * test_cert;
-        
+
         if (test_cert_dir)
         {
             test_cert = globus_common_create_string("%s/%s",
@@ -417,15 +417,15 @@ duplicate_x509_test(void)
         {
             test_cert = test_certs[i];
         }
-        
+
         result = globus_gsi_cred_handle_init(&cred_handle, NULL);
         if (result != GLOBUS_SUCCESS)
         {
             globus_gsi_gssapi_test_print_result(stderr, result);
 
             if (test_cert_dir)
-	    {
-	        free(test_cert);
+            {
+                free(test_cert);
             }
 
             return 2;
@@ -454,7 +454,7 @@ duplicate_x509_test(void)
         name_tok.value = x509;
         name_tok.length = sizeof(x509);
         name_type = GLOBUS_GSS_C_NT_X509;
-        
+
         major_status = gss_import_name(&minor_status,
                                        &name_tok,
                                        name_type,
@@ -532,7 +532,7 @@ duplicate_x509_test(void)
 
 int main()
 {
-    int                                 i, rc = 0, failed = 0;
+    int                                 i, rc = 0;
     globus_module_descriptor_t         *modules[] =
     {
         GLOBUS_COMMON_MODULE,
@@ -562,10 +562,6 @@ int main()
     {
         rc = (*(tests[i].func))();
 
-        if (rc != 0)
-        {
-            failed++;
-        }
         printf("%s %s\n", rc == 0 ? "ok" : "not ok", tests[i].name);
     }
 

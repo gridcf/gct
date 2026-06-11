@@ -22,7 +22,7 @@
 #endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 /******************************************************************************
-			     Include header files
+                             Include header files
 ******************************************************************************/
 #include "globus_i_common_config.h"
 #include "globus_common_include.h"
@@ -36,7 +36,7 @@
 #include "globus_thread.h"
 
 /******************************************************************************
-			       Type definitions
+                               Type definitions
 ******************************************************************************/
 
 /*
@@ -52,10 +52,10 @@ static globus_thread_key_t              globus_l_deactivate_parent_key;
  */
 typedef struct
 {
-    globus_mutex_t			mutex;
-    globus_cond_t			cond;
-    globus_thread_t			thread_id;
-    int					level;
+    globus_mutex_t                      mutex;
+    globus_cond_t                       cond;
+    globus_thread_t                     thread_id;
+    int                                 level;
 } globus_l_module_mutex_t;
 
 /*
@@ -64,15 +64,15 @@ typedef struct
 typedef globus_module_activation_func_t globus_l_module_key_t;
 typedef struct
 {
-    globus_module_descriptor_t *	descriptor;
-    globus_list_t *			clients;
-    int					reference_count;
+    globus_module_descriptor_t *        descriptor;
+    globus_list_t *                     clients;
+    int                                 reference_count;
     globus_module_deactivate_proxy_cb_t deactivate_cb;
     void *                              user_arg;
 } globus_l_module_entry_t;
 
 /******************************************************************************
-		       Define module specific variables
+                       Define module specific variables
 ******************************************************************************/
 
 globus_bool_t
@@ -84,59 +84,59 @@ static globus_bool_t
 globus_l_environ_mutex_initialized = GLOBUS_FALSE;
 
 /* Recursive mutex to protect internal data structures */
-static globus_l_module_mutex_t		globus_l_module_mutex;
+static globus_l_module_mutex_t          globus_l_module_mutex;
 
 /* Hash table and list to maintain a table of registered modules */
 const int GLOBUS_L_MODULE_TABLE_SIZE = 13;
-static globus_hashtable_t		globus_l_module_table;
-static globus_list_t *			globus_l_module_list;
+static globus_hashtable_t               globus_l_module_table;
+static globus_list_t *                  globus_l_module_list;
 
 /* Hash table for globus_environ*/
 const int GLOBUS_L_ENVIRON_TABLE_SIZE = 13;
-static globus_mutex_t		globus_l_environ_hashtable_mutex;
-static globus_hashtable_t		globus_l_environ_table;
+static globus_mutex_t           globus_l_environ_hashtable_mutex;
+static globus_hashtable_t               globus_l_environ_table;
 
 globus_list_t *globus_l_module_atexit_funcs = GLOBUS_NULL;
 
 /******************************************************************************
-		      Module specific function prototypes
+                      Module specific function prototypes
 ******************************************************************************/
 static void
 globus_l_module_initialize();
 
 static globus_bool_t
 globus_l_module_increment(
-    globus_module_descriptor_t *	module_descriptor,
-    globus_l_module_key_t		parent_key,
+    globus_module_descriptor_t *        module_descriptor,
+    globus_l_module_key_t               parent_key,
     globus_module_deactivate_proxy_cb_t deactivate_cb,
     void *                              user_arg);
 
 static globus_l_module_entry_t *
 globus_l_module_decrement(
-    globus_module_descriptor_t *	module_descriptor,
-    globus_l_module_key_t		parent_key);
+    globus_module_descriptor_t *        module_descriptor,
+    globus_l_module_key_t               parent_key);
 
 static
 int
 globus_l_module_reference_count(
-    globus_module_descriptor_t *	module_descriptor);
+    globus_module_descriptor_t *        module_descriptor);
 /******************************************************************************
-		      Recursive mutex function prototypes
+                      Recursive mutex function prototypes
 ******************************************************************************/
 static void
 globus_l_module_mutex_init(
-    globus_l_module_mutex_t *		mutex);
+    globus_l_module_mutex_t *           mutex);
 
 static void
 globus_l_module_mutex_lock(
-    globus_l_module_mutex_t *		mutex);
+    globus_l_module_mutex_t *           mutex);
 
 static void
 globus_l_module_mutex_unlock(
-    globus_l_module_mutex_t *		mutex);
-    
+    globus_l_module_mutex_t *           mutex);
+
 /******************************************************************************
-			   API function definitions
+                           API function definitions
 ******************************************************************************/
 
 #if USE_SYMBOL_LABELS
@@ -167,14 +167,14 @@ __attribute__ ((externally_visible))
 #endif
 int
 globus_module_activate_proxy(
-    globus_module_descriptor_t *	module_descriptor,
+    globus_module_descriptor_t *        module_descriptor,
     globus_module_deactivate_proxy_cb_t deactivate_cb,
     void *                              user_arg)
 {
     globus_l_module_key_t               parent_key;
     int                                 ret_val;
     globus_l_module_key_t               parent_key_save;
-    
+
     /*
      * If this is the first time this routine has been called, then we need to
      * initialize the internal data structures and activate the threads
@@ -182,10 +182,10 @@ globus_module_activate_proxy(
      */
     if (globus_i_module_initialized == GLOBUS_FALSE)
     {
-	globus_i_module_initialized = GLOBUS_TRUE;
-	globus_l_module_initialize();
+        globus_i_module_initialized = GLOBUS_TRUE;
+        globus_l_module_initialize();
     }
-    
+
     parent_key = (globus_l_module_key_t)
         globus_thread_getspecific(globus_l_activate_parent_key);
     /*
@@ -195,22 +195,22 @@ globus_module_activate_proxy(
      */
     globus_l_module_mutex_lock(&globus_l_module_mutex);
     {
-	ret_val = GLOBUS_SUCCESS;
+        ret_val = GLOBUS_SUCCESS;
 
-	if (module_descriptor->activation_func != GLOBUS_NULL)
-	{
-	    if (globus_l_module_increment(module_descriptor,
-					  parent_key,
-					  deactivate_cb,
-					  user_arg) == GLOBUS_TRUE)
-	    {
-		parent_key_save = parent_key;
-		globus_thread_setspecific(
-		    globus_l_activate_parent_key,
-		    module_descriptor->activation_func);
-		
-		ret_val = module_descriptor->activation_func();
-                
+        if (module_descriptor->activation_func != GLOBUS_NULL)
+        {
+            if (globus_l_module_increment(module_descriptor,
+                                          parent_key,
+                                          deactivate_cb,
+                                          user_arg) == GLOBUS_TRUE)
+            {
+                parent_key_save = parent_key;
+                globus_thread_setspecific(
+                    globus_l_activate_parent_key,
+                    module_descriptor->activation_func);
+
+                ret_val = module_descriptor->activation_func();
+
                 if(ret_val != GLOBUS_SUCCESS)
                 {
                     globus_l_module_decrement(
@@ -218,9 +218,9 @@ globus_module_activate_proxy(
                 }
                 else
                 {
-		/*
-		 * Set up the exit handler
-		 */
+                /*
+                 * Set up the exit handler
+                 */
                     if(module_descriptor->atexit_func != GLOBUS_NULL)
                     {
                         /* only call the atexit function once */
@@ -236,11 +236,11 @@ globus_module_activate_proxy(
                         }
                     }
                 }
-                
+
                 globus_thread_setspecific(
-		    globus_l_activate_parent_key, parent_key_save);
-	    }
-	}
+                    globus_l_activate_parent_key, parent_key_save);
+            }
+        }
     }
     globus_l_module_mutex_unlock(&globus_l_module_mutex);
 
@@ -264,7 +264,7 @@ __attribute__ ((externally_visible))
 #endif
 int
 globus_module_activate(
-    globus_module_descriptor_t *	module_descriptor)
+    globus_module_descriptor_t *        module_descriptor)
 {
     return globus_module_activate_proxy(module_descriptor, NULL, NULL);
 }
@@ -276,7 +276,7 @@ globus_module_activate(
  * Activate an NULL-terminated array of modules. If any fail to activate, all
  * are deactivated and the error from the failed activation is returned. If
  * nonzero is returned, and failed_module is non-NULL, it will be set to point
- * to the 1st module which failed to activate. 
+ * to the 1st module which failed to activate.
  * @param module_array
  *     NULL-terminated array of module descriptors to activate.
  * @param failed_module
@@ -329,7 +329,7 @@ __attribute__ ((externally_visible))
 #endif
 int
 globus_module_activate_proxy_compat(
-    globus_module_descriptor_t *	module_descriptor,
+    globus_module_descriptor_t *        module_descriptor,
     globus_module_deactivate_proxy_cb_t deactivate_cb,
     void *                              user_arg)
 {
@@ -350,7 +350,7 @@ __attribute__ ((externally_visible))
 #endif
 int
 globus_module_activate_compat(
-    globus_module_descriptor_t *	module_descriptor)
+    globus_module_descriptor_t *        module_descriptor)
 {
     int rc;
     rc = globus_thread_set_model("pthread");
@@ -393,11 +393,11 @@ globus_module_activate_array_compat(
  */
 int
 globus_module_deactivate(
-    globus_module_descriptor_t *	module_descriptor)
+    globus_module_descriptor_t *        module_descriptor)
 {
     globus_l_module_key_t               parent_key;
-    int					ret_val;
-    globus_l_module_key_t		parent_key_save;
+    int                                 ret_val;
+    globus_l_module_key_t               parent_key_save;
 
 
     /*
@@ -405,9 +405,9 @@ globus_module_deactivate(
      */
     if (!globus_i_module_initialized)
     {
-	return GLOBUS_FAILURE;
+        return GLOBUS_FAILURE;
     }
-    
+
     parent_key = (globus_l_module_key_t)
         globus_thread_getspecific(globus_l_deactivate_parent_key);
     /*
@@ -419,19 +419,19 @@ globus_module_deactivate(
     if (module_descriptor->activation_func != GLOBUS_NULL)
     {
         globus_l_module_entry_t *       entry;
-        
+
         globus_l_module_mutex_lock(&globus_l_module_mutex);
-        
+
         entry = globus_l_module_decrement(module_descriptor, parent_key);
         if (entry && entry->reference_count == 0)
         {
             globus_l_module_mutex_unlock(&globus_l_module_mutex);
-            
+
             parent_key_save = parent_key;
             globus_thread_setspecific(
                 globus_l_deactivate_parent_key,
                 module_descriptor->activation_func);
-            
+
             if(entry->deactivate_cb)
             {
                 ret_val = entry->deactivate_cb(
@@ -441,7 +441,7 @@ globus_module_deactivate(
             {
                 ret_val = module_descriptor->deactivation_func();
             }
-            
+
             globus_thread_setspecific(
                 globus_l_deactivate_parent_key, parent_key_save);
         }
@@ -470,39 +470,39 @@ globus_module_deactivate_all(void)
      */
     if (!globus_i_module_initialized)
     {
-	return GLOBUS_FAILURE;
+        return GLOBUS_FAILURE;
     }
-    
+
     globus_l_module_mutex_lock(&globus_l_module_mutex);
     {
-	globus_bool_t			 deactivated_one;
+        globus_bool_t                    deactivated_one;
 
-	deactivated_one = GLOBUS_TRUE;
+        deactivated_one = GLOBUS_TRUE;
 
-	while(deactivated_one)
-	{
-	    globus_list_t *		module_list;
+        while(deactivated_one)
+        {
+            globus_list_t *             module_list;
 
-	    module_list = globus_l_module_list;
-	    deactivated_one = GLOBUS_FALSE;
+            module_list = globus_l_module_list;
+            deactivated_one = GLOBUS_FALSE;
 
-	    while(!globus_list_empty(module_list))
-	    {
-		globus_l_module_entry_t *module_entry;
+            while(!globus_list_empty(module_list))
+            {
+                globus_l_module_entry_t *module_entry;
 
-		module_entry = globus_list_first(module_list);
-		module_list = globus_list_rest(module_list);
-	    
-		if(globus_list_empty(module_entry->clients) &&
-		   module_entry->reference_count > 0)
-		{
-		    globus_l_module_mutex_unlock(&globus_l_module_mutex);
-		    globus_module_deactivate(module_entry->descriptor);
-		    globus_l_module_mutex_lock(&globus_l_module_mutex);
-		    deactivated_one = GLOBUS_TRUE;
-		}
-	    }
-	}
+                module_entry = globus_list_first(module_list);
+                module_list = globus_list_rest(module_list);
+
+                if(globus_list_empty(module_entry->clients) &&
+                   module_entry->reference_count > 0)
+                {
+                    globus_l_module_mutex_unlock(&globus_l_module_mutex);
+                    globus_module_deactivate(module_entry->descriptor);
+                    globus_l_module_mutex_lock(&globus_l_module_mutex);
+                    deactivated_one = GLOBUS_TRUE;
+                }
+            }
+        }
     }
     globus_l_module_mutex_unlock(&globus_l_module_mutex);
 
@@ -517,7 +517,7 @@ globus_module_deactivate_all(void)
 
 void *
 globus_module_get_module_pointer(
-    globus_module_descriptor_t *	structptr)
+    globus_module_descriptor_t *        structptr)
 {
     void * retptr;
     void * (*module_func)();
@@ -525,7 +525,7 @@ globus_module_get_module_pointer(
     module_func=structptr->get_pointer_func;
 
     if (module_func!=NULL)
-    {	
+    {
         retptr=(*module_func)();
     }
     else
@@ -534,20 +534,20 @@ globus_module_get_module_pointer(
     }
 
     return(retptr);
-} 
+}
 /*globus_module_get_module_pointer();*/
 
 
 /*
  * globus_module_setenv();
- */ 
+ */
 
 void
 globus_module_setenv(
     const char *                        name,
     const char *                        value)
 {
-    int				rc;
+    int                         rc;
 
     /*
      *  First, check to see if the environment mutex has been initialized
@@ -555,38 +555,38 @@ globus_module_setenv(
 
     if(globus_l_environ_mutex_initialized == GLOBUS_FALSE)
     {
-	if(globus_i_module_initialized == GLOBUS_TRUE)
-	{
-	    rc = globus_mutex_init(&globus_l_environ_hashtable_mutex,
+        if(globus_i_module_initialized == GLOBUS_TRUE)
+        {
+            rc = globus_mutex_init(&globus_l_environ_hashtable_mutex,
                            (globus_mutexattr_t *) GLOBUS_NULL);
             globus_assert (rc == 0);
-	    globus_l_environ_mutex_initialized = GLOBUS_TRUE;
-	}
+            globus_l_environ_mutex_initialized = GLOBUS_TRUE;
+        }
     }
-   
+
     /*
      *  then, check to see if the environment hash table has been initialized
      */
- 
+
 
     if(globus_l_environ_initialized == GLOBUS_FALSE)
     {
-	if(globus_i_module_initialized==GLOBUS_TRUE)
-	{
-	    globus_mutex_lock(&globus_l_environ_hashtable_mutex);
-	}
+        if(globus_i_module_initialized==GLOBUS_TRUE)
+        {
+            globus_mutex_lock(&globus_l_environ_hashtable_mutex);
+        }
 
         globus_hashtable_init(&globus_l_environ_table,
                           GLOBUS_L_ENVIRON_TABLE_SIZE,
                           globus_hashtable_string_hash,
                           globus_hashtable_string_keyeq);
 
-	globus_l_environ_initialized = GLOBUS_TRUE;
+        globus_l_environ_initialized = GLOBUS_TRUE;
 
-	if(globus_i_module_initialized == GLOBUS_TRUE)
-	{
-	    globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
-	}
+        if(globus_i_module_initialized == GLOBUS_TRUE)
+        {
+            globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
+        }
     }
 
     /*
@@ -595,12 +595,12 @@ globus_module_setenv(
 
     if(globus_i_module_initialized == GLOBUS_TRUE)
     {
-	globus_mutex_lock(&globus_l_environ_hashtable_mutex);
+        globus_mutex_lock(&globus_l_environ_hashtable_mutex);
     }
 
     globus_hashtable_remove(
-	&globus_l_environ_table,
-	(void *) name);
+        &globus_l_environ_table,
+        (void *) name);
     globus_hashtable_insert(
          &globus_l_environ_table,
          (void *) name,
@@ -608,7 +608,7 @@ globus_module_setenv(
 
     if(globus_i_module_initialized == GLOBUS_TRUE)
     {
-	globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
+        globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
     }
 
 }
@@ -618,31 +618,31 @@ globus_module_setenv(
  * globus_module_getenv();
  */
 
-char * 
+char *
 globus_module_getenv(
     const char *                        name)
 {
-    char * 			entry;
+    char *                      entry;
 
     if(globus_l_environ_initialized == GLOBUS_TRUE)
     {
-	if((globus_i_module_initialized == GLOBUS_TRUE)
-	    &&(globus_l_environ_mutex_initialized == GLOBUS_TRUE))
-	{
-	    globus_mutex_lock(&globus_l_environ_hashtable_mutex);
-	}
+        if((globus_i_module_initialized == GLOBUS_TRUE)
+            &&(globus_l_environ_mutex_initialized == GLOBUS_TRUE))
+        {
+            globus_mutex_lock(&globus_l_environ_hashtable_mutex);
+        }
 
         entry =
            globus_hashtable_lookup(
                &globus_l_environ_table,
-               (void *) name); 
+               (void *) name);
 
 
-	if((globus_i_module_initialized == GLOBUS_TRUE)
-	    &&(globus_l_environ_mutex_initialized == GLOBUS_TRUE))
-	{
-	    globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
-	}
+        if((globus_i_module_initialized == GLOBUS_TRUE)
+            &&(globus_l_environ_mutex_initialized == GLOBUS_TRUE))
+        {
+            globus_mutex_unlock(&globus_l_environ_hashtable_mutex);
+        }
     }
     else
     {
@@ -655,7 +655,7 @@ globus_module_getenv(
 
     if (entry!=GLOBUS_NULL)
     {
-	return(entry);
+        return(entry);
     }
 
     /*
@@ -666,7 +666,7 @@ globus_module_getenv(
 
     if (entry!=NULL)
     {
-	return(entry);
+        return(entry);
     }
 
     return(GLOBUS_NULL);
@@ -695,22 +695,22 @@ globus_module_getenv(
 
 int
 globus_module_get_version(
-    globus_module_descriptor_t *	module_descriptor,
+    globus_module_descriptor_t *        module_descriptor,
     globus_version_t *                  version)
 {
     globus_version_t *                  module_version;
-    
+
     module_version = module_descriptor->version;
-    
+
     if(!module_version)
     {
         return GLOBUS_FAILURE;
     }
-    
-    version->major      = module_version->major;       
-    version->minor      = module_version->minor;       
-    version->timestamp  = module_version->timestamp;   
-    version->branch_id  = module_version->branch_id;   
+
+    version->major      = module_version->major;
+    version->minor      = module_version->minor;
+    version->timestamp  = module_version->timestamp;
+    version->branch_id  = module_version->branch_id;
 
     return GLOBUS_SUCCESS;
 }
@@ -719,7 +719,7 @@ globus_module_get_version(
 /**
  * print module's version
  *
- * This function prints a modules version info using the standard form 
+ * This function prints a modules version info using the standard form
  * provided by globus_version_print
  *
  * @param module_descriptor
@@ -729,17 +729,14 @@ globus_module_get_version(
  *        stream to print on (stdout, stderr, etc)
  *
  * @param verbose
- *        If GLOBUS_TRUE, then all available version info is printed 
+ *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void
 globus_module_print_version(
-    globus_module_descriptor_t *	module_descriptor,
+    globus_module_descriptor_t *        module_descriptor,
     FILE *                              stream,
     globus_bool_t                       verbose)
 {
@@ -753,19 +750,16 @@ globus_module_print_version(
 /**
  * print all activated modules' versions
  *
- * This function prints all activated modules' version info using the standard 
+ * This function prints all activated modules' version info using the standard
  * form provided by globus_version_print
  *
  * @param stream
  *        stream to print on (stdout, stderr, etc)
  *
  * @param verbose
- *        If GLOBUS_TRUE, then all available version info is printed 
+ *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void
@@ -781,19 +775,19 @@ globus_module_print_activated_versions(
     {
         return;
     }
-    
+
     globus_l_module_mutex_lock(&globus_l_module_mutex);
     {
-        globus_list_t *		        module_list;
-        
+        globus_list_t *                 module_list;
+
         module_list = globus_l_module_list;
         while(!globus_list_empty(module_list))
         {
             globus_l_module_entry_t *       module_entry;
-    
+
             module_entry = globus_list_first(module_list);
             module_list = globus_list_rest(module_list);
-            
+
             if(module_entry->reference_count > 0)
             {
                 globus_version_print(
@@ -818,7 +812,7 @@ globus_module_print_activated_versions(
  * name: major.minor                        if verbose = false
  * name: major.minor.timestamp-branch_id    if verbose = true
  *
- * In either case, if name is NULL, then only the numerical version will be 
+ * In either case, if name is NULL, then only the numerical version will be
  * printed.
  *
  * @param name
@@ -832,12 +826,9 @@ globus_module_print_activated_versions(
  *        stream to print on (stdout, stderr, etc)
  *
  * @param verbose
- *        If GLOBUS_TRUE, then all available version info is printed 
+ *        If GLOBUS_TRUE, then all available version info is printed
  *        (ex: globus_module: 1.1 (1013708618-5))
  *        else, only the major.minor is printed (ex: globus_module: 1.1)
- *
- * @return
- *        - void
  */
 
 void
@@ -851,14 +842,14 @@ globus_version_print(
     {
         globus_libc_fprintf(stream, "%s: ", name);
     }
-    
+
     if(version)
     {
         if(verbose)
         {
             globus_libc_fprintf(
-                stream, 
-                "%d.%d (%lu-%d)\n", 
+                stream,
+                "%d.%d (%lu-%d)\n",
                 version->major,
                 version->minor,
                 version->timestamp,
@@ -867,8 +858,8 @@ globus_version_print(
         else
         {
             globus_libc_fprintf(
-                stream, 
-                "%d.%d\n", 
+                stream,
+                "%d.%d\n",
                 version->major,
                 version->minor);
         }
@@ -881,7 +872,7 @@ globus_version_print(
 
 
 /******************************************************************************
-		     Module specific function definitions
+                     Module specific function definitions
 ******************************************************************************/
 
 /*
@@ -900,20 +891,20 @@ globus_l_module_initialize()
      * Initialize the registered module table and list
      */
     globus_hashtable_init(&globus_l_module_table,
-			  GLOBUS_L_MODULE_TABLE_SIZE,
-			  globus_hashtable_voidp_hash,
-			  globus_hashtable_voidp_keyeq);
+                          GLOBUS_L_MODULE_TABLE_SIZE,
+                          globus_hashtable_voidp_hash,
+                          globus_hashtable_voidp_keyeq);
 
     globus_l_module_list = GLOBUS_NULL;
-    
+
     /*
      * Initialize the recursive mutex
      */
     globus_l_module_mutex_init(&globus_l_module_mutex);
-    
+
     globus_thread_key_create(&globus_l_activate_parent_key, NULL);
     globus_thread_key_create(&globus_l_deactivate_parent_key, NULL);
-    
+
     /*
      * Now finish initializing the threads package
      */
@@ -927,71 +918,71 @@ globus_l_module_initialize()
  */
 static globus_bool_t
 globus_l_module_increment(
-    globus_module_descriptor_t *	module_descriptor,
-    globus_l_module_key_t		parent_key,
+    globus_module_descriptor_t *        module_descriptor,
+    globus_l_module_key_t               parent_key,
     globus_module_deactivate_proxy_cb_t deactivate_cb,
     void *                              user_arg)
 {
-    globus_l_module_entry_t *		entry;
-    
+    globus_l_module_entry_t *           entry;
+
     entry =
-	globus_hashtable_lookup(
-	    &globus_l_module_table,
-	    (void *) module_descriptor->activation_func);
+        globus_hashtable_lookup(
+            &globus_l_module_table,
+            (void *) module_descriptor->activation_func);
 
     if (entry != GLOBUS_NULL)
     {
-	/*
-	 * The module has already been registered.  Increment its reference
-	 * counter and add any new clients to the dependency list
-	 */
-	entry->reference_count++;
-	if (parent_key != GLOBUS_NULL
-	    && globus_list_search(entry->clients,
-				  (void *) parent_key) == GLOBUS_NULL)
-	{
-	    globus_list_insert(&entry->clients, (void *) parent_key);
-	}
+        /*
+         * The module has already been registered.  Increment its reference
+         * counter and add any new clients to the dependency list
+         */
+        entry->reference_count++;
+        if (parent_key != GLOBUS_NULL
+            && globus_list_search(entry->clients,
+                                  (void *) parent_key) == GLOBUS_NULL)
+        {
+            globus_list_insert(&entry->clients, (void *) parent_key);
+        }
 
-	if(entry->reference_count == 1)
-	{
-	    entry->deactivate_cb = deactivate_cb;
-	    entry->user_arg = user_arg;
-	    return GLOBUS_TRUE;
-	}
-	else
-	{
-    	    return GLOBUS_FALSE;
-	}
+        if(entry->reference_count == 1)
+        {
+            entry->deactivate_cb = deactivate_cb;
+            entry->user_arg = user_arg;
+            return GLOBUS_TRUE;
+        }
+        else
+        {
+            return GLOBUS_FALSE;
+        }
     }
     else
     {
-	/*
-	 * This is the first time this module has been registered.  Create a
-	 * new entry in the modules table.
-	 */
-	entry = (globus_l_module_entry_t *)
-	    globus_malloc(sizeof(globus_l_module_entry_t));
-	globus_assert(entry != GLOBUS_NULL);
+        /*
+         * This is the first time this module has been registered.  Create a
+         * new entry in the modules table.
+         */
+        entry = (globus_l_module_entry_t *)
+            globus_malloc(sizeof(globus_l_module_entry_t));
+        globus_assert(entry != GLOBUS_NULL);
 
-	entry->descriptor = module_descriptor;
-	entry->reference_count = 1;
-	entry->clients = GLOBUS_NULL;
-	entry->deactivate_cb = deactivate_cb;
-	entry->user_arg = user_arg;
-	if (parent_key != GLOBUS_NULL)
-	{
-	    globus_list_insert(&entry->clients, (void *) parent_key);
-	}
-	
-	globus_hashtable_insert(
-	    &globus_l_module_table,
-	    (void *) module_descriptor->activation_func,
-	    entry);
+        entry->descriptor = module_descriptor;
+        entry->reference_count = 1;
+        entry->clients = GLOBUS_NULL;
+        entry->deactivate_cb = deactivate_cb;
+        entry->user_arg = user_arg;
+        if (parent_key != GLOBUS_NULL)
+        {
+            globus_list_insert(&entry->clients, (void *) parent_key);
+        }
 
-	globus_list_insert(&globus_l_module_list, entry);
-	
-	return GLOBUS_TRUE;
+        globus_hashtable_insert(
+            &globus_l_module_table,
+            (void *) module_descriptor->activation_func,
+            entry);
+
+        globus_list_insert(&globus_l_module_list, entry);
+
+        return GLOBUS_TRUE;
     }
 }
 /* globus_l_module_increment() */
@@ -999,17 +990,17 @@ globus_l_module_increment(
 static
 int
 globus_l_module_reference_count(
-    globus_module_descriptor_t *	module_descriptor)
+    globus_module_descriptor_t *        module_descriptor)
 {
-    globus_l_module_entry_t *		entry;
-    
+    globus_l_module_entry_t *           entry;
+
     entry =
-	globus_hashtable_lookup(
-	    &globus_l_module_table,
-	    (void *) module_descriptor->activation_func);
+        globus_hashtable_lookup(
+            &globus_l_module_table,
+            (void *) module_descriptor->activation_func);
     if (entry == GLOBUS_NULL || entry->reference_count <= 0)
     {
-	return 0;
+        return 0;
     }
     else
     {
@@ -1022,34 +1013,34 @@ globus_l_module_reference_count(
  */
 static globus_l_module_entry_t *
 globus_l_module_decrement(
-    globus_module_descriptor_t *	module_descriptor,
-    globus_l_module_key_t		parent_key)
+    globus_module_descriptor_t *        module_descriptor,
+    globus_l_module_key_t               parent_key)
 {
-    globus_l_module_entry_t *		entry;
-    
+    globus_l_module_entry_t *           entry;
+
     entry =
-	globus_hashtable_lookup(
-	    &globus_l_module_table,
-	    (void *) module_descriptor->activation_func);
+        globus_hashtable_lookup(
+            &globus_l_module_table,
+            (void *) module_descriptor->activation_func);
     if (entry == GLOBUS_NULL || entry->reference_count <= 0)
     {
-	return NULL;
+        return NULL;
     }
 
     entry->reference_count--;
-    
+
     if (parent_key != GLOBUS_NULL)
     {
-	globus_list_t *			client_entry;
+        globus_list_t *                 client_entry;
 
-	
-	client_entry = globus_list_search(entry->clients,
-					  (void *) parent_key);
-	if(client_entry != GLOBUS_NULL)
+
+        client_entry = globus_list_search(entry->clients,
+                                          (void *) parent_key);
+        if(client_entry != GLOBUS_NULL)
         {
-	    globus_list_remove(&entry->clients, client_entry);
-	}
-	/* else module was activated outside this parent */
+            globus_list_remove(&entry->clients, client_entry);
+        }
+        /* else module was activated outside this parent */
     }
 
     return entry;
@@ -1059,52 +1050,52 @@ globus_l_module_decrement(
 
 void
 globus_i_module_dump(
-    FILE *				out_f)
+    FILE *                              out_f)
 {
-    globus_list_t *			module_list;
+    globus_list_t *                     module_list;
 
     globus_libc_fprintf(out_f, "==========\nModule List\n----------\n");
-    
+
     module_list = globus_l_module_list;
     while(!globus_list_empty(module_list))
     {
-	globus_list_t *			client_list;
-	globus_l_module_entry_t *	module_entry;
+        globus_list_t *                 client_list;
+        globus_l_module_entry_t *       module_entry;
 
-	module_entry = globus_list_first(module_list);
-	module_list = globus_list_rest(module_list);
+        module_entry = globus_list_first(module_list);
+        module_list = globus_list_rest(module_list);
 
-	globus_libc_fprintf(out_f, "%s; cnt=%d",
-		module_entry->descriptor->module_name,
-		module_entry->reference_count);
+        globus_libc_fprintf(out_f, "%s; cnt=%d",
+                module_entry->descriptor->module_name,
+                module_entry->reference_count);
 
-	client_list = module_entry->clients;
+        client_list = module_entry->clients;
 
-	if (!globus_list_empty(client_list))
-	{
-	    void *			client_entry;
-	    globus_l_module_entry_t *	client_module_entry;
-	    
-	    client_entry = globus_list_first(client_list);
-	    client_list = globus_list_rest(client_list);
-	    client_module_entry =
-		globus_hashtable_lookup(&globus_l_module_table, client_entry);
-	    globus_libc_fprintf(out_f, "; clients=%s",
-		    client_module_entry->descriptor->module_name);
-	    
-	    while(!globus_list_empty(client_list))
-	    {
-		client_entry = globus_list_first(client_list);
-		client_list = globus_list_rest(client_list);
-		client_module_entry =
-		    globus_hashtable_lookup(&globus_l_module_table,
-					    client_entry);
-		globus_libc_fprintf(out_f, ",%s",
-			client_module_entry->descriptor->module_name);
-	    }
-	}
+        if (!globus_list_empty(client_list))
+        {
+            void *                      client_entry;
+            globus_l_module_entry_t *   client_module_entry;
 
-	globus_libc_fprintf(out_f, "\n");
+            client_entry = globus_list_first(client_list);
+            client_list = globus_list_rest(client_list);
+            client_module_entry =
+                globus_hashtable_lookup(&globus_l_module_table, client_entry);
+            globus_libc_fprintf(out_f, "; clients=%s",
+                    client_module_entry->descriptor->module_name);
+
+            while(!globus_list_empty(client_list))
+            {
+                client_entry = globus_list_first(client_list);
+                client_list = globus_list_rest(client_list);
+                client_module_entry =
+                    globus_hashtable_lookup(&globus_l_module_table,
+                                            client_entry);
+                globus_libc_fprintf(out_f, ",%s",
+                        client_module_entry->descriptor->module_name);
+            }
+        }
+
+        globus_libc_fprintf(out_f, "\n");
     }
 
     globus_libc_fprintf(out_f, "==========\n");
@@ -1112,7 +1103,7 @@ globus_i_module_dump(
 
 
 /******************************************************************************
-		     Recursive mutex function definitions
+                     Recursive mutex function definitions
 ******************************************************************************/
 
 /*
@@ -1120,7 +1111,7 @@ globus_i_module_dump(
  */
 static void
 globus_l_module_mutex_init(
-	globus_l_module_mutex_t *		mutex)
+        globus_l_module_mutex_t *               mutex)
 {
     globus_mutex_init(&mutex->mutex, (globus_mutexattr_t *) GLOBUS_NULL);
     globus_cond_init(&mutex->cond, (globus_condattr_t *) GLOBUS_NULL);
@@ -1134,20 +1125,20 @@ globus_l_module_mutex_init(
  */
 static void
 globus_l_module_mutex_lock(
-	globus_l_module_mutex_t *		mutex)
+        globus_l_module_mutex_t *               mutex)
 {
     globus_mutex_lock(&mutex->mutex);
     {
-	globus_assert(mutex->level >= 0);
-	while (mutex->level > 0
-		   && !globus_thread_equal( mutex->thread_id, globus_thread_self()) )
-	{
-	    globus_cond_wait(&mutex->cond, &mutex->mutex);
-	}
+        globus_assert(mutex->level >= 0);
+        while (mutex->level > 0
+                   && !globus_thread_equal( mutex->thread_id, globus_thread_self()) )
+        {
+            globus_cond_wait(&mutex->cond, &mutex->mutex);
+        }
 
-	mutex->level++;
-	mutex->thread_id = globus_thread_self();
-	
+        mutex->level++;
+        mutex->thread_id = globus_thread_self();
+
     }
     globus_mutex_unlock(&mutex->mutex);
 }
@@ -1158,18 +1149,18 @@ globus_l_module_mutex_lock(
  */
 static void
 globus_l_module_mutex_unlock(
-	globus_l_module_mutex_t *		mutex)
+        globus_l_module_mutex_t *               mutex)
 {
     globus_mutex_lock(&mutex->mutex);
     {
-	globus_assert(mutex->level > 0);
-	globus_assert( globus_thread_equal( mutex->thread_id, globus_thread_self() ) );
+        globus_assert(mutex->level > 0);
+        globus_assert( globus_thread_equal( mutex->thread_id, globus_thread_self() ) );
 
-	mutex->level--;
-	if (mutex->level == 0)
-	{
-	    globus_cond_signal(&mutex->cond);
-	}
+        mutex->level--;
+        if (mutex->level == 0)
+        {
+            globus_cond_signal(&mutex->cond);
+        }
     }
     globus_mutex_unlock(&mutex->mutex);
 }

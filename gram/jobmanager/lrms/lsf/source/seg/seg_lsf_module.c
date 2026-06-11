@@ -122,7 +122,7 @@ enum
 /**
  * State of the LSF log file parser.
  */
-typedef struct 
+typedef struct
 {
     /**
      * Path to the LSF logdir
@@ -333,9 +333,9 @@ globus_l_lsf_module_activate(void)
     if (result != GLOBUS_SUCCESS)
     {
         SEGLsfDebug(SEG_LSF_DEBUG_ERROR,
-                ("Error retrieving log_path attribute from " 
+                ("Error retrieving log_path attribute from "
                  "${sysconfdir}/globus/globus-lsf.conf\n"));
-                
+
         goto free_config_path_error;
     }
     free(config_path);
@@ -439,7 +439,7 @@ globus_l_lsf_module_deactivate(void)
  * read_cb:
  *  check to see if lsb.events.index file changed---if so, we must relocate
  *  our position in the appropriate log file.
- *  
+ *
  *  if we're ok---parse events buffer
  *
  *  if (!eof)
@@ -519,7 +519,7 @@ globus_l_lsf_read_callback(
 
         rc = fread(state->buffer + state->buffer_point + state->buffer_valid,
                 1, max_to_read, state->fp);
-        
+
         SEGLsfDebug(SEG_LSF_DEBUG_TRACE,
                 ("read %d bytes\n", rc));
 
@@ -605,9 +605,9 @@ error:
 /* globus_l_lsf_read_callback() */
 
 /**
- * Determine the next available LSF log file name from the 
+ * Determine the next available LSF log file name from the
  * timestamp stored in the logfile state structure.
- * 
+ *
  * @param state
  *     LSF log state structure. The path field of the structure may be
  *     modified by this function.
@@ -721,7 +721,7 @@ error:
 /* globus_l_lsf_find_logfile() */
 
 /**
- * Move any data in the state buffer to the beginning, to enable reusing 
+ * Move any data in the state buffer to the beginning, to enable reusing
  * buffer space which has already been parsed.
  */
 static
@@ -810,7 +810,6 @@ globus_l_lsf_parse_events(
     long long                           tmp_timestamp;
     char                                event_type_buffer[64];
     char                                job_id_buffer[32];
-    int                                 rc;
     int                                 job_status;
     int                                 exit_status;
     long                                offset;
@@ -871,7 +870,7 @@ globus_l_lsf_parse_events(
         {
             if (event_timestamp >= state->start_timestamp)
             {
-                rc = globus_scheduler_event_pending(event_timestamp,
+                globus_scheduler_event_pending(event_timestamp,
                         job_id_buffer);
                 state->start_timestamp = event_timestamp;
             }
@@ -880,7 +879,7 @@ globus_l_lsf_parse_events(
         {
             if (event_timestamp >= state->start_timestamp)
             {
-                rc = globus_scheduler_event_active(event_timestamp,
+                globus_scheduler_event_active(event_timestamp,
                         job_id_buffer);
 
                 state->start_timestamp = event_timestamp;
@@ -975,13 +974,13 @@ globus_l_lsf_parse_events(
                     {
                         sscanf(tmp, " %d", &exit_status);
                         exit_status = (exit_status & 0xff00) >> 8;
-                        rc = globus_scheduler_event_done(event_timestamp,
+                        globus_scheduler_event_done(event_timestamp,
                                 job_id_buffer,
                                 exit_status);
                     }
                     else
                     {
-                        rc = globus_scheduler_event_failed(event_timestamp,
+                        globus_scheduler_event_failed(event_timestamp,
                                 job_id_buffer,
                                 exit_status);
                     }
@@ -994,7 +993,7 @@ globus_l_lsf_parse_events(
                  */
                 if (event_timestamp >= state->start_timestamp)
                 {
-                    rc = globus_scheduler_event_done(event_timestamp,
+                    globus_scheduler_event_done(event_timestamp,
                             job_id_buffer,
                             0);
                     state->start_timestamp = event_timestamp;

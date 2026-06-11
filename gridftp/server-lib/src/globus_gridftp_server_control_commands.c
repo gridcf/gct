@@ -62,7 +62,7 @@ globus_l_gsc_cmd_stru(
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_OTHER);
     tmp_ptr = cmd_a[1];
-    if((tmp_ptr[0] == 'f' || tmp_ptr[0] == 'F') 
+    if((tmp_ptr[0] == 'f' || tmp_ptr[0] == 'F')
         && tmp_ptr[1] == '\0')
     {
         globus_gsc_959_finished_command(op, _FSMSL("200 STRU F ok.\r\n"));
@@ -130,7 +130,7 @@ globus_l_gsc_cmd_pbsz(
 
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_SECURITY);
-    if(strlen(cmd_a[1]) > 10 || 
+    if(strlen(cmd_a[1]) > 10 ||
         (strlen(cmd_a[1]) == 10 && strcmp(cmd_a[1], "4294967296") >= 0))
     {
         msg = globus_common_create_string(_FSMSL("501 Bad value for PBSZ: %s\r\n"),
@@ -364,7 +364,7 @@ globus_l_gsc_cmd_mdtm_cb(
         code = 213;
         msg =  globus_common_create_string(
             "%04d%02d%02d%02d%02d%02d",
-            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, 
+            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
             tm->tm_hour, tm->tm_min, tm->tm_sec);
     }
 
@@ -425,7 +425,7 @@ globus_l_gsc_cmd_mode(
     ch = (char)toupper((int)cmd_a[1][0]);
     if(strchr(op->server_handle->modes, ch) == NULL)
     {
-        tmp_ptr = strstr(full_command, "\r\n");
+        tmp_ptr = (char *) strstr(full_command, "\r\n");
         if(tmp_ptr != NULL)
         {
             *tmp_ptr = '\0';
@@ -501,16 +501,16 @@ globus_l_gsc_cmd_lang(
 {
     char *                                  lang = NULL;
 
-    
+
     char *                                  msg;
 
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_TRANSFER_STATE);
     if (cmd_a[1]==NULL)
     {
-	    /*nothing specified after LANG, keep default*/
+        /*nothing specified after LANG, keep default*/
         msg = globus_common_create_string(_FSMSL("200 lang set to %s.\r\n"), lang);
-	op->server_handle->lang = lang;
+        op->server_handle->lang = lang;
     }
     else
     {
@@ -523,21 +523,21 @@ globus_l_gsc_cmd_lang(
     }
     else
     {
-	/*Check if it is a supported language*/
-	/*As internationalization continues, this will be discovered
-	 * from configuration--hardcoded for now
-	 */
-	if (strcmp(lang, "EN")==0)
-	{	
+        /*Check if it is a supported language*/
+        /*As internationalization continues, this will be discovered
+         * from configuration--hardcoded for now
+         */
+        if (strcmp(lang, "EN")==0)
+        {
            msg = globus_common_create_string(_FSMSL("200 lang set to %s.\r\n"), lang);
            op->server_handle->lang = lang;
-	}
-	else
-	{
+        }
+        else
+        {
            msg = globus_common_create_string(
             _FSMSL("501 '%s' unrecognized language.\r\n"), full_command);
             free(lang);
-	}
+        }
     }
     if(msg == NULL)
     {
@@ -807,7 +807,7 @@ globus_l_gsc_cmd_stat_cb(
         }
         else if((intptr_t) user_arg == GLOBUS_L_GSC_OP_TYPE_MLSD)
         {
-            if(response_type == 
+            if(response_type ==
                 GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_PARTIAL_SUCCESS)
             {
                 partial = GLOBUS_TRUE;
@@ -818,19 +818,19 @@ globus_l_gsc_cmd_stat_cb(
                 code = 250;
             }
             tmp_ptr = globus_i_gsc_mlsx_line(
-               stat_info, 
-               stat_count, 
-               op->server_handle->opts.mlsx_fact_str, 
+               stat_info,
+               stat_count,
+               op->server_handle->opts.mlsx_fact_str,
                uid,
                NULL,
                abs_path,
                GLOBUS_TRUE);
             msg =  globus_common_create_string(
-               _FSMSL("%d-Contents of %s\r\n%s%d End.\r\n"), 
-               code, 
-               op->path, 
+               _FSMSL("%d-Contents of %s\r\n%s%d End.\r\n"),
+               code,
+               op->path,
                tmp_ptr,
-               code);                
+               code);
             globus_free(tmp_ptr);
         }
         else
@@ -1024,9 +1024,9 @@ globus_l_gsc_cmd_size_cb(
     globus_gsc_959_finished_command(op, tmp_ptr);
     globus_free(tmp_ptr);
     globus_free(msg);
-    
+
     return;
-    
+
   err:
     if(msg != NULL)
     {
@@ -1257,7 +1257,7 @@ globus_l_gsc_cmd_syst(
 
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_OTHER);
-    
+
     globus_gsc_959_finished_command(op, "215 UNIX Type: L8\r\n");
 
     return;
@@ -1378,7 +1378,7 @@ globus_l_gsc_cmd_opts(
     {
         *tmp_ptr = toupper(*tmp_ptr);
     }
-    
+
     if(argc != 3)
     {
         msg = _FSMSL("500 OPTS failed.\r\n");
@@ -1389,7 +1389,7 @@ globus_l_gsc_cmd_opts(
         {
             *tmp_ptr = tolower(*tmp_ptr);
         }
-    
+
         tmp_ptr = cmd_a[2];
 
         msg = _FSMSL("500 OPTS failed.\r\n");
@@ -1477,7 +1477,7 @@ globus_l_gsc_cmd_opts(
                 if(sscanf(tmp_ptr, "markers=%d;", &tmp_i) == 1)
                 {
                     char * freq_str = globus_common_create_string("%d", tmp_i);
-                    op->server_handle->opts.retr_perf_frequency = tmp_i;                    
+                    op->server_handle->opts.retr_perf_frequency = tmp_i;
                     globus_libc_setenv("GFS_RETR_MARKERS", freq_str, 1);
                 }
                 else
@@ -1517,7 +1517,7 @@ globus_l_gsc_cmd_opts(
             msg = _FSMSL("500 OPTS failed.\r\n");
         }
     }
-    else if(strcmp("PASV", cmd_a[1]) == 0 || 
+    else if(strcmp("PASV", cmd_a[1]) == 0 ||
         strcmp("SPAS", cmd_a[1]) == 0 ||
         strcmp("EPSV", cmd_a[1]) == 0)
     {
@@ -1535,12 +1535,12 @@ globus_l_gsc_cmd_opts(
             msg = _FSMSL("500 OPTS failed.\r\n");
         }
     }
-    else if(strcmp("MLST", cmd_a[1]) == 0 || 
+    else if(strcmp("MLST", cmd_a[1]) == 0 ||
             strcmp("MLSD", cmd_a[1]) == 0 ||
             strcmp("MLSR", cmd_a[1]) == 0)
     {
         globus_bool_t                   mlsr_options = GLOBUS_FALSE;
-        
+
         for(tmp_ptr = cmd_a[2]; *tmp_ptr != '\0'; tmp_ptr++)
         {
             *tmp_ptr = tolower(*tmp_ptr);
@@ -1552,22 +1552,22 @@ globus_l_gsc_cmd_opts(
             {
                 opts->mlsr_traversal_options |= GLOBUS_GFS_TRAVERSAL_CONTINUE;
                 mlsr_options = GLOBUS_TRUE;
-            } 
+            }
             else if(strstr(cmd_a[2], "onerror=fail"))
             {
                 opts->mlsr_traversal_options &= ~GLOBUS_GFS_TRAVERSAL_CONTINUE;
                 mlsr_options = GLOBUS_TRUE;
-            }            
+            }
             if(strstr(cmd_a[2], "traversesymboliclinks=true"))
             {
                 opts->mlsr_traversal_options |= GLOBUS_GFS_TRAVERSAL_FOLLOW_SYMLINKS;
                 mlsr_options = GLOBUS_TRUE;
-            } 
+            }
             else if(strstr(cmd_a[2], "traversesymboliclinks=false"))
             {
                 opts->mlsr_traversal_options &= ~GLOBUS_GFS_TRAVERSAL_FOLLOW_SYMLINKS;
                 mlsr_options = GLOBUS_TRUE;
-            }            
+            }
         }
         /** Parse out common options */
         tmp_ptr = opts->mlsx_fact_str;
@@ -1625,7 +1625,7 @@ globus_l_gsc_cmd_opts(
         {
             *tmp_ptr = GLOBUS_GSX_MLSX_FACT_UNIXUID;
             tmp_ptr++;
-        } 
+        }
         if(strstr(cmd_a[2], "unix.gid"))
         {
             *tmp_ptr = GLOBUS_GSX_MLSX_FACT_UNIXGID;
@@ -1786,7 +1786,7 @@ globus_l_gsc_cmd_site_fault(
 {
     int                                 len;
     int                                 ctr;
-  
+
     globus_i_gsc_log(op->server_handle, full_command,
         GLOBUS_GRIDFTP_SERVER_CONTROL_LOG_SITE);
 
@@ -1799,10 +1799,10 @@ globus_l_gsc_cmd_site_fault(
     len = strlen(op->server_handle->fault_cmd);
     for(ctr = 0; ctr < len; ctr++)
     {
-        op->server_handle->fault_cmd[ctr] = 
+        op->server_handle->fault_cmd[ctr] =
             toupper(op->server_handle->fault_cmd[ctr]);
     }
-    
+
     globus_gsc_959_finished_command(
         op, "200 Site Command Successful.\r\n");
 
@@ -1845,8 +1845,8 @@ globus_l_gsc_cmd_rest(
         tmp_ptr = cmd_a[1];
         while(tmp_ptr != NULL)
         {
-            sc = sscanf(tmp_ptr, 
-                "%"GLOBUS_OFF_T_FORMAT"-%"GLOBUS_OFF_T_FORMAT, 
+            sc = sscanf(tmp_ptr,
+                "%"GLOBUS_OFF_T_FORMAT"-%"GLOBUS_OFF_T_FORMAT,
                 &start_offset, &end_offset);
             if(sc != 2)
             {
@@ -1870,7 +1870,7 @@ globus_l_gsc_cmd_rest(
         globus_range_list_destroy(op->server_handle->range_list);
     }
     op->server_handle->range_list = range_list;
-    globus_gsc_959_finished_command(op, 
+    globus_gsc_959_finished_command(op,
         _FSMSL("350 Restart Marker OK. Send STORE or RETR to initiate transfer.\r\n"));
 }
 
@@ -1911,7 +1911,7 @@ globus_l_gsc_cmd_pasv_cb(
             err_code = 534;
             err_msg = "Data connection auth error";
             break;
-            
+
           default:
                 if (globus_l_gsc_is_ftp_code(response_type))
                 {
@@ -1942,7 +1942,7 @@ globus_l_gsc_cmd_pasv_cb(
             if(globus_libc_contact_string_to_ints(
                 cs[0], host_ip, &ip_count, &port) != GLOBUS_SUCCESS)
             {
-                err_code = 500; 
+                err_code = 500;
                 err_msg = "Resource error.\r\n";
                 goto err;
             }
@@ -1952,7 +1952,7 @@ globus_l_gsc_cmd_pasv_cb(
                 err_msg = "Network protocol not supported.\r\n";
                 goto err;
             }
-            
+
             msg = globus_common_create_string(
                 "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d)\r\n",
                     wrapper->reply_code,
@@ -1971,7 +1971,7 @@ globus_l_gsc_cmd_pasv_cb(
                 addr_count = 1;
             }
             msg =  globus_common_create_string(
-                "%d-Entering Striped Passive Mode.\r\n", 
+                "%d-Entering Striped Passive Mode.\r\n",
                 wrapper->reply_code);
             for(ctr = 0; ctr < addr_count; ctr++)
             {
@@ -1988,7 +1988,7 @@ globus_l_gsc_cmd_pasv_cb(
                     err_msg = "Network protocol not supported.\r\n";
                     goto err;
                 }
-            
+
                 tmp_ptr = globus_common_create_string(
                     "%s %d,%d,%d,%d,%d,%d\r\n",
                     msg,
@@ -2007,7 +2007,7 @@ globus_l_gsc_cmd_pasv_cb(
                 globus_free(msg);
                 msg = tmp_ptr;
             }
-            tmp_ptr = globus_common_create_string("%s%d End\r\n", 
+            tmp_ptr = globus_common_create_string("%s%d End\r\n",
                 msg, wrapper->reply_code);
             if(tmp_ptr == NULL)
             {
@@ -2026,7 +2026,7 @@ globus_l_gsc_cmd_pasv_cb(
         {
             char *                      p;
             char *                      h;
-            
+
             host = globus_libc_strdup(cs[0]);
             if(!host)
             {
@@ -2034,7 +2034,7 @@ globus_l_gsc_cmd_pasv_cb(
                 err_msg = "Resource error.\r\n";
                 goto err;
             }
-            
+
             p = strrchr(host, ':');
             if(!p || p == host)
             {
@@ -2043,7 +2043,7 @@ globus_l_gsc_cmd_pasv_cb(
                 err_msg = "Internal Parse error.\r\n";
                 goto err;
             }
-            
+
             h = host;
             if(*host == '[')
             {
@@ -2060,7 +2060,7 @@ globus_l_gsc_cmd_pasv_cb(
                 *p = 0;
             }
             p++;
-            
+
             sc = sscanf(p, "%hu", &port);
             if(sc != 1)
             {
@@ -2069,7 +2069,7 @@ globus_l_gsc_cmd_pasv_cb(
                 err_msg = "Internal Parse error.\r\n";
                 goto err;
             }
-            
+
             if(op->server_handle->epsv_ip)
             {
                 msg = globus_common_create_string(
@@ -2083,7 +2083,7 @@ globus_l_gsc_cmd_pasv_cb(
             {
                 msg = globus_common_create_string(
                     "%d Entering Extended Passive Mode (|||%d|)\r\n",
-                        wrapper->reply_code,                    
+                        wrapper->reply_code,
                         (int) port);
             }
             globus_free(host);
@@ -2101,7 +2101,7 @@ globus_l_gsc_cmd_pasv_cb(
             {
                 char *                  p;
                 char *                  h;
-                
+
                 host = globus_libc_strdup(cs[ctr]);
                 if(!host)
                 {
@@ -2109,7 +2109,7 @@ globus_l_gsc_cmd_pasv_cb(
                     err_msg = "Resource error.\r\n";
                     goto err;
                 }
-                
+
                 p = strrchr(host, ':');
                 if(!p || p == host)
                 {
@@ -2118,7 +2118,7 @@ globus_l_gsc_cmd_pasv_cb(
                     err_msg = "Internal Parse error.\r\n";
                     goto err;
                 }
-                
+
                 h = host;
                 if(*cs[0] == '[')
                 {
@@ -2130,7 +2130,7 @@ globus_l_gsc_cmd_pasv_cb(
                     *p = 0;
                 }
                 p++;
-            
+
                 sc = sscanf(p, "%hu", &port);
                 if(sc != 1)
                 {
@@ -2139,7 +2139,7 @@ globus_l_gsc_cmd_pasv_cb(
                     err_msg = "Internal Parse error.\r\n";
                     goto err;
                 }
-                
+
                 tmp_ptr = globus_common_create_string(
                     "%s |%d|%s|%d|\r\n",
                     msg,
@@ -2156,7 +2156,7 @@ globus_l_gsc_cmd_pasv_cb(
                 globus_free(msg);
                 msg = tmp_ptr;
             }
-            tmp_ptr = globus_common_create_string("%s%d End\r\n", 
+            tmp_ptr = globus_common_create_string("%s%d End\r\n",
                 msg, wrapper->reply_code);
             if(tmp_ptr == NULL)
             {
@@ -2283,7 +2283,7 @@ globus_l_gsc_cmd_pasv(
                 }
             }
         }
-        
+
         wrapper->reply_code = 229;
         wrapper->cmd_ndx = 2;
     }
@@ -2293,7 +2293,7 @@ globus_l_gsc_cmd_pasv(
         wrapper->cmd_ndx = 3;
         wrapper->reply_code = 229;
         wrapper->prt = GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV4;
-        
+
         /* optional 2nd argument similar to epsv */
         if(argc == 2)
         {
@@ -2368,7 +2368,7 @@ globus_l_gsc_cmd_port_cb(
             code = 534;
             msg = strdup("Data connection auth error");
             break;
-            
+
           default:
             if (globus_l_gsc_is_ftp_code(response_type))
             {
@@ -2451,7 +2451,7 @@ globus_l_gsc_cmd_port(
     else if(strcmp(cmd_a[0], "SPOR") == 0)
     {
         wrapper->max = -1;
-        
+
         stripe_count = 1; /* for the first */
         p = cmd_a[1];
         while((p = strchr(p, ' ')))
@@ -2469,13 +2469,13 @@ globus_l_gsc_cmd_port(
     {
         globus_assert(GLOBUS_FALSE);
     }
-    
+
     contact_strings = globus_libc_calloc(stripe_count, sizeof(char *));
     if(contact_strings == NULL)
     {
         goto err;
     }
-            
+
     /* move to the first command argument */
     p = cmd_a[1];
     while(isspace(*p)) p++;
@@ -2483,7 +2483,7 @@ globus_l_gsc_cmd_port(
     {
         delim = 0;
     }
-    
+
     for(i = 0; i < stripe_count && *p; i++)
     {
         if(delim)
@@ -2498,11 +2498,11 @@ globus_l_gsc_cmd_port(
                     /* get prt portion */
                     if(sscanf(p, "%d", &sc) < 1 || (sc != 1 && sc != 2))
                     {
-                        msg = 
+                        msg =
                           "522 Network protocol not supported, use (1,2).\r\n";
                         break;
                     }
-                    
+
                     /* may need to handle mixed prt in striped mode */
                     if(sc == 1)
                     {
@@ -2514,7 +2514,7 @@ globus_l_gsc_cmd_port(
                         wrapper->prt =
                             GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV6;
                     }
-                    
+
                     while(*p && *p != delim) p++;
                 }
                 else
@@ -2523,18 +2523,18 @@ globus_l_gsc_cmd_port(
                     break;
                 }
             }
-            
+
             if(*p)
             {
                 int                     j = 0;
                 char *                  s;
                 char *                  c;
                 char                    buf[100];
-                
+
                 p++;
                 c = strchr(p, ':');
                 s = strchr(p, delim);
-                
+
                 if(*p != delim)
                 {
                     /* get ip portion */
@@ -2542,12 +2542,12 @@ globus_l_gsc_cmd_port(
                     {
                         buf[j++] = '[';
                     }
-                
+
                     while(j < sizeof(buf) - 1 && p < s)
                     {
                         buf[j++] = *(p++);
                     }
-                    
+
                     /* need room for ], :, 5 digits, and nul */
                     if(*p == delim && j + 7 < sizeof(buf))
                     {
@@ -2557,7 +2557,7 @@ globus_l_gsc_cmd_port(
                         {
                             buf[j++] = ']';
                         }
-                        
+
                         buf[j++] = ':';
                         while(j < sizeof(buf) - 1 &&
                             isdigit(*p) && *p != delim)
@@ -2573,9 +2573,9 @@ globus_l_gsc_cmd_port(
                             msg = "501 Malformed argument.\r\n";
                             break;
                         }
-                        
+
                         buf[j] = 0;
-                        
+
                         contact_strings[i] = globus_libc_strdup(buf);
                     }
                     else
@@ -2594,11 +2594,11 @@ globus_l_gsc_cmd_port(
         else
         {
             int                         consumed;
-            
+
             wrapper->prt = GLOBUS_GRIDFTP_SERVER_CONTROL_PROTOCOL_IPV4;
-            
+
             while(*p && !isdigit(*p)) p++;
-    
+
             sc = sscanf(p,
                         "%u,%u,%u,%u,%u,%u%n",
                         &host_ip[0],
@@ -2635,7 +2635,7 @@ globus_l_gsc_cmd_port(
                 p += consumed;
             }
         }
-        
+
         if(!contact_strings[i])
         {
             msg = _FSMSL("501 Resource error.\r\n");
@@ -2689,7 +2689,7 @@ globus_l_gsc_cmd_port(
  *                          ------------------
  ************************************************************************/
 
-static void 
+static void
 globus_l_gsc_data_cb(
     globus_i_gsc_op_t *                     op,
     globus_gridftp_server_control_response_t response_type,
@@ -2788,7 +2788,7 @@ globus_l_gsc_cmd_transfer(
                 globus_l_gsc_data_cb,
                 wrapper);
             break;
-	    
+
         default:
             globus_assert(GLOBUS_FALSE);
             break;
@@ -2837,7 +2837,7 @@ globus_l_gsc_cmd_stor_retr_cb(
 
     wrapper = (globus_i_gsc_cmd_wrapper_t *) user_arg;
     wrapper->op = op;
-    wrapper->path = globus_libc_strdup(path);    
+    wrapper->path = globus_libc_strdup(path);
 
     if(response_type == GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_SUCCESS &&
         stat_count > 1)
@@ -2846,13 +2846,13 @@ globus_l_gsc_cmd_stor_retr_cb(
         msg = globus_common_create_string(
             _FSMSL("Path is a directory."));
     }
-       
+
     if(response_type != GLOBUS_GRIDFTP_SERVER_CONTROL_RESPONSE_SUCCESS ||
         stat_count < 1)
     {
         /* we'll mimic a STOR here since the file doesn't exist */
         wrapper->mod_name = NULL;
-        wrapper->mod_parms = NULL;        
+        wrapper->mod_parms = NULL;
     }
     else
     {
@@ -2861,7 +2861,7 @@ globus_l_gsc_cmd_stor_retr_cb(
         wrapper->mod_parms = globus_common_create_string(
             "%"GLOBUS_OFF_T_FORMAT, stat_info->size);
     }
-    
+
     if(msg != NULL)
     {
         tmp_ptr = globus_gsc_string_to_959(code, msg, NULL);
@@ -2899,7 +2899,7 @@ globus_l_gsc_cmd_stor_retr_cb(
         globus_l_gsc_cmd_transfer(wrapper);
     }
     return;
-    
+
 }
 
 /*
@@ -2981,7 +2981,7 @@ globus_l_gsc_cmd_stor_retr(
     }
     else if(strcmp(cmd_a[0], "APPE") == 0)
     {
-        int                             mask = 
+        int                             mask =
             GLOBUS_GRIDFTP_SERVER_CONTROL_RESOURCE_FILE_ONLY;
 
         res = globus_i_gsc_resource_query(
@@ -3007,8 +3007,8 @@ globus_l_gsc_cmd_stor_retr(
             arg2 = cmd_a[1] + 2;
             while(isspace(*arg2) && *arg2 != '\0') arg2++;
 
-            sc = sscanf(arg2, 
-                "%"GLOBUS_OFF_T_FORMAT" %"GLOBUS_OFF_T_FORMAT, 
+            sc = sscanf(arg2,
+                "%"GLOBUS_OFF_T_FORMAT" %"GLOBUS_OFF_T_FORMAT,
                 &tmp_o, &tmp_o);
             if(sc != 2)
             {
@@ -3097,7 +3097,7 @@ globus_l_gsc_cmd_stor_retr(
                 globus_free(wrapper);
                 globus_gsc_959_finished_command(op, _FSMSL("500 command failed: space.\r\n"));
                 return;
-            }            
+            }
             *tmp_ptr = '\0';
             if(tmp_ptr[1] == '\0' || tmp_ptr[2] == '\0')
             {
@@ -3137,8 +3137,8 @@ globus_l_gsc_cmd_stor_retr(
                         tmp_ptr++;
                     }
                 }
-                
-                if((*tmp_ptr == '*' && *(tmp_ptr + 1) == '\0') || 
+
+                if((*tmp_ptr == '*' && *(tmp_ptr + 1) == '\0') ||
                     *tmp_ptr == '\0')
                 {
                     path = globus_libc_strdup(op->server_handle->cwd);
@@ -3147,14 +3147,14 @@ globus_l_gsc_cmd_stor_retr(
                 {
                     int                 len;
                     char *              fn_ptr;
-                    
+
                     len = strlen(tmp_ptr);
                     if(strcspn(tmp_ptr, "[]*?") == len)
                     {
                         path = globus_libc_strdup(tmp_ptr);
                     }
                     else
-                    {   
+                    {
                         if((fn_ptr = strrchr(tmp_ptr, '/')) != NULL)
                         {
                             fn_ptr++;
@@ -3232,7 +3232,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "ALLO", 
+        "ALLO",
         globus_l_gsc_cmd_allo,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3242,7 +3242,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "APPE", 
+        "APPE",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3252,7 +3252,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "CWD", 
+        "CWD",
         globus_l_gsc_cmd_cwd,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3262,7 +3262,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "CDUP", 
+        "CDUP",
         globus_l_gsc_cmd_cwd,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3272,7 +3272,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "DCAU", 
+        "DCAU",
         globus_l_gsc_cmd_dcau,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3282,7 +3282,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "EPSV", 
+        "EPSV",
         globus_l_gsc_cmd_pasv,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3292,7 +3292,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "ERET", 
+        "ERET",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3302,7 +3302,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "ESTO", 
+        "ESTO",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3312,9 +3312,9 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "FEAT", 
+        "FEAT",
         globus_l_gsc_cmd_feat,
-        GLOBUS_GSC_COMMAND_PRE_AUTH | 
+        GLOBUS_GSC_COMMAND_PRE_AUTH |
             GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
         1,
@@ -3323,9 +3323,9 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "HELP", 
+        "HELP",
         globus_l_gsc_cmd_help,
-        GLOBUS_GSC_COMMAND_PRE_AUTH | 
+        GLOBUS_GSC_COMMAND_PRE_AUTH |
             GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
         2,
@@ -3334,7 +3334,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "LIST", 
+        "LIST",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3344,7 +3344,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "MDTM", 
+        "MDTM",
         globus_l_gsc_cmd_mdtm,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3354,7 +3354,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "MODE", 
+        "MODE",
         globus_l_gsc_cmd_mode,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3364,7 +3364,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "NLST", 
+        "NLST",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3414,9 +3414,9 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "NOOP", 
+        "NOOP",
         globus_l_gsc_cmd_noop,
-        GLOBUS_GSC_COMMAND_PRE_AUTH | 
+        GLOBUS_GSC_COMMAND_PRE_AUTH |
             GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
         1,
@@ -3425,7 +3425,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "OPTS", 
+        "OPTS",
         globus_l_gsc_cmd_opts,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3435,7 +3435,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PASS", 
+        "PASS",
         globus_l_gsc_cmd_pass,
         GLOBUS_GSC_COMMAND_PRE_AUTH,
         1,
@@ -3445,7 +3445,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PASV", 
+        "PASV",
         globus_l_gsc_cmd_pasv,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3455,7 +3455,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PBSZ", 
+        "PBSZ",
         globus_l_gsc_cmd_pbsz,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3465,7 +3465,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PORT", 
+        "PORT",
         globus_l_gsc_cmd_port,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3475,7 +3475,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PROT", 
+        "PROT",
         globus_l_gsc_cmd_prot,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3485,7 +3485,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "EPRT", 
+        "EPRT",
         globus_l_gsc_cmd_port,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3495,7 +3495,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SPOR", 
+        "SPOR",
         globus_l_gsc_cmd_port,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3505,7 +3505,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "TREV", 
+        "TREV",
         globus_l_gsc_cmd_trev,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3515,7 +3515,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "PWD", 
+        "PWD",
         globus_l_gsc_cmd_pwd,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3525,9 +3525,9 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "QUIT", 
+        "QUIT",
         globus_l_gsc_cmd_quit,
-        GLOBUS_GSC_COMMAND_PRE_AUTH | 
+        GLOBUS_GSC_COMMAND_PRE_AUTH |
             GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
         1,
@@ -3536,7 +3536,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "REST", 
+        "REST",
         globus_l_gsc_cmd_rest,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3546,7 +3546,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "RETR", 
+        "RETR",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3556,7 +3556,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SBUF", 
+        "SBUF",
         globus_l_gsc_cmd_sbuf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3566,7 +3566,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SIZE", 
+        "SIZE",
         globus_l_gsc_cmd_size,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3576,7 +3576,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SPAS", 
+        "SPAS",
         globus_l_gsc_cmd_pasv,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3586,7 +3586,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "STAT", 
+        "STAT",
         globus_l_gsc_cmd_stat,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3596,7 +3596,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "STOR", 
+        "STOR",
         globus_l_gsc_cmd_stor_retr,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3606,7 +3606,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "STRU", 
+        "STRU",
         globus_l_gsc_cmd_stru,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3616,7 +3616,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SYST", 
+        "SYST",
         globus_l_gsc_cmd_syst,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
@@ -3626,7 +3626,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "TYPE", 
+        "TYPE",
         globus_l_gsc_cmd_type,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
@@ -3636,7 +3636,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "USER", 
+        "USER",
         globus_l_gsc_cmd_user,
         GLOBUS_GSC_COMMAND_PRE_AUTH,
         2,
@@ -3646,7 +3646,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE SBUF", 
+        "SITE SBUF",
         globus_l_gsc_cmd_site_sbuf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3656,7 +3656,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE RETRBUFSIZE", 
+        "SITE RETRBUFSIZE",
         globus_l_gsc_cmd_site_receive_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3666,7 +3666,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE RBUFSZ", 
+        "SITE RBUFSZ",
         globus_l_gsc_cmd_site_receive_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3676,7 +3676,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE RBUFSIZ", 
+        "SITE RBUFSIZ",
         globus_l_gsc_cmd_site_receive_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3686,7 +3686,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE STORBUFSIZE", 
+        "SITE STORBUFSIZE",
         globus_l_gsc_cmd_site_send_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3696,7 +3696,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE SBUFSZ", 
+        "SITE SBUFSZ",
         globus_l_gsc_cmd_site_send_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3706,7 +3706,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE SBUFSIZ", 
+        "SITE SBUFSIZ",
         globus_l_gsc_cmd_site_send_buf,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3716,9 +3716,9 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE HELP", 
+        "SITE HELP",
         globus_l_gsc_cmd_help,
-        GLOBUS_GSC_COMMAND_PRE_AUTH | 
+        GLOBUS_GSC_COMMAND_PRE_AUTH |
             GLOBUS_GSC_COMMAND_POST_AUTH,
         2,
         3,
@@ -3727,7 +3727,7 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "SITE FAULT", 
+        "SITE FAULT",
         globus_l_gsc_cmd_site_fault,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         3,
@@ -3737,14 +3737,14 @@ globus_i_gsc_add_commands(
 
     globus_gsc_959_command_add(
         server_handle,
-        "LANG", 
+        "LANG",
         globus_l_gsc_cmd_lang,
         GLOBUS_GSC_COMMAND_POST_AUTH,
         1,
         2,
         "LANG: set language for messages",
         NULL);
-    
+
     /* add features */
     globus_gridftp_server_control_add_feature(server_handle, "PASV AllowDelayed;");
     globus_gridftp_server_control_add_feature(server_handle, "MDTM");
@@ -3753,11 +3753,11 @@ globus_i_gsc_add_commands(
     globus_gridftp_server_control_add_feature(server_handle, "SPAS");
     globus_gridftp_server_control_add_feature(server_handle, "ESTO");
     globus_gridftp_server_control_add_feature(server_handle, "ERET");
-    globus_gridftp_server_control_add_feature(server_handle, "MLST Type*;Size*;Modify*;Perm*;Charset;UNIX.mode*;UNIX.owner*;UNIX.uid*;UNIX.group*;UNIX.gid*;Unique*;UNIX.slink*;X.count;");    
-    globus_gridftp_server_control_add_feature(server_handle, "SIZE");    
-    globus_gridftp_server_control_add_feature(server_handle, "PARALLEL");    
-    globus_gridftp_server_control_add_feature(server_handle, "DCAU");    
-    globus_gridftp_server_control_add_feature(server_handle, "LANG EN");    
+    globus_gridftp_server_control_add_feature(server_handle, "MLST Type*;Size*;Modify*;Perm*;Charset;UNIX.mode*;UNIX.owner*;UNIX.uid*;UNIX.group*;UNIX.gid*;Unique*;UNIX.slink*;X.count;");
+    globus_gridftp_server_control_add_feature(server_handle, "SIZE");
+    globus_gridftp_server_control_add_feature(server_handle, "PARALLEL");
+    globus_gridftp_server_control_add_feature(server_handle, "DCAU");
+    globus_gridftp_server_control_add_feature(server_handle, "LANG EN");
     globus_gridftp_server_control_add_feature(server_handle, "UTF8");
     globus_gridftp_server_control_add_feature(server_handle, "MLSC");
     globus_gridftp_server_control_add_feature(server_handle, "MLSR");

@@ -3,7 +3,7 @@
 Name:		globus-xio
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	6.6
+Version:	6.7
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus XIO Framework
 
@@ -140,6 +140,9 @@ GLOBUS_HOSTNAME=localhost make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.7-1
+- Fix compiler and doxygen warnings
+
 * Fri Mar 11 2022 Mattias Ellert <mattias.ellert@physics.uu.se> - 6.6-1
 - Fix some compiler and doxygen warnings
 

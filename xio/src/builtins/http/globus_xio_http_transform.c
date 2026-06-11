@@ -94,9 +94,11 @@ void
 globus_l_xio_http_read_timeout_callback(
     void *                              user_arg);
 
+#ifndef GLOBUS_DONT_DOCUMENT_INTERNAL
+
 /**
  * Open an HTTP URI
- * @ingroup globus_i_xio_http_transform 
+ * @ingroup globus_i_xio_http_transform
  *
  * Opens a new connection to handle an HTTP request. Allocates a handle
  * and then passes the open on to the transport. In the callback called
@@ -131,7 +133,7 @@ globus_i_xio_http_open(
     globus_i_xio_http_target_t *        target = NULL;
     globus_i_xio_http_handle_t *        http_handle;
     GlobusXIOName(globus_i_xio_http_open);
-    
+
     if(link)
     {
         target = (globus_i_xio_http_target_t *) link;
@@ -144,7 +146,7 @@ globus_i_xio_http_open(
             goto error;
         }
     }
-    
+
     http_handle = globus_l_xio_http_find_cached_handle(target, attr);
 
     if (http_handle != NULL)
@@ -155,7 +157,7 @@ globus_i_xio_http_open(
     {
         result = globus_l_xio_http_open(contact_info, target, attr, op);
     }
-    
+
     if(!link && target)
     {
         globus_i_xio_http_target_destroy(target);
@@ -279,11 +281,11 @@ globus_l_xio_http_open(
         open_callback = globus_i_xio_http_server_open_callback;
         http_handle->send_state = GLOBUS_XIO_HTTP_STATUS_LINE;
     }
-    
+
     memcpy(&new_contact_info, contact_info, sizeof(new_contact_info));
     snprintf(port_buf, sizeof(port_buf), "%hu", http_handle->target_info.port);
     new_contact_info.port = port_buf;
-    
+
     http_handle->handle = globus_xio_operation_get_driver_handle(op);
 
     result = globus_xio_driver_pass_open(
@@ -377,7 +379,7 @@ globus_l_xio_http_find_cached_handle(
  *     Operation associated with the read.
  *
  * @return
- *     This function returns GLOBUS_SUCCESS, 
+ *     This function returns GLOBUS_SUCCESS,
  *     GLOBUS_XIO_ERROR_ALREADY_REGISTERED, and GLOBUS_XIO_ERROR_EOF
  *     errors directly.
  *
@@ -425,7 +427,7 @@ globus_i_xio_http_read(
             globus_object_copy(http_handle->pending_error));
         goto error_exit;
     }
-    
+
     if (http_handle->read_operation.operation != NULL)
     {
         /* Only one read in progress per handle, sorry */
@@ -447,7 +449,7 @@ globus_i_xio_http_read(
 
     for (i = 0; i < iovec_count; i++)
     {
-        http_handle->read_operation.iov[i].iov_base = 
+        http_handle->read_operation.iov[i].iov_base =
             iovec[i].iov_base;
         http_handle->read_operation.iov[i].iov_len =
             iovec[i].iov_len;
@@ -475,7 +477,7 @@ globus_i_xio_http_read(
         }
 
         http_handle->cancellation->user_read_op = op;
-        http_handle->cancellation->internal_op = 
+        http_handle->cancellation->internal_op =
                 http_handle->response_read_operation;
         http_handle->cancellation->http_handle = http_handle;
         http_handle->cancellation->driver_handle =
@@ -523,7 +525,7 @@ globus_i_xio_http_read(
             if (http_handle->read_buffer.iov_base == NULL)
             {
                 result = GlobusXIOErrorMemory("read_buffer");
-    
+
                 goto error_exit;
             }
         }
@@ -537,7 +539,7 @@ globus_i_xio_http_read(
             }
             http_handle->parse_state = GLOBUS_XIO_HTTP_REQUEST_LINE;
         }
-    
+
         result = globus_xio_driver_pass_read(
                 op,
                 &http_handle->read_buffer,
@@ -578,7 +580,7 @@ globus_i_xio_http_read(
         }
         /*
          * Either we've read enough, hit end of chunk, no entity was present,
-         * or pass to transport failed. Call finished_read 
+         * or pass to transport failed. Call finished_read
          */
         op = http_handle->read_operation.operation;
 
@@ -645,8 +647,6 @@ error_exit:
  * @param registered_again
  *     Set to GLOBUS_TRUE by this function if the read operation was passed
  *     down again as a result of a partial read of data.
- * 
- * @return void
  */
 globus_result_t
 globus_i_xio_http_parse_residue(
@@ -672,10 +672,10 @@ globus_i_xio_http_parse_residue(
         headers = &http_handle->request_info.headers;
     }
 
-    if (http_handle->read_operation.iovcnt == 0 || 
+    if (http_handle->read_operation.iovcnt == 0 ||
         http_handle->parse_state == GLOBUS_XIO_HTTP_EOF)
     {
-        http_handle->read_operation.wait_for = 0; 
+        http_handle->read_operation.wait_for = 0;
         goto finish;
     }
 
@@ -779,7 +779,7 @@ globus_i_xio_http_parse_residue(
                     {
                         nbytes = http_handle->read_operation.wait_for;
                     }
-                    
+
                     result = globus_xio_driver_pass_read(
                             http_handle->read_operation.operation,
                             http_handle->read_operation.iov,
@@ -790,8 +790,8 @@ globus_i_xio_http_parse_residue(
                     if (result == GLOBUS_SUCCESS)
                     {
                         *registered_again = GLOBUS_TRUE;
-                    }  
-                          
+                    }
+
                 }
                 break;
             case GLOBUS_XIO_HTTP_STATUS_LINE:
@@ -808,7 +808,7 @@ globus_i_xio_http_parse_residue(
                     {
                         goto finish;
                     }
-                
+
                     result = globus_xio_driver_pass_read(
                             http_handle->response_read_operation,
                             &http_handle->read_iovec,
@@ -816,7 +816,7 @@ globus_i_xio_http_parse_residue(
                             1,
                             globus_l_xio_http_client_read_response_callback,
                             http_handle);
-                
+
                     if (result != GLOBUS_SUCCESS)
                     {
                         goto finish;
@@ -969,8 +969,6 @@ globus_l_xio_http_copy_residue(
  *     Number of bytes read by the transport.
  * @param user_arg
  *     Void pointer pointing to an HTTP handle.
- *
- * @return void
  */
 static
 void
@@ -1057,8 +1055,6 @@ globus_l_xio_http_read_callback(
  *     Number of bytes read by the transport.
  * @param user_arg
  *     Void pointer pointing to an HTTP handle.
- *
- * @return void
  */
 static
 void
@@ -1111,7 +1107,7 @@ globus_l_xio_http_read_chunk_header_callback(
         }
         /*
          * Either we've read enough, hit end of chunk, no entity was present,
-         * or pass to transport failed. Call finished_read 
+         * or pass to transport failed. Call finished_read
          */
         op = http_handle->read_operation.operation;
 
@@ -1138,7 +1134,7 @@ globus_l_xio_http_read_chunk_header_callback(
  * @ingroup globus_i_xio_http_transform
  *
  * Parse the chunk size, end-of-chunk CRLF, or chunk footers, out of the
- * handle's read buffer, depending on the current parse state. 
+ * handle's read buffer, depending on the current parse state.
  *
  * @param http_handle
  *     Handle associated with this parsing.
@@ -1211,7 +1207,7 @@ globus_l_xio_http_parse_chunk_header(
 
                 break;
             }
-            
+
             /* FALLSTHROUGH */
         case GLOBUS_XIO_HTTP_CHUNK_LINE:
             *eol = '\0';
@@ -1367,7 +1363,7 @@ globus_l_xio_http_parse_chunk_header(
  *     Operation associated with the write.
  *
  * @return
- *     This function returns GLOBUS_SUCCESS, 
+ *     This function returns GLOBUS_SUCCESS,
  *     GLOBUS_XIO_ERROR_ALREADY_REGISTERED, and GLOBUS_XIO_ERROR_EOF
  *     errors directly. Other errors may be returned from
  *     globus_i_xio_http_server_write_response(),
@@ -1393,17 +1389,7 @@ globus_i_xio_http_write(
 {
     globus_i_xio_http_handle_t *            http_handle = handle;
     globus_result_t                         result = GLOBUS_SUCCESS;
-    globus_i_xio_http_header_info_t *       headers;
     GlobusXIOName(globus_i_xio_http_write);
-
-    if (http_handle->target_info.is_client)
-    {
-        headers = &http_handle->request_info.headers;
-    }
-    else
-    {
-        headers = &http_handle->response_info.headers;
-    }
 
     globus_mutex_lock(&http_handle->mutex);
 
@@ -1414,7 +1400,7 @@ globus_i_xio_http_write(
     }
     else
     {
-        
+
         switch (http_handle->send_state)
         {
             case GLOBUS_XIO_HTTP_STATUS_LINE:
@@ -1428,7 +1414,7 @@ globus_i_xio_http_write(
             case GLOBUS_XIO_HTTP_CLOSE:
                 result = GlobusXIOHttpErrorNoEntity();
                 break;
-    
+
             case GLOBUS_XIO_HTTP_CHUNK_BODY:
                 if (http_handle->write_operation.operation != NULL)
                 {
@@ -1455,13 +1441,13 @@ globus_i_xio_http_write(
                         globus_i_xio_http_write_callback,
                         http_handle);
                 break;
-    
+
             case GLOBUS_XIO_HTTP_PRE_REQUEST_LINE:
                 if(http_handle->delay_write_header)
                 {
                     http_handle->first_write_iovec = iovec;
                     http_handle->first_write_iovec_count = iovec_count;
-    
+
                     result = globus_i_xio_http_client_write_request(
                         op,
                         http_handle);
@@ -1552,7 +1538,7 @@ globus_i_xio_http_write_chunk(
     }
     http_handle->write_operation.operation = op;
     http_handle->write_operation.driver_handle = globus_xio_operation_get_driver_handle(op);
-    http_handle->write_operation.iov = globus_libc_malloc((iovec_count + 2) * 
+    http_handle->write_operation.iov = globus_libc_malloc((iovec_count + 2) *
             sizeof(globus_xio_iovec_t));
 
     if (http_handle->write_operation.iov == NULL)
@@ -1615,7 +1601,7 @@ error_exit:
  * In chunked mode, we will adjust the nbytes to remove the size of the
  * chunk framing, otherwise we will finish the write with the value passed
  * to this callback.
- * 
+ *
  * @param op
  *     Operation associated with the write.
  * @param result
@@ -1624,8 +1610,6 @@ error_exit:
  *     Number of bytes written by the transport.
  * @param user_arg
  *     Void pointer to a globus_i_xio_http_handle_t.
- *
- * @return void
  */
 void
 globus_i_xio_http_write_callback(
@@ -1692,10 +1676,10 @@ globus_i_xio_http_write_callback(
         globus_object_t *               err;
 
         err = globus_error_get(result);
-        
+
         if(http_handle->reopen_in_progress)
         {
-            http_handle->pending_error = 
+            http_handle->pending_error =
                 GlobusXIOHTTPErrorObjPersistentConnectionDropped(err);
         }
         else
@@ -1851,18 +1835,8 @@ globus_result_t
 globus_i_xio_http_close_internal(
     globus_i_xio_http_handle_t *        http_handle)
 {
-    globus_i_xio_http_header_info_t *   headers;
     globus_result_t                     result;
     globus_reltime_t                    delay;
-
-    if (http_handle->target_info.is_client)
-    {
-        headers = &http_handle->request_info.headers;
-    }
-    else
-    {
-        headers = &http_handle->response_info.headers;
-    }
 
     http_handle->send_state = GLOBUS_XIO_HTTP_CLOSE;
 
@@ -1899,6 +1873,8 @@ finish:
     return result;
 }
 /* globus_i_xio_http_close_internal() */
+
+#endif /* GLOBUS_DONT_DOCUMENT_INTERNAL */
 
 void
 globus_i_xio_http_close_callback(

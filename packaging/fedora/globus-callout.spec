@@ -3,7 +3,7 @@
 Name:		globus-callout
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	4.3
+Version:	4.4
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus Callout Library
 
@@ -137,6 +137,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.4-1
+- Fix compiler warnings
+
 * Tue Mar 10 2020 Mattias Ellert <mattias.ellert@physics.uu.se> - 4.3-1
 - Make makefiles exit sooner on errors
 

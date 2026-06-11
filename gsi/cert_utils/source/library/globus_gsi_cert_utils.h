@@ -77,7 +77,7 @@ extern "C" {
    @endcode
  *
  * This function should be called once for each time Globus GSI Cert Utils
- * was activated. 
+ * was activated.
  *
  */
 
@@ -88,11 +88,11 @@ extern "C" {
  */
 #define GLOBUS_GSI_CERT_UTILS_MODULE    (&globus_i_gsi_cert_utils_module)
 
-extern 
+extern
 globus_module_descriptor_t              globus_i_gsi_cert_utils_module;
 
 #define _CUSL(s) globus_common_i18n_get_string(GLOBUS_GSI_CERT_UTILS_MODULE,\
-		s)
+                s)
 
 #ifndef DOXYGEN
 
@@ -150,7 +150,11 @@ globus_gsi_cert_utils_get_identity_cert(
 
 globus_result_t
 globus_gsi_cert_utils_get_cert_type(
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509 *                              cert,
+#else
+    const X509 *                        cert,
+#endif
     globus_gsi_cert_utils_cert_type_t * type);
 
 globus_result_t

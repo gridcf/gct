@@ -269,7 +269,7 @@ globus_l_seg_stdout_activate(void)
     {
 
         goto close_out_handle_error;
-    
+
     }
 
     result = globus_xio_open(globus_l_seg_input_handle, "", in_attr);
@@ -369,7 +369,7 @@ globus_l_seg_stdout_deactivate(void)
 
 /**
  * Send an arbitrary SEG notification.
- * @ingroup seg_api
+ * @ingroup globus_scheduler_event_generator_api
  *
  * @param format
  *     Printf-style format of the SEG notification message

@@ -129,6 +129,10 @@ create_contexts(void)
                     NULL,
                     NULL);
         }
+        else
+        {
+            maj_stat = 0;
+        }
 
         if (GSS_ERROR(maj_stat))
         {
@@ -153,7 +157,7 @@ int gridmap_bad_params_test(void)
     char *                              userid = "userid";
     int                                 rc;
     char *                              gridmap;
-    
+
     gridmap = create_file_path(gridmap_dir, "grid-mapfile");
 
     rc = globus_libc_setenv("GRIDMAP", gridmap, 1);
@@ -194,7 +198,7 @@ userok_bad_params_test(void)
     char *                              userid = "userid";
     int                                 rc;
     char *                              gridmap;
-    
+
     gridmap = create_file_path(gridmap_dir, "grid-mapfile");
 
     rc = globus_libc_setenv("GRIDMAP", gridmap, 1);
@@ -235,7 +239,7 @@ map_local_user_bad_params_test(void)
     char *                              userid = "joe";
     int                                 rc;
     char *                              gridmap;
-    
+
     gridmap = create_file_path(gridmap_dir, "grid-mapfile");
 
     rc = globus_libc_setenv("GRIDMAP", gridmap, 1);
@@ -277,7 +281,7 @@ lookup_all_globusid_bad_params_test(void)
     int                                 dn_count;
     int                                 rc;
     char *                              gridmap;
-    
+
     gridmap = create_file_path(gridmap_dir, "grid-mapfile");
 
     rc = globus_libc_setenv("GRIDMAP", gridmap, 1);
@@ -328,7 +332,7 @@ map_and_authorize_bad_params_test(void)
     char *                              identity_buffer = "id";
     unsigned int                        identity_buffer_length = 2;
     char *                              gridmap;
-    
+
     gridmap = create_file_path(gridmap_dir, "grid-mapfile");
 
 
@@ -388,7 +392,7 @@ gridmap_test(void)
     int                                 failed;
     int                                 rc;
     char *                              gridmap;
-    
+
 
     for (i = 0, failed = 0; i < SIZEOF_ARRAY(tests); i++)
     {

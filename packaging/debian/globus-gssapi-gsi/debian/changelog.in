@@ -1,3 +1,10 @@
+globus-gssapi-gsi (14.21-1+gct.@distro@) @distro@; urgency=medium
+
+  * Compile with OpenSSL 4
+  * Fix compiler warnings
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Tue, 19 May 2026 15:59:55 +0200
+
 globus-gssapi-gsi (14.20-1+gct.@distro@) @distro@; urgency=medium
 
   * Disable sending session tickets after the TLS 1.3 handshake

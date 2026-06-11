@@ -102,9 +102,7 @@ main()
 
     for (i = 0; i <= MAX_ERROR_NUM; i++)
     {
-        globus_result_t                     result;
-
-        result = throw_error(i);
+        throw_error(i);
     }
 
     for (i = 1; i <= MAX_ERROR_NUM; i++)

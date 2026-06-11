@@ -43,10 +43,10 @@ RSA_get0_key(const RSA *r, const BIGNUM **n, const BIGNUM **e, const BIGNUM **d)
 
 #endif
 
-static int 
+static int
 read_cert_request(GSI_SOCKET *self,
-		  unsigned char **buffer,
-		  size_t *length) {
+                  unsigned char **buffer,
+                  size_t *length) {
 
   int             return_value = 1;
   unsigned char * input_buffer = NULL;
@@ -58,7 +58,7 @@ read_cert_request(GSI_SOCKET *self,
   }
 
   if (GSI_SOCKET_read_token(self, &input_buffer,
-			    &input_buffer_length) == GSI_SOCKET_ERROR) {
+                            &input_buffer_length) == GSI_SOCKET_ERROR) {
     verror_put_string("read_cert_request(): Read from socket failed");
     goto error;
   }
@@ -81,13 +81,13 @@ read_cert_request(GSI_SOCKET *self,
 
 }
 
-static int 
+static int
 send_certificate(GSI_SOCKET *self,
-		 unsigned char *buffer,
-		 size_t length) {
+                 unsigned char *buffer,
+                 size_t length) {
 
-  if (GSI_SOCKET_write_buffer(self, (const char *)buffer, 
-			      length) == GSI_SOCKET_ERROR) {
+  if (GSI_SOCKET_write_buffer(self, (const char *)buffer,
+                              length) == GSI_SOCKET_ERROR) {
     verror_put_string("Error writing certificate to client!");
     return 1;
   }
@@ -96,7 +96,7 @@ send_certificate(GSI_SOCKET *self,
 
 }
 
-static void 
+static void
 add_key_value( char * key, char * value, char buffer[] ) {
 
   strcat( buffer, key );
@@ -110,11 +110,11 @@ add_key_value( char * key, char * value, char buffer[] ) {
 }
 
 
-static int 
-external_callout( X509_REQ                 *request, 
-		  X509                     **cert,
-		  myproxy_request_t        *client_request,
-		  myproxy_server_context_t *server_context) {
+static int
+external_callout( X509_REQ                 *request,
+                  X509                     **cert,
+                  myproxy_request_t        *client_request,
+                  myproxy_server_context_t *server_context) {
 
   int return_value = 1;
 
@@ -131,12 +131,12 @@ external_callout( X509_REQ                 *request,
   memset(buffer, '\0', BUF_SIZE);
   memset(intbuf, '\0', 128);
 
-  myproxy_debug("callout using: %s", 
-		server_context->certificate_issuer_program);
+  myproxy_debug("callout using: %s",
+                server_context->certificate_issuer_program);
 
   if ((pid = myproxy_popen(fds,
-			   server_context->certificate_issuer_program,
-			   NULL)) < 0) {
+                           server_context->certificate_issuer_program,
+                           NULL)) < 0) {
     return -1; /* myproxy_popen will set verror */
   }
 
@@ -162,7 +162,7 @@ external_callout( X509_REQ                 *request,
   add_key_value( "authzcreds", client_request->authzcreds, buffer );
   add_key_value( "keyretrieve", client_request->keyretrieve, buffer );
   add_key_value( "trusted_retrievers", client_request->trusted_retrievers,
-		 buffer );
+                 buffer );
 
   sprintf( intbuf, "%d", server_context->max_cert_lifetime );
   add_key_value( "max_cert_lifetime", (char*)intbuf, buffer );
@@ -253,10 +253,10 @@ lock_file(int fd)
 
     while( fcntl( fd, F_SETLKW, &fl ) < 0 )
     {
-	if ( errno != EINTR )
-	{
-	    return -1;
-	}
+        if ( errno != EINTR )
+        {
+            return -1;
+        }
     }
     return 0;
 }
@@ -266,9 +266,9 @@ lock_file(int fd)
  * of file locking
  */
 
-static int 
-assign_serial_number( X509 *cert, 
-		      myproxy_server_context_t *server_context ) {
+static int
+assign_serial_number( X509 *cert,
+                      myproxy_server_context_t *server_context ) {
 
   int retval = 1;
   long serialset;
@@ -301,7 +301,7 @@ assign_serial_number( X509 *cert,
       const char *sdir;
       sdir = myproxy_get_storage_dir();
       if (sdir == NULL) {
-	  goto error;
+          goto error;
       }
       serialfile = malloc(strlen(sdir)+strlen("/serial")+1);
       sprintf(serialfile, "%s/serial", sdir);
@@ -351,17 +351,17 @@ assign_serial_number( X509 *cert,
 
   if (serialset) {
       if (!a2i_ASN1_INTEGER(serialbio, current, buf, sizeof(buf))) {
-	  verror_put_string("Asn1 int read/conversion error\n");
+          verror_put_string("Asn1 int read/conversion error\n");
       ssl_error_to_verror();
-	  goto error;
+          goto error;
       } else {
-	  myproxy_debug("Loaded serial number 0x%s from %s", buf, serialfile);
+          myproxy_debug("Loaded serial number 0x%s from %s", buf, serialfile);
       }
   } else {
       ASN1_INTEGER_set(current, server_context->certificate_serial_skip);
   }
 
-  serial = BN_bin2bn( current->data, current->length, serial );
+  serial = BN_bin2bn( ASN1_STRING_get0_data(current), ASN1_STRING_length(current), serial );
   if ( serial == NULL ) {
     verror_put_string("Error converting to bignum\n");
     ssl_error_to_verror();
@@ -393,7 +393,7 @@ assign_serial_number( X509 *cert,
    * the underlying file stream and close()ing the file descriptor,
    * which will release the lock.
    */
-  
+
   BIO_free(serialbio);
   serialbio    = NULL;
   serialstream = NULL;
@@ -447,7 +447,7 @@ write_certificate(X509 *cert, const char serial[], const char dir[]) {
         goto error;
     }
     close(fd);
-	if ((bp=BIO_new(BIO_s_file())) == NULL) {
+        if ((bp=BIO_new(BIO_s_file())) == NULL) {
         myproxy_debug("BIO_new(BIO_s_file()) failed");
         goto error;
     }
@@ -463,7 +463,7 @@ write_certificate(X509 *cert, const char serial[], const char dir[]) {
 
  error:
     free(path);
-	BIO_free_all(bp);
+        BIO_free_all(bp);
 
     return rval;
 }
@@ -474,14 +474,14 @@ static ENGINE    *engine=NULL;
 static int        engine_used=0;
 #endif
 
-static int 
-generate_certificate( X509_REQ                 *request, 
-		      X509                     **certificate,
-		      EVP_PKEY                 *pkey,
-		      myproxy_request_t        *client_request,
-		      myproxy_server_context_t *server_context) { 
+static int
+generate_certificate( X509_REQ                 *request,
+                      X509                     **certificate,
+                      EVP_PKEY                 *pkey,
+                      myproxy_request_t        *client_request,
+                      myproxy_server_context_t *server_context) {
 
-  int             return_value = 1;  
+  int             return_value = 1;
   int             not_after;
   int             lockfd = -1;
   int             i;
@@ -503,7 +503,7 @@ generate_certificate( X509_REQ                 *request,
 
   cert = X509_new();
 
-  ctxp = &ctx;		/* needed for X509V3 macros */
+  ctxp = &ctx;          /* needed for X509V3 macros */
   X509V3_set_ctx_nodb(ctxp);
 
   if (cert == NULL) {
@@ -517,12 +517,12 @@ generate_certificate( X509_REQ                 *request,
   /* this has already been called successfully, but... */
 
   if ( user_dn_lookup( client_request->username, &userdn,
-		       server_context ) ) {
+                       server_context ) ) {
     verror_put_string("unknown username: %s", client_request->username);
     goto error;
   }
 
-  subject = X509_get_subject_name(cert);
+  subject = X509_NAME_dup(X509_get_subject_name(cert));
 
   globus_result =
       globus_gsi_cert_utils_get_x509_name(userdn, strlen(userdn), subject);
@@ -536,23 +536,21 @@ generate_certificate( X509_REQ                 *request,
      problems we find.*/
   for (i = 0; i < X509_NAME_entry_count(subject); i++)
   {
-      X509_NAME_ENTRY *ne = NULL;
-      ASN1_STRING *str = NULL;
-      ASN1_OBJECT *obj = NULL;
+      const X509_NAME_ENTRY *ne = NULL;
+      const ASN1_STRING *str = NULL;
+      const ASN1_OBJECT *obj = NULL;
 
       ne = X509_NAME_get_entry(subject, i);
       str = X509_NAME_ENTRY_get_data(ne);
       obj = X509_NAME_ENTRY_get_object(ne);
 
       if ((OBJ_obj2nid(obj) == NID_domainComponent) &&
-          (str->type == V_ASN1_PRINTABLESTRING)) {
-          myproxy_debug("Setting DC type to IA5String.");
-          str->type = V_ASN1_IA5STRING;
+          (ASN1_STRING_type(str) == V_ASN1_PRINTABLESTRING)) {
+          myproxy_debug("Can't set DC type to IA5String.");
       }
       if ((OBJ_obj2nid(obj) == NID_pkcs9_emailAddress) &&
-          (str->type == V_ASN1_PRINTABLESTRING)) {
-          myproxy_debug("Setting emailAddress type to IA5String.");
-          str->type = V_ASN1_IA5STRING;
+          (ASN1_STRING_type(str) == V_ASN1_PRINTABLESTRING)) {
+          myproxy_debug("Can't set emailAddress type to IA5String.");
       }
   }
 
@@ -561,16 +559,19 @@ generate_certificate( X509_REQ                 *request,
   issuer_cert_file = fopen(server_context->certificate_issuer_cert, "r");
   if (issuer_cert_file == NULL) {
       verror_put_string("Error opening certificate file %s",
-			server_context->certificate_issuer_cert);
+                        server_context->certificate_issuer_cert);
       verror_put_errno(errno);
       goto error;
   }
-  
+
+  X509_set_subject_name(cert, subject);
+  X509_NAME_free(subject);
+
   if ((issuer_cert = PEM_read_X509(issuer_cert_file,
-				   NULL, NULL, NULL)) == NULL)
+                                   NULL, NULL, NULL)) == NULL)
   {
       verror_put_string("Error reading certificate %s",
-			server_context->certificate_issuer_cert);
+                        server_context->certificate_issuer_cert);
       ssl_error_to_verror();
       fclose(issuer_cert_file);
       goto error;
@@ -595,10 +596,10 @@ generate_certificate( X509_REQ                 *request,
 
   if (!server_context->max_cert_lifetime) {
     not_after = MIN(client_request->proxy_lifetime,
-		    SECONDS_PER_HOUR * MYPROXY_DEFAULT_DELEG_HOURS);
+                    SECONDS_PER_HOUR * MYPROXY_DEFAULT_DELEG_HOURS);
   } else {
     not_after = MIN(client_request->proxy_lifetime,
-		    server_context->max_cert_lifetime);
+                    server_context->max_cert_lifetime);
   }
 
   myproxy_debug("cert lifetime: %d", not_after );
@@ -606,7 +607,7 @@ generate_certificate( X509_REQ                 *request,
   /* allow 5m clock skew */
   X509_gmtime_adj(X509_get_notBefore(cert), -(MYPROXY_DEFAULT_CLOCK_SKEW));
   X509_gmtime_adj(X509_get_notAfter(cert), (long)not_after);
-  
+
   X509_set_pubkey(cert, pkey);
 
   /* extensions */
@@ -617,77 +618,77 @@ generate_certificate( X509_REQ                 *request,
       long errorline = -1;
       extconf = NCONF_new(NULL);
       if (server_context->certificate_extfile) {
-	  if (NCONF_load(extconf, server_context->certificate_extfile,
-			 &errorline) <= 0) {
-	      if (errorline <= 0) {
-		  verror_put_string("OpenSSL error loading the certificate_extfile '%s'", server_context->certificate_extfile);
-	      } else {
-		  verror_put_string("OpenSSL error on line %ld of certificate_extfile '%s'\n", errorline, server_context->certificate_extfile);
-	      }
-	      goto error;
-	  }
-	  myproxy_debug("Successfully loaded extensions file %s.",
-			server_context->certificate_extfile);
+          if (NCONF_load(extconf, server_context->certificate_extfile,
+                         &errorline) <= 0) {
+              if (errorline <= 0) {
+                  verror_put_string("OpenSSL error loading the certificate_extfile '%s'", server_context->certificate_extfile);
+              } else {
+                  verror_put_string("OpenSSL error on line %ld of certificate_extfile '%s'\n", errorline, server_context->certificate_extfile);
+              }
+              goto error;
+          }
+          myproxy_debug("Successfully loaded extensions file %s.",
+                        server_context->certificate_extfile);
       } else {
-	  pid_t childpid;
-	  int fds[3];
-	  int exit_status;
-	  FILE *nconf_stream = NULL;
-	  myproxy_debug("calling %s", server_context->certificate_extapp);
-	  if ((childpid = myproxy_popen(fds,
-					server_context->certificate_extapp,
-					client_request->username,
-					NULL)) < 0) {
-	      return -1; /* myproxy_popen will set verror */
-	  }
-	  close(fds[0]);
-	  if (waitpid(childpid, &exit_status, 0) == -1) {
-	      verror_put_string("wait() failed for extapp child");
-	      verror_put_errno(errno);
-	      return -1;
-	  }
-	  if (exit_status != 0) {
-	      FILE *fp = NULL;
-	      char buf[100];
-	      verror_put_string("Certificate extension call-out returned non-zero.");
-	      fp = fdopen(fds[1], "r");
-	      if (fp) {
-		  while (fgets(buf, 100, fp) != NULL) {
-		      verror_put_string("%s", buf);
-		  }
-		  fclose(fp);
-	      }
-	      fp = fdopen(fds[2], "r");
-	      if (fp) {
-		  while (fgets(buf, 100, fp) != NULL) {
-		      verror_put_string("%s", buf);
-		  }
-		  fclose(fp);
-	      }
-	      goto error;
-	  }
-	  close(fds[2]);
-	  nconf_stream = fdopen(fds[1], "r");
-	  if (NCONF_load_fp(extconf, nconf_stream, &errorline) <= 0) {
-	      if (errorline <= 0) {
-		  verror_put_string("OpenSSL error parsing output of certificate_extapp call-out.");
-	      } else {
-		  verror_put_string("OpenSSL error parsing line %ld of of certificate_extapp call-out output.", errorline);
-	      }
-	      fclose(nconf_stream);
-	      goto error;
-	  }
-	  fclose(nconf_stream);
+          pid_t childpid;
+          int fds[3];
+          int exit_status;
+          FILE *nconf_stream = NULL;
+          myproxy_debug("calling %s", server_context->certificate_extapp);
+          if ((childpid = myproxy_popen(fds,
+                                        server_context->certificate_extapp,
+                                        client_request->username,
+                                        NULL)) < 0) {
+              return -1; /* myproxy_popen will set verror */
+          }
+          close(fds[0]);
+          if (waitpid(childpid, &exit_status, 0) == -1) {
+              verror_put_string("wait() failed for extapp child");
+              verror_put_errno(errno);
+              return -1;
+          }
+          if (exit_status != 0) {
+              FILE *fp = NULL;
+              char buf[100];
+              verror_put_string("Certificate extension call-out returned non-zero.");
+              fp = fdopen(fds[1], "r");
+              if (fp) {
+                  while (fgets(buf, 100, fp) != NULL) {
+                      verror_put_string("%s", buf);
+                  }
+                  fclose(fp);
+              }
+              fp = fdopen(fds[2], "r");
+              if (fp) {
+                  while (fgets(buf, 100, fp) != NULL) {
+                      verror_put_string("%s", buf);
+                  }
+                  fclose(fp);
+              }
+              goto error;
+          }
+          close(fds[2]);
+          nconf_stream = fdopen(fds[1], "r");
+          if (NCONF_load_fp(extconf, nconf_stream, &errorline) <= 0) {
+              if (errorline <= 0) {
+                  verror_put_string("OpenSSL error parsing output of certificate_extapp call-out.");
+              } else {
+                  verror_put_string("OpenSSL error parsing line %ld of of certificate_extapp call-out output.", errorline);
+              }
+              fclose(nconf_stream);
+              goto error;
+          }
+          fclose(nconf_stream);
       }
       X509V3_set_nconf(&ctx, extconf);
       if (!X509V3_EXT_add_nconf(extconf, &ctx, "default", cert))
       {
-	  verror_put_string("OpenSSL error adding extensions.");
+          verror_put_string("OpenSSL error adding extensions.");
       ssl_error_to_verror();
-	  goto error;
+          goto error;
       }
       myproxy_debug("Successfully added extensions.");
-  } else {			/* add some defaults */
+  } else {                      /* add some defaults */
       add_ext(ctxp, cert, NID_key_usage, "critical,Digital Signature, Key Encipherment, Data Encipherment");
       add_ext(ctxp, cert, NID_ext_key_usage, "clientAuth");
       add_ext(ctxp, cert, NID_basic_constraints, "critical,CA:FALSE");
@@ -696,9 +697,9 @@ generate_certificate( X509_REQ                 *request,
   if (server_context->certificate_issuer_email_domain) {
       char *email;
       email = malloc(strlen(client_request->username)+strlen("email:@")+1+
-		     strlen(server_context->certificate_issuer_email_domain));
+                     strlen(server_context->certificate_issuer_email_domain));
       sprintf(email, "email:%s@%s", client_request->username,
-	      server_context->certificate_issuer_email_domain);
+              server_context->certificate_issuer_email_domain);
       add_ext(ctxp, cert, NID_subject_alt_name, email);
       free(email);
   }
@@ -739,13 +740,13 @@ generate_certificate( X509_REQ                 *request,
 
       if (!inkey) {
          verror_put_string("Could not open cakey file handle: %s",
-	     	      server_context->certificate_issuer_key);
+                      server_context->certificate_issuer_key);
          verror_put_errno(errno);
          goto error;
       }
 
       cakey = PEM_read_PrivateKey( inkey, NULL, NULL,
-	           (char *)server_context->certificate_issuer_key_passphrase );
+                   (char *)server_context->certificate_issuer_key_passphrase );
 
       fclose(inkey);
   }
@@ -774,7 +775,7 @@ generate_certificate( X509_REQ                 *request,
     verror_put_string("Certificate/cakey sign failed.");
     ssl_error_to_verror();
     goto error;
-  } 
+  }
   serial = i2s_ASN1_OCTET_STRING(NULL, X509_get_serialNumber(cert));
 #ifndef OPENSSL_NO_ENGINE
   if (engine) {
@@ -794,7 +795,7 @@ generate_certificate( X509_REQ                 *request,
 
   myproxy_log("Issued certificate for user \"%s\", with DN \"%s\", "
               "lifetime \"%d\", and serial number \"0x%s\"",
-              client_request->username, userdn, 
+              client_request->username, userdn,
               not_after,
               serial
              );
@@ -824,7 +825,8 @@ generate_certificate( X509_REQ                 *request,
 }
 
 
-static int 
+#ifndef OPENSSL_NO_ENGINE
+static int
 arraylen(char **options) {
   char **ptr;
   int c = 0;
@@ -835,7 +837,6 @@ arraylen(char **options) {
   return c;
 }
 
-#ifndef OPENSSL_NO_ENGINE
 void shutdown_openssl_engine(void) {
   if (e_cakey) EVP_PKEY_free( e_cakey );
   if (engine) ENGINE_finish(engine);
@@ -846,39 +847,37 @@ void shutdown_openssl_engine(void) {
 
   if (engine_used) ENGINE_cleanup();
 }
-#endif
 
 static int ui_read_fn(UI *ui, UI_STRING *ui_string) {
     switch(UI_get_string_type(ui_string)) {
-  	case UIT_PROMPT:
-	case UIT_VERIFY:
-	    if(UI_get_input_flags(ui_string) & UI_INPUT_FLAG_ECHO) {
-		UI_set_result(ui, ui_string, (char *) UI_get0_user_data(ui));
-		return 1;
-	    } else {
+        case UIT_PROMPT:
+        case UIT_VERIFY:
+            if(UI_get_input_flags(ui_string) & UI_INPUT_FLAG_ECHO) {
+                UI_set_result(ui, ui_string, (char *) UI_get0_user_data(ui));
+                return 1;
+            } else {
             return 0; /* not supported! */
-	    }
-	case UIT_BOOLEAN:
-	default:
-	    return 0; /* not supported! */
+            }
+        case UIT_BOOLEAN:
+        default:
+            return 0; /* not supported! */
     }
 }
 
 static int ui_write_fn(UI *ui, UI_STRING *ui_string) {
     switch(UI_get_string_type(ui_string)) {
-	case UIT_ERROR:
-	    verror_put_string("%s", UI_get0_output_string(ui_string));
-	    break;
-	case UIT_INFO:
-	    myproxy_log("%s", UI_get0_output_string(ui_string));
-	    break;
-	default:
-	    break;
+        case UIT_ERROR:
+            verror_put_string("%s", UI_get0_output_string(ui_string));
+            break;
+        case UIT_INFO:
+            myproxy_log("%s", UI_get0_output_string(ui_string));
+            break;
+        default:
+            break;
     }
     return 1;
 }
 
-#ifndef OPENSSL_NO_ENGINE
 int initialise_openssl_engine(myproxy_server_context_t *server_context) {
     ENGINE *e;
     EVP_PKEY *cakey;
@@ -889,7 +888,7 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
     UI_method_set_reader(ui_method, ui_read_fn);
     UI_method_set_writer(ui_method, ui_write_fn);
 
-	SSL_load_error_strings();
+    SSL_load_error_strings();
     ENGINE_load_builtin_engines();
 
     myproxy_log("Initialising OpenSSL signing engine '%s'....", engine_id);
@@ -900,12 +899,12 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
         UI_destroy_method(ui_method);
         return 0;
     }
-	if(server_context->certificate_openssl_engine_pre) {
-	    char **pre_cmds;
-	    int pre_num;
+    if(server_context->certificate_openssl_engine_pre) {
+        char **pre_cmds;
+        int pre_num;
         pre_cmds = server_context->certificate_openssl_engine_pre;
-	    pre_num = arraylen(pre_cmds);
-	    while(pre_num--) {
+        pre_num = arraylen(pre_cmds);
+        while(pre_num--) {
             char *name, *value=NULL;
             char *n = strchr(pre_cmds[0], ':');
             if(n==NULL) {
@@ -915,19 +914,19 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
                 name=pre_cmds[0];
                 value=n+1;
             }
-         	if(!ENGINE_ctrl_cmd_string(e, name, value, 0)) {
+            if(!ENGINE_ctrl_cmd_string(e, name, value, 0)) {
                 fprintf(stderr, "Failed pre command (%s - %s:%s)\n",
                         engine_id, name, value ? value : "(NULL)");
                 ENGINE_free(e);
                 ENGINE_cleanup();
-	            UI_destroy_method(ui_method);
+                UI_destroy_method(ui_method);
                 return 0;
-         	}
-         	pre_cmds++;
-	    }
+            }
+            pre_cmds++;
+        }
     }
     if(!ENGINE_init(e)) {
-	    verror_put_string("Could not initialise engine '%s'.", engine_id);
+        verror_put_string("Could not initialise engine '%s'.", engine_id);
         ssl_error_to_verror();
         ENGINE_free(e);
         ENGINE_cleanup();
@@ -958,7 +957,7 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
                         engine_id, name, value ? value : "(NULL)");
                 ENGINE_free(e);
                 ENGINE_cleanup();
-	            UI_destroy_method(ui_method);
+                    UI_destroy_method(ui_method);
                 return 0;
             }
             post_cmds++;
@@ -967,31 +966,31 @@ int initialise_openssl_engine(myproxy_server_context_t *server_context) {
 
     cakey = ENGINE_load_private_key(e, server_context->certificate_issuer_key, ui_method, (char *)server_context->certificate_issuer_key_passphrase);
 
-  	if (cakey == NULL) {        /* may not be fatal... */
+    if (cakey == NULL) {        /* may not be fatal... */
         verror_put_string("WARNING: Could not load ENGINE cakey at %s.",
                           server_context->certificate_issuer_key);
         ssl_error_to_verror();
         myproxy_log_verror();
         verror_clear();
-	}
+    }
 
     if(atexit(&shutdown_openssl_engine)!=0) {
         verror_put_string("Could not register shutdown handler for engine '%s'.", engine_id);
-	    if (cakey) EVP_PKEY_free( cakey );
+        if (cakey) EVP_PKEY_free( cakey );
         ENGINE_finish(e);
         ENGINE_cleanup();
         UI_destroy_method(ui_method);
         return 0;
-	} 
+    }
 
     myproxy_log("Initialised engine '%s' (CAKey=%s)", engine_id, server_context->certificate_issuer_key);
 
-	/* Share with the other functions in this module. */
-	e_cakey = cakey; 
-	engine  = e;
+    /* Share with the other functions in this module. */
+    e_cakey = cakey;
+    engine  = e;
 
-	UI_destroy_method(ui_method);
-	return 1;
+    UI_destroy_method(ui_method);
+    return 1;
 }
 #endif
 
@@ -1067,13 +1066,13 @@ check_newcert(const char *callout, const X509 *cert)
     return do_check(callout, NULL, cert);
 }
 
-static int 
+static int
 handle_certificate(unsigned char            *input_buffer,
-		   size_t                   input_buffer_length,
-		   unsigned char            **output_buffer,
-		   int                      *output_buffer_length,
-		   myproxy_request_t        *client_request,
-		   myproxy_server_context_t *server_context) {
+                   size_t                   input_buffer_length,
+                   unsigned char            **output_buffer,
+                   int                      *output_buffer_length,
+                   myproxy_request_t        *client_request,
+                   myproxy_server_context_t *server_context) {
 
   int           return_value = 1;
   int           verify;
@@ -1122,7 +1121,7 @@ handle_certificate(unsigned char            *input_buffer,
     verror_put_string("Could not extract public key from request.");
     ssl_error_to_verror();
     goto error;
-  } 
+  }
 
   if (EVP_PKEY_id(pkey) != EVP_PKEY_RSA) {
       verror_put_string("Public key in certificate request is not of type RSA.");
@@ -1155,15 +1154,15 @@ handle_certificate(unsigned char            *input_buffer,
     verror_put_string("Req/key did not verify: %d", verify );
     ssl_error_to_verror();
     goto error;
-  } 
+  }
 
   /* convert pkey into string for output to log */
   ASN1_digest((i2d_of_void*)i2d_PUBKEY, EVP_sha1(), (char*)pkey, md, &md_len);
-  sub_hash = md[0] + (md[1] + (md[2] + (md[3] >> 1) * 256) * 256) * 256; 
+  sub_hash = md[0] + (md[1] + (md[2] + (md[3] >> 1) * 256) * 256) * 256;
 
   myproxy_log("Got a cert request for user \"%s\", "
               "with pubkey hash \"0x%lx\", and lifetime \"%d\"",
-              client_request->username, 
+              client_request->username,
               sub_hash,
               client_request->proxy_lifetime
              );
@@ -1177,30 +1176,30 @@ handle_certificate(unsigned char            *input_buffer,
    * these checks are duplicated in check_config().
    */
 
-  if ( ( server_context->certificate_issuer_program != NULL ) && 
+  if ( ( server_context->certificate_issuer_program != NULL ) &&
        ( server_context->certificate_issuer_cert != NULL ) ) {
     verror_put_string("CA config error: both issuer and program defined");
     goto error;
-  } 
+  }
 
-  if ( ( server_context->certificate_issuer_program == NULL ) && 
+  if ( ( server_context->certificate_issuer_program == NULL ) &&
        ( server_context->certificate_issuer_cert == NULL ) ) {
     verror_put_string("CA config error: neither issuer or program defined");
     goto error;
   }
 
-  if ( ( server_context->certificate_issuer_cert != NULL ) && 
+  if ( ( server_context->certificate_issuer_cert != NULL ) &&
        ( server_context->certificate_issuer_key == NULL ) ) {
     verror_put_string("CA config error: issuer defined but no key defined");
     goto error;
   }
 
-  if ( ( server_context->certificate_issuer_cert != NULL ) && 
+  if ( ( server_context->certificate_issuer_cert != NULL ) &&
        ( server_context->certificate_issuer_key != NULL ) ) {
     myproxy_debug("Using internal openssl/generate_certificate() code");
 
-    if ( generate_certificate( req, &cert, pkey, 
-			       client_request, server_context ) ) {
+    if ( generate_certificate( req, &cert, pkey,
+                               client_request, server_context ) ) {
       verror_put_string("Internal cert generation failed");
       goto error;
     }
@@ -1283,16 +1282,16 @@ int is_certificate_authority_configured(myproxy_server_context_t
 }
 
 
-void get_certificate_authority(myproxy_socket_attrs_t   *server_attrs, 
-			       myproxy_creds_t          *creds,
-			       myproxy_request_t        *client_request,
-			       myproxy_response_t       *response,
-			       myproxy_server_context_t *server_context) {
+void get_certificate_authority(myproxy_socket_attrs_t   *server_attrs,
+                               myproxy_creds_t          *creds,
+                               myproxy_request_t        *client_request,
+                               myproxy_response_t       *response,
+                               myproxy_server_context_t *server_context) {
 
   unsigned char * input_buffer = NULL;
-  size_t	  input_buffer_length;
-  unsigned char	* output_buffer = NULL;
-  int		  output_buffer_length;
+  size_t          input_buffer_length;
+  unsigned char * output_buffer = NULL;
+  int             output_buffer_length;
 
   myproxy_debug("Calling CA Extensions");
 
@@ -1300,8 +1299,8 @@ void get_certificate_authority(myproxy_socket_attrs_t   *server_attrs,
 
   verror_clear();
 
-  if ( read_cert_request( server_attrs->gsi_socket, 
-			  &input_buffer, &input_buffer_length) ) {
+  if ( read_cert_request( server_attrs->gsi_socket,
+                          &input_buffer, &input_buffer_length) ) {
     verror_put_string("Unable to read request from client");
     myproxy_log_verror();
     response->error_string = \
@@ -1310,8 +1309,8 @@ void get_certificate_authority(myproxy_socket_attrs_t   *server_attrs,
   }
 
   if ( handle_certificate( input_buffer, input_buffer_length,
-			   &output_buffer, &output_buffer_length,
-			   client_request, server_context ) ) {
+                           &output_buffer, &output_buffer_length,
+                           client_request, server_context ) ) {
     verror_put_string("CA failed to generate certificate");
     response->error_string = strdup("Certificate generation failure.\n");
     myproxy_log_verror();
@@ -1319,7 +1318,7 @@ void get_certificate_authority(myproxy_socket_attrs_t   *server_attrs,
   }
 
   if ( send_certificate( server_attrs->gsi_socket,
-			 output_buffer, output_buffer_length ) ) {
+                         output_buffer, output_buffer_length ) ) {
     myproxy_log_verror();
     myproxy_debug("Failure to send response to client!");
     goto error;

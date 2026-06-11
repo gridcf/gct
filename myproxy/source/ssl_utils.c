@@ -79,18 +79,27 @@ void
 ssl_error_to_verror()
 {
     unsigned long error;
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
     ERR_STATE *error_state;
-    const char *error_data;
     int error_number;
+#else
+    int flags;
+#endif
+    const char *error_data;
 
     while ((error = ERR_peek_error()) != 0)
     {
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
         /* Find data for last error */
         error_state = ERR_get_state();
 
         error_number = (error_state->bottom + 1) % ERR_NUM_ERRORS;
 
         error_data = error_state->err_data[error_number];
+#else
+	ERR_peek_error_data(&error_data, &flags);
+	if (!(flags & ERR_TXT_STRING)) error_data = NULL;
+#endif
 
         /* Now add to verror state */
         verror_put_string("%s", ERR_error_string(error, NULL));

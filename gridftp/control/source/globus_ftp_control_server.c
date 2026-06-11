@@ -45,55 +45,55 @@ typedef struct globus_ftp_l_command_hash_entry_s
 }
 globus_ftp_l_command_hash_entry_t;
 
-static void 
+static void
 globus_l_ftp_control_listen_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result);
 
-static void 
+static void
 globus_l_ftp_control_accept_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result);
 
-static void 
+static void
 globus_l_ftp_control_stop_server_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result);
 
 static void
 globus_l_ftp_control_read_command_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes);
 
-static void 
+static void
 globus_l_ftp_control_send_response_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes);
 
-static void 
+static void
 globus_l_ftp_control_auth_write_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes);
 
 
-static void 
+static void
 globus_l_ftp_control_auth_read_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes);
 
 globus_result_t globus_l_ftp_control_parse_sbuf_cmd(
@@ -121,7 +121,7 @@ globus_result_t globus_l_ftp_control_parse_mode_cmd(
     globus_ftp_control_command_t *      command);
 
 globus_result_t globus_l_ftp_control_parse_opts_cmd(
-    globus_ftp_control_command_t *      command);       
+    globus_ftp_control_command_t *      command);
 
 globus_result_t globus_l_ftp_control_parse_string_arg(
     globus_ftp_control_command_t *      command);
@@ -131,8 +131,8 @@ globus_result_t globus_l_ftp_control_parse_no_arg(
 
 #endif
 
-/* 
- * Hardcoded replies used int the accept/authentication process 
+/*
+ * Hardcoded replies used int the accept/authentication process
  */
 
 const char * globus_i_ftp_server_220_reply=
@@ -152,7 +152,7 @@ const char * globus_i_ftp_server_334_reply=
  * @details
  * This function will set up (i.e. initialize all mutexes and
  * variables) a globus ftp server handle. It will also enter the
- * handle in a list used by the module activation/deactivation functions. 
+ * handle in a list used by the module activation/deactivation functions.
  *
  * @param handle
  *        The handle to initialize.
@@ -160,7 +160,7 @@ const char * globus_i_ftp_server_334_reply=
  *        - GLOBUS_SUCCESS
  *        - invalid handle
  */
-globus_result_t 
+globus_result_t
 globus_ftp_control_server_handle_init(
     globus_ftp_control_server_t *           handle)
 {
@@ -210,7 +210,7 @@ globus_ftp_control_server_handle_init(
  */
 
 
-globus_result_t 
+globus_result_t
 globus_ftp_control_server_handle_destroy(
     globus_ftp_control_server_t *          handle)
 {
@@ -224,10 +224,10 @@ globus_ftp_control_server_handle_destroy(
             );
     }
 
-    if(handle->state == 
+    if(handle->state ==
        GLOBUS_FTP_CONTROL_SERVER_LISTENING)
     {
-        
+
         return globus_error_put(
             globus_error_construct_string(
                 GLOBUS_FTP_CONTROL_MODULE,
@@ -235,7 +235,7 @@ globus_ftp_control_server_handle_destroy(
                 _FCSL("globus_ftp_control_server_handle_destroy: handle is still listening"))
             );
     }
-    
+
     globus_mutex_lock(&globus_l_ftp_server_handle_list_mutex);
     {
         globus_mutex_destroy(&(handle->mutex));
@@ -268,7 +268,7 @@ globus_ftp_control_server_handle_destroy(
  *         The callback function called when connection requests
  *         are made.
  *  @param callback_arg
- *         The user argument passed to the callback function when 
+ *         The user argument passed to the callback function when
  *         connection requests are made.
  *
  *  @note I'm not providing any mechanism for making sure that this
@@ -322,7 +322,7 @@ globus_ftp_control_server_listen(
  *         The callback function called when connection requests
  *         are made.
  *  @param callback_arg
- *         The user argument passed to the callback function when 
+ *         The user argument passed to the callback function when
  *         connection requests are made.
  *
  *  @note I'm not providing any mechanism for making sure that this
@@ -402,7 +402,7 @@ globus_ftp_control_server_listen_ex(
     globus_mutex_unlock(&(server_handle->mutex));
 
     backlog=-1;
-    
+
     globus_io_attr_set_socket_oobinline(attr, GLOBUS_TRUE);
     globus_io_attr_set_tcp_nodelay(attr, GLOBUS_TRUE);
 
@@ -410,36 +410,36 @@ globus_ftp_control_server_listen_ex(
                                      backlog,
                                      attr,
                                      &server_handle->io_handle);
-    
+
 
     if(rc != GLOBUS_SUCCESS)
     {
         return rc;
     }
-    
+
     globus_mutex_lock(&(server_handle->mutex));
     {
         server_handle->state=GLOBUS_FTP_CONTROL_SERVER_LISTENING;
     }
     globus_mutex_unlock(&(server_handle->mutex));
-    
+
     rc=globus_io_tcp_register_listen(&server_handle->io_handle,
                                      globus_l_ftp_control_listen_cb,
                                      (void *) server_handle);
-    
+
     if(rc != GLOBUS_SUCCESS)
     {
         return rc;
     }
-        
+
     return GLOBUS_SUCCESS;
 }
 
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_tcp_register_listen function.    
- * 
+ * Internal callback for the globus_io_tcp_register_listen function.
+ *
  * This is a internal callback used with the
  * globus_io_tcp_register_listen function, which in this library is
  * used for detecting connections to a listening "server" socket.
@@ -459,15 +459,15 @@ globus_ftp_control_server_listen_ex(
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object and the function
- *       returns. 
+ *       returns.
  */
 
 #endif
 
 
-static void 
+static void
 globus_l_ftp_control_listen_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result)
 {
@@ -490,11 +490,11 @@ globus_l_ftp_control_listen_cb(
     (server_handle->callback)(server_handle->callback_arg,
                               server_handle,
                               GLOBUS_NULL);
-    
+
     rc=globus_io_tcp_register_listen(&server_handle->io_handle,
                                      globus_l_ftp_control_listen_cb,
                                      arg);
-    
+
     if(rc != GLOBUS_SUCCESS)
     {
         error=globus_error_get(rc);
@@ -516,11 +516,11 @@ globus_l_ftp_control_listen_cb(
  * @details
  * This function initializes a command structure based on a null
  * terminated string representing one line of input from the
- * client. The command structure is used as a convenience to determine 
+ * client. The command structure is used as a convenience to determine
  * what command the client issued.  This function parses a command
  * string sent by a client and populates the command argument
  * appropriately. In the GSSAPI case it will also decode and unwrap
- * the command before parsing it.  
+ * the command before parsing it.
  *
  * @param command
  *        A pointer to the command structure to be initialized
@@ -543,7 +543,7 @@ globus_ftp_control_command_init(
     char *                                      decoded_cmd = GLOBUS_NULL;
     globus_result_t                             rc;
     globus_ftp_l_command_hash_entry_t *         command_hash_entry;
-    
+
     length=strlen(raw_command);
 
     command->noop.raw_command=
@@ -569,7 +569,7 @@ globus_ftp_control_command_init(
         }
         else
         {
-            command->noop.raw_command[j]=raw_command[i];  
+            command->noop.raw_command[j]=raw_command[i];
             j++;
         }
     }
@@ -586,7 +586,7 @@ globus_ftp_control_command_init(
             return rc;
         }
     }
-    
+
     if(decoded_cmd != GLOBUS_NULL)
     {
         globus_libc_free(command->noop.raw_command);
@@ -600,7 +600,7 @@ globus_ftp_control_command_init(
     sscanf(command->noop.raw_command,"%4s",cmd);
 
     i=0;
-    
+
     while(cmd[i] != '\0')
     {
         cmd[i]=toupper(cmd[i]);
@@ -621,7 +621,7 @@ globus_ftp_control_command_init(
         command->code = GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN;
         rc = GLOBUS_SUCCESS;
     }
-        
+
     return rc;
 }
 
@@ -631,7 +631,7 @@ globus_ftp_control_command_init(
  * @details
  * This function frees up the memory allocated to the command
  * argument.
- * 
+ *
  * @param command
  *        The command structure whose associated memory is to be freed
  */
@@ -648,13 +648,13 @@ globus_ftp_control_command_destroy(
                 _FCSL("globus_ftp_control_command_destroy: command argument is NULL"))
             );
     }
-    
+
     globus_libc_free(command->noop.raw_command);
-    
+
     switch(command->code)
     {
     case GLOBUS_FTP_CONTROL_COMMAND_SITE:
-    case GLOBUS_FTP_CONTROL_COMMAND_DELE:  
+    case GLOBUS_FTP_CONTROL_COMMAND_DELE:
     case GLOBUS_FTP_CONTROL_COMMAND_RMD:
     case GLOBUS_FTP_CONTROL_COMMAND_MKD:
     case GLOBUS_FTP_CONTROL_COMMAND_NLST:
@@ -684,7 +684,7 @@ globus_ftp_control_command_destroy(
     case GLOBUS_FTP_CONTROL_COMMAND_SPOR:
     {
         globus_libc_free(command->spor.host_port);
-        break;  
+        break;
     }
     default:
         break;
@@ -697,7 +697,7 @@ globus_ftp_control_command_destroy(
  * @brief Copy of GridFTP command
  * @ingroup globus_ftp_control_server
  * @details
- * This function should be called when the user needs to make a 
+ * This function should be called when the user needs to make a
  * copy of a command structure.
  *
  * @param dest
@@ -717,7 +717,7 @@ globus_ftp_control_command_copy(
                 GLOBUS_FTP_CONTROL_MODULE,
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_copy: dest argument is NULL"))
-            ); 
+            );
     }
 
     if(src == GLOBUS_NULL)
@@ -727,13 +727,13 @@ globus_ftp_control_command_copy(
                 GLOBUS_FTP_CONTROL_MODULE,
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_copy: src argument is NULL"))
-            ); 
+            );
     }
 
     dest->code=src->code;
 
     dest->noop.raw_command=globus_libc_strdup(src->noop.raw_command);
- 
+
     if(dest->noop.raw_command == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -741,14 +741,14 @@ globus_ftp_control_command_copy(
                 GLOBUS_FTP_CONTROL_MODULE,
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_copy: strdup failed"))
-            ); 
+            );
     }
-   
+
     switch(dest->code)
     {
     case GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN:
     case GLOBUS_FTP_CONTROL_COMMAND_SITE:
-    case GLOBUS_FTP_CONTROL_COMMAND_DELE:  
+    case GLOBUS_FTP_CONTROL_COMMAND_DELE:
     case GLOBUS_FTP_CONTROL_COMMAND_RMD:
     case GLOBUS_FTP_CONTROL_COMMAND_MKD:
     case GLOBUS_FTP_CONTROL_COMMAND_NLST:
@@ -772,12 +772,12 @@ globus_ftp_control_command_copy(
     case GLOBUS_FTP_CONTROL_COMMAND_QUIT:
 
         dest->noop.string_arg = GLOBUS_NULL;
-        
+
         if(src->noop.string_arg != GLOBUS_NULL)
         {
             dest->noop.string_arg=
                 globus_libc_strdup(src->noop.string_arg);
-         
+
             if(dest->noop.string_arg == GLOBUS_NULL)
             {
                 globus_libc_free(dest->noop.raw_command);
@@ -786,7 +786,7 @@ globus_ftp_control_command_copy(
                         GLOBUS_FTP_CONTROL_MODULE,
                         GLOBUS_NULL,
                         _FCSL("globus_ftp_control_command_copy: strdup failed"))
-                    ); 
+                    );
             }
         }
         break;
@@ -801,7 +801,7 @@ globus_ftp_control_command_copy(
     case GLOBUS_FTP_CONTROL_COMMAND_SPOR:
         dest->spor.num_args=src->spor.num_args;
         dest->spor.host_port = (globus_ftp_control_host_port_t *)
-            globus_libc_malloc(src->spor.num_args * 
+            globus_libc_malloc(src->spor.num_args *
                                sizeof(globus_ftp_control_host_port_t));
         if(dest->spor.host_port == GLOBUS_NULL)
         {
@@ -811,12 +811,12 @@ globus_ftp_control_command_copy(
                     GLOBUS_FTP_CONTROL_MODULE,
                     GLOBUS_NULL,
                     _FCSL("globus_ftp_control_command_copy: malloc failed"))
-                ); 
+                );
         }
-        
+
         memcpy(dest->spor.host_port,
                src->spor.host_port,
-               src->spor.num_args * 
+               src->spor.num_args *
                sizeof(globus_ftp_control_host_port_t));
         break;
     case GLOBUS_FTP_CONTROL_COMMAND_TYPE:
@@ -840,9 +840,9 @@ globus_ftp_control_command_copy(
                 GLOBUS_FTP_CONTROL_MODULE,
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_copy: Unknown command"))
-            ); 
+            );
     }
-    
+
     return GLOBUS_SUCCESS;
 }
 
@@ -851,10 +851,10 @@ globus_ftp_control_command_copy(
  * @ingroup globus_ftp_control_server
  * @details
  * This function stops listening on the given listener object
- * for client connections.  All existing client connections are 
+ * for client connections.  All existing client connections are
  * left open.
  *
- * @param listener 
+ * @param listener
  *        the globus_ftp_control_server_t object that should
  *        no longer listen for connections.
  * @param callback
@@ -871,10 +871,10 @@ globus_ftp_control_server_stop(
 {
     globus_result_t                             rc;
     globus_i_ftp_server_passthru_cb_arg_t *     cb_arg;
-    
+
 
     if(listener == GLOBUS_NULL)
-    { 
+    {
         return globus_error_put(
             globus_error_construct_string(
                 GLOBUS_FTP_CONTROL_MODULE,
@@ -892,10 +892,10 @@ globus_ftp_control_server_stop(
                 _FCSL("globus_ftp_control_server_stop: callback argument is NULL"))
             );
     }
-    
+
     globus_mutex_lock(&(listener->mutex));
     {
-        if(listener->state != 
+        if(listener->state !=
            GLOBUS_FTP_CONTROL_SERVER_LISTENING)
         {
             globus_mutex_unlock(&(listener->mutex));
@@ -908,7 +908,7 @@ globus_ftp_control_server_stop(
     cb_arg = (globus_i_ftp_server_passthru_cb_arg_t *)
         globus_libc_malloc(
             sizeof(globus_i_ftp_server_passthru_cb_arg_t));
-    
+
     if(cb_arg == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -931,7 +931,7 @@ globus_ftp_control_server_stop(
         globus_libc_free(cb_arg);
         return rc;
     }
-    
+
     return GLOBUS_SUCCESS;
 
 }
@@ -939,8 +939,8 @@ globus_ftp_control_server_stop(
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_close function.    
- * 
+ * Internal callback for the globus_io_register_close function.
+ *
  * This is an internal callback used as part of the
  * globus_ftp_control_server_stop function. It checks the result of
  * the close and calls the user callback.
@@ -952,20 +952,20 @@ globus_ftp_control_server_stop(
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the close operation 
+ *        The result of the close operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
-static void 
+static void
 globus_l_ftp_control_stop_server_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result)
 {
@@ -973,7 +973,7 @@ globus_l_ftp_control_stop_server_cb(
     globus_object_t *                         error;
 
     cb_arg = (globus_i_ftp_server_passthru_cb_arg_t *) arg;
-    
+
     if(result != GLOBUS_SUCCESS){
         error=globus_error_get(result);
         (cb_arg->callback)(cb_arg->callback_arg,
@@ -1004,9 +1004,9 @@ globus_l_ftp_control_stop_server_cb(
  * connection.  This function must be called to accept that user
  * connection request.  Once the connection is established or if
  * a error occurs, the callback function is called.
- * 
+ *
  * @param listener
- *        The server object that received the connection request. 
+ *        The server object that received the connection request.
  * @param handle
  *        The control connection object.  This structure will be populated
  *        and passed to the callback when the client is authorized.  This
@@ -1050,12 +1050,12 @@ globus_ftp_control_server_accept(
                 GLOBUS_FTP_CONTROL_MODULE,
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_server_accept: listener argument is NULL"))
-            ); 
+            );
     }
 
     globus_mutex_lock(&(listener->mutex));
     {
-        if(listener->state != 
+        if(listener->state !=
            GLOBUS_FTP_CONTROL_SERVER_LISTENING)
         {
             globus_mutex_unlock(&(listener->mutex));
@@ -1101,7 +1101,7 @@ globus_ftp_control_server_accept(
                                      globus_l_ftp_control_accept_cb,
                                      (void *) handle);
     globus_io_tcpattr_destroy(&listener_attr);
-    
+
     if(rc != GLOBUS_SUCCESS)
     {
         globus_mutex_lock(&(handle->cc_handle.mutex));
@@ -1130,8 +1130,8 @@ globus_ftp_control_server_accept(
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_accept function.    
- * 
+ * Internal callback for the globus_io_register_accept function.
+ *
  * This is an internal callback used as part of the
  * globus_ftp_control_accept function. It checks the result of
  * the accept, and sends a initial response to the user.
@@ -1143,20 +1143,20 @@ globus_ftp_control_server_accept(
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the accept operation 
+ *        The result of the accept operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
-static void 
+static void
 globus_l_ftp_control_accept_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result)
 {
@@ -1165,7 +1165,7 @@ globus_l_ftp_control_accept_cb(
     globus_ftp_control_handle_t *             c_handle;
     globus_bool_t                             call_close_cb = GLOBUS_FALSE;
 
-    
+
     c_handle=(globus_ftp_control_handle_t *) arg;
     cc_handle=&(c_handle->cc_handle);
 
@@ -1198,7 +1198,7 @@ globus_l_ftp_control_accept_cb(
     globus_mutex_lock(&(cc_handle->mutex));
     {
         cc_handle->cb_count--;
-        
+
         if(!cc_handle->cb_count &&
            cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
         {
@@ -1224,7 +1224,7 @@ globus_l_ftp_control_accept_cb(
  * globus_ftp_control_server_accept call), this function should be called
  * to authenticate the client. The caller of this function may specify
  * certain authentication requirements using the auth_requirements parameter.
- * 
+ *
  * @param handle
  *         The control connection object.  This structure will be populated
  *         and passed to the callback when the client is authorized.  This
@@ -1247,13 +1247,12 @@ globus_l_ftp_control_accept_cb(
  *       have been initialized prior to calling this function.
  */
 globus_result_t
-globus_ftp_control_server_authenticate( 
+globus_ftp_control_server_authenticate(
     globus_ftp_control_handle_t *               handle,
     globus_ftp_control_auth_requirements_t      auth_requirements,
     globus_ftp_control_auth_callback_t          callback,
     void *                                      callback_arg)
 {
-    globus_object_t *                         error = GLOBUS_NULL;
     globus_ftp_cc_handle_t *                  cc_handle;
     globus_result_t                           rc;
     globus_result_t                           rc2;
@@ -1298,7 +1297,6 @@ globus_ftp_control_server_authenticate(
         &(cc_handle->auth_info),GLOBUS_NULL);
     if(rc != GLOBUS_SUCCESS)
     {
-        error=globus_error_get(rc);
         goto error_std;
     }
 
@@ -1316,7 +1314,6 @@ globus_ftp_control_server_authenticate(
 
         if (rc != GLOBUS_SUCCESS)
         {
-            error = globus_error_get(rc);
             goto error_std;
         }
 
@@ -1330,11 +1327,12 @@ globus_ftp_control_server_authenticate(
             || cc_handle->auth_info.auth_gssapi_context
                 == GSS_C_NO_CONTEXT)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                (rc != GLOBUS_SUCCESS) ? globus_error_get(rc) : NULL,
-                _FCSL("TLS control channel not established"));
-
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    (rc != GLOBUS_SUCCESS) ? globus_error_get(rc) : NULL,
+                    _FCSL("TLS control channel not established"))
+                );
             goto error_std;
         }
 
@@ -1358,10 +1356,12 @@ globus_ftp_control_server_authenticate(
 
         if (maj_stat != GSS_S_COMPLETE)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                globus_error_get(min_stat),
-                _FCSL("gss_inquire_context failed"));
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    globus_error_get(min_stat),
+                    _FCSL("gss_inquire_context failed"))
+                );
             goto error_std;
         }
 
@@ -1378,23 +1378,27 @@ globus_ftp_control_server_authenticate(
 
         if (maj_stat != GSS_S_COMPLETE)
         {
-            error = globus_error_construct_string(
-                GLOBUS_FTP_CONTROL_MODULE,
-                NULL,
-                _FCSL("gss_display_name failed"));
+            rc = globus_error_put(
+                globus_error_construct_string(
+                    GLOBUS_FTP_CONTROL_MODULE,
+                    NULL,
+                    _FCSL("gss_display_name failed"))
+                );
             goto error_std;
         }
         cc_handle->auth_info.auth_gssapi_subject
             = malloc(subject_buf.length + 1);
-    
+
         if (cc_handle->auth_info.auth_gssapi_subject == NULL)
         {
             gss_release_buffer(&min_stat, &subject_buf);
-           
-            error = globus_error_construct_string(
+
+            rc = globus_error_put(
+                globus_error_construct_string(
                     GLOBUS_FTP_CONTROL_MODULE,
                     GLOBUS_NULL,
-                    _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
+                    _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"))
+                );
             goto error_std;
         }
 
@@ -1410,19 +1414,18 @@ globus_ftp_control_server_authenticate(
     rc=globus_io_register_read(&cc_handle->io_handle,
                                cc_handle->read_buffer,
                                GLOBUS_FTP_CONTROL_READ_BUFFER_SIZE,
-                               1, 
+                               1,
                                globus_l_ftp_control_auth_read_cb,
                                handle);
     if(rc != GLOBUS_SUCCESS)
     {
-        error=globus_error_get(rc);
         goto error_std;
     }
- 
+
     return GLOBUS_SUCCESS;
-    
+
 error_std:
-    
+
     rc2 = globus_i_ftp_control_auth_info_destroy(
         &(cc_handle->auth_info));
     globus_assert(rc2 == GLOBUS_SUCCESS);
@@ -1430,7 +1433,7 @@ error_std:
     globus_mutex_lock(&(cc_handle->mutex));
     {
         cc_handle->cb_count--;
-        
+
         if(!cc_handle->cb_count &&
            cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
         {
@@ -1443,15 +1446,15 @@ error_std:
     {
         globus_i_ftp_control_call_close_cb(handle);
     }
-    
+
     return rc;
 }
 
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_write function.    
- * 
+ * Internal callback for the globus_io_register_write function.
+ *
  * This is an internal callback used as part of the
  * globus_ftp_control_authenticate function. It checks the result of
  * the write (which was used to send a response to the client), and
@@ -1466,23 +1469,23 @@ error_std:
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the write operation 
+ *        The result of the write operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
-static void 
+static void
 globus_l_ftp_control_auth_write_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes)
 {
     globus_ftp_cc_handle_t *                  cc_handle;
@@ -1504,7 +1507,7 @@ globus_l_ftp_control_auth_write_cb(
         goto error_auth_destroy;
     }
 
-    if(cc_handle->auth_requirements & 
+    if(cc_handle->auth_requirements &
        GLOBUS_FTP_CONTROL_AUTH_REQ_NONE)
     {
         callback=cc_handle->auth_cb;
@@ -1527,17 +1530,17 @@ globus_l_ftp_control_auth_write_cb(
             cc_handle->cb_count--;
 
             if(!cc_handle->cb_count &&
-               cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-            { 
-                call_close_cb = GLOBUS_TRUE; 
-            } 
+               cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+            {
+                call_close_cb = GLOBUS_TRUE;
+            }
         }
         globus_mutex_unlock(&(cc_handle->mutex));
 
-        if(call_close_cb == GLOBUS_TRUE) 
-        { 
-            globus_i_ftp_control_call_close_cb(c_handle); 
-        } 
+        if(call_close_cb == GLOBUS_TRUE)
+        {
+            globus_i_ftp_control_call_close_cb(c_handle);
+        }
 
         return;
     }
@@ -1558,7 +1561,7 @@ globus_l_ftp_control_auth_write_cb(
         error=globus_error_get(rc);
         goto error_auth_destroy;
     }
-    
+
     return;
 
 error_auth_destroy:
@@ -1578,17 +1581,17 @@ error_auth_destroy:
         cc_handle->cb_count--;
 
         if(!cc_handle->cb_count &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-        { 
-            call_close_cb = GLOBUS_TRUE; 
-        } 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+        {
+            call_close_cb = GLOBUS_TRUE;
+        }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
-    
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
-        globus_i_ftp_control_call_close_cb(c_handle); 
-    } 
+
+    if(call_close_cb == GLOBUS_TRUE)
+    {
+        globus_i_ftp_control_call_close_cb(c_handle);
+    }
 
     return;
 }
@@ -1596,8 +1599,8 @@ error_auth_destroy:
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_read function.    
- * 
+ * Internal callback for the globus_io_register_read function.
+ *
  * This is an internal callback used as part of the
  * globus_ftp_control_authenticate function. It checks the result of
  * the read (which was used to read commands from the client), and
@@ -1607,7 +1610,7 @@ error_auth_destroy:
  * is not complete a reply to the received command is sent to then
  * client using the auth_write callbacks which will continue to read
  * commands. If no full command was received a new register_read is
- * called. 
+ * called.
  *
  * @param arg
  *        The callback argument, which in this case is the control
@@ -1616,23 +1619,23 @@ error_auth_destroy:
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the accept operation 
+ *        The result of the accept operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
-static void 
+static void
 globus_l_ftp_control_auth_read_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes)
 {
     globus_ftp_cc_handle_t *                  cc_handle;
@@ -1667,7 +1670,7 @@ globus_l_ftp_control_auth_read_cb(
         error=globus_error_get(result);
         goto error_auth_destroy;
     }
-   
+
     cc_handle->bytes_read += nbytes;
 
     for(i = 1;i<cc_handle->bytes_read;i++)
@@ -1687,19 +1690,19 @@ globus_l_ftp_control_auth_read_cb(
                 error=globus_error_get(rc);
                 goto error_auth_destroy;
             }
-            
+
             for(j=i+1;j<cc_handle->bytes_read;j++)
             {
                 cc_handle->read_buffer[j-(i+1)]=
                     cc_handle->read_buffer[j];
             }
-            
+
             cc_handle->bytes_read -= (i+1);
-            
+
             switch(command.code)
             {
             case GLOBUS_FTP_CONTROL_COMMAND_AUTH:
-                if(command.auth.type != 
+                if(command.auth.type !=
                    GLOBUS_FTP_CONTROL_AUTH_GSSAPI)
                 {
                     error=globus_error_construct_string(
@@ -1708,8 +1711,8 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: Authentication mechanism not supported"));
                     goto error_cmd_destroy;
                 }
-                
-                if( !(cc_handle->auth_requirements & 
+
+                if( !(cc_handle->auth_requirements &
                       GLOBUS_FTP_CONTROL_AUTH_REQ_GSSAPI))
                 {
                     error=globus_error_construct_string(
@@ -1718,8 +1721,8 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: GSSAPI authentication not allowed"));
                     goto error_cmd_destroy;
                 }
-                
-                if(cc_handle->auth_info.prev_cmd != 
+
+                if(cc_handle->auth_info.prev_cmd !=
                    GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN)
                 {
                     error=globus_error_construct_string(
@@ -1728,11 +1731,11 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: AUTH must be the first command in the authentication sequence"));
                     goto error_cmd_destroy;
                 }
-                
+
                 maj_stat=globus_gss_assist_acquire_cred(
                     &min_stat,
                     GSS_C_ACCEPT,
-                    &(cc_handle->auth_info.credential_handle)); 
+                    &(cc_handle->auth_info.credential_handle));
 
                 if(maj_stat != GSS_S_COMPLETE)
                 {
@@ -1740,7 +1743,7 @@ globus_l_ftp_control_auth_read_cb(
                         GLOBUS_FTP_CONTROL_MODULE,
                         GLOBUS_NULL,
                         _FCSL("globus_l_ftp_control_auth_read_cb: globus_gss_assist_acquire_cred failed"));
-                    goto error_cmd_destroy;  
+                    goto error_cmd_destroy;
                 }
                 else
                 {
@@ -1748,17 +1751,17 @@ globus_l_ftp_control_auth_read_cb(
                 }
 
                 cc_handle->auth_info.prev_cmd=command.code;
-                
+
                 reply=globus_libc_strdup(
                     globus_i_ftp_server_334_reply);
-                
+
                 if(reply == GLOBUS_NULL)
                 {
                     error=globus_error_construct_string(
                         GLOBUS_FTP_CONTROL_MODULE,
                         GLOBUS_NULL,
                         _FCSL("globus_l_ftp_control_auth_read_cb: strdup failed"));
-                    goto error_cmd_destroy;   
+                    goto error_cmd_destroy;
                 }
 
                 rc=globus_io_register_write(
@@ -1767,20 +1770,20 @@ globus_l_ftp_control_auth_read_cb(
                     (globus_size_t) strlen(reply),
                     globus_l_ftp_control_auth_write_cb,
                     arg);
-                
+
                 if(rc != GLOBUS_SUCCESS)
                 {
                     globus_libc_free(reply);
                     error=globus_error_get(rc);
                     goto error_cmd_destroy;
                 }
-                
+
                 break;
-                
+
             case GLOBUS_FTP_CONTROL_COMMAND_ADAT:
-                if((cc_handle->auth_info.prev_cmd != 
+                if((cc_handle->auth_info.prev_cmd !=
                     GLOBUS_FTP_CONTROL_COMMAND_AUTH) &&
-                   (cc_handle->auth_info.prev_cmd != 
+                   (cc_handle->auth_info.prev_cmd !=
                     GLOBUS_FTP_CONTROL_COMMAND_ADAT))
                 {
                     error=globus_error_construct_string(
@@ -1791,8 +1794,8 @@ globus_l_ftp_control_auth_read_cb(
                 }
 
                 cc_handle->auth_info.prev_cmd=command.code;
-                
-                recv_tok.value= 
+
+                recv_tok.value=
                     globus_libc_malloc(
                         (strlen(command.adat.string_arg) + 3) * 6 / 8);
 
@@ -1804,10 +1807,10 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
                     goto error_cmd_destroy;
                 }
-                
+
                 rc=globus_i_ftp_control_radix_decode(
-                    (globus_byte_t *) command.adat.string_arg, 
-                    recv_tok.value, 
+                    (globus_byte_t *) command.adat.string_arg,
+                    recv_tok.value,
                     &length);
                 if(rc != GLOBUS_SUCCESS)
                 {
@@ -1815,7 +1818,7 @@ globus_l_ftp_control_auth_read_cb(
                     error=globus_error_get(rc);
                     goto error_cmd_destroy;
                 }
-                
+
                 recv_tok.length = length;
 
                 if(cc_handle->auth_info.encrypt)
@@ -1827,9 +1830,9 @@ globus_l_ftp_control_auth_read_cb(
                     /* context_handle */
                     &(cc_handle->auth_info.auth_gssapi_context),
                     /* verifier_cred_handle */
-                    cc_handle->auth_info.credential_handle, 
+                    cc_handle->auth_info.credential_handle,
                     /* input_token */
-                    &recv_tok, 
+                    &recv_tok,
                     /* channel bindings */
                     GSS_C_NO_CHANNEL_BINDINGS,
                     /* src_name */
@@ -1840,17 +1843,17 @@ globus_l_ftp_control_auth_read_cb(
                     &send_tok,
                     &ret_flags,
                     /* ignore time_rec */
-                    GLOBUS_NULL, 
+                    GLOBUS_NULL,
                     &(cc_handle->auth_info.delegated_credential_handle)
                     );
-                
+
                 globus_libc_free(recv_tok.value);
 
                 switch(maj_stat)
                 {
 
                 case GSS_S_COMPLETE:
-  
+
                     cc_handle->use_auth = GLOBUS_TRUE;
                     cc_handle->auth_info.authenticated = GLOBUS_TRUE;
 
@@ -1858,7 +1861,7 @@ globus_l_ftp_control_auth_read_cb(
                     {
                         cc_handle->auth_info.encrypt = GLOBUS_TRUE;
                     }
-                    
+
                     maj_stat = gss_display_name(
                         &min_stat,
                         cc_handle->auth_info.target_name,
@@ -1868,11 +1871,11 @@ globus_l_ftp_control_auth_read_cb(
                     cc_handle->auth_info.auth_gssapi_subject =
                         malloc(sizeof(char)*
                                            (subject_buf.length + 1));
-                    
+
                     if(cc_handle->auth_info.auth_gssapi_subject == GLOBUS_NULL)
                     {
                         gss_release_buffer(&min_stat, &subject_buf);
-                        
+
                         error=globus_error_construct_string(
                             GLOBUS_FTP_CONTROL_MODULE,
                             GLOBUS_NULL,
@@ -1886,31 +1889,31 @@ globus_l_ftp_control_auth_read_cb(
 
                     cc_handle->auth_info.auth_gssapi_subject[
                         subject_buf.length] = '\0';
-                    
+
                     gss_release_buffer(&min_stat, &subject_buf);
 
-                    if(cc_handle->auth_requirements & 
+                    if(cc_handle->auth_requirements &
                        GLOBUS_FTP_CONTROL_AUTH_REQ_USER)
                     {
                         if(send_tok.length == 0)
-                        { 
+                        {
                             reply=globus_libc_strdup(
                                 globus_i_ftp_server_235_reply);
-                            
+
                             if(reply == GLOBUS_NULL)
                             {
                                 error=globus_error_construct_string(
                                     GLOBUS_FTP_CONTROL_MODULE,
                                     GLOBUS_NULL,
                                     _FCSL("globus_l_ftp_control_auth_read_cb: strdup failed"));
-                                goto error_cmd_destroy;   
+                                goto error_cmd_destroy;
                             }
                         }
                         else
                         {
                             reply= (char *) globus_libc_malloc(
                                 send_tok.length * 8 / 6 + 16);
-                            
+
                             if(reply == GLOBUS_NULL)
                             {
                                 gss_release_buffer(&min_stat, &send_tok);
@@ -1920,16 +1923,16 @@ globus_l_ftp_control_auth_read_cb(
                                     _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
                                 goto error_cmd_destroy;
                             }
-                    
+
                             strcpy(reply,"235 ADAT=");
-                    
+
                             length=send_tok.length;
-                            
-                            rc = globus_i_ftp_control_radix_encode(send_tok.value, 
-                                                                   (globus_byte_t *) &(reply[9]), 
+
+                            rc = globus_i_ftp_control_radix_encode(send_tok.value,
+                                                                   (globus_byte_t *) &(reply[9]),
                                                                    &length);
                             gss_release_buffer(&min_stat, &send_tok);
-                            
+
                             if(rc != GLOBUS_SUCCESS)
                             {
                                 globus_libc_free(reply);
@@ -1940,14 +1943,14 @@ globus_l_ftp_control_auth_read_cb(
                             reply[length+9]='\r';
                             reply[length+10]='\n';
                         }
-                        
+
                         rc=globus_io_register_write(
                             handle,
                             (globus_byte_t *) reply,
                             (globus_size_t) strlen(reply),
                             globus_l_ftp_control_auth_write_cb,
                             arg);
-                        
+
                         if(rc != GLOBUS_SUCCESS)
                         {
                             globus_libc_free(reply);
@@ -1963,7 +1966,7 @@ globus_l_ftp_control_auth_read_cb(
                             cc_handle->auth_cb_arg=GLOBUS_NULL;
                         }
                         globus_mutex_unlock(&(cc_handle->mutex));
-                        
+
                         (callback)(callback_arg,
                                    c_handle,
                                    GLOBUS_NULL,
@@ -1972,26 +1975,26 @@ globus_l_ftp_control_auth_read_cb(
                         globus_mutex_lock(&(cc_handle->mutex));
                         {
                             cc_handle->cb_count--;
-                            
+
                             if(!cc_handle->cb_count &&
-                               cc_handle->cc_state == 
-                               GLOBUS_FTP_CONTROL_CLOSING) 
-                            { 
-                                call_close_cb = GLOBUS_TRUE; 
-                            } 
+                               cc_handle->cc_state ==
+                               GLOBUS_FTP_CONTROL_CLOSING)
+                            {
+                                call_close_cb = GLOBUS_TRUE;
+                            }
                         }
                         globus_mutex_unlock(&(cc_handle->mutex));
-                        
-                        if(call_close_cb == GLOBUS_TRUE) 
-                        { 
-                            globus_i_ftp_control_call_close_cb(c_handle); 
-                        } 
+
+                        if(call_close_cb == GLOBUS_TRUE)
+                        {
+                            globus_i_ftp_control_call_close_cb(c_handle);
+                        }
                     }
                     break;
                 case GSS_S_CONTINUE_NEEDED:
                     reply= (char *) globus_libc_malloc(
                         send_tok.length * 8 / 6 + 16);
-                    
+
                     if(reply == GLOBUS_NULL)
                     {
                         gss_release_buffer(&min_stat, &send_tok);
@@ -2001,13 +2004,13 @@ globus_l_ftp_control_auth_read_cb(
                             _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
                         goto error_cmd_destroy;
                     }
-                    
+
                     strcpy(reply,"335 ADAT=");
-                    
+
                     length=send_tok.length;
-                    
-                    rc = globus_i_ftp_control_radix_encode(send_tok.value, 
-                                                           (globus_byte_t *) &(reply[9]), 
+
+                    rc = globus_i_ftp_control_radix_encode(send_tok.value,
+                                                           (globus_byte_t *) &(reply[9]),
                                                            &length);
                     gss_release_buffer(&min_stat, &send_tok);
 
@@ -2020,7 +2023,7 @@ globus_l_ftp_control_auth_read_cb(
 
                     reply[length+9]='\r';
                     reply[length+10]='\n';
-                    
+
                     rc=globus_io_register_write(
                         handle,
                         (globus_byte_t *) reply,
@@ -2044,9 +2047,9 @@ globus_l_ftp_control_auth_read_cb(
                 }
                 break;
             case GLOBUS_FTP_CONTROL_COMMAND_USER:
-                if((cc_handle->auth_info.prev_cmd != 
+                if((cc_handle->auth_info.prev_cmd !=
                     GLOBUS_FTP_CONTROL_COMMAND_ADAT) &&
-                   (cc_handle->auth_info.prev_cmd != 
+                   (cc_handle->auth_info.prev_cmd !=
                     GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN))
                 {
                     error=globus_error_construct_string(
@@ -2055,10 +2058,10 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: USER must either be preceded by ADAT or be the first command"));
                     goto error_cmd_destroy;
                 }
-                
+
                 cc_handle->auth_info.prev_cmd=command.code;
 
-                if((cc_handle->auth_requirements & 
+                if((cc_handle->auth_requirements &
                     GLOBUS_FTP_CONTROL_AUTH_REQ_GSSAPI) &&
                    (cc_handle->use_auth == GLOBUS_FALSE))
                 {
@@ -2066,9 +2069,9 @@ globus_l_ftp_control_auth_read_cb(
                         GLOBUS_FTP_CONTROL_MODULE,
                         GLOBUS_NULL,
                         _FCSL("globus_l_ftp_control_auth_read_cb: GSSAPI authentication required"));
-                    goto error_cmd_destroy; 
+                    goto error_cmd_destroy;
                 }
-                
+
                 cc_handle->auth_info.user=globus_libc_strdup(
                     command.user.string_arg);
 
@@ -2080,8 +2083,8 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: strdup failed"));
                     goto error_cmd_destroy;
                 }
-                
-                if(cc_handle->auth_requirements & 
+
+                if(cc_handle->auth_requirements &
                    GLOBUS_FTP_CONTROL_AUTH_REQ_USER)
                 {
 
@@ -2095,7 +2098,7 @@ globus_l_ftp_control_auth_read_cb(
                             cc_handle->auth_cb_arg=GLOBUS_NULL;
                         }
                         globus_mutex_unlock(&(cc_handle->mutex));
-                        
+
                         (callback)(callback_arg,
                                    c_handle,
                                    GLOBUS_NULL,
@@ -2106,19 +2109,19 @@ globus_l_ftp_control_auth_read_cb(
                             cc_handle->cb_count--;
 
                             if(!cc_handle->cb_count &&
-                               cc_handle->cc_state == 
-                               GLOBUS_FTP_CONTROL_CLOSING) 
-                            { 
-                                call_close_cb = GLOBUS_TRUE; 
-                            } 
+                               cc_handle->cc_state ==
+                               GLOBUS_FTP_CONTROL_CLOSING)
+                            {
+                                call_close_cb = GLOBUS_TRUE;
+                            }
                         }
                         globus_mutex_unlock(&(cc_handle->mutex));
 
-                        if(call_close_cb == GLOBUS_TRUE) 
-                        { 
-                            globus_i_ftp_control_call_close_cb(c_handle); 
-                        } 
-                        
+                        if(call_close_cb == GLOBUS_TRUE)
+                        {
+                            globus_i_ftp_control_call_close_cb(c_handle);
+                        }
+
                         break;
                     }
 
@@ -2135,8 +2138,8 @@ globus_l_ftp_control_auth_read_cb(
                         reply= globus_libc_strdup(
                             globus_i_ftp_server_332_reply);
                     }
-                    
-                    
+
+
                     if(reply == GLOBUS_NULL)
                     {
                         error=globus_error_construct_string(
@@ -2145,14 +2148,14 @@ globus_l_ftp_control_auth_read_cb(
                             _FCSL("globus_l_ftp_control_auth_read_cb: strdup failed"));
                         goto error_cmd_destroy;
                     }
-                    
+
                     if(cc_handle->auth_info.authenticated == GLOBUS_TRUE)
                     {
                         rc=globus_i_ftp_control_encode_reply(
                             reply,
                             &encoded_reply,
                             &(cc_handle->auth_info));
-                        
+
                         globus_libc_free(reply);
 
                         if(rc != GLOBUS_SUCCESS)
@@ -2160,10 +2163,10 @@ globus_l_ftp_control_auth_read_cb(
                             error=globus_error_get(rc);
                             goto error_cmd_destroy;
                         }
-                        
+
                         reply=encoded_reply;
                     }
-                    
+
 
                     rc=globus_io_register_write(
                         handle,
@@ -2171,14 +2174,14 @@ globus_l_ftp_control_auth_read_cb(
                         (globus_size_t) strlen(reply),
                         globus_l_ftp_control_auth_write_cb,
                         arg);
-                    
+
                     if(rc != GLOBUS_SUCCESS)
                     {
                         globus_libc_free(reply);
                         error=globus_error_get(rc);
                         goto error_cmd_destroy;
                     }
-                    
+
                 }
                 else
                 {
@@ -2191,7 +2194,7 @@ globus_l_ftp_control_auth_read_cb(
                 break;
             case GLOBUS_FTP_CONTROL_COMMAND_PASS:
 
-                if(cc_handle->auth_info.prev_cmd != 
+                if(cc_handle->auth_info.prev_cmd !=
                    GLOBUS_FTP_CONTROL_COMMAND_USER)
                 {
                     error=globus_error_construct_string(
@@ -2214,8 +2217,8 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: No password given"));
                     goto error_cmd_destroy;
                 }
-                
-                if(!(cc_handle->auth_requirements & 
+
+                if(!(cc_handle->auth_requirements &
                      GLOBUS_FTP_CONTROL_AUTH_REQ_ACCT))
                 {
                     globus_mutex_lock(&(cc_handle->mutex));
@@ -2224,7 +2227,7 @@ globus_l_ftp_control_auth_read_cb(
                         cc_handle->auth_cb_arg=GLOBUS_NULL;
                     }
                     globus_mutex_unlock(&(cc_handle->mutex));
-                    
+
                     (callback)(callback_arg,
                                c_handle,
                                GLOBUS_NULL,
@@ -2233,23 +2236,23 @@ globus_l_ftp_control_auth_read_cb(
                     {
                         cc_handle->cb_count--;
                         if(!cc_handle->cb_count &&
-                           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-                        { 
-                            call_close_cb = GLOBUS_TRUE; 
-                        } 
+                           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+                        {
+                            call_close_cb = GLOBUS_TRUE;
+                        }
                     }
                     globus_mutex_unlock(&(cc_handle->mutex));
-                    
-                    if(call_close_cb == GLOBUS_TRUE) 
-                    { 
-                        globus_i_ftp_control_call_close_cb(c_handle); 
-                    } 
+
+                    if(call_close_cb == GLOBUS_TRUE)
+                    {
+                        globus_i_ftp_control_call_close_cb(c_handle);
+                    }
                 }
                 else
                 {
                     reply=globus_libc_strdup(
                         globus_i_ftp_server_332_reply);
-                    
+
                     if(reply == GLOBUS_NULL)
                     {
                         error=globus_error_construct_string(
@@ -2258,25 +2261,25 @@ globus_l_ftp_control_auth_read_cb(
                             _FCSL("globus_l_ftp_control_auth_read_cb: strdup failed"));
                         goto error_cmd_destroy;
                     }
-                    
+
                     if(cc_handle->auth_info.authenticated == GLOBUS_TRUE)
                     {
                         rc=globus_i_ftp_control_encode_reply(
                             reply,
                             &encoded_reply,
                             &(cc_handle->auth_info));
-                        
+
                         globus_libc_free(reply);
-                        
+
                         if(rc != GLOBUS_SUCCESS)
                         {
                             error=globus_error_get(rc);
                             goto error_cmd_destroy;
                         }
-                        
+
                         reply=encoded_reply;
                     }
-                    
+
                     rc=globus_io_register_write(
                         handle,
                         (globus_byte_t *) reply,
@@ -2293,11 +2296,11 @@ globus_l_ftp_control_auth_read_cb(
                 }
                 break;
             case GLOBUS_FTP_CONTROL_COMMAND_ACCT:
-                if(((cc_handle->auth_requirements & 
+                if(((cc_handle->auth_requirements &
                      GLOBUS_FTP_CONTROL_AUTH_REQ_PASS) &&
-                    (cc_handle->auth_info.prev_cmd != 
+                    (cc_handle->auth_info.prev_cmd !=
                      GLOBUS_FTP_CONTROL_COMMAND_PASS)) ||
-                   (cc_handle->auth_info.prev_cmd != 
+                   (cc_handle->auth_info.prev_cmd !=
                     GLOBUS_FTP_CONTROL_COMMAND_USER))
                 {
                     error=globus_error_construct_string(
@@ -2318,8 +2321,8 @@ globus_l_ftp_control_auth_read_cb(
                         _FCSL("globus_l_ftp_control_auth_read_cb: no account given"));
                     goto error_cmd_destroy;
                 }
-                
-                if(cc_handle->auth_requirements & 
+
+                if(cc_handle->auth_requirements &
                    GLOBUS_FTP_CONTROL_AUTH_REQ_ACCT)
                 {
                     globus_mutex_lock(&(cc_handle->mutex));
@@ -2328,7 +2331,7 @@ globus_l_ftp_control_auth_read_cb(
                         cc_handle->auth_cb_arg=GLOBUS_NULL;
                     }
                     globus_mutex_unlock(&(cc_handle->mutex));
-                    
+
                     (callback)(callback_arg,
                                c_handle,
                                GLOBUS_NULL,
@@ -2338,18 +2341,18 @@ globus_l_ftp_control_auth_read_cb(
                         cc_handle->cb_count--;
 
                         if(!cc_handle->cb_count &&
-                           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-                        { 
-                            call_close_cb = GLOBUS_TRUE; 
-                        } 
+                           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+                        {
+                            call_close_cb = GLOBUS_TRUE;
+                        }
 
                     }
                     globus_mutex_unlock(&(cc_handle->mutex));
 
-                    if(call_close_cb == GLOBUS_TRUE) 
-                    { 
-                        globus_i_ftp_control_call_close_cb(c_handle); 
-                    } 
+                    if(call_close_cb == GLOBUS_TRUE)
+                    {
+                        globus_i_ftp_control_call_close_cb(c_handle);
+                    }
                 }
                 else
                 {
@@ -2367,18 +2370,18 @@ globus_l_ftp_control_auth_read_cb(
                     _FCSL("globus_l_ftp_control_auth_read_cb: Command not part of authentication process"));
                 goto error_cmd_destroy;
             }
-            
+
             globus_ftp_control_command_destroy(&command);
             return;
         }
     }
-    
+
     if(cc_handle->bytes_read == cc_handle->read_buffer_size)
     {
         new_buf= (globus_byte_t *) globus_libc_malloc(
             cc_handle->read_buffer_size +
             GLOBUS_I_FTP_CONTROL_BUF_INCR);
-        
+
         if(new_buf == GLOBUS_NULL)
         {
             error=globus_error_construct_string(
@@ -2387,31 +2390,31 @@ globus_l_ftp_control_auth_read_cb(
                 _FCSL("globus_l_ftp_control_auth_read_cb: malloc failed"));
             goto error_auth_destroy;
         }
-        
+
         memcpy(new_buf,
                cc_handle->read_buffer,
                cc_handle->bytes_read);
-        
+
         cc_handle->read_buffer_size += GLOBUS_I_FTP_CONTROL_BUF_INCR;
         globus_libc_free(cc_handle->read_buffer);
         cc_handle->read_buffer=new_buf;
     }
-    
+
     rc=globus_io_register_read(&(cc_handle->io_handle),
                                &(cc_handle->read_buffer[
                                      cc_handle->bytes_read]),
-                               cc_handle->read_buffer_size - 
+                               cc_handle->read_buffer_size -
                                cc_handle->bytes_read,
                                1,
                                globus_l_ftp_control_auth_read_cb,
                                arg);
-    
+
     if(rc != GLOBUS_SUCCESS)
     {
         error=globus_error_get(rc);
         goto error_auth_destroy;
     }
-    
+
     return;
 
 error_cmd_destroy:
@@ -2420,7 +2423,7 @@ error_auth_destroy:
     rc = globus_i_ftp_control_auth_info_destroy(
         &(cc_handle->auth_info));
     globus_assert(rc == GLOBUS_SUCCESS);
-    
+
     (cc_handle->auth_cb)(cc_handle->auth_cb_arg,
                          c_handle,
                          error,
@@ -2431,18 +2434,18 @@ error_auth_destroy:
     {
         cc_handle->cb_count--;
         if(!cc_handle->cb_count &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-        { 
-            call_close_cb = GLOBUS_TRUE; 
-        } 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+        {
+            call_close_cb = GLOBUS_TRUE;
+        }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
 
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
-        globus_i_ftp_control_call_close_cb(c_handle); 
-    } 
- 
+    if(call_close_cb == GLOBUS_TRUE)
+    {
+        globus_i_ftp_control_call_close_cb(c_handle);
+    }
+
     return;
 }
 
@@ -2450,13 +2453,13 @@ error_auth_destroy:
  * @brief Read GridFTP commands
  * @ingroup globus_ftp_control_server
  * @details
- * This function begins reading control commands on a 
+ * This function begins reading control commands on a
  * globus_ftp_control_handle_t.  When a command is read
  * the callback function is called.
  *
  *  @param handle
  *         The control connection handle that commands will be read
- *         from.  Prior to calling this the function 
+ *         from.  Prior to calling this the function
  *         globus_ftp_control_handle_t must be populated via a
  *         call to globus_ftp_control_accept().
  *  @param callback
@@ -2507,11 +2510,11 @@ globus_ftp_control_read_commands(
     }
     globus_mutex_unlock(&(handle->cc_handle.mutex));
 
-    
+
     rc=globus_io_register_read(&(handle->cc_handle.io_handle),
                                &(handle->cc_handle.read_buffer[
                                      handle->cc_handle.bytes_read]),
-                               handle->cc_handle.read_buffer_size - 
+                               handle->cc_handle.read_buffer_size -
                                handle->cc_handle.bytes_read,
                                0,
                                globus_l_ftp_control_read_command_cb,
@@ -2521,40 +2524,40 @@ globus_ftp_control_read_commands(
     {
         globus_i_ftp_control_auth_info_destroy(
             &(handle->cc_handle.auth_info));
-        
+
         globus_mutex_lock(&(handle->cc_handle.mutex));
         {
             handle->cc_handle.cb_count--;
             if(!handle->cc_handle.cb_count &&
-               handle->cc_handle.cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-            { 
-                call_close_cb = GLOBUS_TRUE; 
-            } 
+               handle->cc_handle.cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+            {
+                call_close_cb = GLOBUS_TRUE;
+            }
         }
         globus_mutex_unlock(&(handle->cc_handle.mutex));
 
-        if(call_close_cb == GLOBUS_TRUE) 
-        { 
-            globus_i_ftp_control_call_close_cb(handle); 
-        } 
+        if(call_close_cb == GLOBUS_TRUE)
+        {
+            globus_i_ftp_control_call_close_cb(handle);
+        }
 
         return rc;
     }
-    
+
     return GLOBUS_SUCCESS;
 }
 
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_read function.    
- * 
+ * Internal callback for the globus_io_register_read function.
+ *
  * This is an internal callback used as part of the
- * globus_ftp_control_read_commands function. It checks the result of 
+ * globus_ftp_control_read_commands function. It checks the result of
  * the read (which was used to read commands from the client), and
  * if a full command was received, parses it and returns the resulting
  * command structure to the user through the user callback. If no full
- * command was received a new register_read is called. 
+ * command was received a new register_read is called.
  *
  * @param arg
  *        The callback argument, which in this case is the control
@@ -2563,23 +2566,23 @@ globus_ftp_control_read_commands(
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the accept operation 
+ *        The result of the accept operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
 static void
 globus_l_ftp_control_read_command_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes)
 {
     globus_ftp_cc_handle_t *                  cc_handle;
@@ -2602,11 +2605,11 @@ globus_l_ftp_control_read_command_cb(
         error=globus_error_get(result);
         goto error_auth_destroy;
     }
-    
+
     cc_handle->bytes_read += nbytes;
 
     last=0;
-    
+
     for(i = 1;i < cc_handle->bytes_read; i++)
     {
         if(cc_handle->read_buffer[i-1] == '\r' &&
@@ -2624,7 +2627,7 @@ globus_l_ftp_control_read_command_cb(
                 error=globus_error_get(rc);
                 goto error_auth_destroy;
             }
-            
+
             (cc_handle->command_cb)(cc_handle->command_cb_arg,
                                     c_handle,
                                     GLOBUS_NULL,
@@ -2634,7 +2637,7 @@ globus_l_ftp_control_read_command_cb(
             last=i+1;
         }
     }
-    
+
     if(last != 0)
     {
         for(i=last;i<cc_handle->bytes_read;i++)
@@ -2642,7 +2645,7 @@ globus_l_ftp_control_read_command_cb(
             cc_handle->read_buffer[i-last]=
                 cc_handle->read_buffer[i];
         }
-        
+
         cc_handle->bytes_read -= last;
     }
     else
@@ -2661,7 +2664,7 @@ globus_l_ftp_control_read_command_cb(
                     _FCSL("globus_l_ftp_control_read_command_cb: malloc failed"));
                 goto error_auth_destroy;
             }
-            
+
             memcpy(new_buf,
                    cc_handle->read_buffer,
                    cc_handle->bytes_read);
@@ -2676,71 +2679,71 @@ globus_l_ftp_control_read_command_cb(
     globus_mutex_lock(&(cc_handle->mutex));
     {
         if(cc_handle->cb_count == 1 &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
         {
             cc_handle->cb_count--;
-            call_close_cb = GLOBUS_TRUE; 
+            call_close_cb = GLOBUS_TRUE;
         }
-	else if(code == GLOBUS_FTP_CONTROL_COMMAND_QUIT)
-	{
+        else if(code == GLOBUS_FTP_CONTROL_COMMAND_QUIT)
+        {
             cc_handle->cb_count--;
-	}
+        }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
-    
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
+
+    if(call_close_cb == GLOBUS_TRUE)
+    {
         globus_i_ftp_control_call_close_cb(c_handle);
         return;
-    } 
-    
+    }
+
     if(code != GLOBUS_FTP_CONTROL_COMMAND_QUIT)
     {
         rc=globus_io_register_read(&(cc_handle->io_handle),
                                    &(cc_handle->read_buffer[
                                          cc_handle->bytes_read]),
-                                   cc_handle->read_buffer_size - 
+                                   cc_handle->read_buffer_size -
                                    cc_handle->bytes_read,
                                    1,
                                    globus_l_ftp_control_read_command_cb,
                                    arg);
-        
+
         if(rc != GLOBUS_SUCCESS)
         {
             error=globus_error_get(rc);
             goto error_auth_destroy;
         }
     }
-    
+
     return;
 
 error_auth_destroy:
     rc = globus_i_ftp_control_auth_info_destroy(
         &(cc_handle->auth_info));
     globus_assert(rc == GLOBUS_SUCCESS);
-    
+
     (cc_handle->command_cb)(cc_handle->command_cb_arg,
                             c_handle,
                             error,
                             GLOBUS_NULL);
     globus_object_free(error);
-    
+
     globus_mutex_lock(&(cc_handle->mutex));
     {
         cc_handle->cb_count--;
 
         if(!cc_handle->cb_count &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-        { 
-            call_close_cb = GLOBUS_TRUE; 
-        } 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+        {
+            call_close_cb = GLOBUS_TRUE;
+        }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
-    
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
-        globus_i_ftp_control_call_close_cb(c_handle); 
-    } 
+
+    if(call_close_cb == GLOBUS_TRUE)
+    {
+        globus_i_ftp_control_call_close_cb(c_handle);
+    }
 
     return;
 }
@@ -2750,8 +2753,8 @@ error_auth_destroy:
  * @brief Send a GridFTP response
  * @ingroup globus_ftp_control_server
  * @details
- * This function sends a GridFTP formatted response to the client.  
- * When a command callback is received the user calls this function 
+ * This function sends a GridFTP formatted response to the client.
+ * When a command callback is received the user calls this function
  * to respond to the clients request.
  *
  *  @param handle
@@ -2794,15 +2797,15 @@ globus_ftp_control_send_response(
             );
     }
 
-    
+
     va_start(ap, callback_arg);
-    
+
     arglength=globus_libc_vfprintf(globus_i_ftp_control_devnull,
                                    respspec,
                                    ap);
 
     va_end(ap);
-    
+
     if(arglength < 1)
     {
         result=globus_error_put(
@@ -2857,13 +2860,13 @@ globus_ftp_control_send_response(
             result=rc;
             goto return_error;
         }
-        
+
         buf=encoded_buf;
     }
 
     element = (globus_ftp_control_rw_queue_element_t *)
         globus_libc_malloc(sizeof(globus_ftp_control_rw_queue_element_t));
-    
+
     if(element == GLOBUS_NULL)
     {
         result=globus_error_put(
@@ -2917,7 +2920,7 @@ globus_ftp_control_send_response(
                                       (globus_size_t) strlen((char *) buf),
                                       globus_l_ftp_control_send_response_cb,
                                       (void *) handle);
-    
+
         if(rc != GLOBUS_SUCCESS)
         {
             globus_mutex_lock(&(handle->cc_handle.mutex));
@@ -2927,26 +2930,26 @@ globus_ftp_control_send_response(
                 queue_empty=globus_fifo_empty(&handle->cc_handle.writers);
 
                 if(!handle->cc_handle.cb_count &&
-                   handle->cc_handle.cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-                { 
-                    call_close_cb = GLOBUS_TRUE; 
-                } 
+                   handle->cc_handle.cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+                {
+                    call_close_cb = GLOBUS_TRUE;
+                }
             }
             globus_mutex_unlock(&(handle->cc_handle.mutex));
 
-            if(call_close_cb == GLOBUS_TRUE) 
-            { 
-                globus_i_ftp_control_call_close_cb(handle); 
+            if(call_close_cb == GLOBUS_TRUE)
+            {
+                globus_i_ftp_control_call_close_cb(handle);
             }
 
             globus_libc_free(buf);
-            globus_libc_free(element);  
+            globus_libc_free(element);
 
             if(queue_empty == GLOBUS_FALSE)
             {
                 globus_i_ftp_control_write_next(handle);
             }
-            
+
             result=rc;
             goto return_error;
         }
@@ -2961,8 +2964,8 @@ return_error:
 #ifdef GLOBUS_INTERNAL_DOC
 
 /**
- * Internal callback for the globus_io_register_write function.    
- * 
+ * Internal callback for the globus_io_register_write function.
+ *
  * This is an internal callback used as part of the
  * globus_ftp_control_send_response function. It checks the result of
  * the write (which was used to send a response to the client), and
@@ -2975,23 +2978,23 @@ return_error:
  *        The globus_io handle for the connection. In practice this
  *        represents the socket fd for the connection.
  * @param result
- *        The result of the write operation 
+ *        The result of the write operation
  *
  * @return void
  *
  * @note If a error is detected in this function the user callback is
  *       called with an appropriate error object or ftp response and
- *       the function returns. 
+ *       the function returns.
  */
 
 #endif
 
-static void 
+static void
 globus_l_ftp_control_send_response_cb(
-    void *                                    arg, 
+    void *                                    arg,
     globus_io_handle_t *                      handle,
     globus_result_t                           result,
-    globus_byte_t *                           buf, 
+    globus_byte_t *                           buf,
     globus_size_t                             nbytes)
 {
     globus_ftp_cc_handle_t *                  cc_handle;
@@ -3014,12 +3017,12 @@ globus_l_ftp_control_send_response_cb(
         queue_empty=globus_fifo_empty(&cc_handle->writers);
     }
     globus_mutex_unlock(&(cc_handle->mutex));
-    
+
     if(queue_empty == GLOBUS_FALSE)
     {
         globus_i_ftp_control_write_next(c_handle);
     }
-    
+
     if(result != GLOBUS_SUCCESS)
     {
         error=globus_error_get(result);
@@ -3031,26 +3034,26 @@ globus_l_ftp_control_send_response_cb(
                                 GLOBUS_NULL);
 
     globus_libc_free(element);
-    
+
     globus_mutex_lock(&(cc_handle->mutex));
     {
         cc_handle->cb_count--;
 
         if(!cc_handle->cb_count &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-        { 
-            call_close_cb = GLOBUS_TRUE; 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+        {
+            call_close_cb = GLOBUS_TRUE;
         }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
-    
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
-        globus_i_ftp_control_call_close_cb(c_handle); 
-    } 
+
+    if(call_close_cb == GLOBUS_TRUE)
+    {
+        globus_i_ftp_control_call_close_cb(c_handle);
+    }
 
     return;
-    
+
 return_error:
 
     (element->send_response_cb)((element->arg),
@@ -3063,17 +3066,17 @@ return_error:
     {
         cc_handle->cb_count--;
         if(!cc_handle->cb_count &&
-           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING) 
-        { 
-            call_close_cb = GLOBUS_TRUE; 
+           cc_handle->cc_state == GLOBUS_FTP_CONTROL_CLOSING)
+        {
+            call_close_cb = GLOBUS_TRUE;
         }
     }
     globus_mutex_unlock(&(cc_handle->mutex));
 
-    if(call_close_cb == GLOBUS_TRUE) 
-    { 
-        globus_i_ftp_control_call_close_cb(c_handle); 
-    } 
+    if(call_close_cb == GLOBUS_TRUE)
+    {
+        globus_i_ftp_control_call_close_cb(c_handle);
+    }
 
     return;
 }
@@ -3083,7 +3086,7 @@ return_error:
 /**
  * Internal helper function which base 64 decodes and gss unwraps a
  * MIC command
- * 
+ *
  * Internal helper function which base 64 decodes and gss unwraps a
  * MIC command
  *
@@ -3095,7 +3098,7 @@ return_error:
  * @param auth_info
  *        The auth_info structure to use for gss unwrapping the command
  *
- * @return 
+ * @return
  *        - error object
  *        - GLOBUS_SUCCESS
  *
@@ -3119,7 +3122,7 @@ globus_i_ftp_control_decode_command(
     OM_uint32                                 min_stat;
     int                                       conf_state;
     gss_qop_t                                 qop_state;
-    
+
     if(cmd == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -3129,11 +3132,11 @@ globus_i_ftp_control_decode_command(
                 _FCSL("globus_i_ftp_control_decode_command: cmd argument is NULL"))
             );
     }
-    
+
     length=strlen(cmd);
-    
+
     tmp=(char *) globus_libc_malloc(length+1);
-    
+
     if(tmp == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -3143,7 +3146,7 @@ globus_i_ftp_control_decode_command(
                 _FCSL("globus_ftp_control_decode_command: malloc failed"))
             );
     }
-    
+
     if(sscanf(cmd,"%4s",tmp) < 1)
     {
         rc = globus_error_put(
@@ -3154,16 +3157,16 @@ globus_i_ftp_control_decode_command(
             );
         goto decode_error;
     }
-    
+
     i=0;
-    
+
     while(tmp[i] != '\0')
     {
         tmp[i]=toupper(tmp[i]);
         i++;
     }
-    
-    
+
+
     if(strcmp(tmp,"MIC") &&
        strcmp(tmp,"ENC"))
     {
@@ -3180,7 +3183,7 @@ globus_i_ftp_control_decode_command(
     {
         /* if command is ENC and encryption isn't turned on in
            sec context */
-        
+
         rc = globus_error_put(
             globus_error_construct_string(
                 GLOBUS_FTP_CONTROL_MODULE,
@@ -3189,7 +3192,7 @@ globus_i_ftp_control_decode_command(
             );
         goto decode_error;
     }
-       
+
     if(sscanf(cmd,"%*s %s",tmp) < 1)
     {
         rc = globus_error_put(
@@ -3200,9 +3203,9 @@ globus_i_ftp_control_decode_command(
             );
         goto decode_error;
     }
-    
+
     *decoded_cmd = (char *) globus_libc_malloc((length+3) * 6/8);
-        
+
     if(*decoded_cmd == GLOBUS_NULL)
     {
         rc = globus_error_put(
@@ -3213,27 +3216,27 @@ globus_i_ftp_control_decode_command(
             );
         goto decode_error;
     }
-        
+
     rc=globus_i_ftp_control_radix_decode(
         (globus_byte_t *) tmp,
         (globus_byte_t *) *decoded_cmd,&length);
-        
+
     if(rc != GLOBUS_SUCCESS)
     {
         globus_libc_free(*decoded_cmd);
         goto decode_error;
     }
-    
+
     wrapped_token.value = *decoded_cmd;
     wrapped_token.length = length;
 
-    maj_stat = gss_unwrap(&min_stat, 
+    maj_stat = gss_unwrap(&min_stat,
                           auth_info->auth_gssapi_context,
-                          &wrapped_token, 
+                          &wrapped_token,
                           &unwrapped_token,
-                          &conf_state, 
+                          &conf_state,
                           &qop_state);
-    
+
     if(maj_stat != GSS_S_COMPLETE)
     {
         rc = globus_error_put(
@@ -3242,23 +3245,23 @@ globus_i_ftp_control_decode_command(
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_decode_command: failed to unwrap command"))
             );
-        
+
         globus_libc_free(*decoded_cmd);
         goto decode_error;
     }
-    
+
     globus_assert(strlen(cmd) > unwrapped_token.length);
-                    
+
     memcpy(tmp,
            unwrapped_token.value,
            unwrapped_token.length);
 
     tmp[unwrapped_token.length] = '\0';
-    
+
     gss_release_buffer(&min_stat, &unwrapped_token);
-    
+
     globus_libc_free(*decoded_cmd);
-    
+
     *decoded_cmd=tmp;
 
     return GLOBUS_SUCCESS;
@@ -3266,9 +3269,9 @@ globus_i_ftp_control_decode_command(
 decode_error:
 
     *decoded_cmd=GLOBUS_NULL;
-    
+
     globus_libc_free(tmp);
-    
+
     return rc;
 }
 
@@ -3277,7 +3280,7 @@ decode_error:
 /**
  * Internal helper function which gss wraps, base 64 encodes and puts
  * a 635 in front of the supplied response
- * 
+ *
  * Internal helper function which gss wraps, base 64 encodes and puts
  * a 635 in front of the supplied response
  *
@@ -3289,7 +3292,7 @@ decode_error:
  * @param auth_info
  *        The auth_info structure to use for gss wrapping the reply.
  *
- * @return 
+ * @return
  *        - error object
  *        - GLOBUS_SUCCESS
  *
@@ -3310,7 +3313,7 @@ globus_i_ftp_control_encode_reply(
     OM_uint32                              min_stat;
     int                                    conf_state;
     int                                    length;
-    
+
     if(auth_info == GLOBUS_NULL ||
        reply == GLOBUS_NULL ||
        encoded_reply == GLOBUS_NULL)
@@ -3322,7 +3325,7 @@ globus_i_ftp_control_encode_reply(
                 _FCSL("globus_i_ftp_control_encode_reply: NULL argument detected"))
             );
     }
-    
+
     in_buf.value = reply;
     in_buf.length = strlen(reply)+1;
 
@@ -3330,11 +3333,11 @@ globus_i_ftp_control_encode_reply(
                         auth_info->auth_gssapi_context,
                         0,
                         GSS_C_QOP_DEFAULT,
-                        &in_buf, 
+                        &in_buf,
                         &conf_state,
                         &out_buf);
-    
-    if(maj_stat != GSS_S_COMPLETE) 
+
+    if(maj_stat != GSS_S_COMPLETE)
     {
         return globus_error_put(
             globus_error_construct_string(
@@ -3368,11 +3371,11 @@ globus_i_ftp_control_encode_reply(
     {
         strcat(*encoded_reply,"631 ");
     }
-    
+
     length = out_buf.length;
     globus_i_ftp_control_radix_encode(
         out_buf.value,
-        (globus_byte_t *) &((*encoded_reply)[4]), 
+        (globus_byte_t *) &((*encoded_reply)[4]),
         &length);
 
     (*encoded_reply)[length+4]='\r';
@@ -3380,7 +3383,7 @@ globus_i_ftp_control_encode_reply(
     (*encoded_reply)[length+6]='\0';
 
     gss_release_buffer(&min_stat, &out_buf);
-    
+
     return GLOBUS_SUCCESS;
 }
 
@@ -3392,12 +3395,12 @@ globus_i_ftp_control_encode_reply(
 /**
  * Internal helper function which sets up a list for keeping track of
  * server handles.
- * 
+ *
  * Internal helper function which sets up a list for keeping track of
  * server handles.
  *
  *
- * @return 
+ * @return
  *        - GLOBUS_SUCCESS
  *
  */
@@ -3409,7 +3412,7 @@ globus_result_t
 globus_i_ftp_control_server_activate(void)
 {
     globus_ftp_l_command_hash_entry_t * entries;
-        
+
     globus_mutex_init(
         &(globus_l_ftp_server_handle_list_mutex), GLOBUS_NULL);
 
@@ -3419,7 +3422,7 @@ globus_i_ftp_control_server_activate(void)
                           globus_hashtable_string_keyeq);
 
     /* the size of this array needs to be adjusted */
-        
+
     entries = (globus_ftp_l_command_hash_entry_t *)
         globus_libc_malloc(44 * sizeof(globus_ftp_l_command_hash_entry_t));
 
@@ -3530,7 +3533,7 @@ globus_i_ftp_control_server_activate(void)
     globus_hashtable_insert(&globus_l_ftp_control_parse_table,
                             "SMNT",
                             &entries[17]);
-        
+
     entries[18].code = GLOBUS_FTP_CONTROL_COMMAND_OPTS;
     entries[18].parse_func = globus_l_ftp_control_parse_opts_cmd;
     globus_hashtable_insert(&globus_l_ftp_control_parse_table,
@@ -3584,7 +3587,7 @@ globus_i_ftp_control_server_activate(void)
     globus_hashtable_insert(&globus_l_ftp_control_parse_table,
                             "PASS",
                             &entries[26]);
-        
+
     entries[27].code = GLOBUS_FTP_CONTROL_COMMAND_RMD;
     entries[27].parse_func = globus_l_ftp_control_parse_string_arg;
     globus_hashtable_insert(&globus_l_ftp_control_parse_table,
@@ -3697,9 +3700,9 @@ globus_i_ftp_control_server_activate(void)
  *
  * Internal helper function which goes through a list of server
  * handles and closes any open connections associated with the
- * handles. 
- * 
- * @return 
+ * handles.
+ *
+ * @return
  *        - GLOBUS_SUCCESS
  *
  */
@@ -3720,7 +3723,7 @@ globus_i_ftp_control_server_deactivate(void)
                 globus_list_first(globus_l_ftp_server_handle_list);
             globus_mutex_lock(&(server_handle->mutex));
             {
-                if(server_handle->state == 
+                if(server_handle->state ==
                    GLOBUS_FTP_CONTROL_SERVER_LISTENING)
                 {
                     rc=globus_io_close(&(server_handle->io_handle));
@@ -3729,7 +3732,7 @@ globus_i_ftp_control_server_deactivate(void)
                 }
             }
             globus_mutex_unlock(&(server_handle->mutex));
-            
+
             globus_mutex_destroy(&(server_handle->mutex));
             globus_list_remove(&globus_l_ftp_server_handle_list,
                                globus_l_ftp_server_handle_list);
@@ -3741,18 +3744,18 @@ globus_i_ftp_control_server_deactivate(void)
 
 
     /* free all command hash memory */
-        
+
     globus_libc_free(globus_hashtable_lookup(
                          &globus_l_ftp_control_parse_table,
                          "SBUF"));
 
     globus_hashtable_destroy(&globus_l_ftp_control_parse_table);
-        
+
     return GLOBUS_SUCCESS;
 }
 
 globus_result_t globus_l_ftp_control_parse_sbuf_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     if(sscanf(command->noop.raw_command,
               "%*s %d", &command->sbuf.buffer_size) < 1)
@@ -3767,12 +3770,12 @@ globus_result_t globus_l_ftp_control_parse_string_arg(
 {
     int                                 length;
     int                                 arg_start;
-        
+
     length = strlen(command->noop.raw_command);
-        
+
     command->size.string_arg =
         (char *) globus_libc_malloc(length);
-        
+
     if(command->size.string_arg == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -3781,10 +3784,10 @@ globus_result_t globus_l_ftp_control_parse_string_arg(
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_init: malloc failed")));
     }
-        
+
     sscanf(command->noop.raw_command,"%*s%n",
            &arg_start);
-                
+
     while(isspace(command->noop.raw_command[arg_start]))
     {
         arg_start++;
@@ -3795,11 +3798,11 @@ globus_result_t globus_l_ftp_control_parse_string_arg(
         length--;
     }
 
-    command->noop.raw_command[length]='\0';     
+    command->noop.raw_command[length]='\0';
 
     strcpy(command->eret.string_arg,
            &command->noop.raw_command[arg_start]);
-        
+
     return GLOBUS_SUCCESS;
 
 }
@@ -3807,13 +3810,13 @@ globus_result_t globus_l_ftp_control_parse_string_arg(
 globus_result_t globus_l_ftp_control_parse_no_arg(
     globus_ftp_control_command_t *      command)
 {
-    command->cdup.string_arg=GLOBUS_NULL;       
+    command->cdup.string_arg=GLOBUS_NULL;
     return GLOBUS_SUCCESS;
 }
 
 
 globus_result_t globus_l_ftp_control_parse_allo_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     command->allo.record_size = 0;
     if(sscanf(command->noop.raw_command,"%*s %d R %d",
@@ -3823,12 +3826,12 @@ globus_result_t globus_l_ftp_control_parse_allo_cmd(
         command->allo.size = 0;
         command->allo.record_size = 0;
     }
-        
+
     return GLOBUS_SUCCESS;
 }
 
 globus_result_t globus_l_ftp_control_parse_opts_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     int                                 length;
 
@@ -3836,7 +3839,7 @@ globus_result_t globus_l_ftp_control_parse_opts_cmd(
 
     command->opts.cmd_name =
         (char *) globus_libc_malloc(length);
-            
+
     if(command->opts.cmd_name == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -3846,7 +3849,7 @@ globus_result_t globus_l_ftp_control_parse_opts_cmd(
                 _FCSL("globus_ftp_control_command_init: malloc failed")));
     }
 
-    command->opts.cmd_opts = 
+    command->opts.cmd_opts =
         (char *) globus_libc_malloc(length);
 
     if(command->opts.cmd_opts == GLOBUS_NULL)
@@ -3858,7 +3861,7 @@ globus_result_t globus_l_ftp_control_parse_opts_cmd(
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_init: malloc failed")));
     }
-            
+
     if(sscanf(command->noop.raw_command,"%*s %s %s",
               command->opts.cmd_name, command->opts.cmd_opts) < 2)
     {
@@ -3872,10 +3875,10 @@ globus_result_t globus_l_ftp_control_parse_opts_cmd(
 
 
 globus_result_t globus_l_ftp_control_parse_port_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     int                                 port[2];
-                
+
     if(sscanf(command->noop.raw_command,
               "%*s %u,%u,%u,%u,%u,%u",
               &(command->port.host_port.host[0]),
@@ -3888,7 +3891,7 @@ globus_result_t globus_l_ftp_control_parse_port_cmd(
         command->code=GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN;
         return GLOBUS_SUCCESS;
     }
-        
+
     if((command->port.host_port.host)[0] > 255 ||
        (command->port.host_port.host)[1] > 255 ||
        (command->port.host_port.host)[2] > 255 ||
@@ -3899,38 +3902,38 @@ globus_result_t globus_l_ftp_control_parse_port_cmd(
         command->code=GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN;
         return GLOBUS_SUCCESS;
     }
-        
+
     command->port.host_port.port= (short) 256*port[0]+port[1];
     command->port.host_port.hostlen = 4;
     return GLOBUS_SUCCESS;
 }
 
 globus_result_t globus_l_ftp_control_parse_spor_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     char *                              start;
     int                                 i;
     int                                 j;
     int                                 arg_start;
     int                                 port[2];
-        
+
     start=strstr(command->noop.raw_command,"SPOR");
-            
+
     i=0;
-            
+
     while(start != &(command->noop.raw_command[i]))
     {
         i++;
     }
 
     arg_start = i+4;
-        
+
     i = arg_start;
-            
+
     j = 0;
-        
+
     /* figure out how many host/port arguments there are */
-        
+
     while(command->noop.raw_command[i])
     {
         if(isspace(command->noop.raw_command[i]))
@@ -3941,7 +3944,7 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
             {
                 i++;
             }
-                    
+
             if(command->noop.raw_command[i])
             {
                 j++;
@@ -3952,12 +3955,12 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
             i++;
         }
     }
-        
+
     /* allocate memory for them */
-        
+
     command->spor.host_port = (globus_ftp_control_host_port_t*)
         globus_libc_malloc(j*sizeof(globus_ftp_control_host_port_t));
-        
+
     if(command->spor.host_port == GLOBUS_NULL)
     {
         return globus_error_put(
@@ -3966,12 +3969,12 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
                 GLOBUS_NULL,
                 _FCSL("globus_ftp_control_command_init: malloc failed")));
     }
-        
+
     command->spor.num_args = j;
-        
+
     i = arg_start;
     j = 0;
-        
+
     while(command->noop.raw_command[i])
     {
         if(!isspace(command->noop.raw_command[i]))
@@ -3989,7 +3992,7 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
                 command->code=GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN;
                 return GLOBUS_SUCCESS;
             }
-                        
+
             if((command->spor.host_port[j].host)[0] > 255 ||
                (command->spor.host_port[j].host)[1] > 255 ||
                (command->spor.host_port[j].host)[2] > 255 ||
@@ -4001,18 +4004,18 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
                 command->code=GLOBUS_FTP_CONTROL_COMMAND_UNKNOWN;
                 return GLOBUS_SUCCESS;
             }
-                    
-            command->spor.host_port[j].port= 
+
+            command->spor.host_port[j].port=
                 (short) 256*port[0]+port[1];
             command->spor.host_port[j].hostlen = 4;
-            
+
             i++;
             while(command->noop.raw_command[i] &&
                   !isspace(command->noop.raw_command[i]))
             {
                 i++;
             }
-                        
+
             if(command->noop.raw_command[i])
             {
                 j++;
@@ -4023,16 +4026,16 @@ globus_result_t globus_l_ftp_control_parse_spor_cmd(
             i++;
         }
     }
-        
+
     return GLOBUS_SUCCESS;
 }
 
 globus_result_t globus_l_ftp_control_parse_type_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 
 {
     char                                tmp;
-        
+
     command->type.option=GLOBUS_FTP_CONTROL_TYPE_NO_OPTION;
     command->type.bytesize=0;
 
@@ -4040,13 +4043,13 @@ globus_result_t globus_l_ftp_control_parse_type_cmd(
     {
         command->type.type=GLOBUS_FTP_CONTROL_TYPE_NONE;
     }
-            
+
     switch(tmp)
     {
     case 'A':
     case 'a':
         command->type.type=GLOBUS_FTP_CONTROL_TYPE_ASCII;
-                                
+
         if(sscanf(command->noop.raw_command,
                   "%*s %*c %c",&tmp) > 0)
         {
@@ -4068,11 +4071,11 @@ globus_result_t globus_l_ftp_control_parse_type_cmd(
             }
         }
         return GLOBUS_SUCCESS;
-                
+
     case 'E':
     case 'e':
         command->type.type=GLOBUS_FTP_CONTROL_TYPE_EBCDIC;
-                
+
         if(sscanf(command->noop.raw_command,
                   "%*s %*c %c",&tmp) > 0)
         {
@@ -4118,17 +4121,17 @@ globus_result_t globus_l_ftp_control_parse_type_cmd(
 
 
 globus_result_t globus_l_ftp_control_parse_stru_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     char                                tmp;
-        
+
     command->stru.structure=
         GLOBUS_FTP_CONTROL_STRUCTURE_NONE;
     if(sscanf(command->noop.raw_command,"%*s %c",&tmp) < 1)
     {
         return GLOBUS_SUCCESS;
     }
-            
+
     switch(tmp)
     {
     case 'F':
@@ -4153,48 +4156,48 @@ globus_result_t globus_l_ftp_control_parse_stru_cmd(
 
 
 globus_result_t globus_l_ftp_control_parse_auth_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     char                                tmp[10];
     int                                 i;
-        
+
     command->auth.type=GLOBUS_FTP_CONTROL_AUTH_UNKNOWN;
-        
+
     if(sscanf(command->noop.raw_command,"%*s %7s",tmp) < 1)
     {
         return GLOBUS_SUCCESS;
     }
-        
+
     i = 0;
-        
+
     while(tmp[i] != '\0')
     {
         tmp[i] = toupper(tmp[i]);
         i++;
     }
-        
+
     if(strcmp("GSSAPI",tmp) == 0)
     {
         command->auth.type=GLOBUS_FTP_CONTROL_AUTH_GSSAPI;
     }
-        
+
     return GLOBUS_SUCCESS;
-        
+
 }
 
 globus_result_t globus_l_ftp_control_parse_mode_cmd(
-    globus_ftp_control_command_t *      command)        
+    globus_ftp_control_command_t *      command)
 {
     char                                tmp;
-        
+
     command->code=GLOBUS_FTP_CONTROL_COMMAND_MODE;
-        
+
     if(sscanf(command->noop.raw_command,"%*s %c",&tmp) < 1)
     {
         command->mode.mode=GLOBUS_FTP_CONTROL_MODE_NONE;
         return GLOBUS_SUCCESS;
     }
-            
+
     switch(tmp)
     {
     case 'S':

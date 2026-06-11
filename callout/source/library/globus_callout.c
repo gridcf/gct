@@ -85,7 +85,7 @@ globus_l_callout_activate(void)
     if(tmp_string != GLOBUS_NULL)
     {
         globus_i_callout_debug_level = atoi(tmp_string);
-        
+
         if(globus_i_callout_debug_level < 0)
         {
             globus_i_callout_debug_level = 0;
@@ -186,7 +186,7 @@ globus_callout_handle_init(
         GLOBUS_CALLOUT_MALLOC_ERROR(result);
         goto exit;
     }
-    
+
     if((rc = globus_hashtable_init(&((*handle)->symbol_htable),
                                    GLOBUS_I_CALLOUT_HASH_SIZE,
                                    globus_hashtable_string_hash,
@@ -198,7 +198,7 @@ globus_callout_handle_init(
             GLOBUS_CALLOUT_ERROR_WITH_HASHTABLE,
             ("globus_hashtable_init retuned %d", rc));
         goto exit;
-    }    
+    }
 
     if((rc = globus_hashtable_init(&((*handle)->library_htable),
                                    GLOBUS_I_CALLOUT_HASH_SIZE,
@@ -212,12 +212,12 @@ globus_callout_handle_init(
             GLOBUS_CALLOUT_ERROR_WITH_HASHTABLE,
             ("globus_hashtable_init retuned %d", rc));
         goto exit;
-    }    
+    }
 
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
 
  exit:
-    
+
     return result;
 }/*globus_callout_handle_init*/
 
@@ -238,7 +238,7 @@ globus_callout_handle_destroy(
     static char *                       _function_name_ =
         "globus_callout_handle_destroy";
     GLOBUS_I_CALLOUT_DEBUG_ENTER;
-    
+
     /* free hashes */
 
     globus_hashtable_destroy_all(
@@ -250,7 +250,7 @@ globus_callout_handle_destroy(
         globus_l_callout_data_free);
 
     free(handle);
-    
+
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
 
     return result;
@@ -273,7 +273,7 @@ globus_callout_handle_destroy(
  *      of the callout. The library argument can be specified in two forms,
  *      libfoo or libfoo_<i>flavor</i>. When using the former version the
  *      current flavor will automatically be added to the library name if
- *      needed. 
+ *      needed.
  *
  * @param handle
  *        The handle that is to be configured
@@ -306,13 +306,13 @@ globus_callout_read_config(
     globus_result_t                     result;
     globus_i_callout_data_t *           datum = NULL;
     globus_i_callout_data_t *           existing_datum;
-    
+
 
     static char *                       _function_name_ =
         "globus_callout_read_config";
 
     GLOBUS_I_CALLOUT_DEBUG_ENTER;
-    
+
     conf_file = fopen(filename, "r");
 
     if(conf_file == NULL)
@@ -323,7 +323,7 @@ globus_callout_read_config(
             ("filename %s", filename));
         goto error_exit;
     }
-    
+
     while(fgets(buffer,GLOBUS_I_CALLOUT_LINEBUF,conf_file))
     {
         if(!strchr(buffer, '\n'))
@@ -339,12 +339,12 @@ globus_callout_read_config(
         pound = strchr(buffer, '#');
 
         if(pound != NULL)
-        { 
+        {
             *pound = '\0';
         }
 
         /* strip white space from start */
-        
+
         index = 0;
 
         while(buffer[index] == '\t' || buffer[index] == ' ')
@@ -353,12 +353,12 @@ globus_callout_read_config(
         }
 
         /* if blank line continue */
-        
+
         if(buffer[index] == '\0' || buffer[index] == '\n')
-        { 
+        {
             continue;
         }
-        
+
         if(sscanf(&buffer[index],"%127s%255s%127s",type,library,symbol) < 3)
         {
             GLOBUS_CALLOUT_ERROR_RESULT(
@@ -367,7 +367,7 @@ globus_callout_read_config(
                 ("malformed line: %s", &buffer[index]));
             goto error_exit;
         }
-        
+
         /* check for ENV vars to set */
         env_argstr = strstr(buffer, "ENV:");
         if(env_argstr && strchr(env_argstr, '='))
@@ -375,7 +375,7 @@ globus_callout_read_config(
             int                         i;
             char *                      ptr;
             char *                      start;
-            
+
             numpairs = 0;
             ptr = strchr(env_argstr, '=');
             while(ptr)
@@ -396,26 +396,26 @@ globus_callout_read_config(
                 }
                 ptr = strchr(ptr + 1, '=');
             }
-            
+
             if(numpairs > 0)
             {
                 env_args = globus_calloc(numpairs*2+1, sizeof(char *));
-                
+
                 start = env_argstr + 4;
-                
+
                 i = 0;
                 while(start)
-                {                    
+                {
                     /* skip initial space */
                     while(isspace(*start))
                     {
                         start++;
                     }
-                    
+
                     /* find var name */
                     ptr = strchr(start, '=');
                     *ptr = '\0';
-                    
+
                     if(strcspn(start, " \"=") != strlen(start))
                     {
                         GLOBUS_CALLOUT_ERROR_RESULT(
@@ -426,10 +426,10 @@ globus_callout_read_config(
                     }
 
                     env_args[i] = globus_libc_strdup(start);
-                    
+
                     /* find value in quotes or before a space or end of line */
                     start = ++ptr;
-                    
+
                     if(*start == '"')
                     {
                         start++;
@@ -443,7 +443,7 @@ globus_callout_read_config(
                         {
                             ptr = strchr(start, '\n');
                         }
-                        *ptr = '\0';                        
+                        *ptr = '\0';
                     }
                     env_args[i+1] = globus_libc_strdup(start);
 
@@ -460,8 +460,8 @@ globus_callout_read_config(
                     {
                         start = NULL;
                     }
-                    
-                    i += 2; 
+
+                    i += 2;
                 }
                 env_args[i] = NULL;
             }
@@ -470,7 +470,7 @@ globus_callout_read_config(
         {
             env_args = NULL;
         }
-        
+
         /* push values into hash */
         datum = malloc(sizeof(globus_i_callout_data_t));
 
@@ -488,7 +488,7 @@ globus_callout_read_config(
            (strstr(flavor_start, "32") || strstr(flavor_start, "64")))
         {
             datum->file = strdup(library);
-            
+
             if(datum->file == NULL)
             {
                 GLOBUS_CALLOUT_MALLOC_ERROR(result);
@@ -496,7 +496,7 @@ globus_callout_read_config(
             }
         }
         else
-        { 
+        {
             datum->file = malloc(strlen(library) + 2 + strlen(flavor));
             if(datum->file == NULL)
             {
@@ -508,7 +508,7 @@ globus_callout_read_config(
             strcat(datum->file, "_");
             strcat(datum->file, flavor);
         }
-        
+
         datum->symbol = strdup(symbol);
 
         if(datum->symbol == NULL)
@@ -516,7 +516,7 @@ globus_callout_read_config(
             GLOBUS_CALLOUT_MALLOC_ERROR(result);
             goto error_exit;
         }
-        
+
         if(*type == '|')
         {
             datum->mandatory = GLOBUS_FALSE;
@@ -552,7 +552,7 @@ globus_callout_read_config(
     }
 
     fclose(conf_file);
-    
+
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
 
     return GLOBUS_SUCCESS;
@@ -603,23 +603,23 @@ globus_callout_register(
     globus_i_callout_data_t *           datum = NULL;
     globus_i_callout_data_t *           existing_datum;
     char *                              flavor_start;
-    
+
     static char *                       _function_name_ =
         "globus_callout_register";
 
     GLOBUS_I_CALLOUT_DEBUG_ENTER;
-    
-    
+
+
     /* push values into hash */
 
     datum = malloc(sizeof(globus_i_callout_data_t));
-    
+
     if(datum == NULL)
     {
         GLOBUS_CALLOUT_MALLOC_ERROR(result);
         goto error_exit;
     }
-    
+
     memset(datum,'\0',sizeof(globus_i_callout_data_t));
     datum->mandatory = GLOBUS_TRUE;
 
@@ -627,7 +627,7 @@ globus_callout_register(
        (strstr(flavor_start, "32") || strstr(flavor_start, "64")))
     {
         datum->file = strdup(library);
-        
+
         if(datum->file == NULL)
         {
             GLOBUS_CALLOUT_MALLOC_ERROR(result);
@@ -635,7 +635,7 @@ globus_callout_register(
         }
     }
     else
-    { 
+    {
         datum->file = malloc(strlen(library) + 2 + strlen(flavor));
         if(datum->file == NULL)
         {
@@ -644,26 +644,26 @@ globus_callout_register(
         }
         datum->file[0] = '\0';
         strcat(datum->file, library);
-        strcat(datum->file, "_");            
+        strcat(datum->file, "_");
         strcat(datum->file, flavor);
     }
-    
+
     datum->symbol = strdup(symbol);
-    
+
     if(datum->symbol == NULL)
     {
         GLOBUS_CALLOUT_MALLOC_ERROR(result);
         goto error_exit;
     }
-    
+
     datum->type = strdup(type);
-    
+
     if(datum->type == NULL)
     {
         GLOBUS_CALLOUT_MALLOC_ERROR(result);
         goto error_exit;
     }
-    
+
     if((rc = globus_hashtable_insert(&handle->symbol_htable,
                                      datum->type,
                                      datum)) == -1)
@@ -676,7 +676,7 @@ globus_callout_register(
         }
         existing_datum->next = datum;
     }
-    
+
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
 
     return GLOBUS_SUCCESS;
@@ -684,12 +684,12 @@ globus_callout_register(
  error_exit:
 
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
-    
+
     if(datum != NULL)
     {
         globus_l_callout_data_free(datum);
     }
- 
+
     return result;
 }/*globus_callout_register*/
 
@@ -731,7 +731,7 @@ globus_callout_call_type(
     char *                              flavor_start;
     char *                              file;
     char                                library[1024];
-    char **                             save_env;
+    char **                             save_env = NULL;
     int                                 i;
     globus_i_callout_data_t *           tmp_datum;
     int                                 mandatory_callouts_remaining = 0;
@@ -749,7 +749,7 @@ globus_callout_call_type(
             ("unknown type: %s\n", type));
         goto exit;
     }
-    
+
     tmp_datum = current_datum;
     while(tmp_datum)
     {
@@ -759,7 +759,7 @@ globus_callout_call_type(
         }
         tmp_datum = tmp_datum->next;
     }
-    
+
     do
     {
         dlhandle = globus_hashtable_lookup(&handle->library_htable,
@@ -768,12 +768,12 @@ globus_callout_call_type(
         if(dlhandle == NULL)
         {
             dlhandle = malloc(sizeof(lt_dlhandle));
-            
+
             if(dlhandle == NULL)
             {
                 GLOBUS_CALLOUT_MALLOC_ERROR(result);
             }
-            
+
             *dlhandle = NULL;
             rc = globus_hashtable_insert(&handle->library_htable,
                                          current_datum->file,
@@ -786,15 +786,15 @@ globus_callout_call_type(
                     GLOBUS_CALLOUT_ERROR_WITH_HASHTABLE,
                     ("globus_hashtable_insert retuned %d", rc));
                 goto exit;
-            }            
+            }
         }
-    
+
         if(*dlhandle == NULL)
         {
             /* first time a symbol is referenced in this library ->
              * need to open it
              */
-            
+
             *dlhandle = lt_dlopenext(current_datum->file);
             if(*dlhandle == NULL)
             {
@@ -803,7 +803,7 @@ globus_callout_call_type(
                 library[1023] = 0;
                 *dlhandle = lt_dlopenext(library);
             }
-            
+
             if(*dlhandle == NULL)
             {
                 /* try again with flavor string removed */
@@ -834,7 +834,7 @@ globus_callout_call_type(
                     GLOBUS_CALLOUT_ERROR_WITH_DL,
                     ("couldn't dlopen %s: %s\n",
                      library,
-                     (dlerror = lt_dlerror()) ? dlerror : 
+                     (dlerror = lt_dlerror()) ? dlerror :
                         "unknown error, possibly file not found."));
                 goto exit;
             }
@@ -855,16 +855,16 @@ globus_callout_call_type(
         }
 
         if(current_datum->env_args)
-        {            
+        {
             save_env = globus_calloc(
                 current_datum->num_env_args*2+1, sizeof(char *));
 
             i = 0;
-            while(current_datum->env_args[i] != NULL && 
+            while(current_datum->env_args[i] != NULL &&
                 current_datum->env_args[i+1] != NULL)
             {
                 save_env[i] = current_datum->env_args[i];
-                save_env[i+1] = 
+                save_env[i+1] =
                     globus_libc_strdup(getenv(current_datum->env_args[i]));
                 globus_libc_setenv(current_datum->env_args[i], current_datum->env_args[i+1], 1);
                 i += 2;
@@ -873,14 +873,14 @@ globus_callout_call_type(
         }
 
         va_start(ap,type);
-    
+
         result = ((globus_callout_function_t) function)(ap);
-        
+
         va_end(ap);
 
-        if(current_datum->env_args)
+        if(current_datum->env_args && save_env)
         {
-            i = 0;            
+            i = 0;
             while(save_env[i] != NULL)
             {
                 if(save_env[i+1] == NULL)
@@ -892,7 +892,7 @@ globus_callout_call_type(
                     globus_libc_setenv(save_env[i], save_env[i+1], 1);
                     globus_free(save_env[i+1]);
                 }
-                                
+
                 i += 2;
             }
             globus_free(save_env);
@@ -904,13 +904,13 @@ globus_callout_call_type(
             {
                 mandatory_callouts_remaining--;
             }
-            
+
             if(!mandatory_callouts_remaining)
             {
                 goto exit;
             }
         }
-        
+
         if(result != GLOBUS_SUCCESS)
         {
             if(current_datum->mandatory)
@@ -938,7 +938,7 @@ globus_callout_call_type(
         current_datum = current_datum->next;
     }
     while(current_datum);
-    
+
  exit:
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
     return result;
@@ -961,17 +961,17 @@ globus_l_callout_data_free(
         {
             free(data->type);
         }
-        
+
         if(data->file != NULL)
         {
             free(data->file);
         }
-        
+
         if(data->symbol != NULL)
         {
             free(data->symbol);
         }
-        
+
         if(data->env_args != NULL)
         {
             int i = 0;
@@ -982,10 +982,10 @@ globus_l_callout_data_free(
             }
             free(data->env_args);
         }
-        
+
         free(data);
     }
-    
+
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
 }
 
@@ -996,7 +996,6 @@ globus_l_callout_library_table_element_free(
     void *                              element)
 {
     lt_dlhandle *                       dlhandle;
-    globus_result_t                     result;
     static char *                       _function_name_ =
         "globus_l_callout_library_table_element_free";
     GLOBUS_I_CALLOUT_DEBUG_ENTER;
@@ -1004,21 +1003,15 @@ globus_l_callout_library_table_element_free(
     dlhandle = (lt_dlhandle *) element;
 
     if(dlhandle != NULL)
-    { 
+    {
         if(*dlhandle != NULL)
         {
-            if(lt_dlclose(*dlhandle) < 0)
-            {
-                GLOBUS_CALLOUT_ERROR_RESULT(
-                    result,
-                    GLOBUS_CALLOUT_ERROR_WITH_DL,
-                    ("failed to close library"));
-            }
+            lt_dlclose(*dlhandle);
         }
 
         free(dlhandle);
     }
-    
+
     GLOBUS_I_CALLOUT_DEBUG_EXIT;
     return;
 }

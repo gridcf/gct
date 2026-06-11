@@ -34,7 +34,7 @@ IMPLEMENT_ASN1_DUP_FUNCTION(PROXYPOLICY)
 #if OPENSSL_VERSION_NUMBER < 0x10000000L
 /**
  * @ingroup proxypolicy
- *  
+ *
  * Creates an ASN1_METHOD structure, which contains
  * pointers to routines that convert any PROXYPOLICY
  * structure to its associated ASN.1 DER encoded form
@@ -70,7 +70,7 @@ int PROXYPOLICY_cmp(
     const PROXYPOLICY *                 a,
     const PROXYPOLICY *                 b)
 {
-    
+
     if((OBJ_obj2nid(a->policy_language) != OBJ_obj2nid(b->policy_language)) ||
        ASN1_STRING_cmp((ASN1_STRING *)a->policy, (ASN1_STRING *)b->policy))
     {
@@ -99,9 +99,9 @@ int PROXYPOLICY_print(
     values = i2v_PROXYPOLICY(PROXYPOLICY_x509v3_ext_meth(),
                              policy,
                              values);
-    
+
     X509V3_EXT_val_prn(bp, values, 0, 1);
-    
+
     sk_CONF_VALUE_pop_free(values, X509V3_conf_free);
     return 1;
 }
@@ -123,7 +123,7 @@ int PROXYPOLICY_print_fp(
 {
     int                                 ret;
 
-    BIO * bp = BIO_new(BIO_s_file());    
+    BIO * bp = BIO_new(BIO_s_file());
     BIO_set_fp(bp, fp, BIO_NOCLOSE);
     ret = PROXYPOLICY_print(bp, policy);
     BIO_free(bp);
@@ -146,7 +146,7 @@ int PROXYPOLICY_set_policy_language(
     PROXYPOLICY *                       policy,
     ASN1_OBJECT *                       policy_language)
 {
-    if(policy_language != NULL) 
+    if(policy_language != NULL)
     {
         ASN1_OBJECT_free(policy->policy_language);
         policy->policy_language = OBJ_dup(policy_language);
@@ -157,14 +157,14 @@ int PROXYPOLICY_set_policy_language(
 
 /**
  * @ingroup proxypolicy
- * 
+ *
  * Gets the policy language of the PROXYPOLICY
  *
  * @param policy the proxy policy to get the policy language
  * of
- * 
+ *
  * @return the policy language as an ASN1_OBJECT
- */    
+ */
 ASN1_OBJECT * PROXYPOLICY_get_policy_language(
     PROXYPOLICY *                       policy)
 {
@@ -196,7 +196,7 @@ int PROXYPOLICY_set_policy(
         {
             proxypolicy->policy = ASN1_OCTET_STRING_new();
         }
-        
+
         ASN1_OCTET_STRING_set(proxypolicy->policy, copy, length);
 
     }
@@ -228,16 +228,16 @@ unsigned char * PROXYPOLICY_get_policy(
     int *                               length)
 {
     if(policy->policy)
-    { 
-        (*length) = policy->policy->length;
-        if(*length > 0 && policy->policy->data)
+    {
+        (*length) = ASN1_STRING_length(policy->policy);
+        if(*length > 0 && ASN1_STRING_get0_data(policy->policy))
         {
             unsigned char *                 copy = malloc(*length);
-            memcpy(copy, policy->policy->data, *length);
+            memcpy(copy, ASN1_STRING_get0_data(policy->policy), *length);
             return copy;
         }
     }
-    
+
     return NULL;
 }
 
@@ -289,13 +289,13 @@ STACK_OF(CONF_VALUE) * i2v_PROXYPOLICY(
                         127,
                         PROXYPOLICY_get_policy_language(ext));
     }
-    
-    X509V3_add_value("    Policy Language", 
+
+    X509V3_add_value("    Policy Language",
                      policy_lang,
                      &extlist);
-    
+
     policy = PROXYPOLICY_get_policy(ext, &policy_length);
-    
+
     if(!policy)
     {
         X509V3_add_value("    Policy", " EMPTY", &extlist);
@@ -332,16 +332,16 @@ STACK_OF(CONF_VALUE) * i2v_PROXYPOLICY(
             {
                 *(index++) = '\0';
                 policy_line_length = index - tmp_string;
-                
+
                 X509V3_add_value(NULL, (char *) tmp_string, &extlist);
-                
+
                 tmp_string = index;
             }
             policy_length -= policy_line_length;
         }
-        
+
         free(policy);
     }
-    
+
     return extlist;
 }

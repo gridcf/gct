@@ -2,7 +2,7 @@
 
 Name:		globus-xioperf
 %global _name %(echo %{name} | tr - _)
-Version:	5.1
+Version:	5.2
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - XIO Performance Tool
 
@@ -47,6 +47,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.2-1
+- Fix compiler warnings
+
 * Thu Jul 18 2019 Mattias Ellert <mattias.ellert@physics.uu.se> - 5.1-1
 - Add AC_CONFIG_MACRO_DIR and ACLOCAL_AMFLAGS
 

@@ -45,7 +45,7 @@ _test_res(
 void
 help()
 {
-    fprintf(stdout, 
+    fprintf(stdout,
         "globus-xio-gridftp [options]\n"
         "-----------------\n"
         "specify -c <contact string> to communicate with the server"
@@ -98,7 +98,7 @@ main(
             {
                 cs = argv[++ctr];
             }
-            else        
+            else
             {
                 help();
                 exit(1);
@@ -110,7 +110,7 @@ main(
             {
                 filename =  argv[++ctr];
             }
-            else        
+            else
             {
                 help();
                 exit(1);
@@ -119,7 +119,7 @@ main(
         else if(strcmp(argv[ctr], "-r") == 0)
         {
             read = GLOBUS_TRUE;
-        }       
+        }
         else if(strcmp(argv[ctr], "-w") == 0)
         {
             read = GLOBUS_FALSE;
@@ -172,8 +172,8 @@ main(
     test_res(res);
     res = globus_xio_stack_push_driver(stack, gridftp_driver);
     test_res(res);
-    
-  
+
+
     res = globus_xio_handle_create(&xio_handle, stack);
     test_res(res);
     res = globus_xio_stack_destroy(stack);
@@ -188,13 +188,13 @@ main(
     }
     if (partial_xfer)
     {
-        res = globus_xio_attr_cntl(attr, gridftp_driver, 
+        res = globus_xio_attr_cntl(attr, gridftp_driver,
             GLOBUS_XIO_GRIDFTP_SET_PARTIAL_TRANSFER, GLOBUS_TRUE);
         test_res(res);
     }
     if (append)
     {
-        res = globus_xio_attr_cntl(attr, gridftp_driver, 
+        res = globus_xio_attr_cntl(attr, gridftp_driver,
             GLOBUS_XIO_GRIDFTP_SET_APPEND, GLOBUS_TRUE);
         test_res(res);
     }
@@ -202,12 +202,12 @@ main(
     {
         if (read)
         {
-            res = globus_xio_attr_cntl(attr, gridftp_driver, 
+            res = globus_xio_attr_cntl(attr, gridftp_driver,
                 GLOBUS_XIO_GRIDFTP_SET_ERET, eret_esto_alg_str);
         }
         else
         {
-            res = globus_xio_attr_cntl(attr, gridftp_driver, 
+            res = globus_xio_attr_cntl(attr, gridftp_driver,
                 GLOBUS_XIO_GRIDFTP_SET_ESTO, eret_esto_alg_str);
         }
         test_res(res);
@@ -231,7 +231,7 @@ main(
     {
         globus_byte_t                   buffer[CHUNK_SIZE + 1];
         size_t                          nbytes;
-        int i, x, j = 0;
+        int i, j = 0;
         fp = fopen(filename, "r");
         if (fp == NULL)
         {
@@ -242,7 +242,7 @@ main(
         {
             for (i = 0; i< CHUNK_SIZE + 1; i++)
                 buffer[i] = '\0';
-            x = fread(buffer, CHUNK_SIZE, 1, fp);
+            fread(buffer, CHUNK_SIZE, 1, fp);
             nbytes = strlen((char *) buffer);
             res = globus_xio_write(
                 xio_handle,
@@ -251,17 +251,17 @@ main(
                 nbytes,
                 &nbytes,
                 NULL);
-            test_res(res); 
+            test_res(res);
             if (seek)
             {
                 j += 2*nbytes;
                 res = globus_xio_handle_cntl(xio_handle, gridftp_driver,
                     GLOBUS_XIO_GRIDFTP_SEEK, j);
-                test_res(res); 
+                test_res(res);
             }
-        } 
-        fclose(fp);  
-        
+        }
+        fclose(fp);
+
     }
     else
     {
@@ -293,7 +293,7 @@ main(
                     j += 2*nbytes;
                     res = globus_xio_handle_cntl(xio_handle, gridftp_driver,
                         GLOBUS_XIO_GRIDFTP_SEEK, j);
-                    test_res(res); 
+                    test_res(res);
                 }
             }
             else
@@ -309,11 +309,11 @@ main(
 
     if (user_handle)
     {
-        globus_ftp_client_handle_destroy(&ftp_handle);  
+        globus_ftp_client_handle_destroy(&ftp_handle);
     }
     res = globus_xio_driver_unload(gridftp_driver);
     test_res(res);
- 
+
     rc = globus_module_deactivate(GLOBUS_XIO_MODULE);
     globus_assert(rc == GLOBUS_SUCCESS);
     return 0;

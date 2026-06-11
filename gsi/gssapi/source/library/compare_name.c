@@ -37,7 +37,7 @@
 #endif
 
 /* Comparison types */
-typedef enum 
+typedef enum
 {
     GSS_I_COMPARE_NT_ANONYMOUS,
     GSS_I_COMPARE_NT_X509,
@@ -174,7 +174,7 @@ gss_l_get_oid_type(
  * @ingroup globus_gsi_gssapi
  * @details
  * Compare two names. GSSAPI names in this implementation
- * are pointers to X.509 names. 
+ * are pointers to X.509 names.
  *
  * @param minor_status
  *        currently is always set to GLOBUS_SUCCESS
@@ -185,7 +185,7 @@ gss_l_get_oid_type(
  * @return
  *        currently always returns GSS_S_COMPLETE
  */
-OM_uint32 
+OM_uint32
 GSS_CALLCONV gss_compare_name(
     OM_uint32 *                         minor_status,
     const gss_name_t                    name1_P,
@@ -272,7 +272,7 @@ GSS_CALLCONV gss_compare_name(
                                       _GGSL("Name 2 is of type %s:\n"),
                                       gss_l_name_types[type2]));
 
-    /* Normalize order of name1 and name2 so we can have fewer comparisons 
+    /* Normalize order of name1 and name2 so we can have fewer comparisons
      * below
      */
     if (type1 > type2)
@@ -377,7 +377,7 @@ GSS_CALLCONV gss_compare_name(
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
 
-} 
+}
 /* gss_compare_name */
 
 static
@@ -415,7 +415,7 @@ gss_l_compare_x509_to_x509(
             {
                 dns_alt_name_found1 = GLOBUS_TRUE;
 
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 for (i2 = 0; i2 < name_count2; i2++)
                 {
@@ -423,7 +423,7 @@ gss_l_compare_x509_to_x509(
 
                     if (gn2->type == GEN_DNS)
                     {
-                        ns2 = (char *) ASN1_STRING_data(gn2->d.dNSName);
+                        ns2 = (char *) ASN1_STRING_get0_data(gn2->d.dNSName);
                         dns_alt_name_found2 = GLOBUS_TRUE;
 
                         major_status = gss_l_compare_hostnames_with_wildcards(
@@ -472,7 +472,7 @@ gss_l_compare_x509_to_x509(
 
                     if (gn2->type == GEN_DNS)
                     {
-                        ns2 = (char *) ASN1_STRING_data(gn2->d.dNSName);
+                        ns2 = (char *) ASN1_STRING_get0_data(gn2->d.dNSName);
 
                         major_status = gss_l_compare_hostnames_with_wildcards(
                                 minor_status,
@@ -596,7 +596,7 @@ gss_l_compare_x509_to_hostbased_service(
             gn1 = sk_GENERAL_NAME_value(name1->subjectAltNames, i1);
             if (gn1->type == GEN_DNS)
             {
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 /* In strict RFC mode, we're going to require the service
                  * portion of the hostbased service name to be "host" (the
@@ -691,7 +691,7 @@ gss_l_compare_x509_to_host_ip(
             gn1 = sk_GENERAL_NAME_value(name1->subjectAltNames, i1);
             if (gn1->type == GEN_DNS)
             {
-                ns1 = (char *) ASN1_STRING_data(gn1->d.dNSName);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.dNSName);
 
                 major_status = gss_l_compare_hostnames_with_wildcards(
                         minor_status,
@@ -714,7 +714,7 @@ gss_l_compare_x509_to_host_ip(
             {
                 int ip_as_ints[16], j;
                 int len = ASN1_STRING_length(gn1->d.iPAddress);
-                ns1 = (char *) ASN1_STRING_data(gn1->d.iPAddress);
+                ns1 = (char *) ASN1_STRING_get0_data(gn1->d.iPAddress);
 
                 for (j = 0; j < len; j++)
                 {
@@ -911,7 +911,7 @@ gss_l_compare_hostbased_service_to_hostbased_service(
     ns1 = name1->host_name;
     ns2 = name2->host_name;
 
-    /* In strict mode, we compare service names, for backward compatibility, 
+    /* In strict mode, we compare service names, for backward compatibility,
      * we ignore them.
      */
     if (gss_i_name_compatibility_mode == GSS_I_COMPATIBILITY_STRICT_RFC2818 &&
@@ -1012,7 +1012,7 @@ gss_l_compare_host_ip_to_host_ip(
     {
         *name_equal = GSS_NAMES_EQUAL;
     }
-    else if (gss_i_name_compatibility_mode != GSS_I_COMPATIBILITY_STRICT_RFC2818) 
+    else if (gss_i_name_compatibility_mode != GSS_I_COMPATIBILITY_STRICT_RFC2818)
     {
         ns1 = name1->ip_name;
         major_status = gss_l_compare_hostnames_with_wildcards(
@@ -1182,7 +1182,7 @@ gss_l_compare_hostnames_with_wildcards(
             }
 
         }
-        else if (wildcards2 == GSS_I_WILDCARD_GT2 && *tok2 == '-' 
+        else if (wildcards2 == GSS_I_WILDCARD_GT2 && *tok2 == '-'
             && first_token)
         {
             if (*tok1 != '\0')
@@ -1243,7 +1243,7 @@ gss_l_strsep(char **stringp, const char * delim)
 /* Convert oid struct to integer
  *
  * @param oid
- *     OID to convert to a gss_l_compare_type_t (or -1 if the 
+ *     OID to convert to a gss_l_compare_type_t (or -1 if the
  *     name type is not supported.
  */
 static
@@ -1259,7 +1259,7 @@ gss_l_get_oid_type(
     {
         return GSS_I_COMPARE_NT_X509;
     }
-    else if (g_OID_equal(oid, GSS_C_NO_OID) || 
+    else if (g_OID_equal(oid, GSS_C_NO_OID) ||
              g_OID_equal(oid, GSS_C_NT_USER_NAME))
     {
         return GSS_I_COMPARE_NT_NO_OID;

@@ -34,15 +34,15 @@
  * @details
  * Produces a single line version of the internal X.509 name
  *
- * @param minor_status 
+ * @param minor_status
  * @param input_name_P
  * @param output_name
  * @param output_name_type
  *
- * @return 
+ * @return
  */
-OM_uint32 
-GSS_CALLCONV 
+OM_uint32
+GSS_CALLCONV
 gss_display_name(
     OM_uint32 *                         minor_status,
     const gss_name_t                    input_name_P,
@@ -51,7 +51,7 @@ gss_display_name(
 {
     OM_uint32                           major_status = GSS_S_COMPLETE;
 
-    const gss_name_desc*                input_name = 
+    const gss_name_desc*                input_name =
                                         (gss_name_desc*) input_name_P;
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_ENTER;
@@ -62,7 +62,7 @@ gss_display_name(
     {
         major_status = GSS_S_FAILURE;
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-            minor_status, 
+            minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_BAD_ARGUMENT,
             ("Bad argument"));
         goto exit;
@@ -146,7 +146,7 @@ gss_display_name(
         {
             int                         name_length;
             GENERAL_NAME *              name;
-            unsigned char *             dns;
+            const unsigned char *       dns;
             int                         i;
 
             name_length = sk_GENERAL_NAME_num(input_name->subjectAltNames);
@@ -156,9 +156,9 @@ gss_display_name(
 
                 if (name->type == GEN_DNS)
                 {
-                    dns = ASN1_STRING_data(name->d.dNSName);
+                    dns = ASN1_STRING_get0_data(name->d.dNSName);
                     output_name->value =
-                            globus_common_create_string("/CN=%s", (char *) dns);
+                            globus_common_create_string("/CN=%s", (const char *) dns);
                     if (output_name->value == NULL)
                     {
                         GLOBUS_GSI_GSSAPI_MALLOC_ERROR(minor_status);
@@ -174,7 +174,7 @@ gss_display_name(
         {
             major_status = GSS_S_BAD_NAME;
             GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-                minor_status, 
+                minor_status,
                 GLOBUS_GSI_GSSAPI_ERROR_BAD_NAME,
                 ("X.509 Name contains no SubjectName and no dNSName."));
             goto exit;
@@ -184,12 +184,12 @@ gss_display_name(
     {
         major_status = GSS_S_FAILURE;
         GLOBUS_GSI_GSSAPI_ERROR_RESULT(
-            minor_status, 
+            minor_status,
             GLOBUS_GSI_GSSAPI_ERROR_BAD_NAME,
             ("Bad Name"));
         goto exit;
     }
-  
+
     if(output_name_type)
     {
         *output_name_type = input_name->name_oid;
@@ -199,5 +199,5 @@ gss_display_name(
 
     GLOBUS_I_GSI_GSSAPI_DEBUG_EXIT;
     return major_status;
-} 
+}
 /* gss_display_name */

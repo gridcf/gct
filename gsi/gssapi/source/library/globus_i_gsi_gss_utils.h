@@ -128,7 +128,7 @@ extern globus_bool_t                    globus_i_gssapi_active;
     {                                                         \
         globus_libc_fprintf _MESSAGE_;                        \
     }                                                         \
-} 
+}
 
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_FNPRINTF(_LEVEL_, _MESSAGE_) \
 { \
@@ -151,7 +151,7 @@ extern globus_bool_t                    globus_i_gssapi_active;
             "%s", _MESSAGE_);                               \
     }                                                       \
 }
- 
+
 #define GLOBUS_I_GSI_GSSAPI_DEBUG_PRINT_OBJECT(_LEVEL_, _TYPE_, _OBJ_) \
 {                                                                      \
     if (GLOBUS_I_GSI_GSSAPI_DEBUG(_LEVEL_))                            \
@@ -245,9 +245,15 @@ globus_i_gsi_gss_create_cred(
     globus_gsi_cred_handle_t *          cred_handle,
     globus_bool_t                       sni_context);
 
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 int globus_i_gsi_gss_verify_extensions_callback(
     globus_gsi_callback_data_t          callback_data,
     X509_EXTENSION *                    extension);
+#else
+int globus_i_gsi_gss_verify_extensions_callback(
+    globus_gsi_callback_data_t          callback_data,
+    const X509_EXTENSION *              extension);
+#endif
 
 OM_uint32
 globus_i_gsi_gss_handshake(

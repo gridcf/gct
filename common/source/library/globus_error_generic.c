@@ -79,7 +79,7 @@ typedef struct
  *        The resulting error object. It is the user's responsibility
  *        to eventually free this object using globus_object_free(). A
  *        globus_result_t may be obtained by calling
- *        globus_error_put() on this object.        
+ *        globus_error_put() on this object.
  */
 globus_object_t *
 globus_error_construct_error(
@@ -148,7 +148,7 @@ globus_error_construct_error(
  *        The resulting error object. It is the user's responsibility
  *        to eventually free this object using globus_object_free(). A
  *        globus_result_t may be obtained by calling
- *        globus_error_put() on this object.        
+ *        globus_error_put() on this object.
  */
 globus_object_t *
 globus_error_v_construct_error(
@@ -192,7 +192,7 @@ globus_error_v_construct_error(
 /**
  * Initialize a previously allocated error of type
  * GLOBUS_ERROR_TYPE_GLOBUS
- * @ingroup globus_generic_error_object 
+ * @ingroup globus_generic_error_object
  *
  * @param error
  *        The previously allocated error object.
@@ -241,7 +241,7 @@ globus_error_initialize_error(
     {
         return NULL;
     }
-    
+
     instance_data = (globus_l_error_data_t *)
         malloc(sizeof(globus_l_error_data_t));
 
@@ -263,12 +263,12 @@ globus_error_initialize_error(
         va_end(ap_copy);
 
         size++;
-        
+
         if ((instance_data->short_desc = malloc (size)) == NULL)
         {
             return NULL;
         }
-        
+
         globus_libc_vsnprintf(instance_data->short_desc,
                               size,
                               short_desc_format,
@@ -289,7 +289,7 @@ globus_error_initialize_error(
 /*@{*/
 /**
  * Retrieve the originating module descriptor from a error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error from which to retrieve the module descriptor
@@ -310,14 +310,12 @@ globus_error_get_source(
 /*@{*/
 /**
  * Set the originating module descriptor in a error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error object for which to set the causative error
  * @param source_module
  *        The originating module descriptor
- * @return
- *        void
  */
 void
 globus_error_set_source(
@@ -334,7 +332,7 @@ globus_error_set_source(
 /*@{*/
 /**
  * Retrieve the underlying error from a error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error from which to retrieve the causative error.
@@ -357,14 +355,12 @@ globus_error_get_cause (
 /*@{*/
 /**
  * Set the causative error in a error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error object for which to set the causative error.
  * @param causal_error
  *        The causative error.
- * @return
- *        void
  */
 void
 globus_error_set_cause (
@@ -382,7 +378,7 @@ globus_error_set_cause (
 /*@{*/
 /**
  * Retrieve the error type from a generic globus error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error from which to retrieve the error type
@@ -394,7 +390,7 @@ globus_error_get_type(
     globus_object_t *                   error)
 {
     globus_object_t *                   tmp;
-    
+
     if ((tmp = globus_object_upcast(error, GLOBUS_ERROR_TYPE_GLOBUS)) != NULL)
     {
         return ((globus_l_error_data_t *)
@@ -418,14 +414,12 @@ globus_error_get_type(
 /*@{*/
 /**
  * Set the error type in a generic globus error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error object for which to set the error type
  * @param type
  *        The error type
- * @return
- *        void
  */
 void
 globus_error_set_type(
@@ -449,8 +443,8 @@ globus_error_set_type(
 /*@{*/
 /**
  * Retrieve the short error description from a generic globus error
- * object. 
- * @ingroup globus_generic_error_accessor  
+ * object.
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error from which to retrieve the description
@@ -479,8 +473,8 @@ globus_error_get_short_desc(
  */
 /*@{*/
 /**
- * Set the short error description in a generic globus error object. 
- * @ingroup globus_generic_error_accessor  
+ * Set the short error description in a generic globus error object.
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error object for which to set the description
@@ -489,8 +483,6 @@ globus_error_get_short_desc(
  *        of the error. To be passed on to the user.
  * @param ...
  *        Arguments for the format string.
- * @return
- *        void
  */
 void
 globus_error_set_short_desc(
@@ -501,7 +493,7 @@ globus_error_set_short_desc(
     char **                             instance_short_desc;
     va_list                             ap;
     int                                 size;
-    
+
     if ((error = globus_object_upcast(error, GLOBUS_ERROR_TYPE_GLOBUS)) == NULL)
     {
         return;
@@ -509,7 +501,7 @@ globus_error_set_short_desc(
     instance_short_desc =
         &((globus_l_error_data_t *)
           globus_object_get_local_instance_data(error))->short_desc;
-    
+
     if(*instance_short_desc != NULL)
     {
         globus_libc_free(*instance_short_desc);
@@ -522,7 +514,7 @@ globus_error_set_short_desc(
     size = globus_libc_vprintf_length(short_desc_format,ap);
 
     va_end(ap);
-    
+
     size++;
 
     if ((*instance_short_desc = malloc (size)) == NULL)
@@ -531,14 +523,14 @@ globus_error_set_short_desc(
     }
 
     va_start(ap, short_desc_format);
-    
+
     globus_libc_vsnprintf(*instance_short_desc,
                           size,
                           short_desc_format,
                           ap);
 
     va_end(ap);
-    
+
     return;
 }/* globus_error_set_short_desc */
 /*@}*/
@@ -550,8 +542,8 @@ globus_error_set_short_desc(
 /*@{*/
 /**
  * Retrieve the long error description from a generic globus error
- * object. 
- * @ingroup globus_generic_error_accessor  
+ * object.
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error from which to retrieve the description
@@ -578,15 +570,13 @@ globus_error_get_long_desc(
 /*@{*/
 /**
  * Set the long error description in a generic globus error object.
- * @ingroup globus_generic_error_accessor  
+ * @ingroup globus_generic_error_accessor
  *
  * @param error
  *        The error object for which to set the description
  * @param long_desc_format
  *        Longer format string giving a more detailed explanation of
- *        the error. 
- * @return
- *        void
+ *        the error.
  */
 void
 globus_error_set_long_desc(
@@ -597,7 +587,7 @@ globus_error_set_long_desc(
     char **                             instance_long_desc;
     va_list                             ap;
     int                                 size;
-    
+
     if ((error = globus_object_upcast(error, GLOBUS_ERROR_TYPE_GLOBUS)) == NULL)
     {
         return;
@@ -605,7 +595,7 @@ globus_error_set_long_desc(
     instance_long_desc =
         &((globus_l_error_data_t *)
           globus_object_get_local_instance_data(error))->long_desc;
-    
+
     if(*instance_long_desc != NULL)
     {
         globus_libc_free(*instance_long_desc);
@@ -633,7 +623,7 @@ globus_error_set_long_desc(
                           long_desc_format,
                           ap);
     va_end(ap);
-    
+
     return;
 }/* globus_error_set_long_desc */
 /*@}*/
@@ -646,7 +636,7 @@ globus_error_set_long_desc(
 /**
  * Check whether the error originated from a specific module and is of
  * a specific type.
- * @ingroup globus_generic_error_utility  
+ * @ingroup globus_generic_error_utility
  *
  * This function checks whether the error or any of it's causative
  * errors originated from a specific module and is of a specific
@@ -672,12 +662,12 @@ globus_error_match(
     globus_module_descriptor_t *        source_module;
     int                                 error_type;
     globus_object_t *                   tmp;
-    
+
     if(error == NULL)
     {
         return GLOBUS_FALSE;
     }
-    
+
     if ((tmp = globus_object_upcast(error, GLOBUS_ERROR_TYPE_GLOBUS)) != NULL)
     {
         error = tmp;
@@ -696,7 +686,7 @@ globus_error_match(
     }
     source_module = globus_error_get_source(error);
     error_type = globus_error_get_type(error);
-    
+
     if(source_module == module && error_type == type)
     {
         return GLOBUS_TRUE;
@@ -719,7 +709,7 @@ globus_error_match(
 /**
  * Return a string containing all printable errors found in a error
  * object and it's causative error chain.
- * @ingroup globus_generic_error_utility  
+ * @ingroup globus_generic_error_utility
  *
  * If the GLOBUS_ERROR_VERBOSE env is set, file, line and function info will
  * also be printed (where available).  Otherwise, only the module name will
@@ -739,7 +729,7 @@ globus_error_print_chain(
     char *                              tmp;
     int                                 length = 0;
     globus_object_t *                   current_error;
-    
+
     current_error = error;
     error_string = (char *) globus_libc_malloc(1);
 
@@ -749,12 +739,12 @@ globus_error_print_chain(
         if(tmp != NULL)
         {
             int                         l;
-            
+
             l = strlen(tmp);
             if(l)
             {
                 char *                  ns;
-                
+
                 ns = (char *) globus_libc_realloc(
                     error_string, length + l + 2);
                 if(ns)
@@ -769,15 +759,15 @@ globus_error_print_chain(
         }
     }
     while((current_error = globus_error_get_cause(current_error)));
-    
+
     error_string[length] = '\0';
-    
+
     if(length == 0)
     {
         globus_libc_free(error_string);
         error_string = NULL;
     }
-    
+
     return error_string;
 }/* globus_error_print_chain */
 /*@}*/
@@ -794,7 +784,7 @@ globus_l_error_multiple_print(
     char **                             free_ptrs = NULL;
     char *                              error_string;
     int                                 i = 0;
-    
+
     if ((error = globus_object_upcast(error, GLOBUS_ERROR_TYPE_MULTIPLE)) == NULL)
     {
         return NULL;
@@ -810,28 +800,28 @@ globus_l_error_multiple_print(
         {
             globus_list_t *             tmp;
             int                         j = 0;
-            
+
             if(data->desc && *data->desc)
             {
                 layout[i++] = data->desc;
                 layout[i++] = "\n";
             }
-            
+
             for(tmp = data->chains;
-                !globus_list_empty(tmp); 
+                !globus_list_empty(tmp);
                 tmp = globus_list_rest(tmp))
             {
                 globus_l_error_multiple_chain_t * instance;
-                
+
                 instance = (globus_l_error_multiple_chain_t *)
                     globus_list_first(tmp);
-                
+
                 if(instance->desc && *instance->desc)
                 {
                     layout[i++] = instance->desc;
                     layout[i++] = "\n";
                 }
-                
+
                 if(friendly)
                 {
                     free_ptrs[j++] = layout[i++] =
@@ -839,13 +829,13 @@ globus_l_error_multiple_print(
                 }
                 else
                 {
-                    free_ptrs[j++] = layout[i++] = 
+                    free_ptrs[j++] = layout[i++] =
                         globus_error_print_chain(instance->chain);
                 }
             }
         }
     }
-    
+
     error_string = layout ? globus_libc_join((const char **) layout, i) : NULL;
     if(layout)
     {
@@ -892,7 +882,7 @@ globus_l_add_error_string(
              layout[(*idx)++] = "\n";
          }
     }
-    
+
     return msg;
 }
 
@@ -908,7 +898,7 @@ globus_l_add_error_string(
  * @ingroup globus_generic_error_utility
  *
  * If the GLOBUS_ERROR_VERBOSE env is set, then the result from
- * globus_error_print_chain() will be used. 
+ * globus_error_print_chain() will be used.
  *
  * @param error
  *        The error to print
@@ -932,16 +922,16 @@ globus_error_print_friendly(
     char *                              bottom3 = NULL;
     char *                              verbose = NULL;
     globus_bool_t                       verbose_allowed = GLOBUS_TRUE;
-    
+
     if(!error)
     {
         return NULL;
     }
-    
+
     if(globus_i_error_verbose)
     {
         int *                           in_progress;
-        
+
         in_progress = (int *)
             globus_thread_getspecific(globus_i_error_verbose_key);
         if(in_progress)
@@ -954,7 +944,7 @@ globus_error_print_friendly(
                 globus_i_error_verbose_key, (int *) 0x01);
         }
     }
-    
+
     if(globus_i_error_verbose && verbose_allowed)
     {
         verbose = globus_error_print_chain(error);
@@ -962,7 +952,7 @@ globus_error_print_friendly(
         {
             layout[i++] = verbose;
         }
-        
+
         globus_thread_setspecific(globus_i_error_verbose_key, NULL);
     }
     else
@@ -970,7 +960,7 @@ globus_error_print_friendly(
         globus_object_t *               source_error1 = NULL;
         globus_object_t *               source_error2 = NULL;
         globus_object_t *               source_error3;
-        
+
         /* here we only take the top error and the bottom 3 */
         current_error = error;
         do
@@ -986,9 +976,9 @@ globus_error_print_friendly(
                     globus_object_get_type(current_error));
             }
         } while((current_error = globus_error_get_cause(current_error)));
-        
+
         top = globus_l_add_error_string(layout, &i, error);
-        
+
         if(error != source_error1)
         {
             if(error != source_error2)
@@ -998,22 +988,22 @@ globus_error_print_friendly(
                     bottom3 = globus_l_add_error_string(
                         layout, &i, source_error3);
                 }
- 
+
                 bottom2 = globus_l_add_error_string(layout, &i, source_error2);
             }
-            
+
             bottom1 = globus_l_add_error_string(layout, &i, source_error1);
         }
-        
+
         if(friendly && *friendly)
         {
             layout[i++] = friendly;
             layout[i++] = "\n";
         }
     }
-    
+
     error_string = globus_libc_join((const char **) layout, i);
-    
+
     if(top)
     {
         globus_free(top);
@@ -1038,7 +1028,7 @@ globus_error_print_friendly(
     {
         globus_free(verbose);
     }
-    
+
     return error_string;
 }/* globus_error_print_friendly */
 /*@}*/
@@ -1053,7 +1043,7 @@ globus_error_print_friendly(
  * Construct a container object for multiple error chains.  Useful when
  * an application tries many things (and each fails) before finally
  * giving up;
- * 
+ *
  * Use globus_error_mutliple_add_chain() to add error objects/chains to this
  * object.
  *
@@ -1071,7 +1061,7 @@ globus_error_print_friendly(
  *        The resulting error object. It is the user's responsibility
  *        to eventually free this object using globus_object_free(). A
  *        globus_result_t may be obtained by calling
- *        globus_error_put() on this object.  
+ *        globus_error_put() on this object.
  */
 globus_object_t *
 globus_error_construct_multiple(
@@ -1083,58 +1073,58 @@ globus_error_construct_multiple(
     globus_object_t *                   newerror;
     globus_object_t *                   error;
     globus_l_error_multiple_t *         data;
-    
+
     newerror = globus_object_construct(GLOBUS_ERROR_TYPE_MULTIPLE);
     if(!newerror)
     {
         goto error_object;
     }
-    
+
     data = (globus_l_error_multiple_t *)
         globus_malloc(sizeof(globus_l_error_multiple_t));
     if(!data)
     {
         goto error_data;
     }
-    
+
     data->type = type;
     data->chains = NULL;
     data->desc = NULL;
-    
+
     if(fmt)
     {
         int                             size;
         va_list                         ap;
         va_list                         ap_copy;
-        
+
         va_start(ap, fmt);
-        
+
         globus_libc_va_copy(ap_copy, ap);
         size = globus_libc_vprintf_length(fmt, ap_copy);
         va_end(ap_copy);
-        
+
         data->desc = (char *) globus_malloc(size + 1);
         if(data->desc)
         {
             globus_libc_vsnprintf(data->desc, size + 1, fmt, ap);
         }
-        
+
         va_end(ap);
     }
-    
+
     globus_object_set_local_instance_data(newerror, data);
     error = globus_error_initialize_base(newerror, base_source, NULL);
     if(!error)
     {
         goto error_construct;
     }
-    
+
     return error;
 
 error_construct:
 error_data:
     globus_object_free(newerror);
-    
+
 error_object:
     return NULL;
 }
@@ -1150,8 +1140,6 @@ error_object:
  *        over 'chain''s memory after this call.
  * @param fmt
  *        a printf style format string describing this chain
- * @return
- *        void
  */
 void
 globus_error_mutliple_add_chain(
@@ -1162,7 +1150,7 @@ globus_error_mutliple_add_chain(
 {
     globus_l_error_multiple_t *         data;
     globus_l_error_multiple_chain_t *   instance;
-    
+
     data = (globus_l_error_multiple_t *)
         globus_object_get_local_instance_data(multiple_error);
     if(data && chain)
@@ -1173,28 +1161,28 @@ globus_error_mutliple_add_chain(
         {
             instance->chain = chain;
             instance->desc = NULL;
-            
+
             if(fmt)
             {
                 int                     size;
                 va_list                 ap;
                 va_list                 ap_copy;
-                
+
                 va_start(ap, fmt);
-                
+
                 globus_libc_va_copy(ap_copy, ap);
                 size = globus_libc_vprintf_length(fmt, ap_copy);
                 va_end(ap_copy);
-                
+
                 instance->desc = (char *) globus_malloc(size + 1);
                 if(instance->desc)
                 {
                     globus_libc_vsnprintf(instance->desc, size + 1, fmt, ap);
                 }
-                
+
                 va_end(ap);
             }
-            
+
             globus_list_insert(&data->chains, instance);
         }
     }
@@ -1215,13 +1203,13 @@ globus_error_multiple_remove_chain(
 {
     globus_l_error_multiple_t *         data;
     globus_object_t *                   chain = NULL;
-    
+
     data = (globus_l_error_multiple_t *)
         globus_object_get_local_instance_data(multiple_error);
     if(data && data->chains)
     {
         globus_l_error_multiple_chain_t * instance;
-        
+
         instance = (globus_l_error_multiple_chain_t *)
             globus_list_remove(&data->chains, data->chains);
         chain = instance->chain;
@@ -1231,7 +1219,7 @@ globus_error_multiple_remove_chain(
         }
         globus_free(instance);
     }
-    
+
     return chain;
 }
 
@@ -1243,28 +1231,28 @@ globus_l_error_multiple_copy(
 {
     globus_l_error_multiple_t *         copy;
     globus_l_error_multiple_t *         source;
-    
+
     source = (globus_l_error_multiple_t *) src;
-    copy = (globus_l_error_multiple_t *) 
+    copy = (globus_l_error_multiple_t *)
         globus_malloc(sizeof(globus_l_error_multiple_t));
     if(copy)
     {
         globus_list_t *                 tmp;
-        
+
         copy->type = source->type;
         copy->chains = globus_list_copy(source->chains);
         copy->desc = source->desc ? globus_libc_strdup(source->desc) : NULL;
-        
+
         for(tmp = copy->chains;
-            !globus_list_empty(tmp); 
+            !globus_list_empty(tmp);
             tmp = globus_list_rest(tmp))
         {
             globus_l_error_multiple_chain_t * instance;
             globus_l_error_multiple_chain_t * new_instance;
-            
+
             instance = (globus_l_error_multiple_chain_t *)
                 globus_list_first(tmp);
-                
+
             new_instance = (globus_l_error_multiple_chain_t *)
                 globus_malloc(sizeof(globus_l_error_multiple_chain_t));
             if(new_instance)
@@ -1276,7 +1264,7 @@ globus_l_error_multiple_copy(
             globus_list_replace_first(tmp, new_instance);
         }
     }
-    
+
     *dst = copy;
 }
 
@@ -1286,14 +1274,14 @@ globus_l_error_multiple_destroy_all(
     void *                              data)
 {
     globus_l_error_multiple_chain_t * instance;
-    
+
     if(!data)
     {
         return;
     }
-    
+
     instance = (globus_l_error_multiple_chain_t *) data;
-    
+
     globus_object_free(instance->chain);
     if(instance->desc)
     {
@@ -1308,7 +1296,7 @@ globus_l_error_multiple_free(
     void *                              data)
 {
     globus_l_error_multiple_t *         d;
-    
+
     d = (globus_l_error_multiple_t *) data;
     if(d->chains)
     {
@@ -1330,7 +1318,7 @@ globus_l_error_multiple_printable(
     return globus_l_error_multiple_print(error, GLOBUS_FALSE);
 }
 
-const globus_object_type_t GLOBUS_ERROR_TYPE_MULTIPLE_DEFINITION = 
+const globus_object_type_t GLOBUS_ERROR_TYPE_MULTIPLE_DEFINITION =
 globus_error_type_static_initializer (
     GLOBUS_ERROR_TYPE_BASE,
     globus_l_error_multiple_copy,
