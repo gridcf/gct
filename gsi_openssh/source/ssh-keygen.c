@@ -23,6 +23,7 @@
 #include <openssl/bn.h>
 #include <openssl/evp.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include <openssl/pem.h>
 #endif
 

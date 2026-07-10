@@ -72,6 +72,7 @@
 #include <openssl/err.h>
 #endif
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include "openbsd-compat/openssl-compat.h"
 
 #include "xmalloc.h"

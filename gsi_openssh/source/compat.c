@@ -38,6 +38,7 @@
 #include "log.h"
 #include "match.h"
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 
 /* determine bug flags from SSH protocol banner */
 void

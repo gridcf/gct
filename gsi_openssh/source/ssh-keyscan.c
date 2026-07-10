@@ -22,6 +22,7 @@
 #include <openssl/bn.h>
 #endif
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 
 #include <errno.h>
 #include <limits.h>

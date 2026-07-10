@@ -56,6 +56,7 @@
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include "openbsd-compat/openssl-compat.h"
 #endif
 

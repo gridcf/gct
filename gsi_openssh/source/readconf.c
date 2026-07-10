@@ -39,6 +39,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #ifdef USE_SYSTEM_GLOB
 # include <glob.h>
 #else

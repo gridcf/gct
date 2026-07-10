@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 
 #include "log.h"
 #include "sshbuf.h"

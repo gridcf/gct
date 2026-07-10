@@ -38,6 +38,7 @@
 #include <openssl/crypto.h>
 #include <openssl/dh.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 # ifdef HAVE_EVP_KDF_CTX_NEW
 # include <openssl/kdf.h>
 # include <openssl/param_build.h>

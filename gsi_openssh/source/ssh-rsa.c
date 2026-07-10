@@ -26,6 +26,7 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 
 #include <stdarg.h>
 #include <string.h>

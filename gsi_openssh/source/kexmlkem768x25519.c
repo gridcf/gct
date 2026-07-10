@@ -49,6 +49,7 @@
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include <stdio.h>
 
 #define FIPS_FALLBACK_PROPQ "provider=default,-fips"

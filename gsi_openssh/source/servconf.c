@@ -39,6 +39,7 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #ifdef HAVE_UTIL_H
 #include <util.h>
 #endif
