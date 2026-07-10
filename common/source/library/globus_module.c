@@ -93,7 +93,7 @@ static globus_list_t *                  globus_l_module_list;
 
 /* Hash table for globus_environ*/
 const int GLOBUS_L_ENVIRON_TABLE_SIZE = 13;
-static globus_mutex_t           globus_l_environ_hashtable_mutex;
+static globus_mutex_t                   globus_l_environ_hashtable_mutex;
 static globus_hashtable_t               globus_l_environ_table;
 
 globus_list_t *globus_l_module_atexit_funcs = GLOBUS_NULL;
@@ -547,7 +547,7 @@ globus_module_setenv(
     const char *                        name,
     const char *                        value)
 {
-    int                         rc;
+    int                                 rc;
 
     /*
      *  First, check to see if the environment mutex has been initialized
@@ -622,7 +622,7 @@ char *
 globus_module_getenv(
     const char *                        name)
 {
-    char *                      entry;
+    char *                              entry;
 
     if(globus_l_environ_initialized == GLOBUS_TRUE)
     {

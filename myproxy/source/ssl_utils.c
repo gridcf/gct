@@ -97,8 +97,8 @@ ssl_error_to_verror()
 
         error_data = error_state->err_data[error_number];
 #else
-	ERR_peek_error_data(&error_data, &flags);
-	if (!(flags & ERR_TXT_STRING)) error_data = NULL;
+        ERR_peek_error_data(&error_data, &flags);
+        if (!(flags & ERR_TXT_STRING)) error_data = NULL;
 #endif
 
         /* Now add to verror state */

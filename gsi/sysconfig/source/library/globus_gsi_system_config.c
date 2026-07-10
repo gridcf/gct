@@ -520,7 +520,7 @@ globus_gsi_sysconfig_set_key_permissions_win32(
     char *                              filename)
 {
     globus_result_t                     result = GLOBUS_SUCCESS;
-    int                                                 fd = -1;
+    int                                 fd = -1;
     struct _stat                        stx;
 
     GLOBUS_I_GSI_SYSCONFIG_DEBUG_ENTER;

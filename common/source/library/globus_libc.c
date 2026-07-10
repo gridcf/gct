@@ -144,35 +144,35 @@ globus_libc_strncasecmp(
 
         for(ctr = 0; ctr < n; ctr++)
         {
-                if(s2[ctr] == '\0' && s1[ctr] == '\0')
-                {
-                    rc = 0;
-                    goto exit;
-                }
-                else if(s2[ctr] == '\0')
-                {
-                    rc = -1;
-                    goto exit;
-                }
-                else if(s1[ctr] == '\0')
-                {
-                    rc = 1;
-                    goto exit;
-                }
+            if(s2[ctr] == '\0' && s1[ctr] == '\0')
+            {
+                rc = 0;
+                goto exit;
+            }
+            else if(s2[ctr] == '\0')
+            {
+                rc = -1;
+                goto exit;
+            }
+            else if(s1[ctr] == '\0')
+            {
+                rc = 1;
+                goto exit;
+            }
             else
-                {
+            {
                 ch1 = toupper(s2[ctr]);
                 ch2 = toupper(s1[ctr]);
                 if(ch2 > ch1)
-                        {
+                {
                     rc = 1;
                     goto exit;
-                        }
+                }
                 else if(ch2 < ch1)
-                        {
+                {
                     rc = -1;
                     goto exit;
-                        }
+                }
             }
         }
         rc = 0;
@@ -831,7 +831,7 @@ globus_libc_gethostbyname_r(
     }
 #   else
     {
-            GLOBUS_HAVE_GETHOSTBYNAME symbol must be defined!!!;
+        GLOBUS_HAVE_GETHOSTBYNAME symbol must be defined!!!;
     }
 #   endif
 
@@ -844,23 +844,23 @@ globus_libc_gethostbyname_r(
      */
     if (hp == GLOBUS_NULL)
     {
-            if(isdigit(hostname[0]))
-            {
-                struct in_addr                  addr;
+        if(isdigit(hostname[0]))
+        {
+            struct in_addr                  addr;
 
-                addr.s_addr = inet_addr(hostname);
-                if ((int) addr.s_addr != -1)
-                {
-                        hp = globus_libc_gethostbyaddr_r(
-                        (void *) &addr,
-                        sizeof(addr),
-                        AF_INET,
-                        result,
-                        buffer,
-                        buflen,
-                        h_errnop);
-                }
+            addr.s_addr = inet_addr(hostname);
+            if ((int) addr.s_addr != -1)
+            {
+                hp = globus_libc_gethostbyaddr_r(
+                    (void *) &addr,
+                    sizeof(addr),
+                    AF_INET,
+                    result,
+                    buffer,
+                    buflen,
+                    h_errnop);
             }
+        }
     }
 
     return hp;
@@ -2729,7 +2729,7 @@ globus_libc_addr_is_wildcard(
         break;
 #endif
       default:
-            printf("%d\n%d\n", _addr->sa_family, AF_INET6);
+        printf("%d\n%d\n", _addr->sa_family, AF_INET6);
         globus_assert(0 &&
                       "Unknown family in globus_libc_addr_is_wildcard");
         break;
