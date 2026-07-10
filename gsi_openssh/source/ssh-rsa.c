@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh-rsa.c,v 1.80 2024/08/15 00:51:51 djm Exp $ */
+/* $OpenBSD: ssh-rsa.c,v 1.84 2026/02/14 00:18:34 jsg Exp $ */
 /*
  * Copyright (c) 2000, 2003 Markus Friedl <markus@openbsd.org>
  *
@@ -18,26 +18,24 @@
 #include "includes.h"
 
 #ifdef WITH_OPENSSL
+#include "openbsd-compat/openssl-compat.h"
 
 #include <sys/types.h>
 
+#include <openssl/bn.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/fips.h>
-
-#include "fips_mode_replacement.h"
 
 #include <stdarg.h>
 #include <string.h>
 
 #include "sshbuf.h"
 #include "ssherr.h"
+#include "log.h"
 #define SSHKEY_INTERNAL
 #include "sshkey.h"
 #include "digest.h"
-#include "log.h"
-
-#include "openbsd-compat/openssl-compat.h"
 
 static u_int
 ssh_rsa_size(const struct sshkey *k)
@@ -314,8 +312,8 @@ ssh_rsa_deserialize_private(const char *ktype, struct sshbuf *b,
 	return r;
 }
 
-static const char *
-rsa_hash_alg_ident(int hash_alg)
+const char *
+ssh_rsa_hash_alg_ident(int hash_alg)
 {
 	switch (hash_alg) {
 	case SSH_DIGEST_SHA1:
@@ -349,8 +347,8 @@ rsa_hash_id_from_ident(const char *ident)
  * all the cases of rsa_hash_id_from_ident() but also the certificate key
  * types.
  */
-static int
-rsa_hash_id_from_keyname(const char *alg)
+int
+ssh_rsa_hash_id_from_keyname(const char *alg)
 {
 	int r;
 
@@ -415,7 +413,6 @@ ssh_rsa_sign(struct sshkey *key,
 	size_t diff, len = 0;
 	int slen = 0;
 	int hash_alg, ret = SSH_ERR_INTERNAL_ERROR;
-	struct sshbuf *b = NULL;
 
 	if (lenp != NULL)
 		*lenp = 0;
@@ -425,7 +422,7 @@ ssh_rsa_sign(struct sshkey *key,
 	if (alg == NULL || strlen(alg) == 0)
 		hash_alg = SSH_DIGEST_SHA1;
 	else
-		hash_alg = rsa_hash_id_from_keyname(alg);
+		hash_alg = ssh_rsa_hash_id_from_keyname(alg);
 
 	if (key == NULL || key->pkey == NULL || hash_alg == -1 ||
 	    sshkey_type_plain(key->type) != KEY_RSA)
@@ -447,16 +444,42 @@ ssh_rsa_sign(struct sshkey *key,
 		ret = SSH_ERR_INTERNAL_ERROR;
 		goto out;
 	}
+	if ((ret = ssh_rsa_encode_store_sig(hash_alg, sig, slen,
+	    sigp, lenp)) != 0)
+		goto out;
 
-	/* encode signature */
+	/* success */
+	ret = 0;
+ out:
+	freezero(sig, slen);
+	return ret;
+}
+
+int
+ssh_rsa_encode_store_sig(int hash_alg, const u_char *sig, size_t slen,
+    u_char **sigp, size_t *lenp)
+{
+	struct sshbuf *b = NULL;
+	int ret = SSH_ERR_INTERNAL_ERROR;
+	size_t len;
+
+	if (lenp != NULL)
+		*lenp = 0;
+	if (sigp != NULL)
+		*sigp = NULL;
+
+	/* Encode signature */
 	if ((b = sshbuf_new()) == NULL) {
 		ret = SSH_ERR_ALLOC_FAIL;
 		goto out;
 	}
-	if ((ret = sshbuf_put_cstring(b, rsa_hash_alg_ident(hash_alg))) != 0 ||
+	if ((ret = sshbuf_put_cstring(b,
+	    ssh_rsa_hash_alg_ident(hash_alg))) != 0 ||
 	    (ret = sshbuf_put_string(b, sig, slen)) != 0)
 		goto out;
 	len = sshbuf_len(b);
+
+	/* Store signature */
 	if (sigp != NULL) {
 		if ((*sigp = malloc(len)) == NULL) {
 			ret = SSH_ERR_ALLOC_FAIL;
@@ -468,7 +491,6 @@ ssh_rsa_sign(struct sshkey *key,
 		*lenp = len;
 	ret = 0;
  out:
-	freezero(sig, slen);
 	sshbuf_free(b);
 	return ret;
 }
@@ -507,7 +529,7 @@ ssh_rsa_verify(const struct sshkey *key,
 	 * legacy reasons, but otherwise the signature type should match.
 	 */
 	if (alg != NULL && strcmp(alg, "ssh-rsa-cert-v01@openssh.com") != 0) {
-		if ((want_alg = rsa_hash_id_from_keyname(alg)) == -1) {
+		if ((want_alg = ssh_rsa_hash_id_from_keyname(alg)) == -1) {
 			ret = SSH_ERR_INVALID_ARGUMENT;
 			goto out;
 		}
@@ -559,79 +581,6 @@ ssh_rsa_verify(const struct sshkey *key,
 	explicit_bzero(digest, sizeof(digest));
 	return ret;
 }
-
-# if OPENSSL_VERSION_NUMBER < 0x30000000L
-/*
- * See:
- * http://www.rsasecurity.com/rsalabs/pkcs/pkcs-1/
- * ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-1/pkcs-1v2-1.asn
- */
-
-/*
- * id-sha1 OBJECT IDENTIFIER ::= { iso(1) identified-organization(3)
- *	oiw(14) secsig(3) algorithms(2) 26 }
- */
-static const u_char id_sha1[] = {
-	0x30, 0x21, /* type Sequence, length 0x21 (33) */
-	0x30, 0x09, /* type Sequence, length 0x09 */
-	0x06, 0x05, /* type OID, length 0x05 */
-	0x2b, 0x0e, 0x03, 0x02, 0x1a, /* id-sha1 OID */
-	0x05, 0x00, /* NULL */
-	0x04, 0x14  /* Octet string, length 0x14 (20), followed by sha1 hash */
-};
-
-/*
- * See http://csrc.nist.gov/groups/ST/crypto_apps_infra/csor/algorithms.html
- * id-sha256 OBJECT IDENTIFIER ::= { joint-iso-itu-t(2) country(16) us(840)
- *      organization(1) gov(101) csor(3) nistAlgorithm(4) hashAlgs(2)
- *      id-sha256(1) }
- */
-static const u_char id_sha256[] = {
-	0x30, 0x31, /* type Sequence, length 0x31 (49) */
-	0x30, 0x0d, /* type Sequence, length 0x0d (13) */
-	0x06, 0x09, /* type OID, length 0x09 */
-	0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01, /* id-sha256 */
-	0x05, 0x00, /* NULL */
-	0x04, 0x20  /* Octet string, length 0x20 (32), followed by sha256 hash */
-};
-
-/*
- * See http://csrc.nist.gov/groups/ST/crypto_apps_infra/csor/algorithms.html
- * id-sha512 OBJECT IDENTIFIER ::= { joint-iso-itu-t(2) country(16) us(840)
- *      organization(1) gov(101) csor(3) nistAlgorithm(4) hashAlgs(2)
- *      id-sha256(3) }
- */
-static const u_char id_sha512[] = {
-	0x30, 0x51, /* type Sequence, length 0x51 (81) */
-	0x30, 0x0d, /* type Sequence, length 0x0d (13) */
-	0x06, 0x09, /* type OID, length 0x09 */
-	0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x03, /* id-sha512 */
-	0x05, 0x00, /* NULL */
-	0x04, 0x40  /* Octet string, length 0x40 (64), followed by sha512 hash */
-};
-
-static int
-rsa_hash_alg_oid(int hash_alg, const u_char **oidp, size_t *oidlenp)
-{
-	switch (hash_alg) {
-	case SSH_DIGEST_SHA1:
-		*oidp = id_sha1;
-		*oidlenp = sizeof(id_sha1);
-		break;
-	case SSH_DIGEST_SHA256:
-		*oidp = id_sha256;
-		*oidlenp = sizeof(id_sha256);
-		break;
-	case SSH_DIGEST_SHA512:
-		*oidp = id_sha512;
-		*oidlenp = sizeof(id_sha512);
-		break;
-	default:
-		return SSH_ERR_INVALID_ARGUMENT;
-	}
-	return 0;
-}
-# endif /* OPENSSL_VERSION_NUMBER < 0x30000000L */
 
 static const struct sshkey_impl_funcs sshkey_rsa_funcs = {
 	/* .size = */		ssh_rsa_size,

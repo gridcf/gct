@@ -1,4 +1,4 @@
-/* $OpenBSD: kex.h,v 1.126 2024/09/02 12:13:56 djm Exp $ */
+/* $OpenBSD: kex.h,v 1.129 2026/03/05 05:40:36 djm Exp $ */
 
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
@@ -38,10 +38,8 @@
 # include <openssl/dh.h>
 # include <openssl/ecdsa.h>
 # include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 # include <openssl/core_names.h>
 # include <openssl/param_build.h>
-# endif
 # ifdef OPENSSL_HAS_ECC
 #  include <openssl/ec.h>
 # else /* OPENSSL_HAS_ECC */
@@ -74,6 +72,8 @@
 #define	KEX_SNTRUP761X25519_SHA512	"sntrup761x25519-sha512"
 #define	KEX_SNTRUP761X25519_SHA512_OLD	"sntrup761x25519-sha512@openssh.com"
 #define	KEX_MLKEM768X25519_SHA256	"mlkem768x25519-sha256"
+#define	KEX_MLKEM768NISTP256_SHA256     "mlkem768nistp256-sha256"
+#define	KEX_MLKEM1024NISTP384_SHA384    "mlkem1024nistp384-sha384"
 
 #define COMP_NONE	0
 #define COMP_DELAYED	2
@@ -112,6 +112,8 @@ enum kex_exchange {
 	KEX_C25519_SHA256,
 	KEX_KEM_SNTRUP761X25519_SHA512,
 	KEX_KEM_MLKEM768X25519_SHA256,
+	KEX_KEM_MLKEM768NISTP256_SHA256,
+	KEX_KEM_MLKEM1024NISTP384_SHA384,
 #ifdef GSSAPI
 	KEX_GSS_GRP1_SHA1,
 	KEX_GSS_GRP14_SHA1,
@@ -132,6 +134,11 @@ enum kex_exchange {
 #define KEX_RSA_SHA2_512_SUPPORTED	0x0010 /* only set in server for now */
 #define KEX_HAS_PING			0x0020
 #define KEX_HAS_EXT_INFO_IN_AUTH	0x0040
+#define KEX_HAS_NEWAGENT		0x0080 /* only set in client */
+
+/* kex->pq */
+#define KEX_NOT_PQ			0
+#define KEX_IS_PQ			1
 
 struct sshenc {
 	char	*name;
@@ -208,12 +215,16 @@ struct kex {
 	u_char sntrup761_client_key[crypto_kem_sntrup761_SECRETKEYBYTES]; /* KEM */
 	u_char mlkem768_client_key[crypto_kem_mlkem768_SECRETKEYBYTES]; /* KEM */
 	struct sshbuf *client_pub;
+	/* FIXME */
+	EVP_PKEY *ec_hybrid_client_key; /* NIST hybrids */
+	u_char mlkem1024_client_key[crypto_kem_mlkem1024_SECRETKEYBYTES]; /* ML-KEM 1024 + NIST */
 };
 
 int	 kex_name_valid(const char *);
 u_int	 kex_type_from_name(const char *);
 int	 kex_hash_from_name(const char *);
 int	 kex_nid_from_name(const char *);
+int	 kex_is_pq_from_name(const char *);
 int	 kex_names_valid(const char *);
 char	*kex_alg_list(char);
 char	*kex_gss_alg_list(char);
@@ -240,9 +251,9 @@ int	 kex_load_hostkey(struct ssh *, struct sshkey **, struct sshkey **);
 int	 kex_verify_host_key(struct ssh *, struct sshkey *);
 
 int	 kex_send_kexinit(struct ssh *);
-int	 kex_input_kexinit(int, u_int32_t, struct ssh *);
-int	 kex_input_ext_info(int, u_int32_t, struct ssh *);
-int	 kex_protocol_error(int, u_int32_t, struct ssh *);
+int	 kex_input_kexinit(int, uint32_t, struct ssh *);
+int	 kex_input_ext_info(int, uint32_t, struct ssh *);
+int	 kex_protocol_error(int, uint32_t, struct ssh *);
 int	 kex_derive_keys(struct ssh *, u_char *, u_int, const struct sshbuf *);
 int	 kex_send_newkeys(struct ssh *);
 int	 kex_start_rekex(struct ssh *);
@@ -289,6 +300,18 @@ int	 kex_kem_mlkem768x25519_enc(struct kex *, const struct sshbuf *,
 int	 kex_kem_mlkem768x25519_dec(struct kex *, const struct sshbuf *,
     struct sshbuf **);
 
+int	 kex_kem_mlkem768nistp256_keypair(struct kex *);
+int	 kex_kem_mlkem768nistp256_enc(struct kex *, const struct sshbuf *,
+    struct sshbuf **, struct sshbuf **);
+int	 kex_kem_mlkem768nistp256_dec(struct kex *, const struct sshbuf *,
+    struct sshbuf **);
+
+int	 kex_kem_mlkem1024nistp384_keypair(struct kex *);
+int	 kex_kem_mlkem1024nistp384_enc(struct kex *, const struct sshbuf *,
+    struct sshbuf **, struct sshbuf **);
+int	 kex_kem_mlkem1024nistp384_dec(struct kex *, const struct sshbuf *,
+    struct sshbuf **);
+
 int	 kex_dh_keygen(struct kex *);
 int	 kex_dh_compute_key(struct kex *, BIGNUM *, struct sshbuf *);
 
@@ -316,11 +339,9 @@ int	kexc25519_shared_key_ext(const u_char key[CURVE25519_SIZE],
     const u_char pub[CURVE25519_SIZE], struct sshbuf *out, int)
 	__attribute__((__bounded__(__minbytes__, 1, CURVE25519_SIZE)))
 	__attribute__((__bounded__(__minbytes__, 2, CURVE25519_SIZE)));
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int	kex_create_evp_dh(EVP_PKEY **, const BIGNUM *, const BIGNUM *,
     const BIGNUM *, const BIGNUM *, const BIGNUM *);
 int    kex_create_evp_ec(EC_KEY *k, int ecdsa_nid, EVP_PKEY **pkey);
-# endif
 
 #if defined(DEBUG_KEX) || defined(DEBUG_KEXDH) || defined(DEBUG_KEXECDH)
 void	dump_digest(const char *, const u_char *, int);

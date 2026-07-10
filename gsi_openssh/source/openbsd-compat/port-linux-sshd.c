@@ -33,7 +33,6 @@
 #include "misc.h"      /* servconf.h needs misc.h for struct ForwardOptions */
 #include "servconf.h"
 #include "port-linux.h"
-#include "misc.h"
 #include "sshkey.h"
 #include "hostfile.h"
 #include "auth.h"
@@ -448,94 +447,6 @@ sshd_selinux_setup_exec_context(char *pwname, int inetd,
 		freecon(default_ctx);
 
 	debug3_f("done");
-}
-
-void
-sshd_selinux_copy_context(void)
-{
-	char *ctx;
-
-	if (!sshd_selinux_enabled())
-		return;
-
-	if (getexeccon((security_context_t *)&ctx) != 0) {
-		logit_f("getexeccon failed with %s", strerror(errno));
-		return;
-	}
-	if (ctx != NULL) {
-		/* unset exec context before we will lose this capabililty */
-		if (setexeccon(NULL) != 0)
-			fatal_f("setexeccon failed with %s", strerror(errno));
-		if (setcon(ctx) != 0)
-			fatal_f("setcon failed with %s", strerror(errno));
-		freecon(ctx);
-	}
-}
-
-void
-sshd_selinux_change_privsep_preauth_context(void)
-{
-	int len;
-	char line[1024], *preauth_context = NULL, *cp, *arg;
-	const char *contexts_path;
-	FILE *contexts_file;
-	struct stat sb;
-
-	contexts_path = selinux_openssh_contexts_path();
-	if (contexts_path == NULL) {
-		debug3_f("Failed to get the path to SELinux context");
-		return;
-	}
-
-	if ((contexts_file = fopen(contexts_path, "r")) == NULL) {
-		debug_f("Failed to open SELinux context file");
-		return;
-	}
-
-	if (fstat(fileno(contexts_file), &sb) != 0 ||
-	    sb.st_uid != 0 || (sb.st_mode & 022) != 0) {
-		logit_f("SELinux context file needs to be owned by root"
-		    " and not writable by anyone else");
-		fclose(contexts_file);
-		return;
-	}
-
-	while (fgets(line, sizeof(line), contexts_file)) {
-		/* Strip trailing whitespace */
-		for (len = strlen(line) - 1; len > 0; len--) {
-			if (strchr(" \t\r\n", line[len]) == NULL)
-				break;
-			line[len] = '\0';
-		}
-
-		if (line[0] == '\0')
-			continue;
-
-		cp = line;
-		arg = strdelim(&cp);
-		if (arg && *arg == '\0')
-			arg = strdelim(&cp);
-
-		if (arg && strcmp(arg, "privsep_preauth") == 0) {
-			arg = strdelim(&cp);
-			if (!arg || *arg == '\0') {
-				debug_f("privsep_preauth is empty");
-				fclose(contexts_file);
-				return;
-			}
-			preauth_context = xstrdup(arg);
-		}
-	}
-	fclose(contexts_file);
-
-	if (preauth_context == NULL) {
-		debug_f("Unable to find 'privsep_preauth' option in"
-		    " SELinux context file");
-		return;
-	}
-
-	ssh_selinux_change_context(preauth_context);
-	free(preauth_context);
 }
 
 #endif

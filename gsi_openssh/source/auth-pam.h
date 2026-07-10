@@ -43,6 +43,7 @@ int sshpam_auth_passwd(Authctxt *, const char *);
 int sshpam_get_maxtries_reached(void);
 void sshpam_set_maxtries_reached(int);
 int is_pam_session_open(void);
+int sshpam_priv_kbdint_authdone(void *ctxtp);
 struct passwd *sshpam_getpw(const char *);
 
 #endif /* USE_PAM */

@@ -1,4 +1,4 @@
-/* $OpenBSD: gss-genr.c,v 1.29 2024/02/01 02:37:33 djm Exp $ */
+/* $OpenBSD: gss-genr.c,v 1.31 2026/02/08 19:54:31 dtucker Exp $ */
 
 /*
  * Copyright (c) 2001-2007 Simon Wilkinson. All rights reserved.
@@ -150,19 +150,29 @@ ssh_gssapi_kex_mechs(gss_OID_set gss_supported, ssh_gssapi_check_fn *check,
 	for (i = 0; i < gss_supported->count; i++) {
 		if (gss_supported->elements[i].length < 128 &&
 		    (*check)(NULL, &(gss_supported->elements[i]), host, client)) {
+			EVP_MD_CTX * ctx = NULL;
+			EVP_MD *md5 = NULL; /* Here we don't use MD5 for crypto purposes */
+			unsigned int md_size = sizeof(digest);
 
 			deroid[0] = SSH_GSS_OIDTYPE;
 			deroid[1] = gss_supported->elements[i].length;
-
-			if ((md = ssh_digest_start(SSH_DIGEST_MD5)) == NULL ||
-			    (r = ssh_digest_update(md, deroid, 2)) != 0 ||
-			    (r = ssh_digest_update(md,
-			        gss_supported->elements[i].elements,
-			        gss_supported->elements[i].length)) != 0 ||
-			    (r = ssh_digest_final(md, digest, sizeof(digest))) != 0)
+			if ((md5 = EVP_MD_fetch(NULL, "MD5", "provider=default,-fips")) == NULL)
+				fatal_fr(r, "MD5 fetch failed");
+			if ((ctx = EVP_MD_CTX_new()) == NULL) {
+				EVP_MD_free(md5);
+				fatal_fr(r, "digest ctx failed");
+			}
+			if (EVP_DigestInit(ctx, md5) <= 0
+			    || EVP_DigestUpdate(ctx, deroid, 2) <= 0
+			    || EVP_DigestUpdate(ctx, gss_supported->elements[i].elements,
+				    gss_supported->elements[i].length) <= 0
+			    || EVP_DigestFinal(ctx, digest, &md_size) <= 0) {
+				EVP_MD_free(md5);
+				EVP_MD_CTX_free(ctx);
 				fatal_fr(r, "digest failed");
-			ssh_digest_free(md);
-			md = NULL;
+			}
+			EVP_MD_free(md5); md5 = NULL;
+			EVP_MD_CTX_free(ctx); ctx = NULL;
 
 			encoded = xmalloc(ssh_digest_bytes(SSH_DIGEST_MD5)
 			    * 2);

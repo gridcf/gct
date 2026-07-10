@@ -132,7 +132,7 @@ kexgss_final(struct ssh *ssh,
 {
 	struct kex *kex = ssh->kex;
 	Gssctxt *gss = kex->gss;
-	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;;
+	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;
 	u_char hash[SSH_DIGEST_MAX_LENGTH];
 	size_t hashlen;
 	struct sshbuf *shared_secret = NULL;
@@ -386,7 +386,7 @@ kexgssgex_final(struct ssh *ssh,
 {
 	struct kex *kex = ssh->kex;
 	Gssctxt *gss = kex->gss;
-	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;;
+	gss_buffer_desc msg_tok = GSS_C_EMPTY_BUFFER;
 	u_char hash[SSH_DIGEST_MAX_LENGTH];
 	size_t hashlen;
 	const BIGNUM *pub_key, *dh_p, *dh_g;
@@ -527,9 +527,8 @@ input_kexgssgex_groupreq(int type,
 		fatal("GSS_GEX, bad parameters: %d !< %d !< %d", min, nbits, max);
 
 	kex->dh = mm_choose_dh(min, nbits, max);
-	if (kex->dh == NULL) {
+	if (kex->dh == NULL)
 		ssh_packet_disconnect(ssh, "Protocol error: no matching group found");
-	}
 
 	DH_get0_pqg(kex->dh, &dh_p, NULL, &dh_g);
 	if ((r = sshpkt_start(ssh, SSH2_MSG_KEXGSS_GROUP)) != 0 ||

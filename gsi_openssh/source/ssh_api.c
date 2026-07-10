@@ -1,4 +1,4 @@
-/* $OpenBSD: ssh_api.c,v 1.32 2024/10/18 05:14:51 djm Exp $ */
+/* $OpenBSD: ssh_api.c,v 1.34 2026/03/03 09:57:25 dtucker Exp $ */
 /*
  * Copyright (c) 2012 Markus Friedl.  All rights reserved.
  *
@@ -135,6 +135,8 @@ ssh_init(struct ssh **sshp, int is_server, struct kex_params *kex_params)
 		ssh->kex->kex[KEX_C25519_SHA256] = kex_gen_server;
 		ssh->kex->kex[KEX_KEM_SNTRUP761X25519_SHA512] = kex_gen_server;
 		ssh->kex->kex[KEX_KEM_MLKEM768X25519_SHA256] = kex_gen_server;
+		ssh->kex->kex[KEX_KEM_MLKEM768NISTP256_SHA256] = kex_gen_server;
+		ssh->kex->kex[KEX_KEM_MLKEM1024NISTP384_SHA384] = kex_gen_server;
 		ssh->kex->load_host_public_key=&_ssh_host_public_key;
 		ssh->kex->load_host_private_key=&_ssh_host_private_key;
 		ssh->kex->sign=&_ssh_host_key_sign;
@@ -154,6 +156,8 @@ ssh_init(struct ssh **sshp, int is_server, struct kex_params *kex_params)
 		ssh->kex->kex[KEX_C25519_SHA256] = kex_gen_client;
 		ssh->kex->kex[KEX_KEM_SNTRUP761X25519_SHA512] = kex_gen_client;
 		ssh->kex->kex[KEX_KEM_MLKEM768X25519_SHA256] = kex_gen_client;
+		ssh->kex->kex[KEX_KEM_MLKEM768NISTP256_SHA256] = kex_gen_client;
+		ssh->kex->kex[KEX_KEM_MLKEM1024NISTP384_SHA384] = kex_gen_client;
 		ssh->kex->verify_host_key =&_ssh_verify_host_key;
 	}
 	*sshp = ssh;
@@ -255,7 +259,7 @@ int
 ssh_packet_next(struct ssh *ssh, u_char *typep)
 {
 	int r;
-	u_int32_t seqnr;
+	uint32_t seqnr;
 	u_char type;
 
 	/*

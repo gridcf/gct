@@ -64,6 +64,8 @@ linux_audit_user_logxxx(int uid, const char *username, const char *hostname,
 		else
 			goto fatal_report; /* Must prevent login */
 	}
+        if (hostname != NULL && strcmp(hostname, "UNKNOWN") == 0)
+                hostname = NULL;
 	rc = audit_log_acct_message(audit_fd, event,
 	    NULL, "login", username ? username : "(unknown)",
 	    username == NULL ? uid : -1, hostname, ip, ttyn, success);
@@ -322,7 +324,7 @@ audit_event(struct ssh *ssh, ssh_audit_event_t event)
 			ssh_remote_ipaddr(ssh), "ssh", 0, AUDIT_USER_LOGIN);
 		break;
 	default:
-		debug("%s: unhandled event %d", __func__, event);
+		debug_f("unhandled event %d", event);
 		break;
 	}
 	free(audit_hostname);

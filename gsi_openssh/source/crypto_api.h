@@ -1,4 +1,4 @@
-/* $OpenBSD: crypto_api.h,v 1.9 2024/09/02 12:13:56 djm Exp $ */
+/* $OpenBSD: crypto_api.h,v 1.10 2025/10/30 23:19:33 djm Exp $ */
 
 /*
  * Assembled from generated headers and source files by Markus Friedl.
@@ -10,9 +10,7 @@
 
 #include "includes.h"
 
-#ifdef HAVE_STDINT_H
-# include <stdint.h>
-#endif
+#include <stdint.h>
 #include <stdlib.h>
 
 typedef int8_t crypto_int8;
@@ -29,8 +27,34 @@ typedef uint64_t crypto_uint64;
 
 #define crypto_hash_sha512_BYTES 64U
 
-int	crypto_hash_sha512(unsigned char *, const unsigned char *,
-    unsigned long long);
+#ifdef WITH_OPENSSL
+#include <openssl/evp.h>
+static inline int
+crypto_hash_sha512(unsigned char *out, const unsigned char *in,
+    unsigned long long inlen)
+{
+
+	if (!EVP_Digest(in, inlen, out, NULL, EVP_sha512(), NULL))
+		return -1;
+	return 0;
+}
+#else /* WITH_OPENSSL */
+# ifdef HAVE_SHA2_H
+#  include <sha2.h>
+# endif
+static inline int
+crypto_hash_sha512(unsigned char *out, const unsigned char *in,
+    unsigned long long inlen)
+{
+
+	SHA2_CTX ctx;
+
+	SHA512Init(&ctx);
+	SHA512Update(&ctx, in, inlen);
+	SHA512Final(out, &ctx);
+	return 0;
+}
+#endif /* WITH_OPENSSL */
 
 #define crypto_sign_ed25519_SECRETKEYBYTES 64U
 #define crypto_sign_ed25519_PUBLICKEYBYTES 32U
@@ -57,5 +81,9 @@ int	crypto_kem_sntrup761_keypair(unsigned char *pk, unsigned char *sk);
 #define crypto_kem_mlkem768_SECRETKEYBYTES 2400
 #define crypto_kem_mlkem768_CIPHERTEXTBYTES 1088
 #define crypto_kem_mlkem768_BYTES 32
+
+#define crypto_kem_mlkem1024_PUBLICKEYBYTES 1568
+#define crypto_kem_mlkem1024_SECRETKEYBYTES 3168
+#define crypto_kem_mlkem1024_CIPHERTEXTBYTES 1568
 
 #endif /* crypto_api_h */

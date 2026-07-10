@@ -94,6 +94,11 @@ extern char **k5users_allowed_cmds;
 	KEX_GSS_GRP14_SHA1_ID "," \
 	KEX_GSS_GEX_SHA1_ID
 
+#define        GSS_KEX_DEFAULT_KEX_FIPS \
+	KEX_GSS_GRP14_SHA256_ID "," \
+	KEX_GSS_GRP16_SHA512_ID	"," \
+	KEX_GSS_NISTP256_SHA256_ID
+
 #include "digest.h" /* SSH_DIGEST_MAX_LENGTH */
 
 typedef struct {
@@ -116,6 +121,7 @@ typedef struct {
 	int used;
 	int updated;
 	char **indicators; /* auth indicators */
+	int allow_self; /* allow protocol transition */
 } ssh_gssapi_client;
 
 typedef struct ssh_gssapi_mech_struct {
@@ -199,6 +205,18 @@ OM_uint32 ssh_gssapi_checkmic(Gssctxt *, gss_buffer_t, gss_buffer_t);
 void ssh_gssapi_do_child(char ***, u_int *);
 void ssh_gssapi_cleanup_creds(void);
 int ssh_gssapi_storecreds(void);
+int  ssh_gssapi_credentials_stored(void);
+ssh_gssapi_ccache *ssh_gssapi_get_ccache(void);
+int  ssh_gssapi_user_has_valid_tgt(u_int);
+int  ssh_gssapi_user_has_valid_proxy_tickets(char **, u_int, u_int);
+int  ssh_gssapi_s4u2self(const char *, u_int);
+void ssh_gssapi_storecreds_s4u2self(void);
+void ssh_gssapi_s4u2proxy(char **, u_int, u_int);
+/* Flags for ssh_gssapi_krb5_filter_ccache(): which ticket classes to remove */
+#define SSH_GSSAPI_CCFILTER_TGT    (1u << 0) /* krbtgt/... entries */
+#define SSH_GSSAPI_CCFILTER_SELF   (1u << 1) /* S4U2Self evidence ticket */
+#define SSH_GSSAPI_CCFILTER_PROXY  (1u << 2) /* S4U2Proxy service tickets */
+void ssh_gssapi_krb5_filter_ccache(u_int, char **, u_int);
 const char *ssh_gssapi_displayname(void);
 
 char *ssh_gssapi_server_mechanisms(void);

@@ -141,7 +141,7 @@ dump_keys(const char *user)
 		goto fail;
 	}
 
-	if (!S_ISREG(st.st_mode) || 
+	if (!S_ISREG(st.st_mode) ||
 		(st.st_uid != pwd->pw_uid && st.st_uid != 0)) {
 		rv = ERR_FILE_MODE;
 		goto fail;

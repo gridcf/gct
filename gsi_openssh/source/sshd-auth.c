@@ -1,4 +1,4 @@
-/* $OpenBSD: sshd-auth.c,v 1.3 2025/01/16 06:37:10 dtucker Exp $ */
+/* $OpenBSD: sshd-auth.c,v 1.14 2026/03/11 09:10:59 dtucker Exp $ */
 /*
  * SSH2 implementation:
  * Privilege Separation:
@@ -32,19 +32,16 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/wait.h>
+#include <sys/tree.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <sys/time.h>
-
-#include "openbsd-compat/sys-tree.h"
-#include "openbsd-compat/sys-queue.h"
+#include <sys/queue.h>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
-#ifdef HAVE_PATHS_H
-# include <paths.h>
-#endif
+#include <paths.h>
 #include <pwd.h>
 #include <grp.h>
 #include <signal.h>
@@ -58,7 +55,6 @@
 #ifdef WITH_OPENSSL
 #include <openssl/bn.h>
 #include <openssl/evp.h>
-#include <openssl/fips.h>
 #endif
 
 #include "xmalloc.h"
@@ -188,10 +184,6 @@ privsep_child_demote(void)
 	if ((box = ssh_sandbox_init(pmonitor)) == NULL)
 		fatal_f("ssh_sandbox_init failed");
 #endif
-#ifdef WITH_SELINUX
-	sshd_selinux_change_privsep_preauth_context();
-#endif
-
 	/* Demote the child */
 	if (privsep_chroot) {
 		/* Change our root directory */
@@ -255,12 +247,10 @@ list_hostkey_types(void)
 			append_hostkey_type(b, "rsa-sha2-512");
 			append_hostkey_type(b, "rsa-sha2-256");
 			/* FALLTHROUGH */
-		case KEY_DSA:
 		case KEY_ECDSA:
 		case KEY_ED25519:
 		case KEY_ECDSA_SK:
 		case KEY_ED25519_SK:
-		case KEY_XMSS:
 			append_hostkey_type(b, sshkey_ssh_name(key));
 			break;
 		}
@@ -276,12 +266,10 @@ list_hostkey_types(void)
 			append_hostkey_type(b,
 			    "rsa-sha2-256-cert-v01@openssh.com");
 			/* FALLTHROUGH */
-		case KEY_DSA_CERT:
 		case KEY_ECDSA_CERT:
 		case KEY_ED25519_CERT:
 		case KEY_ECDSA_SK_CERT:
 		case KEY_ED25519_SK_CERT:
-		case KEY_XMSS_CERT:
 			append_hostkey_type(b, sshkey_ssh_name(key));
 			break;
 		}
@@ -302,12 +290,10 @@ get_hostkey_public_by_type(int type, int nid, struct ssh *ssh)
 	for (i = 0; i < options.num_host_key_files; i++) {
 		switch (type) {
 		case KEY_RSA_CERT:
-		case KEY_DSA_CERT:
 		case KEY_ECDSA_CERT:
 		case KEY_ED25519_CERT:
 		case KEY_ECDSA_SK_CERT:
 		case KEY_ED25519_SK_CERT:
-		case KEY_XMSS_CERT:
 			key = host_certificates[i];
 			break;
 		default:
@@ -453,7 +439,7 @@ main(int ac, char **av)
 	extern int optind;
 	int r, opt, have_key = 0;
 	int sock_in = -1, sock_out = -1, rexeced_flag = 0;
-	char *line, *logfile = NULL;
+	char *line;
 	u_int i;
 	mode_t new_umask;
 	Authctxt *authctxt;
@@ -516,11 +502,7 @@ main(int ac, char **av)
 				options.log_level++;
 			break;
 		case 'D':
-			/* ignore */
-			break;
 		case 'E':
-			logfile = optarg;
-			/* FALLTHROUGH */
 		case 'e':
 			/* ignore */
 			break;
@@ -605,23 +587,6 @@ main(int ac, char **av)
 	if (!rexeced_flag)
 		fatal("sshd-auth should not be executed directly");
 
-#ifdef WITH_OPENSSL
-	OpenSSL_add_all_algorithms();
-#endif
-
-	/* If requested, redirect the logs to the specified logfile. */
-	if (logfile != NULL) {
-		char *cp, pid_s[32];
-
-		snprintf(pid_s, sizeof(pid_s), "%ld", (unsigned long)getpid());
-		cp = percent_expand(logfile,
-		    "p", pid_s,
-		    "P", "sshd-auth",
-		    (char *)NULL);
-		log_redirect_stderr_to(cp);
-		free(cp);
-	}
-
 	log_init(__progname,
 	    options.log_level == SYSLOG_LEVEL_NOT_SET ?
 	    SYSLOG_LEVEL_INFO : options.log_level,
@@ -677,9 +642,12 @@ main(int ac, char **av)
 	/* Fill in default values for those options not explicitly set. */
 	fill_default_server_options(&options);
 	options.timing_secret = timing_secret; /* XXX eliminate from unpriv */
+	ssh_packet_set_qos(ssh, options.ip_qos_interactive,
+	    options.ip_qos_bulk);
 
 	/* Reinit logging in case config set Level, Facility or Verbose. */
 	log_init(__progname, options.log_level, options.log_facility, 1);
+	set_log_handler(mm_log_handler, pmonitor);
 
 	debug("sshd-auth version %s, %s", SSH_VERSION, SSH_OPENSSL_VERSION);
 
@@ -723,7 +691,7 @@ main(int ac, char **av)
 			break;
 		}
 	}
-	if (!have_key)
+	if (!have_key && !options.gss_keyex)
 		fatal("internal error: received no hostkeys");
 
 	/* Ensure that umask disallows at least group and world write */
@@ -747,8 +715,8 @@ main(int ac, char **av)
 	setproctitle("%s", "[session-auth]");
 
 	/* Executed child processes don't need these. */
-	fcntl(sock_out, F_SETFD, FD_CLOEXEC);
-	fcntl(sock_in, F_SETFD, FD_CLOEXEC);
+	FD_CLOSEONEXEC(sock_out);
+	FD_CLOSEONEXEC(sock_in);
 
 	ssh_signal(SIGPIPE, SIG_IGN);
 	ssh_signal(SIGALRM, SIG_DFL);
@@ -781,9 +749,6 @@ main(int ac, char **av)
 		fatal("sshbuf_new loginmsg failed");
 	auth_debug_reset();
 
-	/* Enable challenge-response authentication for privilege separation */
-	privsep_challenge_enable();
-
 #ifdef GSSAPI
 	/* Cache supported mechanism OIDs for later use */
 	ssh_gssapi_prepare_supported_oids();
@@ -800,6 +765,7 @@ main(int ac, char **av)
 	 * The unprivileged child now transfers the current keystate and exits.
 	 */
 	mm_send_keystate(ssh, pmonitor);
+	sshauthopt_free(auth_opts);
 	ssh_packet_clear_keys(ssh);
 	exit(0);
 }
@@ -879,14 +845,10 @@ do_ssh2_kex(struct ssh *ssh)
 	if (strlen(myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS]) == 0)
 		orig = NULL;
 
-	if (options.gss_keyex) {
-		if (FIPS_mode()) {
-			logit("Disabling GSSAPIKeyExchange. Not usable in FIPS mode");
-			options.gss_keyex = 0;
-		} else {
-			gss = ssh_gssapi_server_mechanisms();
-		}
-	}
+	if (options.gss_keyex)
+		gss = ssh_gssapi_server_mechanisms();
+	else
+		gss = NULL;
 
 	if (gss && orig)
 		xasprintf(&newstr, "%s,%s", gss, orig);
@@ -909,6 +871,14 @@ do_ssh2_kex(struct ssh *ssh)
 		fatal("No supported key exchange algorithms");
 	}
 #endif
+
+	if ((r = kex_exchange_identification(ssh, -1,
+	    options.version_addendum)) != 0)
+		sshpkt_fatal(ssh, r, "banner exchange");
+	mm_sshkey_setcompat(ssh); /* tell monitor */
+
+	if ((ssh->compat & SSH_BUG_NOREKEY))
+		debug("client does not support rekeying");
 
 	/* start key exchange */
 	if ((r = kex_setup(ssh, myproposal)) != 0)
@@ -942,6 +912,8 @@ do_ssh2_kex(struct ssh *ssh)
 	kex->kex[KEX_C25519_SHA256] = kex_gen_server;
 	kex->kex[KEX_KEM_SNTRUP761X25519_SHA512] = kex_gen_server;
 	kex->kex[KEX_KEM_MLKEM768X25519_SHA256] = kex_gen_server;
+	kex->kex[KEX_KEM_MLKEM768NISTP256_SHA256] = kex_gen_server;
+	kex->kex[KEX_KEM_MLKEM1024NISTP384_SHA384] = kex_gen_server;
 	kex->load_host_public_key=&get_hostkey_public_by_type;
 	kex->load_host_private_key=&get_hostkey_private_by_type;
 	kex->host_key_index=&get_hostkey_index;

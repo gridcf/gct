@@ -1,4 +1,4 @@
-/* $OpenBSD: cipher.c,v 1.124 2025/03/14 09:49:49 tb Exp $ */
+/* $OpenBSD: cipher.c,v 1.126 2026/02/14 00:18:34 jsg Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -117,25 +117,16 @@ static struct sshcipher ciphers[] = {
 char *
 cipher_alg_list(char sep, int auth_only)
 {
-	char *tmp, *ret = NULL;
-	size_t nlen, rlen = 0;
+	char *ret = NULL;
 	const struct sshcipher *c;
+	char sep_str[2] = {sep, '\0'};
 
 	for (c = ciphers; c->name != NULL; c++) {
 		if ((c->flags & CFLAG_INTERNAL) != 0)
 			continue;
 		if (auth_only && c->auth_len == 0)
 			continue;
-		if (ret != NULL)
-			ret[rlen++] = sep;
-		nlen = strlen(c->name);
-		if ((tmp = realloc(ret, rlen + nlen + 2)) == NULL) {
-			free(ret);
-			return NULL;
-		}
-		ret = tmp;
-		memcpy(ret + rlen, c->name, nlen + 1);
-		rlen += nlen;
+		xextendf(&ret, sep_str, "%s", c->name);
 	}
 	return ret;
 }
@@ -571,10 +562,12 @@ cipher_free(struct sshcipher_ctx *cc)
 	 * the ctx it is a part of it doesn't get freed. So...
 	 * cjr 2/7/2023
 	 */
+#if !defined(WITH_OPENSSL3)
 	if (cc->meth_ptr != NULL) {
 		EVP_CIPHER_meth_free((void *)(EVP_CIPHER *)cc->meth_ptr);
 		cc->meth_ptr = NULL;
 	}
+#endif
 #endif
 	freezero(cc, sizeof(*cc));
 }

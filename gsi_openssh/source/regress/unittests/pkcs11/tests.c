@@ -344,3 +344,10 @@ tests(void)
 	test_parse_invalid();
 	test_generate_valid();
 }
+
+void
+benchmarks(void)
+{
+	printf("no benchmarks\n");
+}
+
