@@ -26,6 +26,8 @@ done
 
 AC_LANG([C])
 
+LT_INIT
+
 AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC([cc gcc clang])
 
@@ -64,6 +66,9 @@ AC_PATH_PROG([NROFF], [nroff awf])
 AC_PATH_PROG([MANDOC], [mandoc])
 AC_PATH_TOOL([PKGCONFIG], [pkg-config], [no])
 AC_SUBST([TEST_SHELL], [sh])
+
+m4_include([../version.m4])
+AC_SUBST([GSI_OPENSSH_VERSION], [gsissh_version])
 
 dnl select manpage formatter to be used to build "cat" format pages.
 if test "x$MANDOC" != "x" ; then
@@ -107,7 +112,7 @@ dnl Since autoconf doesn't support it very well,  we no longer allow users to
 dnl override LD, however keeping the hook here for now in case there's a use
 dnl use case we overlooked and someone needs to re-enable it.  Unless a good
 dnl reason is found we'll be removing this in future.
-LD="$CC"
+LD="\$(LIBTOOL) --mode=link \$(CC)"
 AC_SUBST([LD])
 
 AC_C_INLINE
@@ -5268,6 +5273,7 @@ AC_SUBST([CHANNELLIBS])
 
 # Check whether the user wants GSI (Globus) support
 gsi="no"
+program_prefix=""
 AC_ARG_WITH(gsi,
 	[  --with-gsi              Enable Globus GSI authentication support],
 	[
@@ -5296,6 +5302,7 @@ if test "x$gsi" != "xno" ; then
 
 	AC_DEFINE(GSSAPI)
 	AC_DEFINE(HAVE_GSSAPI_H)
+	AC_SUBST(program_prefix, "gsi")
 
 	AC_CHECK_FUNCS(globus_gss_assist_map_and_authorize)
 fi

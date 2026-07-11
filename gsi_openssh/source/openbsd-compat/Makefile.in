@@ -1,12 +1,14 @@
 sysconfdir=@sysconfdir@
 piddir=@piddir@
 srcdir=@srcdir@
+top_builddir=@top_builddir@
 top_srcdir=@top_srcdir@
 
 BUILDDIR=@abs_top_builddir@
 VPATH=@srcdir@
 CC=@CC@
 LD=@LD@
+LIBTOOL=@LIBTOOL@
 CFLAGS=@CFLAGS@
 CFLAGS_NOPIE=@CFLAGS_NOPIE@
 COMPATINCLUDES="$(BUILDDIR)/@COMPATINCLUDES@"
