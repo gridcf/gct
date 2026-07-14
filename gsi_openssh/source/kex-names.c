@@ -114,6 +114,7 @@ static const struct kexalg gss_kexalgs[] = {
 	{ NULL, 0, -1, -1, 0},
 };
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 /*
  * 0 - unavailable
  * 1 - available in non-FIPS mode
@@ -139,6 +140,7 @@ int is_mlkem768_available()
 
 	return is_fetched;
 }
+#endif
 
 static char *
 kex_alg_list_internal(char sep, const struct kexalg *algs)
@@ -148,6 +150,7 @@ kex_alg_list_internal(char sep, const struct kexalg *algs)
 	char sep_str[2] = {sep, '\0'};
 	int x25519mlkem_available = 0, nistmlkem_available = 0;
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	/*
 	 * FIPS provider can provide ML-KEMs and then all hybrids are available
 	 * Otherwise only NIST hybrids are available
@@ -165,6 +168,7 @@ kex_alg_list_internal(char sep, const struct kexalg *algs)
 	        nistmlkem_available = 1;
 	    }
 	}
+#endif
 
 	for (k = algs; k->name != NULL; k++) {
 		if (  (strcmp(k->name, KEX_MLKEM768X25519_SHA256) == 0    && x25519mlkem_available == 0)
@@ -196,6 +200,7 @@ kex_alg_by_name(const char *name)
 	const struct kexalg *k;
 	int x25519mlkem_available = 0, nistmlkem_available = 0;
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	/*
 	 * FIPS provider can provide ML-KEMs and then all hybrids are available
 	 * Otherwise only NIST hybrids are available
@@ -213,6 +218,7 @@ kex_alg_by_name(const char *name)
 	        nistmlkem_available = 1;
 	    }
 	}
+#endif
 
 	if (  (strcmp(name, KEX_MLKEM768X25519_SHA256) == 0    && x25519mlkem_available == 0)
 	   || (strcmp(name, KEX_MLKEM768NISTP256_SHA256) == 0  && nistmlkem_available == 0)

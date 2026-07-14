@@ -150,6 +150,7 @@ ssh_gssapi_kex_mechs(gss_OID_set gss_supported, ssh_gssapi_check_fn *check,
 	for (i = 0; i < gss_supported->count; i++) {
 		if (gss_supported->elements[i].length < 128 &&
 		    (*check)(NULL, &(gss_supported->elements[i]), host, client)) {
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 			EVP_MD_CTX * ctx = NULL;
 			EVP_MD *md5 = NULL; /* Here we don't use MD5 for crypto purposes */
 			unsigned int md_size = sizeof(digest);
@@ -173,6 +174,20 @@ ssh_gssapi_kex_mechs(gss_OID_set gss_supported, ssh_gssapi_check_fn *check,
 			}
 			EVP_MD_free(md5); md5 = NULL;
 			EVP_MD_CTX_free(ctx); ctx = NULL;
+#else
+			deroid[0] = SSH_GSS_OIDTYPE;
+			deroid[1] = gss_supported->elements[i].length;
+
+			if ((md = ssh_digest_start(SSH_DIGEST_MD5)) == NULL ||
+			    (r = ssh_digest_update(md, deroid, 2)) != 0 ||
+			    (r = ssh_digest_update(md,
+			        gss_supported->elements[i].elements,
+			        gss_supported->elements[i].length)) != 0 ||
+			    (r = ssh_digest_final(md, digest, sizeof(digest))) != 0)
+				fatal_fr(r, "digest failed");
+			ssh_digest_free(md);
+			md = NULL;
+#endif
 
 			encoded = xmalloc(ssh_digest_bytes(SSH_DIGEST_MD5)
 			    * 2);

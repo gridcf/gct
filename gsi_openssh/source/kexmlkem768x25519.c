@@ -52,6 +52,7 @@
 #include "fips_mode_replacement.h"
 #include <stdio.h>
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #define FIPS_FALLBACK_PROPQ "provider=default,-fips"
 
 static int
@@ -245,11 +246,12 @@ mlkem1024_decap_secret(const u_char *privkeybuf, const u_char *wrapped, u_char *
 	return mlkem_decap_secret("mlkem1024", privkeybuf, crypto_kem_mlkem1024_SECRETKEYBYTES,
 		wrapped, crypto_kem_mlkem1024_CIPHERTEXTBYTES, secret);
 }
+#endif
 
 int
 kex_kem_mlkem768x25519_keypair(struct kex *kex)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *buf = NULL;
 	u_char rnd[LIBCRUX_ML_KEM_KEY_PAIR_PRNG_LEN], *cp = NULL;
 	size_t need;
@@ -321,7 +323,7 @@ kex_kem_mlkem768x25519_enc(struct kex *kex,
    const struct sshbuf *client_blob, struct sshbuf **server_blobp,
    struct sshbuf **shared_secretp)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *server_blob = NULL;
 	struct sshbuf *buf = NULL;
 	const u_char *client_pub;
@@ -504,7 +506,7 @@ int
 kex_kem_mlkem768x25519_dec(struct kex *kex,
     const struct sshbuf *server_blob, struct sshbuf **shared_secretp)
 {
-#if 0
+#if OPENSSL_VERSION_NUMBER < 0x30000000L
 	struct sshbuf *buf = NULL;
 	u_char mlkem_key[crypto_kem_mlkem768_BYTES];
 	const u_char *ciphertext, *server_pub;
@@ -632,6 +634,7 @@ kex_kem_mlkem768x25519_dec(struct kex *kex,
 #endif
 }
 
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #define NIST_P256_COMPRESSED_LEN   33
 #define NIST_P256_UNCOMPRESSED_LEN 65
 #define NIST_P384_COMPRESSED_LEN   49
@@ -1144,6 +1147,7 @@ kex_kem_mlkem1024nistp384_dec(struct kex *kex, const struct sshbuf *server_blob,
 	return kex_kem_mlkem_nist_dec(kex, server_blob, shared_secretp,
 		crypto_kem_mlkem1024_CIPHERTEXTBYTES);
 }
+#endif
 
 #else /* USE_MLKEM768X25519 */
 int

@@ -180,10 +180,12 @@ char *
 compat_kex_proposal(struct ssh *ssh, const char *p)
 {
 	char *cp = NULL, *cp2 = NULL;
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	int mlkem_available = is_mlkem768_available();
 
 	if ((ssh->compat & (SSH_BUG_CURVE25519PAD|SSH_OLD_DHGEX)) == 0 && mlkem_available == 2)
 		return xstrdup(p);
+#endif
 	debug2_f("original KEX proposal: %s", p);
 	if ((ssh->compat & SSH_BUG_CURVE25519PAD) != 0)
 		if ((cp = match_filter_denylist(p,
@@ -197,6 +199,7 @@ compat_kex_proposal(struct ssh *ssh, const char *p)
 		free(cp);
 		cp = cp2;
 	}
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	if (mlkem_available == 2)
 		return cp ? cp : xstrdup(p);
 	if (mlkem_available == 1 && FIPS_mode()) {
@@ -206,7 +209,9 @@ compat_kex_proposal(struct ssh *ssh, const char *p)
 		free(cp);
 		cp = cp2;
 	}
-	if (mlkem_available == 0) {
+	if (mlkem_available == 0)
+#endif
+	{
 		if ((cp2 = match_filter_denylist(cp ? cp : p,
 		    "mlkem768x25519-sha256,"
 		    "mlkem768nistp256-sha256,"
