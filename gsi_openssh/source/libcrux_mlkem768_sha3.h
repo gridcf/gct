@@ -5706,7 +5706,7 @@ libcrux_ml_kem_vector_portable_cond_subtract_3329_b8(
  - result ≡ value (mod FIELD_MODULUS)
  - the absolute value of `result` is bound as follows:
 
- `|result| ≤ FIELD_MODULUS / 2 · (|value|/BARRETT_R + 1)
+ `|result| ≤ FIELD_MODULUS / 2 · (|value|/BARRETT_R + 1)`
 
  Note: The input bound is 28296 to prevent overflow in the multiplication of
  quotient by FIELD_MODULUS
@@ -5758,11 +5758,11 @@ libcrux_ml_kem_vector_portable_barrett_reduce_b8(
  - o ≡ value · MONTGOMERY_R^(-1) (mod FIELD_MODULUS)
  - the absolute value of `o` is bound as follows:
 
- `|result| ≤ ceil(|value| / MONTGOMERY_R) + 1665
+ `|result| ≤ ceil(|value| / MONTGOMERY_R) + 1665`
 
  In particular, if `|value| ≤ FIELD_MODULUS-1 * FIELD_MODULUS-1`, then `|o| <=
  FIELD_MODULUS-1`. And, if `|value| ≤ pow2 16 * FIELD_MODULUS-1`, then `|o| <=
- FIELD_MODULUS + 1664
+ FIELD_MODULUS + 1664`
 
 */
 static inline int16_t
