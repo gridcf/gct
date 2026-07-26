@@ -1,11 +1,13 @@
 sysconfdir=@sysconfdir@
 piddir=@piddir@
 srcdir=@srcdir@
+top_builddir=@top_builddir@
 top_srcdir=@top_srcdir@
 
 VPATH=@srcdir@
 CC=@CC@
 LD=@LD@
+LIBTOOL=@LIBTOOL@
 CFLAGS=@CFLAGS@
 CPPFLAGS=-I. -I.. -I../.. -I$(srcdir) -I$(srcdir)/.. -I$(srcdir)/../.. @CPPFLAGS@ @DEFS@
 EXEEXT=@EXEEXT@

@@ -188,7 +188,7 @@ ssh_selinux_change_context(const char *newname)
 	xasprintf(&newctx, "%.*s%s%s", (int)(cx - oldctx + 1), oldctx,
 	    newname, cx2 == NULL ? "" : cx2);
 
-	debug_f("setting context from '%s' to '%s'", oldctx, newctx);
+	debug3_f("setting context from '%s' to '%s'", oldctx, newctx);
 	if (setcon(newctx) < 0)
 		do_log2_f(log_level, "setcon %s from %s failed with %s",
 		    newctx, oldctx, strerror(errno));

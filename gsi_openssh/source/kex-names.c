@@ -1,4 +1,4 @@
-/* $OpenBSD: kex-names.c,v 1.4 2024/09/09 02:39:57 djm Exp $ */
+/* $OpenBSD: kex-names.c,v 1.7 2026/02/14 00:18:34 jsg Exp $ */
 /*
  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.
  *
@@ -28,23 +28,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <signal.h>
 
 #ifdef WITH_OPENSSL
 #include <openssl/crypto.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include <openssl/evp.h>
+#include <openssl/err.h>
 #endif
 
 #include "kex.h"
+#include "xmalloc.h"
 #include "log.h"
 #include "match.h"
 #include "digest.h"
 #include "misc.h"
 
 #include "ssherr.h"
-#include "xmalloc.h"
 
 #ifdef GSSAPI
 #include "ssh-gss.h"
@@ -55,98 +56,129 @@ struct kexalg {
 	u_int type;
 	int ec_nid;
 	int hash_alg;
+	int pq_alg;
 };
 static const struct kexalg kexalgs[] = {
 #ifdef WITH_OPENSSL
-	{ KEX_DH1, KEX_DH_GRP1_SHA1, 0, SSH_DIGEST_SHA1 },
-	{ KEX_DH14_SHA1, KEX_DH_GRP14_SHA1, 0, SSH_DIGEST_SHA1 },
-	{ KEX_DH14_SHA256, KEX_DH_GRP14_SHA256, 0, SSH_DIGEST_SHA256 },
-	{ KEX_DH16_SHA512, KEX_DH_GRP16_SHA512, 0, SSH_DIGEST_SHA512 },
-	{ KEX_DH18_SHA512, KEX_DH_GRP18_SHA512, 0, SSH_DIGEST_SHA512 },
-	{ KEX_DHGEX_SHA1, KEX_DH_GEX_SHA1, 0, SSH_DIGEST_SHA1 },
+	{ KEX_DH1, KEX_DH_GRP1_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
+	{ KEX_DH14_SHA1, KEX_DH_GRP14_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
+	{ KEX_DH14_SHA256, KEX_DH_GRP14_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
+	{ KEX_DH16_SHA512, KEX_DH_GRP16_SHA512, 0, SSH_DIGEST_SHA512, KEX_NOT_PQ },
+	{ KEX_DH18_SHA512, KEX_DH_GRP18_SHA512, 0, SSH_DIGEST_SHA512, KEX_NOT_PQ },
+	{ KEX_DHGEX_SHA1, KEX_DH_GEX_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
 #ifdef HAVE_EVP_SHA256
-	{ KEX_DHGEX_SHA256, KEX_DH_GEX_SHA256, 0, SSH_DIGEST_SHA256 },
+	{ KEX_DHGEX_SHA256, KEX_DH_GEX_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
 #endif /* HAVE_EVP_SHA256 */
 #ifdef OPENSSL_HAS_ECC
 	{ KEX_ECDH_SHA2_NISTP256, KEX_ECDH_SHA2,
-	    NID_X9_62_prime256v1, SSH_DIGEST_SHA256 },
+	    NID_X9_62_prime256v1, SSH_DIGEST_SHA256, KEX_NOT_PQ },
 	{ KEX_ECDH_SHA2_NISTP384, KEX_ECDH_SHA2, NID_secp384r1,
-	    SSH_DIGEST_SHA384 },
+	    SSH_DIGEST_SHA384, KEX_NOT_PQ },
 # ifdef OPENSSL_HAS_NISTP521
 	{ KEX_ECDH_SHA2_NISTP521, KEX_ECDH_SHA2, NID_secp521r1,
-	    SSH_DIGEST_SHA512 },
+	    SSH_DIGEST_SHA512, KEX_NOT_PQ },
 # endif /* OPENSSL_HAS_NISTP521 */
 #endif /* OPENSSL_HAS_ECC */
 #endif /* WITH_OPENSSL */
 #if defined(HAVE_EVP_SHA256) || !defined(WITH_OPENSSL)
-	{ KEX_CURVE25519_SHA256, KEX_C25519_SHA256, 0, SSH_DIGEST_SHA256 },
-	{ KEX_CURVE25519_SHA256_OLD, KEX_C25519_SHA256, 0, SSH_DIGEST_SHA256 },
+	{ KEX_CURVE25519_SHA256, KEX_C25519_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
+	{ KEX_CURVE25519_SHA256_OLD, KEX_C25519_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
 #ifdef USE_SNTRUP761X25519
 	{ KEX_SNTRUP761X25519_SHA512, KEX_KEM_SNTRUP761X25519_SHA512, 0,
-	    SSH_DIGEST_SHA512 },
+	    SSH_DIGEST_SHA512, KEX_IS_PQ },
 	{ KEX_SNTRUP761X25519_SHA512_OLD, KEX_KEM_SNTRUP761X25519_SHA512, 0,
-	    SSH_DIGEST_SHA512 },
+	    SSH_DIGEST_SHA512, KEX_IS_PQ },
 #endif
 #ifdef USE_MLKEM768X25519
 	{ KEX_MLKEM768X25519_SHA256, KEX_KEM_MLKEM768X25519_SHA256, 0,
-	    SSH_DIGEST_SHA256 },
+	    SSH_DIGEST_SHA256, KEX_IS_PQ },
+	{ KEX_MLKEM768NISTP256_SHA256, KEX_KEM_MLKEM768NISTP256_SHA256, 0,
+	    SSH_DIGEST_SHA256, KEX_IS_PQ },
+	{ KEX_MLKEM1024NISTP384_SHA384, KEX_KEM_MLKEM1024NISTP384_SHA384, 0,
+	    SSH_DIGEST_SHA384, KEX_IS_PQ },
 #endif
 #endif /* HAVE_EVP_SHA256 || !WITH_OPENSSL */
-	{ NULL, 0, -1, -1},
+	{ NULL, 0, -1, -1, 0 },
 };
 static const struct kexalg gss_kexalgs[] = {
 #ifdef GSSAPI
-	{ KEX_GSS_GEX_SHA1_ID, KEX_GSS_GEX_SHA1, 0, SSH_DIGEST_SHA1 },
-	{ KEX_GSS_GRP1_SHA1_ID, KEX_GSS_GRP1_SHA1, 0, SSH_DIGEST_SHA1 },
-	{ KEX_GSS_GRP14_SHA1_ID, KEX_GSS_GRP14_SHA1, 0, SSH_DIGEST_SHA1 },
-	{ KEX_GSS_GRP14_SHA256_ID, KEX_GSS_GRP14_SHA256, 0, SSH_DIGEST_SHA256 },
-	{ KEX_GSS_GRP16_SHA512_ID, KEX_GSS_GRP16_SHA512, 0, SSH_DIGEST_SHA512 },
+	{ KEX_GSS_GEX_SHA1_ID, KEX_GSS_GEX_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
+	{ KEX_GSS_GRP1_SHA1_ID, KEX_GSS_GRP1_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
+	{ KEX_GSS_GRP14_SHA1_ID, KEX_GSS_GRP14_SHA1, 0, SSH_DIGEST_SHA1, KEX_NOT_PQ },
+	{ KEX_GSS_GRP14_SHA256_ID, KEX_GSS_GRP14_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
+	{ KEX_GSS_GRP16_SHA512_ID, KEX_GSS_GRP16_SHA512, 0, SSH_DIGEST_SHA512, KEX_NOT_PQ },
 	{ KEX_GSS_NISTP256_SHA256_ID, KEX_GSS_NISTP256_SHA256,
-	    NID_X9_62_prime256v1, SSH_DIGEST_SHA256 },
-	{ KEX_GSS_C25519_SHA256_ID, KEX_GSS_C25519_SHA256, 0, SSH_DIGEST_SHA256 },
+	    NID_X9_62_prime256v1, SSH_DIGEST_SHA256, KEX_NOT_PQ },
+	{ KEX_GSS_C25519_SHA256_ID, KEX_GSS_C25519_SHA256, 0, SSH_DIGEST_SHA256, KEX_NOT_PQ },
 #endif
-	{ NULL, 0, -1, -1},
+	{ NULL, 0, -1, -1, 0},
 };
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-static int is_mlkem768_available()
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+/*
+ * 0 - unavailable
+ * 1 - available in non-FIPS mode
+ * 2 - available always
+ */
+int is_mlkem768_available()
 {
 	static int is_fetched = -1;
 
 	if (is_fetched == -1) {
-		EVP_KEM *mlkem768 = EVP_KEM_fetch(NULL, "mlkem768", NULL);
-		is_fetched = mlkem768 != NULL ? 1 : 0;
+		EVP_KEM *mlkem768 = NULL;
+
+		ERR_set_mark();
+		mlkem768 = EVP_KEM_fetch(NULL, "mlkem768", NULL);
+		is_fetched = (mlkem768 == NULL) ? 0 : 2;
+		if (is_fetched == 0 && FIPS_mode() == 1) {
+		    mlkem768 = EVP_KEM_fetch(NULL, "mlkem768", "provider=default,-fips");
+		    is_fetched = (mlkem768 == NULL) ? 0 : 1;
+		}
 		EVP_KEM_free(mlkem768);
+		ERR_pop_to_mark();
 	}
 
 	return is_fetched;
 }
-# endif
+#endif
 
 static char *
 kex_alg_list_internal(char sep, const struct kexalg *algs)
 {
-	char *ret = NULL, *tmp;
-	size_t nlen, rlen = 0;
+	char *ret = NULL;
 	const struct kexalg *k;
+	char sep_str[2] = {sep, '\0'};
+	int x25519mlkem_available = 0, nistmlkem_available = 0;
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+	/*
+	 * FIPS provider can provide ML-KEMs and then all hybrids are available
+	 * Otherwise only NIST hybrids are available
+	 * */
+	if (FIPS_mode()) {
+	    if (is_mlkem768_available() == 2) {
+	        x25519mlkem_available = 1;
+	        nistmlkem_available = 1;
+	    } else if (is_mlkem768_available() == 1) {
+	        nistmlkem_available = 1;
+	    }
+	} else {
+	    if (is_mlkem768_available() > 0) {
+	        x25519mlkem_available = 1;
+	        nistmlkem_available = 1;
+	    }
+	}
+#endif
 
 	for (k = algs; k->name != NULL; k++) {
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-		if (strcmp(k->name, KEX_MLKEM768X25519_SHA256) == 0
-			&& !is_mlkem768_available())
+		if (  (strcmp(k->name, KEX_MLKEM768X25519_SHA256) == 0    && x25519mlkem_available == 0)
+		   || (strcmp(k->name, KEX_MLKEM768NISTP256_SHA256) == 0  && nistmlkem_available == 0)
+		   || (strcmp(k->name, KEX_MLKEM1024NISTP384_SHA384) == 0 && nistmlkem_available == 0))
 			continue;
-# endif
-		if (ret != NULL)
-			ret[rlen++] = sep;
-		nlen = strlen(k->name);
-		if ((tmp = realloc(ret, rlen + nlen + 2)) == NULL) {
-			free(ret);
-			return NULL;
-		}
-		ret = tmp;
-		memcpy(ret + rlen, k->name, nlen + 1);
-		rlen += nlen;
+
+		xextendf(&ret, sep_str, "%s", k->name);
 	}
+
 	return ret;
 }
 
@@ -166,12 +198,32 @@ static const struct kexalg *
 kex_alg_by_name(const char *name)
 {
 	const struct kexalg *k;
+	int x25519mlkem_available = 0, nistmlkem_available = 0;
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
-	if (strcmp(name, KEX_MLKEM768X25519_SHA256) == 0
-		&& !is_mlkem768_available())
-	return NULL;
-# endif
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+	/*
+	 * FIPS provider can provide ML-KEMs and then all hybrids are available
+	 * Otherwise only NIST hybrids are available
+	 * */
+	if (FIPS_mode()) {
+	    if (is_mlkem768_available() == 2) {
+	        x25519mlkem_available = 1;
+	        nistmlkem_available = 1;
+	    } else if (is_mlkem768_available() == 1) {
+	        nistmlkem_available = 1;
+	    }
+	} else {
+	    if (is_mlkem768_available() > 0) {
+	        x25519mlkem_available = 1;
+	        nistmlkem_available = 1;
+	    }
+	}
+#endif
+
+	if (  (strcmp(name, KEX_MLKEM768X25519_SHA256) == 0    && x25519mlkem_available == 0)
+	   || (strcmp(name, KEX_MLKEM768NISTP256_SHA256) == 0  && nistmlkem_available == 0)
+	   || (strcmp(name, KEX_MLKEM1024NISTP384_SHA384) == 0 && nistmlkem_available == 0))
+	   return NULL;
 
 	for (k = kexalgs; k->name != NULL; k++) {
 		if (strcmp(k->name, name) == 0)
@@ -188,6 +240,16 @@ int
 kex_name_valid(const char *name)
 {
 	return kex_alg_by_name(name) != NULL;
+}
+
+int
+kex_is_pq_from_name(const char *name)
+{
+	const struct kexalg *k;
+
+	if ((k = kex_alg_by_name(name)) == NULL)
+		return 0;
+	return k->pq_alg == KEX_IS_PQ;
 }
 
 u_int
@@ -232,9 +294,23 @@ kex_names_valid(const char *names)
 		return 0;
 	for ((p = strsep(&cp, ",")); p && *p != '\0';
 	    (p = strsep(&cp, ","))) {
+		if (strncmp(p, "gss-", 4) == 0
+		  && kex_alg_by_name(p) != NULL) {
+			error("GSSAPI KEX algorithm \"%.100s\" is only allowed in GSSAPIKexAlgorithms", p);
+			free(s);
+			return 0;
+		}
 		if (kex_alg_by_name(p) == NULL) {
-			if (FIPS_mode())
-				error("\"%.100s\" is not allowed in FIPS mode", p);
+			if (FIPS_mode()) {
+				if ((strcmp(p, KEX_MLKEM768X25519_SHA256) == 0)
+				    || (strcmp(p, KEX_MLKEM768NISTP256_SHA256) == 0)
+				    || (strcmp(p, KEX_MLKEM1024NISTP384_SHA384) == 0)) {
+					debug("\"%.100s\" is not allowed in FIPS mode", p);
+					continue;
+				}
+				else
+					error("\"%.100s\" is not allowed in FIPS mode", p);
+			}
 			else
 				error("Unsupported KEX algorithm \"%.100s\"", p);
 			free(s);
@@ -411,7 +487,7 @@ kex_gss_names_valid(const char *names)
 	    (p = strsep(&cp, ","))) {
 		if (strncmp(p, "gss-", 4) != 0
 		  || kex_alg_by_name(p) == NULL) {
-			error("Unsupported KEX algorithm \"%.100s\"", p);
+			error("Unsupported GSS KEX algorithm \"%.100s\"", p);
 			free(s);
 			return 0;
 		}

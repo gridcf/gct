@@ -24,10 +24,8 @@ void ssh_selinux_change_context(const char *);
 void ssh_selinux_setfscreatecon(const char *);
 
 int sshd_selinux_enabled(void);
-void sshd_selinux_copy_context(void);
 void sshd_selinux_setup_exec_context(char *, int, int(char *, const char *), void *, int);
 int sshd_selinux_setup_env_variables(int inetd, void *);
-void sshd_selinux_change_privsep_preauth_context(void);
 #endif
 
 #ifdef LINUX_OOM_ADJUST

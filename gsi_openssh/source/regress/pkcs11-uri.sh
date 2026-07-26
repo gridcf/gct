@@ -67,7 +67,15 @@ SSH_ASKPASS=/usr/bin/true
 export SSH_ASKPASS
 unset DISPLAY
 # We need interactive access to test PKCS# since it prompts for PIN
+# Backup ssh_proxy before modifications
+cp $OBJ/ssh_proxy $OBJ/ssh_proxy_bak
 sed -i 's/.*BatchMode.*//g' $OBJ/ssh_proxy
+# Remove IdentityFile entries to prevent exceeding MaxAuthTries when using
+# PKCS11Provider (-I) or PKCS11 URIs. The default ssh_config includes multiple
+# identity files that would be tried before PKCS11 keys, causing authentication
+# to fail with "Too many authentication failures" before PKCS11 keys are reached.
+grep -iv IdentityFile $OBJ/ssh_proxy > $OBJ/ssh_proxy.tmp
+mv $OBJ/ssh_proxy.tmp $OBJ/ssh_proxy
 
 # start command w/o tty, so ssh accepts pin from stdin (from agent-pkcs11.sh)
 notty() {
@@ -78,8 +86,10 @@ notty() {
 trace "generating keys"
 ID1="02"
 ID2="04"
+ID3="06"
 RSA=${DIR}/RSA
 EC=${DIR}/EC
+ED25519=${DIR}/ED25519
 openssl genpkey -algorithm rsa > $RSA
 openssl pkcs8 -nocrypt -in $RSA |\
     softhsm2-util --slot "$slot" --label "SSH RSA Key $ID1" --id $ID1 \
@@ -92,6 +102,10 @@ openssl genpkey \
     -paramfile /dev/stdin > $EC
 openssl pkcs8 -nocrypt -in $EC |\
     softhsm2-util --slot "$slot" --label "SSH ECDSA Key $ID2" --id $ID2 \
+	--pin "$TEST_SSH_PIN" --import /dev/stdin
+openssl genpkey -algorithm ed25519 > $ED25519
+openssl pkcs8 -nocrypt -in $ED25519 |\
+    softhsm2-util --slot "$slot" --label "SSH ED25519 Key $ID3" --id $ID3 \
 	--pin "$TEST_SSH_PIN" --import /dev/stdin
 
 trace "List the keys in the ssh-keygen with PKCS#11 URIs"
@@ -132,6 +146,20 @@ if [ $r -eq 5 ]; then
 	fail "FAIL: ssh connect with PKCS#11 URI succeeded (should fail)"
 fi
 
+# Set the ED25519 key as authorized
+grep "ED25519" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
+trace "  (ED25519 key should succeed)"
+echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy \
+     -i "pkcs11:id=%${ID3}?module-path=${TEST_SSH_PKCS11}" somehost exit 5
+r=$?
+if [ $r -ne 5 ]; then
+	fail "FAIL: ssh connect with PKCS#11 URI (Ed25519) failed (exit code $r)"
+fi
+
+# Set the ECDSA key back as authorized
+grep "ECDSA" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
 trace "Connect with PKCS#11 URI including PIN should not prompt"
 trace "  (ECDSA key should succeed)"
 ${SSH} -F $OBJ/ssh_proxy -i \
@@ -148,6 +176,20 @@ r=$?
 if [ $r -eq 5 ]; then
 	fail "FAIL: ssh connect with PKCS#11 URI succeeded (should fail)"
 fi
+
+# Set the ED25519 key as authorized
+grep "ED25519" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
+trace "  (ED25519 key should succeed)"
+${SSH} -F $OBJ/ssh_proxy -i \
+    "pkcs11:id=%${ID3}?module-path=${TEST_SSH_PKCS11}&pin-value=${TEST_SSH_PIN}" somehost exit 5
+r=$?
+if [ $r -ne 5 ]; then
+	fail "FAIL: ssh connect with PKCS#11 URI (Ed25519) failed (exit code $r)"
+fi
+
+# Set the ECDSA key back as authorized
+grep "ECDSA" $OBJ/token_keys > $OBJ/authorized_keys_$USER
 
 trace "Connect with various filtering options in PKCS#11 URI"
 trace "  (by object label, ECDSA should succeed)"
@@ -166,6 +208,20 @@ if [ $r -eq 5 ]; then
 	fail "FAIL: ssh connect with PKCS#11 URI succeeded (should fail)"
 fi
 
+# Set the ED25519 key as authorized
+grep "ED25519" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
+trace "  (by object label, ED25519 key should succeed)"
+echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy \
+     -i "pkcs11:object=SSH%20ED25519%20Key%2006?module-path=${TEST_SSH_PKCS11}" somehost exit 5
+r=$?
+if [ $r -ne 5 ]; then
+	fail "FAIL: ssh connect with PKCS#11 URI (Ed25519) failed (exit code $r)"
+fi
+
+# Set the ECDSA key back as authorized
+grep "ECDSA" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
 trace "  (by token label, ECDSA key should succeed)"
 echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy \
     -i "pkcs11:id=%${ID2};token=token-slot-0?module-path=${TEST_SSH_PKCS11}" somehost exit 5
@@ -173,6 +229,20 @@ r=$?
 if [ $r -ne 5 ]; then
 	fail "FAIL: ssh connect with PKCS#11 URI failed (exit code $r)"
 fi
+
+# Set the ED25519 key as authorized
+grep "ED25519" $OBJ/token_keys > $OBJ/authorized_keys_$USER
+
+trace "  (by token label, ED25519 key should succeed)"
+echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy \
+    -i "pkcs11:id=%${ID3};token=token-slot-0?module-path=${TEST_SSH_PKCS11}" somehost exit 5
+r=$?
+if [ $r -ne 5 ]; then
+	fail "FAIL: ssh connect with PKCS#11 URI (Ed25519) failed (exit code $r)"
+fi
+
+# Set the ECDSA key back as authorized
+grep "ECDSA" $OBJ/token_keys > $OBJ/authorized_keys_$USER
 
 trace "  (by wrong token label, should fail)"
 echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy \
@@ -205,18 +275,6 @@ if [ $r -eq 5 ]; then
 	fail "FAIL: ssh connect with PKCS#11 URI in config succeeded (should fail)"
 fi
 sed -i -e "/IdentityFile/d" $OBJ/ssh_proxy
-
-trace "Test PKCS#11 URI specification in configuration files with bogus spaces"
-echo "IdentityFile \"    pkcs11:?module-path=${TEST_SSH_PKCS11}    \"" \
-    >> $OBJ/ssh_proxy
-echo ${TEST_SSH_PIN} | notty ${SSH} -F $OBJ/ssh_proxy somehost exit 5
-r=$?
-if [ $r -ne 5 ]; then
-	fail "FAIL: ssh connect with PKCS#11 URI with bogus spaces in config failed" \
-	    "(exit code $r)"
-fi
-sed -i -e "/IdentityFile/d" $OBJ/ssh_proxy
-
 
 trace "Combination of PKCS11Provider and PKCS11URI on commandline"
 trace "  (RSA key should succeed)"
@@ -347,3 +405,6 @@ else
 	trace "kill agent"
 	${SSHAGENT} -k > /dev/null
 fi
+
+# Restore original ssh_proxy
+mv $OBJ/ssh_proxy_bak $OBJ/ssh_proxy

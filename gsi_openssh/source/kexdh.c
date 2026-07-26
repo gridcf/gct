@@ -1,4 +1,4 @@
-/* $OpenBSD: kexdh.c,v 1.34 2020/12/04 02:29:25 djm Exp $ */
+/* $OpenBSD: kexdh.c,v 1.36 2026/02/14 00:18:34 jsg Exp $ */
 /*
  * Copyright (c) 2019 Markus Friedl.  All rights reserved.
  *
@@ -26,26 +26,24 @@
 #include "includes.h"
 
 #ifdef WITH_OPENSSL
+#include "openbsd-compat/openssl-compat.h"
 
 #include <sys/types.h>
 
 #include <stdio.h>
-#include <string.h>
 #include <signal.h>
 
-#include "openbsd-compat/openssl-compat.h"
+#include <openssl/bn.h>
 #include <openssl/dh.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
-# endif
+#endif
 
-#include "sshkey.h"
 #include "kex.h"
 #include "sshbuf.h"
-#include "digest.h"
 #include "ssherr.h"
 #include "dh.h"
 #include "log.h"
@@ -85,7 +83,7 @@ kex_dh_keygen(struct kex *kex)
 	return (dh_gen_key(kex->dh, kex->we_need * 8));
 }
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 {
@@ -165,7 +163,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	EVP_PKEY_CTX_free(ctx);
 	return r;
 }
-# else
+#else
 /* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
@@ -208,7 +206,7 @@ kex_dh_compute_key(struct kex *kex, BIGNUM *dh_pub, struct sshbuf *out)
 	BN_clear_free(shared_secret);
 	return r;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+#endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 int
 kex_dh_keypair(struct kex *kex)

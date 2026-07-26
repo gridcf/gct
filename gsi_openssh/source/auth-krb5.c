@@ -1,4 +1,4 @@
-/* $OpenBSD: auth-krb5.c,v 1.24 2021/04/03 06:18:40 djm Exp $ */
+/* $OpenBSD: auth-krb5.c,v 1.26 2026/02/08 19:54:31 dtucker Exp $ */
 /*
  *    Kerberos v5 authentication and ticket-passing routines.
  *
@@ -465,6 +465,19 @@ ssh_krb5_cc_new_unique(krb5_context ctx, krb5_ccache *ccache, int *need_environm
 	 * a primary cache for this collection, if it supports that (non-FILE)
 	 */
 	if (krb5_cc_support_switch(ctx, type)) {
+		/*
+		 * For collection-type caches (KCM, KEYRING, …) reuse the
+		 * existing primary ccache when one is already present.  The
+		 * caller will reinitialise it with krb5_cc_initialize(), so
+		 * its old contents are replaced rather than orphaned.  Only
+		 * create a fresh unique ccache when no primary exists yet.
+		 */
+		if (krb5_cc_default(ctx, ccache) == 0) {
+			debug3_f("reusing existing default ccache of type %s",
+			    type);
+			free(type);
+			return 0;
+		}
 		debug3_f("calling cc_new_unique(%s)", ccname);
 		ret = krb5_cc_new_unique(ctx, type, NULL, ccache);
 		free(type);

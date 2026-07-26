@@ -1,4 +1,4 @@
-/* $OpenBSD: sshd-session.c,v 1.12 2025/03/12 22:43:44 djm Exp $ */
+/* $OpenBSD: sshd-session.c,v 1.23 2026/03/11 09:10:59 dtucker Exp $ */
 /*
  * SSH2 implementation:
  * Privilege Separation:
@@ -31,23 +31,17 @@
 
 #include <sys/types.h>
 #include <sys/ioctl.h>
-#include <sys/socket.h>
-#ifdef HAVE_SYS_STAT_H
-# include <sys/stat.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-# include <sys/time.h>
-#endif
-#include "openbsd-compat/sys-tree.h"
-#include "openbsd-compat/sys-queue.h"
 #include <sys/wait.h>
+#include <sys/tree.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/queue.h>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
-#ifdef HAVE_PATHS_H
-# include <paths.h>
-#endif
+#include <paths.h>
 #include <pwd.h>
 #include <grp.h>
 #include <signal.h>
@@ -57,13 +51,6 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <limits.h>
-
-#ifdef WITH_OPENSSL
-#include <openssl/bn.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include "openbsd-compat/openssl-compat.h"
-#endif
 
 #ifdef HAVE_SECUREWARE
 #include <sys/security.h>
@@ -220,12 +207,6 @@ sshkey_is_private(const struct sshkey *k)
               RSA_get0_key(rsa, NULL, NULL, &d);
               return d != NULL;
           }
-      case KEY_DSA_CERT:
-      case KEY_DSA: {
-              const BIGNUM *priv_key;
-              DSA_get0_key(k->dsa, NULL, &priv_key);
-              return priv_key != NULL;
-          }
 #ifdef OPENSSL_HAS_ECC
       case KEY_ECDSA_CERT:
       case KEY_ECDSA: {
@@ -236,7 +217,7 @@ sshkey_is_private(const struct sshkey *k)
 #endif /* WITH_OPENSSL */
       case KEY_ED25519_CERT:
       case KEY_ED25519:
-              return (k->ed25519_pk != NULL);
+              return (k->ed25519_sk != NULL);
       default:
               /* fatal("key_is_private: bad key type %d", k->type); */
               return 0;
@@ -350,27 +331,6 @@ demote_sensitive_data(struct ssh *ssh)
 	}
 }
 
-static void
-reseed_prngs(void)
-{
-	u_int32_t rnd[256];
-
-#ifdef WITH_OPENSSL
-	RAND_poll();
-#endif
-	arc4random_stir(); /* noop on recent arc4random() implementations */
-	arc4random_buf(rnd, sizeof(rnd)); /* let arc4random notice PID change */
-
-#ifdef WITH_OPENSSL
-	RAND_seed(rnd, sizeof(rnd));
-	/* give libcrypto a chance to notice the PID change */
-	if ((RAND_bytes((u_char *)rnd, 1)) != 1)
-		fatal("%s: RAND_bytes failed", __func__);
-#endif
-
-	explicit_bzero(rnd, sizeof(rnd));
-}
-
 struct sshbuf *
 pack_hostkeys(void)
 {
@@ -411,7 +371,7 @@ pack_hostkeys(void)
 static int
 privsep_preauth(struct ssh *ssh)
 {
-	int status, r;
+	int r;
 	pid_t pid;
 
 	/* Set up unprivileged child process to deal with network data */
@@ -433,23 +393,7 @@ privsep_preauth(struct ssh *ssh)
 			}
 		}
 		monitor_child_preauth(ssh, pmonitor);
-
-		/* Wait for the child's exit status */
-		while (waitpid(pid, &status, 0) == -1) {
-			if (errno == EINTR)
-				continue;
-			pmonitor->m_pid = -1;
-			fatal_f("waitpid: %s", strerror(errno));
-		}
 		privsep_is_preauth = 0;
-		pmonitor->m_pid = -1;
-		if (WIFEXITED(status)) {
-			if (WEXITSTATUS(status) != 0)
-				fatal_f("preauth child exited with status %d",
-				    WEXITSTATUS(status));
-		} else if (WIFSIGNALED(status))
-			fatal_f("preauth child terminated by signal %d",
-			    WTERMSIG(status));
 		return 1;
 	} else {
 		/* child */
@@ -502,12 +446,12 @@ privsep_postauth(struct ssh *ssh, Authctxt *authctxt)
 	 * Hack for systems that don't support FD passing: retain privileges
 	 * in the post-auth privsep process so it can allocate PTYs directly.
 	 * This is basically equivalent to what we did <= 9.7, which was to
-	 * disable post-auth privsep entriely.
+	 * disable post-auth privsep entirely.
 	 * Cygwin doesn't need to drop privs here although it doesn't support
 	 * fd passing, as AFAIK PTY allocation on this platform doesn't require
 	 * special privileges to begin with.
 	 */
-#if defined(DISABLE_FD_PASSING) && !defined(HAVE_CYGWIN) && !defined(WITH_SELINUX)
+#if defined(DISABLE_FD_PASSING) && !defined(HAVE_CYGWIN)
 	skip_privdrop = 1;
 #endif
 
@@ -565,12 +509,10 @@ get_hostkey_by_type(int type, int nid, int need_private, struct ssh *ssh)
 	for (i = 0; i < options.num_host_key_files; i++) {
 		switch (type) {
 		case KEY_RSA_CERT:
-		case KEY_DSA_CERT:
 		case KEY_ECDSA_CERT:
 		case KEY_ED25519_CERT:
 		case KEY_ECDSA_SK_CERT:
 		case KEY_ED25519_SK_CERT:
-		case KEY_XMSS_CERT:
 			key = sensitive_data.host_certificates[i];
 			break;
 		default:
@@ -942,7 +884,7 @@ main(int ac, char **av)
 	const char *remote_ip, *rdomain;
 	char *line, *laddr, *logfile = NULL;
 	u_int i;
-	u_int64_t ibytes, obytes;
+	uint64_t ibytes, obytes;
 	mode_t new_umask;
 	Authctxt *authctxt;
 	struct connection_info *connection_info = NULL;
@@ -1308,8 +1250,8 @@ main(int ac, char **av)
 	setproctitle("%s", "[accepted]");
 
 	/* Executed child processes don't need these. */
-	fcntl(sock_out, F_SETFD, FD_CLOEXEC);
-	fcntl(sock_in, F_SETFD, FD_CLOEXEC);
+	FD_CLOSEONEXEC(sock_out);
+	FD_CLOSEONEXEC(sock_in);
 
 	/* We will not restart on SIGHUP since it no longer makes sense. */
 	ssh_signal(SIGALRM, SIG_DFL);
@@ -1327,6 +1269,8 @@ main(int ac, char **av)
 		fatal("Unable to create connection");
 	the_active_state = ssh;
 	ssh_packet_set_server(ssh);
+	ssh_packet_set_qos(ssh, options.ip_qos_interactive,
+	    options.ip_qos_bulk);
 
 	check_ip_options(ssh);
 
@@ -1413,10 +1357,6 @@ main(int ac, char **av)
 			fatal("login grace time setitimer failed");
 	}
 
-	if ((r = kex_exchange_identification(ssh, -1,
-	    options.version_addendum)) != 0)
-		sshpkt_fatal(ssh, r, "banner exchange");
-
 	ssh_packet_set_nonblocking(ssh);
 
 	/* allocate authentication context */
@@ -1470,6 +1410,106 @@ main(int ac, char **av)
 		authctxt->krb5_set_env = ssh_gssapi_storecreds();
 		restore_uid();
 	}
+#ifdef KRB5
+	/*
+	 * GSSAPIAllowS4U2Self / GSSAPIProxyS4U2Services: if no credentials were stored
+	 * above (i.e. no GSSAPI auth with delegation occurred), use S4U2Self
+	 * to obtain an impersonated credential for the user, then optionally
+	 * follow with S4U2Proxy for configured target services.
+	 *
+	 * GSSAPIAllowS4U2Self alone:    store S4U2Self evidence ticket only;
+	 *                            the host TGT is removed.
+	 * GSSAPIProxyS4U2Services alone: store host TGT and S4U2Proxy service
+	 *                            tickets; the S4U2Self evidence ticket
+	 *                            is removed.
+	 * Both:                     store host TGT, S4U2Self evidence ticket,
+	 *                            and all S4U2Proxy service tickets.
+	 *
+	 * When S4U2Proxy tickets are present the host TGT must remain in the
+	 * ccache; applications check for TGT presence to determine whether
+	 * Kerberos credentials are available.  Only in GSSAPIAllowS4U2Self-alone
+	 * mode (no proxy tickets) is the host TGT removed.
+	 *
+	 * Skip S4U2Self when the user already has credentials covering the
+	 * requested lifetime: check for a valid TGT in the GSSAPIAllowS4U2Self-
+	 * alone case, or for valid proxy tickets for every configured service
+	 * otherwise.
+	 */
+	if ((options.gss_allow_s4u2self || options.num_gss_proxy_services > 0) &&
+	    !ssh_gssapi_credentials_stored()) {
+		u_int lifetime = (!options.gss_allow_s4u2self ||
+		    options.gss_allow_s4u2self == INT_MAX) ?
+		    GSS_C_INDEFINITE : (u_int)options.gss_allow_s4u2self;
+		int skip = 0;
+
+		temporarily_use_uid(authctxt->pw);
+		if (options.gss_allow_s4u2self &&
+		    options.num_gss_proxy_services == 0) {
+			/* S4U2Self-alone: skip if user already has a valid TGT */
+			skip = ssh_gssapi_user_has_valid_tgt(lifetime);
+		} else if (options.num_gss_proxy_services > 0) {
+			/*
+			 * Proxy-only or both: skip if every configured service
+			 * already has a valid ticket in the user's ccache.
+			 * Service tickets are not GSSAPI initiator credentials,
+			 * so gss_acquire_cred() cannot be used; iterate the
+			 * ccache with the krb5 API instead.
+			 */
+			skip = ssh_gssapi_user_has_valid_proxy_tickets(
+			    options.gss_proxy_services,
+			    options.num_gss_proxy_services,
+			    lifetime);
+		}
+		restore_uid();
+
+		if (skip) {
+			debug_f("user %.100s already has valid Kerberos "
+			    "credentials, skipping S4U2Self",
+			    authctxt->user);
+		} else if (ssh_gssapi_s4u2self(authctxt->user, lifetime) == 0) {
+			u_int filter;
+
+			temporarily_use_uid(authctxt->pw);
+			/*
+			 * Always create the ccache via storecreds_s4u2self so
+			 * that s4u2proxy has a ccache to store tickets into.
+			 * gss_krb5_copy_ccache() copies the host service's own
+			 * TGT along with the evidence ticket; filter_ccache
+			 * removes the ticket classes that should not be kept.
+			 */
+			ssh_gssapi_storecreds_s4u2self();
+			if (options.num_gss_proxy_services > 0)
+				ssh_gssapi_s4u2proxy(
+				    options.gss_proxy_services,
+				    options.num_gss_proxy_services,
+				    lifetime);
+
+			/*
+			 * Remove the host TGT only in GSSAPIAllowS4U2Self-alone
+			 * mode; when proxy tickets are present the TGT must
+			 * stay so that applications recognise the ccache as
+			 * holding live Kerberos credentials.
+			 * Remove the S4U2Self evidence ticket in proxy-only
+			 * mode (GSSAPIProxyS4U2Services without GSSAPIAllowS4U2Self).
+			 */
+			filter = 0;
+			if (options.gss_allow_s4u2self &&
+			    options.num_gss_proxy_services == 0)
+				filter = SSH_GSSAPI_CCFILTER_TGT |
+				    SSH_GSSAPI_CCFILTER_PROXY;
+			else if (!options.gss_allow_s4u2self)
+				filter = SSH_GSSAPI_CCFILTER_SELF;
+			if (filter != 0)
+				ssh_gssapi_krb5_filter_ccache(filter,
+				    options.gss_proxy_services,
+				    options.num_gss_proxy_services);
+			restore_uid();
+		} else {
+			logit("S4U2Self failed for user %.100s, continuing",
+			    authctxt->user);
+		}
+	}
+#endif
 #endif
 #ifdef WITH_SELINUX
 	sshd_selinux_setup_exec_context(authctxt->pw->pw_name,
@@ -1578,7 +1618,9 @@ cleanup_exit(int i)
 		audit_event(the_active_state, SSH_CONNECTION_ABANDON);
 #endif
 	/* Override default fatal exit value when auth was attempted */
-	if (i == 255 && auth_attempted)
+	if (i == 255 && monitor_auth_attempted())
 		_exit(EXIT_AUTH_ATTEMPTED);
+	if (i == 255 && monitor_invalid_user())
+		_exit(EXIT_INVALID_USER);
 	_exit(i);
 }

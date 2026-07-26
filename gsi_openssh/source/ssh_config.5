@@ -33,8 +33,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: ssh_config.5,v 1.413 2025/03/03 06:53:09 dtucker Exp $
-.Dd $Mdocdate: March 3 2025 $
+.\" $OpenBSD: ssh_config.5,v 1.423 2026/03/23 01:33:46 djm Exp $
+.Dd $Mdocdate: March 23 2026 $
 .Dt SSH_CONFIG 5
 .Os
 .Sh NAME
@@ -547,7 +547,7 @@ Open connections to
 .Xr ssh-agent 1 .
 .It Cm direct-tcpip , Cm direct-streamlocal@openssh.com
 Open TCP or Unix socket (respectively) connections that have
-been established from a
+been established from an
 .Xr ssh 1
 local forwarding, i.e.\&
 .Cm LocalForward
@@ -555,9 +555,9 @@ or
 .Cm DynamicForward .
 .It Cm forwarded-tcpip , Cm forwarded-streamlocal@openssh.com
 Open TCP or Unix socket (respectively) connections that have been
-established to a
+established to an
 .Xr sshd 8
-listening on behalf of a
+listening on behalf of an
 .Xr ssh 1
 remote forwarding, i.e.\&
 .Cm RemoteForward .
@@ -847,8 +847,8 @@ or
 .Cm no
 (the default).
 .It Cm FallbackPort
-Specifies the port hpnssh should try to connect to if it fails connecting to the 
-default hpnsshd port of 2222. The default is port 22. HPN-SSH only. 
+Specifies the port hpnssh should try to connect to if it fails connecting to the
+default hpnsshd port of 2222. The default is port 22. HPN-SSH only.
 .It Cm FingerprintHash
 Specifies the hash algorithm used when displaying key fingerprints.
 Valid options are:
@@ -1057,6 +1057,8 @@ gss-curve25519-sha256-
 .Pp
 This option only applies to connections using GSSAPI.
 .Pp
+The list of supported key exchange algorithms may also be obtained using
+.Qq ssh -Q GSSAPIKexAlgorithms .
 .It Cm HashKnownHosts
 Indicates that
 .Xr ssh 1
@@ -1074,6 +1076,23 @@ Note that existing names and addresses in known hosts files
 will not be converted automatically,
 but may be manually hashed using
 .Xr ssh-keygen 1 .
+.It Cm HappyEyes
+If set to
+.Cm yes
+this option specifies that the client should use the Happy Eyeballs connection
+method as described by RFC 8305. When attempting to connect to a
+target that supports IPv4 and IPv6 the client will try to connect
+on IPv6 first, delay a set time (250ms default), and then try IPv4.
+The client will use which ever socket is returned first. Note:
+This process may, rarely, produce false positives in some monitoring tools
+due to multiple connection attempts prior to authentication.
+The default is
+.Cm no
+.It Cm HappyDelay
+This options specifies how long the HappyEyes connection method should
+wait before trying IPv4 after the initial IPv6 connection. This value is
+a positive integer of milliseconds with a default of
+.Cm 250ms.
 .It Cm HostbasedAcceptedAlgorithms
 The default is handled system-wide by
 .Xr crypto-policies 7 .
@@ -1132,11 +1151,13 @@ ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
 sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ecdsa-sha2-nistp256@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256@openssh.com
 sk-ssh-ed25519@openssh.com,
 rsa-sha2-512,rsa-sha2-256
 .Ed
@@ -1178,7 +1199,7 @@ The default is the name given on the command line.
 .It Cm HPNDisabled
 In some situations, such as transfers on a local area network, the impact
 of the HPN code produces a net decrease in performance. In these cases it is
-helpful to disable the HPN functionality. By default HPNDisabled is set to 
+helpful to disable the HPN functionality. By default HPNDisabled is set to
 .Cm no. HPNSSH only.
 .It Cm IdentitiesOnly
 Specifies that
@@ -1339,7 +1360,9 @@ or
 block
 to perform conditional inclusion.
 .It Cm IPQoS
-Specifies the IPv4 type-of-service or DSCP class for connections.
+Specifies the
+.Em Differentiated Services Field Codepoint Pq DSCP
+value for connections.
 Accepted values are
 .Cm af11 ,
 .Cm af12 ,
@@ -1363,9 +1386,6 @@ Accepted values are
 .Cm cs7 ,
 .Cm ef ,
 .Cm le ,
-.Cm lowdelay ,
-.Cm throughput ,
-.Cm reliability ,
 a numeric value, or
 .Cm none
 to use the operating system default.
@@ -1374,12 +1394,18 @@ If one argument is specified, it is used as the packet class unconditionally.
 If two values are specified, the first is automatically selected for
 interactive sessions and the second for non-interactive sessions.
 The default is
-.Cm af21
-(Low-Latency Data)
+.Cm ef
+(Expedited Forwarding)
 for interactive sessions and
-.Cm cs1
-(Lower Effort)
+.Cm none
+(the operating system default)
 for non-interactive sessions.
+If using the
+.Cm HappyEyes
+option these default to
+.Cm lowlatency and
+.m throughput ,
+respectively.
 .It Cm KbdInteractiveAuthentication
 Specifies whether to use keyboard-interactive authentication.
 The argument to this keyword must be
@@ -1422,8 +1448,8 @@ from the built-in openssh default set instead of replacing them.
 If the specified list begins with a
 .Sq ^
 character, then the specified algorithms will be placed at the head of the
-.Pp
 built-in openssh default set.
+.Pp
 The list of supported key exchange algorithms may also be obtained using
 .Qq ssh -Q kex .
 .It Cm KnownHostsCommand
@@ -1570,58 +1596,58 @@ The list of available MAC algorithms may also be obtained using
 .Qq ssh -Q mac .
 .It Cm Metrics
 Indicate that the ssh client should gather and write TCP stack metrics from the
-TCP_INFO socket structure on compliant operating systems to a text file. 
-These metrics will be collected from both the local and remote hosts if metrics 
-are supported by the version of SSH and TCP_INFO is supported by the 
-operating system. Currently operating system support is limited to Linux 
-version 3.7 and greater, NetBSD, and FreeBSD (version 6 or greater). 
+TCP_INFO socket structure on compliant operating systems to a text file.
+These metrics will be collected from both the local and remote hosts if metrics
+are supported by the version of SSH and TCP_INFO is supported by the
+operating system. Currently operating system support is limited to Linux
+version 3.7 and greater, NetBSD, and FreeBSD (version 6 or greater).
 
 If one of the hosts does not support the Metrics option then only data
-from the the host that does will be reported. See the HPN-README file 
-for more detail.  
+from the the host that does will be reported. See the HPN-README file
+for more detail.
 
-The argument to the keyword must be 
+The argument to the keyword must be
 .Cm yes
-or 
+or
 .Cm no
-(the default). 
+(the default).
 
-See 
-.Cm MetricsInterval 
-and 
-.Cm MetricsPath 
+See
+.Cm MetricsInterval
+and
+.Cm MetricsPath
 for more metrics options.
-.Cm HPNSSH only. 
+.Cm HPNSSH only.
 .It Cm MetricsInterval
-The frequency, in seconds, with which the TCP_INFO struct will be polled. The 
+The frequency, in seconds, with which the TCP_INFO struct will be polled. The
 default value is 5 seconds.
 
-.Cm Metrics 
-must be set to 
+.Cm Metrics
+must be set to
 .Cm yes
 fot this option to have any effect.
 .Cm HPNSSH only.
 .It Cm MetricsPath
 The file path where
 .Cm Metrics
-should write the TCP stack metrics. 
+should write the TCP stack metrics.
 
-The default is 
+The default is
 .Sm off
-.Ar ./ssh_stack_metrics.local  
- and 
-.Ar ./ssh_stack_metrics.remote 
+.Ar ./ssh_stack_metrics.local
+ and
+.Ar ./ssh_stack_metrics.remote
 .Sm on
 
-The user may specify any other filepath and filename that they have write 
+The user may specify any other filepath and filename that they have write
 access to. E.g. MetricsPath=/tmp/my_metrics. The suffix of .local
-and .remote will be appended to this path. Files are 
-.Cm not 
+and .remote will be appended to this path. Files are
+.Cm not
 overwritten by subsequent metrics sessions. Instead, data from new sessions
-will be appended if the file already exists. 
+will be appended if the file already exists.
 
-.Cm Metrics 
-must be set to 
+.Cm Metrics
+must be set to
 .Cm yes
 fot this option to have any effect.
 .Cm HPNSSH only.
@@ -1636,14 +1662,14 @@ or
 Enable or disable the use of the None cipher. Care must always be used
 when enabling this as it will allow users to send data in the clear. However,
 it is important to note that authentication information remains encrypted
-even if this option is enabled. Default is 
+even if this option is enabled. Default is
 .Cm no. HPNSSH only.
 .It Cm NoneMacEnabled
 Enable or disable the use of the None MAC. When this is enabled ssh
 will *not* provide data integrity of any data being transmitted between hosts. Use
 with caution as it, unlike just using NoneEnabled, doesn't provide data integrity and
 protection against man-in-the-middle attacks. As with NoneEnabled all authentication
-remains encrypted and integrity is ensured. Default is 
+remains encrypted and integrity is ensured. Default is
 .Cm no. HPNSSH only.
 .It Cm NoneSwitch
 Switch the encryption cipher being used to the None cipher after
@@ -1652,16 +1678,16 @@ and server side of the connection. When the connection switches to the NONE
 cipher a warning is sent to STDERR. The connection attempt will fail with an
 error if a client requests a NoneSwitch from the server that does not explicitly
 have NoneEnabled set to yes. Note: The NONE cipher cannot be used in
-interactive (shell) sessions and it will fail silently. Set to 
-.Cm no 
-by default. 
+interactive (shell) sessions and it will fail silently. Set to
+.Cm no
+by default.
 .Cm HPNSSH only.
 .Pp
-.Cm Note: 
+.Cm Note:
 this options cannot actualy be set in the ssh_config file. It must be
-set on the command line use -oNoneEnabled. This is to prevent it from being 
+set on the command line use -oNoneEnabled. This is to prevent it from being
 used accidentally. It is included here for completeness as neither NoneMacEnabled
-or NoneCipherEnabled have any effect without this option. 
+or NoneCipherEnabled have any effect without this option.
 .It Cm NumberOfPasswordPrompts
 Specifies the number of password prompts before giving up.
 The argument to this keyword must be an integer.
@@ -1812,7 +1838,7 @@ Multiple proxies may be separated by comma characters and will be visited
 sequentially.
 Setting this option will cause
 .Xr ssh 1
-to connect to the target host by first making a
+to connect to the target host by first making an
 .Xr ssh 1
 connection to the specified
 .Cm ProxyJump
@@ -1865,7 +1891,7 @@ The list of available signature algorithms may also be obtained using
 .Qq ssh -Q PubkeyAcceptedAlgorithms .
 .Pp
 This option affects also
-.Cm HostKeyAlgorithms
+.Cm HostKeyAlgorithms .
 .It Cm PubkeyAuthentication
 Specifies whether to try public key authentication.
 The argument to this keyword must be
@@ -1880,6 +1906,15 @@ disabling or enabling the OpenSSH host-bound authentication protocol
 extension required for restricted
 .Xr ssh-agent 1
 forwarding.
+.It Cm RefuseConnection
+Allows a connection to be refused by the configuration file.
+If this option is specified, then
+.Xr ssh 1
+will terminate immediately before attempting to connect to the remote
+host, display an error message that contains the argument to this keyword
+and return a non-zero exit status.
+This option may be useful to express reminders or warnings to the user via
+.Nm .
 .It Cm RekeyLimit
 Specifies the maximum amount of data that may be transmitted or received
 before the session key is renegotiated, optionally followed by a maximum
@@ -2236,7 +2271,7 @@ directive to select a block of configuration.
 Enable of disable the polling of the tcp receive buffer through the life
 of the connection. You would want to make sure that this option is enabled
 for systems making use of autotuning kernels (linux 2.4.24+, 2.6, MS Vista).
-Default is 
+Default is
 .Cm yes. HPNSSH only.
 .It Cm Tunnel
 Request
@@ -2398,6 +2433,20 @@ If this flag is set to
 (the default),
 no fingerprint strings are printed at login and
 only the fingerprint string will be printed for unknown host keys.
+.It Cm WarnWeakCrypto
+controls whether the user is warned when the cryptographic algorithms
+negotiated for the connection are weak or otherwise recommended against.
+Warnings may be disabled by turning off a specific warning or by disabling
+all warnings.
+Warnings about connections that don't use a post-quantum key exchange
+may be disabled using the
+.Cm no-pq-kex
+flag.
+.Cm no
+will disable all warnings.
+The default, equivalent to
+.Cm yes ,
+is to enable all warnings.
 .It Cm XAuthLocation
 Specifies the full pathname of the
 .Xr xauth 1
@@ -2454,7 +2503,14 @@ such as a wildcard:
 .Dl from=\&"!host1,!host2,*\&"
 .Sh TOKENS
 Arguments to some keywords can make use of tokens,
-which are expanded at runtime:
+which are expanded at runtime.
+Tokens are expanded without quoting or escaping of shell characters.
+It is the user's responsibility to ensure they are safe in the
+context of their use.
+.Pp
+The supported tokens in
+.Nm
+are:
 .Pp
 .Bl -tag -width XXXX -offset indent -compact
 .It %%
@@ -2617,11 +2673,11 @@ removed many bugs, re-added newer features and
 created OpenSSH.
 .An Markus Friedl
 contributed the support for SSH protocol versions 1.5 and 2.0.
-.An Chris Rapier, 
-.An Michael Stevens, 
-.An Ben Bennet, 
-and 
-.An Mike Tasota 
-developed the HPN extensions at the Pittsburgh Supercomuting Center 
-with grants from Cisco, the National Library of Medicine, and 
+.An Chris Rapier,
+.An Michael Stevens,
+.An Ben Bennet,
+and
+.An Mike Tasota
+developed the HPN extensions at the Pittsburgh Supercomuting Center
+with grants from Cisco, the National Library of Medicine, and
 the National Science Foundation.

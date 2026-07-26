@@ -1,4 +1,4 @@
-/* $OpenBSD: myproposal.h,v 1.77 2024/12/02 14:06:42 djm Exp $ */
+/* $OpenBSD: myproposal.h,v 1.78 2026/02/05 22:05:49 djm Exp $ */
 
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
@@ -26,6 +26,8 @@
 
 #define KEX_SERVER_KEX	\
 	"mlkem768x25519-sha256," \
+	"mlkem768nistp256-sha256," \
+	"mlkem1024nistp384-sha384," \
 	"sntrup761x25519-sha512," \
 	"sntrup761x25519-sha512@openssh.com," \
 	"curve25519-sha256," \
@@ -47,6 +49,7 @@
 	"ecdsa-sha2-nistp521-cert-v01@openssh.com," \
 	"sk-ssh-ed25519-cert-v01@openssh.com," \
 	"sk-ecdsa-sha2-nistp256-cert-v01@openssh.com," \
+	"webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com," \
 	"rsa-sha2-512-cert-v01@openssh.com," \
 	"rsa-sha2-256-cert-v01@openssh.com," \
 	"ssh-ed25519," \
@@ -55,6 +58,7 @@
 	"ecdsa-sha2-nistp521," \
 	"sk-ssh-ed25519@openssh.com," \
 	"sk-ecdsa-sha2-nistp256@openssh.com," \
+	"webauthn-sk-ecdsa-sha2-nistp256@openssh.com," \
 	"rsa-sha2-512," \
 	"rsa-sha2-256"
 
@@ -70,11 +74,20 @@
 	"rsa-sha2-512," \
 	"rsa-sha2-256"
 
+/*if we aren't using OpenSSL we need to remove
+ * the parallel ChaCha20 cipher from the list */
+#ifdef WITH_OPENSSL
 #define	KEX_SERVER_ENCRYPT \
 	"chacha20-poly1305-mt@hpnssh.org,"  \
 	"chacha20-poly1305@openssh.com," \
 	"aes128-gcm@openssh.com,aes256-gcm@openssh.com," \
 	"aes128-ctr,aes192-ctr,aes256-ctr"
+#else
+#define	KEX_SERVER_ENCRYPT \
+	"chacha20-poly1305@openssh.com," \
+	"aes128-gcm@openssh.com,aes256-gcm@openssh.com," \
+	"aes128-ctr,aes192-ctr,aes256-ctr"
+#endif
 
 #define KEX_CLIENT_ENCRYPT KEX_SERVER_ENCRYPT
 
@@ -98,6 +111,8 @@
 	"aes192-cbc,aes256-cbc,rijndael-cbc@lysator.liu.se," \
 	"aes128-gcm@openssh.com,aes256-gcm@openssh.com"
 #define KEX_DEFAULT_KEX_FIPS		\
+	"mlkem768nistp256-sha256," \
+	"mlkem1024nistp384-sha384," \
 	"ecdh-sha2-nistp256," \
 	"ecdh-sha2-nistp384," \
 	"ecdh-sha2-nistp521," \
@@ -121,6 +136,7 @@
 	"ecdsa-sha2-nistp521," \
 	"sk-ssh-ed25519@openssh.com," \
 	"sk-ecdsa-sha2-nistp256@openssh.com," \
+	"webauthn-sk-ecdsa-sha2-nistp256@openssh.com," \
 	"rsa-sha2-512," \
 	"rsa-sha2-256"
 

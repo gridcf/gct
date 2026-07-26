@@ -1,4 +1,4 @@
-/* $OpenBSD: auth2.c,v 1.170 2025/01/17 00:09:41 dtucker Exp $ */
+/* $OpenBSD: auth2.c,v 1.173 2026/03/03 09:57:25 dtucker Exp $ */
 /*
  * Copyright (c) 2000 Markus Friedl.  All rights reserved.
  *
@@ -94,8 +94,8 @@ Authmethod *authmethods[] = {
 
 /* protocol */
 
-static int input_service_request(int, u_int32_t, struct ssh *);
-static int input_userauth_request(int, u_int32_t, struct ssh *);
+static int input_service_request(int, uint32_t, struct ssh *);
+static int input_userauth_request(int, uint32_t, struct ssh *);
 
 /* helper */
 static Authmethod *authmethod_byname(const char *);
@@ -154,7 +154,7 @@ userauth_send_banner(struct ssh *ssh, const char *msg)
 	    (r = sshpkt_put_cstring(ssh, "")) != 0 ||	/* language, unused */
 	    (r = sshpkt_send(ssh)) != 0)
 		fatal_fr(r, "send packet");
-	debug("%s: sent", __func__);
+	debug_f("sent");
 }
 
 static void
@@ -190,7 +190,7 @@ do_authentication2(struct ssh *ssh)
 }
 
 static int
-input_service_request(int type, u_int32_t seq, struct ssh *ssh)
+input_service_request(int type, uint32_t seq, struct ssh *ssh)
 {
 	Authctxt *authctxt = ssh->authctxt;
 	char *service = NULL;
@@ -275,7 +275,7 @@ ensure_minimum_time_since(double start, double seconds)
 }
 
 static int
-input_userauth_request(int type, u_int32_t seq, struct ssh *ssh)
+input_userauth_request(int type, uint32_t seq, struct ssh *ssh)
 {
 	Authctxt *authctxt = ssh->authctxt;
 	Authmethod *m = NULL;
@@ -343,6 +343,11 @@ input_userauth_request(int type, u_int32_t seq, struct ssh *ssh)
 		}
 		authctxt->valid = 0;
 		authctxt->user = xstrdup(user);
+		authctxt->service = xstrdup(service);
+		authctxt->style = style ? xstrdup(style) : NULL;
+#ifdef WITH_SELINUX
+		authctxt->role = role ? xstrdup(role) : NULL;
+#endif
 		if (strcmp(service, "ssh-connection") != 0) {
 			ssh_packet_disconnect(ssh, "Unsupported service %s",
 			    service);
@@ -377,11 +382,6 @@ input_userauth_request(int type, u_int32_t seq, struct ssh *ssh)
 		    authctxt->valid ? "authenticating " : "invalid ", user);
 		setproctitle("%s [net]", authctxt->valid ? user : "unknown");
 		if (authctxt->attempt == 1) {
-		authctxt->service = xstrdup(service);
-		authctxt->style = style ? xstrdup(style) : NULL;
-#ifdef WITH_SELINUX
-		authctxt->role = role ? xstrdup(role) : NULL;
-#endif
 		mm_inform_authserv(service, style);
 #ifdef WITH_SELINUX
          	mm_inform_authrole(role);

@@ -285,7 +285,7 @@ stop_and_join_pregen_threads(struct ssh_aes_ctr_ctx_mt *c)
 static void *
 thread_loop(void *x)
 {
-	EVP_CIPHER_CTX *aesni_ctx;
+	EVP_CIPHER_CTX * volatile aesni_ctx;
 	struct ssh_aes_ctr_ctx_mt *c = x;
 	struct kq *q;
 	struct aes_mt_ctx_ptrs *ptr;
@@ -471,12 +471,16 @@ ssh_aes_ctr(EVP_CIPHER_CTX *ctx, u_char *dest, const u_char *src,
 		/* 	destp.u128[0] = srcp.u128[0] ^ bufp.u128[0]; */
 		/* } else */
 #endif
+		/* this is causing undefined behaviour in sanitizers
+		 * this is annoying because it's more efficient
+		 * but UB is not something I want to retain */
 		/* 64 bits */
-		if ((align & 0x7) == 0) {
-			destp.u64[0] = srcp.u64[0] ^ bufp.u64[0];
-			destp.u64[1] = srcp.u64[1] ^ bufp.u64[1];
-		/* 32 bits */
-		} else if ((align & 0x3) == 0) {
+		/* if ((align & 0x7) == 0) { */
+		/* 	destp.u64[0] = srcp.u64[0] ^ bufp.u64[0]; */
+		/* 	destp.u64[1] = srcp.u64[1] ^ bufp.u64[1]; */
+		/* /\* 32 bits *\/ */
+		/* } else */
+		if ((align & 0x3) == 0) {
 			destp.u32[0] = srcp.u32[0] ^ bufp.u32[0];
 			destp.u32[1] = srcp.u32[1] ^ bufp.u32[1];
 			destp.u32[2] = srcp.u32[2] ^ bufp.u32[2];

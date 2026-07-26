@@ -1,4 +1,4 @@
-/* $OpenBSD: kexecdh.c,v 1.10 2019/01/21 10:40:11 djm Exp $ */
+/* $OpenBSD: kexecdh.c,v 1.12 2026/02/14 00:18:34 jsg Exp $ */
 /*
  * Copyright (c) 2010 Damien Miller.  All rights reserved.
  * Copyright (c) 2019 Markus Friedl.  All rights reserved.
@@ -31,21 +31,20 @@
 #include <sys/types.h>
 
 #include <stdio.h>
-#include <string.h>
 #include <signal.h>
 
+#include <openssl/bn.h>
 #include <openssl/ecdh.h>
 #include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
-# endif
+#endif
 #include <openssl/err.h>
 
 #include "sshkey.h"
 #include "kex.h"
 #include "sshbuf.h"
-#include "digest.h"
 #include "ssherr.h"
 #include "log.h"
 
@@ -53,7 +52,7 @@ static int
 kex_ecdh_dec_key_group(struct kex *, const struct sshbuf *, EC_KEY *key,
     const EC_GROUP *, struct sshbuf **);
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static EC_KEY *
 generate_ec_keys(int ec_nid)
 {
@@ -88,9 +87,9 @@ out:
 	OSSL_PARAM_free(params);
 	return client_key;
 }
-# endif
+#endif
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 kex_ecdh_keypair(struct kex *kex)
 {
@@ -128,7 +127,7 @@ kex_ecdh_keypair(struct kex *kex)
 	sshbuf_free(buf);
 	return r;
 }
-# else
+#else
 /* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_ecdh_keypair(struct kex *kex)
@@ -171,9 +170,9 @@ kex_ecdh_keypair(struct kex *kex)
 	sshbuf_free(buf);
 	return r;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+#endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
     struct sshbuf **server_blobp, struct sshbuf **shared_secretp)
@@ -215,7 +214,7 @@ kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
 	sshbuf_free(server_blob);
 	return r;
 }
-# else
+#else
 /* Original function in OpenSSH Portable 10.0p1 */
 int
 kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
@@ -262,9 +261,9 @@ kex_ecdh_enc(struct kex *kex, const struct sshbuf *client_blob,
 	sshbuf_free(server_blob);
 	return r;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+#endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 static int
 kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
     EC_KEY *key, const EC_GROUP *group, struct sshbuf **shared_secretp)
@@ -373,7 +372,7 @@ kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
 	sshbuf_free(buf);
 	return r;
 }
-# else
+#else
 /* Original function in OpenSSH Portable 10.0p1 */
 static int
 kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
@@ -436,7 +435,7 @@ kex_ecdh_dec_key_group(struct kex *kex, const struct sshbuf *ec_blob,
 	sshbuf_free(buf);
 	return r;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+#endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 int
 kex_ecdh_dec(struct kex *kex, const struct sshbuf *server_blob,

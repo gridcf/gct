@@ -1,4 +1,4 @@
-/* $OpenBSD: dh.c,v 1.75 2024/12/03 16:27:53 dtucker Exp $ */
+/* $OpenBSD: dh.c,v 1.76 2026/02/08 19:54:31 dtucker Exp $ */
 /*
  * Copyright (c) 2000 Niels Provos.  All rights reserved.
  *
@@ -26,6 +26,7 @@
 #include "includes.h"
 
 #ifdef WITH_OPENSSL
+#include "openbsd-compat/openssl-compat.h"
 
 #include <errno.h>
 #include <stdarg.h>
@@ -37,20 +38,18 @@
 #include <openssl/bn.h>
 #include <openssl/dh.h>
 #include <openssl/fips.h>
+#include "fips_mode_replacement.h"
 #include <openssl/evp.h>
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
-# endif
+#endif
 
 #include "dh.h"
 #include "pathnames.h"
 #include "log.h"
 #include "misc.h"
 #include "ssherr.h"
-
-#include "openbsd-compat/openssl-compat.h"
-#include "fips_mode_replacement.h"
 
 static const char *moduli_filename;
 
@@ -293,7 +292,7 @@ dh_pub_is_valid(const DH *dh, const BIGNUM *dh_pub)
 	return 1;
 }
 
-# if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 int
 dh_gen_key(DH *dh, int need)
 {
@@ -393,7 +392,7 @@ out:
 	BN_clear_free(priv_key);
 	return r;
 }
-# else
+#else
 /* Original function in OpenSSH Portable 10.0p1 */
 int
 dh_gen_key(DH *dh, int need)
@@ -423,7 +422,7 @@ dh_gen_key(DH *dh, int need)
 		return SSH_ERR_INVALID_FORMAT;
 	return 0;
 }
-# endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
+#endif /* OPENSSL_VERSION_NUMBER >= 0x30000000L */
 
 DH *
 dh_new_group_asc(const char *gen, const char *modulus)
