@@ -119,6 +119,16 @@ globus_gss_assist_token_get_fd(
              */
             dsize = ( (((unsigned int) (int_buf[0] & 0x7f)) << 8)
                     |  ((unsigned int) int_buf[1]) ) - 3;
+            /* An SSLv2 record length below 3 underflows dsize (and thus
+             * size = dsize + 5), yielding an undersized malloc that the
+             * fixed 5-byte memcpy and the (size_t)-cast fread overflow.
+             * Reject it, mirroring the lower-bound guard the raw-length
+             * branch already applies below. */
+            if (dsize < 0 || dsize > (1 << 24))
+            {
+                return_value = GLOBUS_GSS_ASSIST_TOKEN_ERR_BAD_SIZE;
+                goto exit;
+            }
         }
         else
         {
