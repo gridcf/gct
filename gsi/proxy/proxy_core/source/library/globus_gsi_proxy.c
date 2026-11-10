@@ -1749,11 +1749,21 @@ globus_l_gsi_proxy_sign_key(
         goto done;
     }
 
-    /* right now if MD5 isn't requested as the signing algorithm,
-     * we throw an error
+    /*Determine the issuer certificate's digest algorithm so the
+     * proxy can be signed with a matching digest.
      */
-    issuer_digest = EVP_get_digestbynid(
-            X509_get_signature_nid(issuer_cert));
+    {
+        int issuer_digest_nid = NID_undef;
+
+        if (!X509_get_signature_info(
+                issuer_cert, &issuer_digest_nid, NULL, NULL, NULL) ||
+            issuer_digest_nid == NID_undef)
+        {
+            issuer_digest_nid = X509_get_signature_nid(issuer_cert);
+        }
+        issuer_digest = EVP_get_digestbynid(issuer_digest_nid);
+    }
+
     if (issuer_digest == NULL)
     {
         GLOBUS_GSI_PROXY_OPENSSL_ERROR_RESULT(
@@ -1881,10 +1891,21 @@ globus_gsi_proxy_create_signed(
 
     if (handle->attrs->signing_algorithm == NULL)
     {
-        const EVP_MD *                  issuer_digest;
+        const EVP_MD *                  issuer_digest = NULL;
+        int                             digest_nid = NID_undef;
 
-        issuer_digest = EVP_get_digestbynid(
-                X509_get_signature_nid(issuer_cert));
+        /* Digest check is broken on ECDSA certs and only worked on RSA.
+         */
+        if (!X509_get_signature_info(
+                issuer_cert, &digest_nid, NULL, NULL, NULL) ||
+            digest_nid == NID_undef)
+        {
+            /* Fall back on failure
+            */
+            digest_nid = X509_get_signature_nid(issuer_cert);
+        }
+
+        issuer_digest = EVP_get_digestbynid(digest_nid);
         if (issuer_digest == NULL)
         {
             GLOBUS_GSI_PROXY_OPENSSL_ERROR_RESULT(

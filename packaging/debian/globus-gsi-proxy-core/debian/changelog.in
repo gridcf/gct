@@ -1,3 +1,9 @@
+globus-gsi-proxy-core (9.11-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix ECDSA issuer digest initialization and improve algorithm handling
+
+ -- Frank Scheiner <scheiner@hlrs.de>   Tue, 11 Nov 2026 16:34:00 +0100
+
 globus-gsi-proxy-core (9.10-1+gct.@distro@) @distro@; urgency=medium
 
   * Compile with OpenSSL 4
