@@ -352,7 +352,7 @@ globus_gss_assist_will_handle_restrictions(
 
 
 /*
- * globus_gss_assist_import_sec_context - read a security context
+ * globus_gss_assist_export_sec_context - export a security context
  */
 extern OM_uint32
 globus_gss_assist_export_sec_context(

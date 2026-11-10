@@ -30,7 +30,7 @@ extern gss_OID gss_nt_service_name;
  * @ingroup globus_gss_assist_context
  * Initialize a GSSAPI security connection. Used by the client.
  * The context_handle is returned, and there is one for each
- * connection.  This routine will take cake of the looping
+ * connection.  This routine will take care of the looping
  * and token processing, using the supplied get_token and
  * send_token routines.
  *

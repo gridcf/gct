@@ -158,7 +158,7 @@ globus_gss_assist_export_sec_context(
         {
             globus_gss_assist_display_status(
                 fperr,
-                _GASL("gss_assist_import_sec_context failure:"),
+                _GASL("gss_assist_export_sec_context failure:"),
                 major_status,
                 *minor_status,
                 *token_status);
