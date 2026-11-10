@@ -3,7 +3,7 @@
 Name:		globus-gss-assist
 %global soname 3
 %global _name %(echo %{name} | tr - _)
-Version:	12.8
+Version:	12.9
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - GSSAPI Assist library
 
@@ -185,6 +185,10 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Nov 10 2026 Frank Scheiner <scheiner@hlrs.de> - 12.9-1
+- Fix typos and function documentation
+- Fix CVE-2026-123975
+
 * Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 12.8-1
 - Fix compiler and doxygen warnings
 

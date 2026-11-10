@@ -1,3 +1,10 @@
+globus-gss-assist (12.9-1+gct.@distro@) @distro@; urgency=medium
+
+  * Fix typos and function documentation
+  * Fix CVE-2026-123975
+
+ -- Frank Scheiner <scheiner@hlrs.de>  Tue, 10 Nov 2026 11:00:00 +0100
+
 globus-gss-assist (12.8-1+gct.@distro@) @distro@; urgency=medium
 
   * Fix compiler and doxygen warnings
