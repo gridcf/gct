@@ -3,7 +3,7 @@
 Name:		globus-gsi-proxy-core
 %global soname 0
 %global _name %(echo %{name} | tr - _)
-Version:	9.10
+Version:	9.11
 Release:	1%{?dist}
 Summary:	Grid Community Toolkit - Globus GSI Proxy Core Library
 
@@ -143,6 +143,9 @@ make %{?_smp_mflags} check VERBOSE=1
 %doc %{_pkgdocdir}/GLOBUS_LICENSE
 
 %changelog
+* Tue Nov 11 2026 Frank Scheiner <scheiner@hlrs.de> - 9.11-1
+- Fix ECDSA issuer digest initialization and improve algorithm handling
+
 * Tue May 19 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 9.10-1
 - Compile with OpenSSL 4
 
